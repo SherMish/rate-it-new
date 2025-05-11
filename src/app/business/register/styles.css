@@ -1,0 +1,28 @@
+.bg-dot-pattern {
+  background-image: radial-gradient(
+    circle at center,
+    hsl(var(--muted-foreground) / 0.1) 1px,
+    transparent 1px
+  );
+  background-size: 24px 24px;
+  background-position: center;
+  position: relative;
+}
+
+.bg-dot-pattern::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    35deg,
+    hsl(var(--primary) / 0.05),
+    transparent 40%,
+    transparent 60%,
+    hsl(var(--primary) / 0.05)
+  );
+  mask-image: radial-gradient(
+    circle at center,
+    black,
+    transparent 70%
+  );
+} 
