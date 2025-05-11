@@ -38,18 +38,18 @@ export function SearchSection() {
   return (
     <div className="min-h-[30vh] relative overflow-visible">
       <div className="relative container mx-auto px-4 py-8 pb-4">
-        <motion.div 
+        <motion.div
           className="max-w-3xl mx-auto text-center space-y-8"
           variants={containerVariants}
           initial="hidden"
           animate="visible"
         >
           <div className="space-y-4">
-            <motion.h1 
+            <motion.h1
               variants={itemVariants}
               className="text-4xl md:text-6xl text-white font-semibold font-medium tracking-tight"
             >
-              Find AI you can{" "}
+              Find AI you cann{" "}
               <span className="relative inline-block">
                 <span className="relative bg-clip-text via-primary ">
                   trust
@@ -57,18 +57,15 @@ export function SearchSection() {
                 <span className="absolute -bottom-1 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-primary to-transparent" />
               </span>
             </motion.h1>
-            <motion.p 
+            <motion.p
               variants={itemVariants}
               className="text-xl text-muted-foreground"
             >
               Explore the best AI tools, rated by real users.
             </motion.p>
           </div>
-          
-          <motion.div 
-            variants={itemVariants}
-            className="relative"
-          >
+
+          <motion.div variants={itemVariants} className="relative">
             <SearchInput onSearch={handleSearch} />
           </motion.div>
 
@@ -78,7 +75,9 @@ export function SearchSection() {
           >
             <Link href="/tool/new" className="group">
               <div className="text-muted-foreground hover:text-primary transition-colors">
-                <span className="text-sm">Missing an AI tool? Add it in seconds!</span>
+                <span className="text-sm">
+                  Missing an AI tool? Add it in seconds!
+                </span>
               </div>
             </Link>
           </motion.div>
@@ -86,4 +85,4 @@ export function SearchSection() {
       </div>
     </div>
   );
-} 
+}
