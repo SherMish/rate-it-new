@@ -112,7 +112,7 @@ export function SearchInput({
           <div className="relative flex-1">
             <Input
               type="search"
-              placeholder="חפש כלי בינה מלאכותית"
+              placeholder="חפשו אתר, עסק או חברה"
               className={cn(
                 "w-full bg-secondary/50 border-secondary-foreground/10 gradient-border text-right",
                 variant === "default" ? "h-12 pr-12 text-lg" : "h-10 pr-10"

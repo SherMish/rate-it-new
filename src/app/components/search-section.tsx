@@ -49,10 +49,10 @@ export function SearchSection() {
               variants={itemVariants}
               className="text-4xl md:text-6xl text-foreground font-semibold font-medium tracking-tight"
             >
-              מצא בינה מלאכותית{" "}
+              חוות דעת אמיתיות.{" "}
               <span className="relative inline-block">
                 <span className="relative bg-clip-text text-primary font-bold">
-                  אמינה
+                  עסקים אמינים.
                 </span>
                 <span className="absolute -bottom-1 right-0 left-0 h-[2px] bg-gradient-to-l from-transparent via-primary to-transparent" />
               </span>
@@ -61,8 +61,7 @@ export function SearchSection() {
               variants={itemVariants}
               className="text-xl text-muted-foreground"
             >
-              חקור את כלי הבינה המלאכותית הטובים ביותר, מדורגים על ידי משתמשים
-              אמיתיים.
+              פלטפורמה לדירוג וביקורת של חנויות ואתרים בישראל
             </motion.p>
           </div>
 
