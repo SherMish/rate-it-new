@@ -57,7 +57,7 @@ export function SideNav() {
             className="flex items-center hover:opacity-90 transition-opacity"
           >
             <div className="flex items-center gap-2">
-              <Image src="/logo.svg" alt="AI-Radar" width={150} height={28} />
+              <Image src="/logo.png" alt="Rate It" width={150} height={28} />
               <span className="text-sm font-medium text-gray-400 border-border/50 mt-[11px]">
                 Business
               </span>

@@ -47,11 +47,11 @@ export function SearchSection() {
           <div className="space-y-4">
             <motion.h1
               variants={itemVariants}
-              className="text-4xl md:text-6xl text-white font-semibold font-medium tracking-tight"
+              className="text-4xl md:text-6xl text-foreground font-semibold font-medium tracking-tight"
             >
               מצא בינה מלאכותית{" "}
               <span className="relative inline-block">
-                <span className="relative bg-clip-text via-primary ">
+                <span className="relative bg-clip-text text-primary font-bold">
                   אמינה
                 </span>
                 <span className="absolute -bottom-1 right-0 left-0 h-[2px] bg-gradient-to-l from-transparent via-primary to-transparent" />

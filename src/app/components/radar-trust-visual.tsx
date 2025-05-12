@@ -12,13 +12,13 @@ export function RadarTrustVisual() {
   return (
     <div ref={ref} className="relative flex justify-center">
       <motion.div
-        className="aspect-square rounded-full bg-primary/5 flex items-center justify-center"
+        className="aspect-square rounded-full bg-blue-50 flex items-center justify-center"
         initial={{ scale: 0, opacity: 0 }}
         animate={isInView ? { scale: 1, opacity: 1 } : { scale: 0, opacity: 0 }}
         transition={{ duration: 0.5, delay: 0 }}
       >
         <motion.div
-          className="w-48 h-48 rounded-full bg-primary/10 flex items-center justify-center"
+          className="w-48 h-48 rounded-full bg-blue-100 flex items-center justify-center"
           initial={{ scale: 0, opacity: 0 }}
           animate={
             isInView ? { scale: 1, opacity: 1 } : { scale: 0, opacity: 0 }

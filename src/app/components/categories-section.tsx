@@ -65,7 +65,7 @@ export function CategoriesSection() {
     <div className="py-16 pb-8 relative">
       <div className="container max-w-7xl mx-auto">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold mb-4">
+          <h2 className="text-3xl font-bold mb-4 text-foreground">
             חקור כלי בינה מלאכותית לפי קטגוריה
           </h2>
           <p className="text-muted-foreground text-lg">
@@ -82,13 +82,15 @@ export function CategoriesSection() {
                 href={`/category/${category.id}`}
                 className="block h-full"
               >
-                <Card className="p-4 hover:bg-secondary/50 transition-colors group h-full flex flex-col">
+                <Card className="p-4 bg-white hover:bg-blue-50 transition-colors group h-full flex flex-col border border-border shadow-sm hover:shadow-md">
                   <div className="flex items-start gap-3 h-full">
                     <div className="w-10 h-10 rounded-lg bg-primary/10 flex-shrink-0 flex items-center justify-center group-hover:bg-primary/20 transition-colors rtl:ml-0 rtl:mr-0">
                       <Icon className="w-5 h-5 text-primary" />
                     </div>
                     <div className="flex-1 min-h-0 text-right">
-                      <div className="font-medium mb-1">{category.name}</div>
+                      <div className="font-medium mb-1 text-foreground">
+                        {category.name}
+                      </div>
                       <p className="text-sm text-muted-foreground line-clamp-2">
                         {category.description}
                       </p>
@@ -107,7 +109,7 @@ export function CategoriesSection() {
               variant="outline"
               size="lg"
               onClick={() => setShowAll(!showAll)}
-              className="group"
+              className="group bg-white border border-border hover:bg-blue-50 shadow-sm"
             >
               {showAll ? (
                 <>

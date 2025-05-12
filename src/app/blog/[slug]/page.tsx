@@ -82,7 +82,7 @@ function generateStructuredData(post: BlogPost, baseUrl: string) {
       name: "AI-Radar",
       logo: {
         "@type": "ImageObject",
-        url: `${baseUrl}/logo.svg`,
+        url: `${baseUrl}/logo.png`,
       },
     },
     mainEntityOfPage: {

@@ -201,7 +201,7 @@ export default async function Home() {
       />
       <main className="relative min-h-screen" dir="rtl">
         {/* Main background gradient */}
-        <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,#3b82f615,transparent_70%),radial-gradient(ellipse_at_bottom,#6366f115,transparent_70%)] pointer-events-none" />
+        <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,#3b82f620,transparent_70%),radial-gradient(ellipse_at_bottom,#6366f115,transparent_70%)] pointer-events-none" />
 
         {/* Radar Section */}
         <div className="absolute left-0 right-0 top-0 bottom-0 flex justify-center items-center -z-10">
@@ -233,7 +233,7 @@ export default async function Home() {
           </div> */}
 
           {/* Latest Tools Section */}
-          <section className="py-12 bg-secondary/50 backdrop-blur-sm border-y border-border/50">
+          <section className="py-12 bg-secondary/80 border-y border-border/50">
             <div className="container max-w-6xl mx-auto px-4">
               <div className="grid lg:grid-cols-[1fr,400px] gap-12">
                 {/* Right Column - Content (was Left) */}
@@ -261,7 +261,7 @@ export default async function Home() {
           </div>
 
           {/* TrustRadar Section */}
-          <section className="py-24 relative overflow-hidden">
+          <section className="py-24 relative overflow-hidden bg-gradient-to-b from-white to-secondary/50">
             <div className="container max-w-6xl mx-auto px-4">
               <div className="grid lg:grid-cols-[400px,1fr] gap-12 items-center">
                 {/* Right Column - Visual (was Left) */}

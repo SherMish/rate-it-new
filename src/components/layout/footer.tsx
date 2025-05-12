@@ -24,7 +24,7 @@ const navigation = {
 
 export function Footer() {
   return (
-    <footer className="bg-secondary/50 backdrop-blur-sm border-t border-border">
+    <footer className="bg-blue-50 border-t border-border">
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
           {/* Brand */}
@@ -40,13 +40,15 @@ export function Footer() {
 
           {/* Navigation */}
           <div className="text-right">
-            <h3 className="text-sm font-semibold mb-4">ניווט</h3>
+            <h3 className="text-sm font-semibold mb-4 text-foreground">
+              ניווט
+            </h3>
             <ul className="space-y-3">
               {navigation.main.map((item) => (
                 <li key={item.name}>
                   <Link
                     href={item.href}
-                    className="text-muted-foreground hover:text-foreground transition-colors"
+                    className="text-muted-foreground hover:text-primary transition-colors"
                   >
                     {item.name}
                   </Link>
@@ -57,7 +59,9 @@ export function Footer() {
 
           {/* Contact */}
           <div className="text-right">
-            <h3 className="text-sm font-semibold mb-4">יצירת קשר</h3>
+            <h3 className="text-sm font-semibold mb-4 text-foreground">
+              יצירת קשר
+            </h3>
             <ul className="space-y-3 text-muted-foreground">
               <li>אימייל: info@ai-radar.co</li>
               {/* <li>Support: support@ai-radar.com</li> */}
@@ -66,7 +70,9 @@ export function Footer() {
 
           {/* Social */}
           <div className="text-right">
-            <h3 className="text-sm font-semibold mb-4">עקבו אחרינו</h3>
+            <h3 className="text-sm font-semibold mb-4 text-foreground">
+              עקבו אחרינו
+            </h3>
             <div className="flex space-x-4 space-x-reverse rtl:space-x-reverse">
               {navigation.social.map((item) => {
                 const Icon = item.icon;
@@ -74,7 +80,7 @@ export function Footer() {
                   <a
                     key={item.name}
                     href={item.href}
-                    className="text-muted-foreground hover:text-foreground transition-colors"
+                    className="text-muted-foreground hover:text-primary transition-colors"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -94,13 +100,13 @@ export function Footer() {
           <div className="mt-4 flex space-x-6 space-x-reverse rtl:space-x-reverse md:mt-0">
             <Link
               href="/privacy"
-              className="text-sm text-muted-foreground hover:text-foreground"
+              className="text-sm text-muted-foreground hover:text-primary transition-colors"
             >
               מדיניות פרטיות
             </Link>
             <Link
               href="/terms"
-              className="text-sm text-muted-foreground hover:text-foreground"
+              className="text-sm text-muted-foreground hover:text-primary transition-colors"
             >
               תנאי שימוש
             </Link>

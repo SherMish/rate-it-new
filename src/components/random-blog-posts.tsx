@@ -11,17 +11,20 @@ export async function RandomBlogPosts() {
   if (posts.length === 0) return null;
 
   return (
-    <section className="relative py-20" dir="rtl">
+    <section
+      className="relative py-20 bg-gradient-to-b from-secondary/50 to-white"
+      dir="rtl"
+    >
       {/* Background effects */}
-      <div className="absolute inset-0 bg-[#0A0F1F]/40" />
-      <div className="absolute inset-0 bg-[linear-gradient(110deg,#2563eb10,#9333ea10,#2563eb10)] backdrop-blur-[100px]" />
+      <div className="absolute inset-0 bg-[#f0f6ff]/60" />
+      <div className="absolute inset-0 bg-[linear-gradient(110deg,#3b82f608,#9333ea08,#3b82f608)]" />
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-foreground/10 to-transparent" />
       <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-foreground/10 to-transparent" />
 
       {/* Content */}
       <div className="relative container mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className="text-4xl font-semibold">
+          <h2 className="text-4xl font-semibold text-foreground">
             נושאי בינה מלאכותית מובילים
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto my-2">
@@ -33,7 +36,7 @@ export async function RandomBlogPosts() {
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-12">
           {posts.map((post) => (
             <Link key={post._id} href={`/blog/${post.slug}`}>
-              <Card className="group h-full overflow-hidden border border-border/50 bg-background/50 backdrop-blur-sm hover:bg-background/80 transition-colors">
+              <Card className="group h-full overflow-hidden border border-border bg-white shadow-sm hover:shadow-md transition-all">
                 {post.coverImage && (
                   <div className="relative h-48 overflow-hidden">
                     <Image
@@ -59,7 +62,7 @@ export async function RandomBlogPosts() {
                   </div>
 
                   {/* Title & Excerpt */}
-                  <h3 className="text-xl font-semibold mb-2 group-hover:text-primary transition-colors text-right">
+                  <h3 className="text-xl font-semibold mb-2 group-hover:text-primary transition-colors text-right text-foreground">
                     {post.title}
                   </h3>
                   <p className="text-muted-foreground mb-4 line-clamp-2 text-right">
@@ -67,7 +70,7 @@ export async function RandomBlogPosts() {
                   </p>
 
                   {/* Date & Read More */}
-                  <div className="flex items-center justify-between mt-auto pt-4 border-t border-border/50">
+                  <div className="flex items-center justify-between mt-auto pt-4 border-t border-border">
                     <span className="text-primary flex items-center gap-1 text-sm">
                       <ArrowLeft className="w-4 h-4" /> קרא עוד
                     </span>
@@ -88,7 +91,7 @@ export async function RandomBlogPosts() {
         <div className="flex justify-center mt-8">
           <Link
             href="/blog"
-            className="inline-flex items-center gap-2 bg-primary/10 hover:bg-primary/20 text-primary px-6 py-3 rounded-lg font-medium transition-colors"
+            className="inline-flex items-center gap-2 bg-primary text-white px-6 py-3 rounded-lg font-medium shadow-sm hover:shadow-md hover:bg-primary/90 transition-all"
           >
             צפה בכל הפוסטים
             <ArrowLeft className="w-4 h-4" />

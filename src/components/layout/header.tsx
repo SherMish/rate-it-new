@@ -43,7 +43,7 @@ export function Header() {
   if (isBusinessDashboard) return <> </>;
   else {
     return (
-      <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <header className="sticky top-0 z-50 w-full border-b border-border bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80 shadow-sm">
         <nav className="container mx-auto px-4" aria-label="ניווט ראשי">
           {isBusinessRegister ? (
             <div className="flex h-16 items-center justify-center">
@@ -54,7 +54,7 @@ export function Header() {
               >
                 <div className="flex items-center gap-2">
                   <Image
-                    src="/logo.svg"
+                    src="/logo.png"
                     alt="AI-Radar"
                     width={150}
                     height={28}
@@ -75,7 +75,7 @@ export function Header() {
                 >
                   <div className="flex items-center gap-2">
                     <Image
-                      src="/logo.svg"
+                      src="/logo.png"
                       alt="AI-Radar"
                       width={150}
                       height={28}
@@ -98,7 +98,7 @@ export function Header() {
 
               {/* Desktop Navigation */}
 
-              <div className="hidden md:flex md:items-center md:space-x-0 md:space-x-reverse md:space-y-0 md:mr-8 order-3">
+              <div className="hidden md:flex md:items-center md:space-x-0 md:space-x-reverse md:space-y-0 md:mr-8 order-3 gap-4">
                 {isRegularSite &&
                   navigation.map((item) => (
                     <Link
@@ -113,7 +113,7 @@ export function Header() {
                 {isRegularSite ? (
                   <Link
                     href="/business"
-                    className="inline-flex items-center gap-1 px-4 py-2 text-sm font-semibold text-white bg-primary rounded-full hover:bg-primary/90 transition-colors"
+                    className="inline-flex items-center gap-1 px-4 py-2 text-sm font-semibold text-white bg-primary rounded-full hover:bg-primary/90 transition-colors shadow-sm hover:shadow-md"
                   >
                     לעסקים
                   </Link>
@@ -129,7 +129,7 @@ export function Header() {
                 {isBusinessHome && (
                   <Link
                     href="/business/register"
-                    className="inline-flex items-center gap-1 px-4 py-2 text-sm font-semibold text-white bg-primary rounded-full hover:bg-primary/90 transition-colors mr-4"
+                    className="inline-flex items-center gap-1 px-4 py-2 text-sm font-semibold text-white bg-primary rounded-full hover:bg-primary/90 transition-colors shadow-sm hover:shadow-md mr-4"
                   >
                     צור חשבון חינם
                   </Link>
@@ -146,7 +146,7 @@ export function Header() {
                       <Button
                         variant="outline"
                         onClick={() => loginModal.onOpen()}
-                        className="font-medium"
+                        className="font-medium bg-white border border-border hover:bg-blue-50"
                       >
                         התחברות
                       </Button>
@@ -197,13 +197,13 @@ export function Header() {
           {/* Mobile Navigation */}
           {!isBusinessRegister && (
             <div className={cn("md:hidden", isOpen ? "block" : "hidden")}>
-              <div className="space-y-1 pb-3 text-right">
+              <div className="space-y-1 pb-3 text-right bg-white">
                 {isRegularSite &&
                   navigation.map((item) => (
                     <Link
                       key={item.name}
                       href={item.href}
-                      className="block rounded-md px-3 py-4 text-base font-medium text-muted-foreground hover:bg-muted/50 hover:text-foreground transition-colors"
+                      className="block rounded-md px-3 py-4 text-base font-medium text-muted-foreground hover:bg-blue-50 hover:text-foreground transition-colors"
                       onClick={() => setIsOpen(false)}
                     >
                       {item.name}
@@ -213,7 +213,7 @@ export function Header() {
                 {isRegularSite ? (
                   <Link
                     href="/business"
-                    className="block rounded-md px-3 py-4 text-base font-medium text-primary hover:bg-muted/50 hover:text-primary/80 transition-colors"
+                    className="block rounded-md px-3 py-4 text-base font-medium text-primary hover:bg-blue-50 hover:text-primary/80 transition-colors"
                     onClick={() => setIsOpen(false)}
                   >
                     לעסקים
@@ -221,7 +221,7 @@ export function Header() {
                 ) : (
                   <Link
                     href="/"
-                    className="block rounded-md px-3 py-4 text-base font-medium text-muted-foreground hover:bg-muted/50 hover:text-foreground transition-colors"
+                    className="block rounded-md px-3 py-4 text-base font-medium text-muted-foreground hover:bg-blue-50 hover:text-foreground transition-colors"
                     onClick={() => setIsOpen(false)}
                   >
                     אתר צרכנים
@@ -231,7 +231,7 @@ export function Header() {
                 {isBusinessHome && (
                   <Link
                     href="/business/register"
-                    className="block rounded-md px-3 py-4 text-base font-medium text-primary hover:bg-muted/50 hover:text-primary/80 transition-colors"
+                    className="block rounded-md px-3 py-4 text-base font-medium text-primary hover:bg-blue-50 hover:text-primary/80 transition-colors"
                     onClick={() => setIsOpen(false)}
                   >
                     צור חשבון חינם
@@ -241,7 +241,7 @@ export function Header() {
                 {session?.user && (
                   <Link
                     href="/my-reviews"
-                    className="block rounded-md px-3 py-4 text-base font-medium text-muted-foreground hover:bg-muted/50 hover:text-foreground transition-colors"
+                    className="block rounded-md px-3 py-4 text-base font-medium text-muted-foreground hover:bg-blue-50 hover:text-foreground transition-colors"
                     onClick={() => setIsOpen(false)}
                   >
                     הביקורות שלי
@@ -262,7 +262,7 @@ export function Header() {
                           setIsOpen(false);
                           loginModal.onOpen();
                         }}
-                        className="px-0 w-full justify-start text-base font-medium text-muted-foreground hover:bg-muted/50 hover:text-foreground transition-colors"
+                        className="px-0 w-full justify-start text-base font-medium text-muted-foreground hover:bg-blue-50 hover:text-foreground transition-colors"
                       >
                         התחברות
                       </Button>

@@ -37,10 +37,10 @@ export function LatestToolCard({ website, index }: LatestToolCardProps) {
       transition={{ duration: 0.5, delay: 0.2 + index * 0.1 }}
     >
       <Link href={`/tool/${encodeURIComponent(website.url)}`}>
-        <Card className=" h-[178px] p-6 bg-zinc-900/50 hover:bg-zinc-800/50 transition-colors border-zinc-700/50">
+        <Card className="h-[178px] p-6 bg-white hover:bg-blue-50 transition-colors border border-border shadow-sm hover:shadow-md">
           <div className="flex flex-col sm:flex-row items-start gap-4">
             <div className="flex items-center gap-3 sm:block">
-              <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-zinc-800/50 border border-zinc-700/50 flex items-center justify-center overflow-hidden">
+              <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-secondary border border-border flex items-center justify-center overflow-hidden">
                 {website.logo ? (
                   <Image
                     src={website.logo}
@@ -50,26 +50,26 @@ export function LatestToolCard({ website, index }: LatestToolCardProps) {
                     className="rounded-xl object-cover"
                   />
                 ) : (
-                  <div className="w-6 h-6 bg-zinc-700 rounded-full flex items-center justify-center">
-                    <span className="text-xs text-zinc-400">
+                  <div className="w-6 h-6 bg-primary/20 rounded-full flex items-center justify-center">
+                    <span className="text-xs text-primary font-medium">
                       {website.name.charAt(0)}
                     </span>
                   </div>
                 )}
               </div>
-              <h2 className="text-lg font-semibold text-zinc-50 sm:hidden">
+              <h2 className="text-lg font-semibold text-foreground sm:hidden">
                 {website.name}
               </h2>
             </div>
             <div className="flex-1 min-w-0 space-y-3 text-right">
               <div>
-                <h2 className="hidden sm:block text-lg font-semibold text-zinc-50">
+                <h2 className="hidden sm:block text-lg font-semibold text-foreground">
                   {website.name}
                 </h2>
                 <div className="flex flex-col gap-2">
                   {website.reviewCount > 0 && (
                     <div className="flex items-center gap-3 justify-end">
-                      <span className="text-sm text-zinc-400">
+                      <span className="text-sm text-muted-foreground">
                         {website.averageRating.toFixed(1)}
                       </span>
                       <div className="flex items-center">
@@ -78,8 +78,8 @@ export function LatestToolCard({ website, index }: LatestToolCardProps) {
                             key={i}
                             className={`w-4 h-4 ${
                               i < (website.averageRating || 0)
-                                ? "text-yellow-400 fill-yellow-400"
-                                : "text-zinc-600"
+                                ? "text-yellow-500 fill-yellow-500"
+                                : "text-gray-300"
                             }`}
                           />
                         ))}
@@ -99,7 +99,7 @@ export function LatestToolCard({ website, index }: LatestToolCardProps) {
               </div>
 
               {website.shortDescription && (
-                <p className="text-sm text-zinc-400 line-clamp-2 text-right">
+                <p className="text-sm text-muted-foreground line-clamp-2 text-right">
                   {website.shortDescription}
                 </p>
               )}

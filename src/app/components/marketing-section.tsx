@@ -23,41 +23,42 @@ export function MarketingSection() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-          <Card className="bg-secondary/50 backdrop-blur-sm p-6 border-border/50">
+          <Card className="bg-white shadow-md p-6 border border-border hover:shadow-lg transition-shadow">
             <div className="space-y-4">
-              <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
-                <Shield className="w-6 h-6 text-primary" />
+              <div className="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center">
+                <Shield className="w-6 h-6 text-blue-600" />
               </div>
-              <h3 className="text-lg font-semibold">Credible Reviews</h3>
+              <h3 className="text-lg font-semibold">ביקורות אמינות</h3>
               <p className="text-muted-foreground">
-                Each review is backed by user verification and proof, ensuring
-                trustworthy insights.
+                כל ביקורת מגובה באימות משתמש והוכחות, המבטיחים תובנות אמינות.
               </p>
             </div>
           </Card>
 
-          <Card className="bg-secondary/50 backdrop-blur-sm p-6 border-border/50">
+          <Card className="bg-white shadow-md p-6 border border-border hover:shadow-lg transition-shadow">
             <div className="space-y-4">
-              <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
-                <Filter className="w-6 h-6 text-primary" />
+              <div className="w-12 h-12 rounded-lg bg-purple-100 flex items-center justify-center">
+                <Filter className="w-6 h-6 text-purple-600" />
               </div>
-              <h3 className="text-lg font-semibold">Unbiased Platform</h3>
+              <h3 className="text-lg font-semibold">פלטפורמה אובייקטיבית</h3>
               <p className="text-muted-foreground">
-                AI-Radar doesn&apos;t filter or manipulate reviews—your decision
-                is based on real-world experiences.
+                AI-Radar אינו מסנן או מתפעל ביקורות - ההחלטה שלך מבוססת על
+                חוויות אמיתיות.
               </p>
             </div>
           </Card>
 
-          <Card className="bg-secondary/50 backdrop-blur-sm p-6 border-border/50">
+          <Card className="bg-white shadow-md p-6 border border-border hover:shadow-lg transition-shadow">
             <div className="space-y-4">
-              <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
-                <Target className="w-6 h-6 text-primary" />
+              <div className="w-12 h-12 rounded-lg bg-indigo-100 flex items-center justify-center">
+                <Target className="w-6 h-6 text-indigo-600" />
               </div>
-              <h3 className="text-lg font-semibold">Find the Best Fit</h3>
+              <h3 className="text-lg font-semibold">
+                מצא את ההתאמה הטובה ביותר
+              </h3>
               <p className="text-muted-foreground">
-                Easily compare AI tools and make confident choices for your
-                specific needs.
+                השווה בקלות בין כלי בינה מלאכותית וקבל החלטות בטוחות לצרכים
+                הספציפיים שלך.
               </p>
             </div>
           </Card>
@@ -69,7 +70,7 @@ export function MarketingSection() {
             className="gradient-button"
             onClick={handleExploreClick}
           >
-            Start Exploring AI Tools
+            התחל לחקור כלי בינה מלאכותית
           </Button>
         </div>
       </div>
