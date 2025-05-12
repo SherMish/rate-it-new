@@ -23,16 +23,14 @@ export function LatestToolsContent() {
         variants={fadeInUp}
       >
         <h2 className="text-3xl font-bold mb-4">
-          היה בחזית.
+          אל תישארו מאחור.
           <br />
-          ייעל תהליכי עבודה.
-          <br />
-          צמח בחוכמה.
+          תנו לעסק שלכם את המקום שמגיע לו.
         </h2>
         <p className="text-muted-foreground text-lg leading-relaxed">
-          שחרר את פתרונות הבינה המלאכותית החדשניים שעוצבו כדי לקדם יעילות,
-          חדשנות וצמיחה. מאוטומציה ועד ניתוח מתקדם, חקור כלים מתקדמים שיכולים
-          להעניק לעסק שלך יתרון תחרותי.
+          לקוחות מחפשים עסקים אמינים – תנו להם למצוא אתכם עם דירוגים שקופים וחוות
+          דעת אמיתיות. חזקו את הנוכחות הדיגיטלית שלכם, בנו אמון, והפכו למותג
+          שהלקוחות זוכרים וממליצים עליו.
         </p>
       </motion.div>
 
@@ -43,14 +41,14 @@ export function LatestToolsContent() {
         variants={fadeInUp}
       >
         <p className="text-muted-foreground text-lg">
-          רוצה להציג את פתרון הבינה המלאכותית שלך?{" "}
+          רוצים שהעסק שלכם יופיע בפלטפורמה?{" "}
           <Link
             href="/business/register"
             className="text-primary hover:text-primary/90 hover:underline transition-colors"
           >
-            רשום אותו היום בחינם
+            הוסיפו אותו עכשיו בחינם
           </Link>{" "}
-          והגיע למקצוענים המחפשים את החדשנות הבאה.
+          ותנו ללקוחות הנכונים להגיע אליכם.{" "}
         </p>
       </motion.div>
     </div>

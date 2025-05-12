@@ -54,14 +54,14 @@ export function SearchSection() {
                 <span className="relative bg-clip-text text-primary font-bold">
                   עסקים אמינים.
                 </span>
-                <span className="absolute -bottom-1 right-0 left-0 h-[2px] bg-gradient-to-l from-transparent via-primary to-transparent" />
+                <span className="absolute -bottom-3 right-0 left-0 h-[2px] bg-gradient-to-l from-transparent via-primary to-transparent" />
               </span>
             </motion.h1>
             <motion.p
               variants={itemVariants}
               className="text-xl text-muted-foreground"
             >
-              פלטפורמה לדירוג וביקורת של חנויות אינטרנטיות, חברות ואתרים בישראל
+              הפלטפורמה המובילה לדירוג וביקורת של חנויות אינטרנטיות, חברות ואתרים בישראל
             </motion.p>
           </div>
 
@@ -76,7 +76,7 @@ export function SearchSection() {
             <Link href="/tool/new" className="group">
               <div className="text-muted-foreground hover:text-primary transition-colors">
                 <span className="text-sm">
-                  חסר כלי בינה מלאכותית? הוסף אותו בשניות!
+                  העסק לא מופיע? לחצו כאן כדי להוסיף אותו בקלות!{" "}
                 </span>
               </div>
             </Link>
