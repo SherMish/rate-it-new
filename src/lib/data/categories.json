@@ -1,6 +1,150 @@
 {
   "categories": [
     {
+      "id": "fashion",
+      "name": "אופנה והלבשה",
+      "description": "ביגוד, נעליים, אקססוריז וחנויות אונליין בתחום האופנה",
+      "icon": "Shirt"
+    },
+    {
+      "id": "electronics",
+      "name": "אלקטרוניקה וגאדג'טים",
+      "description": "חנויות אינטרנט למחשבים, טלפונים ומוצרי חשמל",
+      "icon": "TabletSmartphone"
+    },
+    {
+      "id": "beauty",
+      "name": "טיפוח ויופי",
+      "description": "קוסמטיקה, איפור, מוצרי טיפוח ובריאות",
+      "icon": "Sparkles"
+    },
+    {
+      "id": "home-garden",
+      "name": "בית וגן",
+      "description": "ריהוט, עיצוב הבית, מוצרים לגינה ולמטבח",
+      "icon": "Home"
+    },
+    {
+      "id": "food-delivery",
+      "name": "משלוחי אוכל ומצרכים",
+      "description": "שירותי משלוח אוכל, סופר אונליין ותזונה",
+      "icon": "Pizza"
+    },
+    {
+      "id": "sports",
+      "name": "ספורט ובריאות",
+      "description": "ציוד ספורט, מאמני כושר וחברות ייעוץ תזונה",
+      "icon": "Dumbbell"
+    },
+    {
+      "id": "babies",
+      "name": "תינוקות וילדים",
+      "description": "חנויות אונליין לצעצועים, בגדי ילדים, ומוצרי תינוקות",
+      "icon": "Baby"
+    },
+    {
+      "id": "health",
+      "name": "בריאות ותוספים",
+      "description": "תוספי תזונה, מוצרים רפואיים, רפואה משלימה",
+      "icon": "HeartPulse"
+    },
+    {
+      "id": "automotive",
+      "name": "רכב ואביזרים",
+      "description": "חנויות לציוד ואביזרים לרכב, שירותים לרכב אונליין",
+      "icon": "Car"
+    },
+    {
+      "id": "pets",
+      "name": "חיות מחמד",
+      "description": "מזון, ציוד וטיפולים לחיות מחמד",
+      "icon": "PawPrint"
+    },
+    {
+      "id": "education",
+      "name": "קורסים ולמידה",
+      "description": "פלטפורמות ללימוד אונליין, קורסים והכשרות",
+      "icon": "BookOpen"
+    },
+    {
+      "id": "travel",
+      "name": "תיירות ונופש",
+      "description": "הזמנת טיסות, מלונות, טיולים וחבילות נופש",
+      "icon": "Plane"
+    },
+    {
+      "id": "finance",
+      "name": "כספים וביטוח",
+      "description": "שירותים פיננסיים, ביטוחים, הלוואות ובנקים",
+      "icon": "CreditCard"
+    },
+    {
+      "id": "marketing",
+      "name": "שיווק ודיגיטל",
+      "description": "סוכנויות פרסום, בניית אתרים, קידום בגוגל וברשתות",
+      "icon": "Megaphone"
+    },
+    {
+      "id": "cleaning",
+      "name": "ניקיון ושירותי בית",
+      "description": "חברות ניקיון, הדברה, תחזוקה ואחזקה",
+      "icon": "Sparkles"
+    },
+    {
+      "id": "real-estate",
+      "name": "נדל״ן ודיור",
+      "description": "חברות תיווך, אתרי נדל״ן, ושירותים בתחום הדיור",
+      "icon": "Building"
+    },
+    {
+      "id": "legal",
+      "name": "שירותים משפטיים",
+      "description": "משרדי עורכי דין, שירותים משפטיים ותביעות",
+      "icon": "Scale"
+    },
+    {
+      "id": "tech",
+      "name": "טכנולוגיה ושירותי מחשוב",
+      "description": "חברות תוכנה, שירותי IT, תמיכה טכנית ואחסון אתרים",
+      "icon": "Cpu"
+    },
+    {
+      "id": "gifts",
+      "name": "מתנות ואירועים",
+      "description": "חנויות למתנות, מארזים, וציוד לאירועים וחגיגות",
+      "icon": "Gift"
+    },
+    {
+      "id": "printing",
+      "name": "הדפסה ומיתוג",
+      "description": "שירותי דפוס, שילוט, מיתוג לעסקים ומוצרים בהתאמה אישית",
+      "icon": "Printer"
+    },
+    {
+      "id": "jewelry",
+      "name": "תכשיטים ואקססוריז",
+      "description": "חנויות אונליין לתכשיטים, שעונים ואביזרי אופנה",
+      "icon": "Gem"
+    },
+    {
+      "id": "events",
+      "name": "שירותי אירועים",
+      "description": "תקליטנים, צלמים, עיצוב אירועים ואולמות",
+      "icon": "CalendarHeart"
+    },
+    {
+      "id": "subscriptions",
+      "name": "מנויים ושירותים חודשיים",
+      "description": "שירותים מבוססי מנוי – תוכן, מוצרים, ומנויים דיגיטליים",
+      "icon": "Repeat"
+    },
+    {
+      "id": "marketplaces",
+      "name": "מרקטפלייס ואתרי מכר",
+      "description": "פלטפורמות מסחר גדולות כמו אמזון, איביי, עלי אקספרס וכו׳",
+      "icon": "Store"
+    },
+    {
       "id": "text-generation",
       "name": "Text Generation",
       "description": "AI writing, content creation, and language models",
@@ -76,7 +220,7 @@
       "id": "ai-agents",
       "name": "AI Agents",
       "description": "Custom AI assistants and chatbot builders",
-      "icon": "Briefcase"
+      "icon": "Bot"
     },
     {
       "id": "content-analysis",

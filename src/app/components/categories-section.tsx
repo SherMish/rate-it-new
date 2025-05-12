@@ -24,6 +24,29 @@ import {
   ChevronUp,
   ChevronDown,
   LucideIcon,
+  Shirt,
+  TabletSmartphone,
+  Home,
+  Pizza,
+  Dumbbell,
+  Baby,
+  HeartPulse,
+  Car,
+  PawPrint,
+  BookOpen,
+  Plane,
+  CreditCard,
+  Megaphone,
+  Building,
+  Scale,
+  Cpu,
+  Gift,
+  Printer,
+  Gem,
+  CalendarHeart,
+  Repeat,
+  Store,
+  Book,
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import Link from "next/link";
@@ -53,6 +76,29 @@ const Icons: Record<string, LucideIcon> = {
   Headphones,
   SearchIcon,
   Zap,
+  Shirt,
+  TabletSmartphone,
+  Home,
+  Pizza,
+  Dumbbell,
+  Baby,
+  HeartPulse,
+  Car,
+  PawPrint,
+  BookOpen,
+  Plane,
+  CreditCard,
+  Megaphone,
+  Building,
+  Scale,
+  Cpu,
+  Gift,
+  Printer,
+  Gem,
+  CalendarHeart,
+  Repeat,
+  Store,
+  Book,
 };
 
 export function CategoriesSection() {
@@ -61,21 +107,30 @@ export function CategoriesSection() {
     ? categoriesData.categories
     : categoriesData.categories.slice(0, 8);
 
+  // Debug statement to check for missing icons
+  const missingIcons = visibleCategories
+    .filter((category) => !(category.icon in Icons))
+    .map((category) => category.icon);
+
+  if (missingIcons.length > 0) {
+    console.warn("Missing icons:", missingIcons);
+  }
+
   return (
     <div className="py-16 pb-8 relative">
       <div className="container max-w-7xl mx-auto">
-        <div className="text-center mb-12">
+        {/* <div className="text-center mb-12">
           <h2 className="text-3xl font-bold mb-4 text-foreground">
-            חקור כלי בינה מלאכותית לפי קטגוריה
+            חקור לפי קטגוריה
           </h2>
           <p className="text-muted-foreground text-lg">
-            מצא את כלי הבינה המלאכותית המושלם לצרכים הספציפיים שלך
+            מצא את הביקורות הטובות ביותר עבור השירותים והמוצרים שמעניינים אותך
           </p>
-        </div>
+        </div> */}
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {visibleCategories.map((category) => {
-            const Icon = Icons[category.icon as keyof typeof Icons];
+            const Icon = Icons[category.icon as keyof typeof Icons] || Sparkles; // Fallback to Sparkles if icon not found
             return (
               <Link
                 key={category.id}

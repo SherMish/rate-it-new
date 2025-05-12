@@ -61,7 +61,7 @@ export function SearchSection() {
               variants={itemVariants}
               className="text-xl text-muted-foreground"
             >
-              פלטפורמה לדירוג וביקורת של חנויות ואתרים בישראל
+              פלטפורמה לדירוג וביקורת של חנויות אינטרנטיות, חברות ואתרים בישראל
             </motion.p>
           </div>
 
