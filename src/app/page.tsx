@@ -1,6 +1,5 @@
 export const revalidate = 200; // Update every 10 seconds
 
-
 import { useState, useRef, useEffect } from "react";
 import {
   Search,
@@ -41,16 +40,16 @@ import { RadarTrustContent } from "@/app/components/radar-trust-content";
 import { LatestToolsContent } from "@/app/components/latest-tools-content";
 
 const categories = [
-  { name: "Text Generation", icon: MessageSquare, count: 156 },
-  { name: "Image Generation", icon: ImageIcon, count: 89 },
-  { name: "Code Generation", icon: Code, count: 67 },
-  { name: "Audio Processing", icon: Music, count: 45 },
-  { name: "Video Generation", icon: Video, count: 34 },
-  { name: "Data Analysis", icon: Database, count: 78 },
-  { name: "Machine Learning", icon: Brain, count: 92 },
-  { name: "Creative Tools", icon: Palette, count: 123 },
-  { name: "Automation", icon: Bot, count: 56 },
-  { name: "General AI", icon: Sparkles, count: 145 },
+  { name: "יצירת טקסט", icon: MessageSquare, count: 156 },
+  { name: "יצירת תמונות", icon: ImageIcon, count: 89 },
+  { name: "יצירת קוד", icon: Code, count: 67 },
+  { name: "עיבוד אודיו", icon: Music, count: 45 },
+  { name: "יצירת וידאו", icon: Video, count: 34 },
+  { name: "ניתוח נתונים", icon: Database, count: 78 },
+  { name: "למידת מכונה", icon: Brain, count: 92 },
+  { name: "כלים יצירתיים", icon: Palette, count: 123 },
+  { name: "אוטומציה", icon: Bot, count: 56 },
+  { name: "בינה מלאכותית כללית", icon: Sparkles, count: 145 },
 ];
 
 interface ReviewDoc extends Document {
@@ -170,8 +169,9 @@ export const metadata: Metadata = {
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "WebSite",
-  name: "AI Tools Directory",
-  description: "Find and compare the best AI tools with authentic user reviews",
+  name: "ספריית כלי בינה מלאכותית",
+  description:
+    "מצא והשווה את כלי הבינה מלאכותית הטובים ביותר עם ביקורות אמיתיות",
   url: process.env.NEXT_PUBLIC_APP_URL,
   potentialAction: {
     "@type": "SearchAction",
@@ -183,9 +183,9 @@ const jsonLd = {
   },
   about: {
     "@type": "Thing",
-    name: "Artificial Intelligence Tools",
+    name: "כלי בינה מלאכותית",
     description:
-      "Directory of AI-powered software tools and applications with user reviews",
+      "ספריית כלים ואפליקציות מבוססי בינה מלאכותית עם ביקורות משתמשים",
   },
 };
 
@@ -199,7 +199,7 @@ export default async function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <main className="relative min-h-screen">
+      <main className="relative min-h-screen" dir="rtl">
         {/* Main background gradient */}
         <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,#3b82f615,transparent_70%),radial-gradient(ellipse_at_bottom,#6366f115,transparent_70%)] pointer-events-none" />
 
@@ -235,23 +235,26 @@ export default async function Home() {
           {/* Latest Tools Section */}
           <section className="py-12 bg-secondary/50 backdrop-blur-sm border-y border-border/50">
             <div className="container max-w-6xl mx-auto px-4">
-              <div className="grid lg:grid-cols-[400px,1fr] gap-12">
-                {/* Left Column - Content */}
-                <LatestToolsContent />
-
-                {/* Right Column - Cards */}
-                <div className="grid gap-6 md:grid-cols-2">
+              <div className="grid lg:grid-cols-[1fr,400px] gap-12">
+                {/* Right Column - Content (was Left) */}
+                <div className="grid gap-6 md:grid-cols-2 order-2 lg:order-1">
                   {latestTools.map((tool, index) => (
-                    <LatestToolCard 
-                      key={tool._id.toString()} 
-                      website={tool} 
+                    <LatestToolCard
+                      key={tool._id.toString()}
+                      website={tool}
                       index={index}
                     />
                   ))}
                 </div>
+
+                {/* Left Column - Cards (was Right) */}
+                <div className="order-1 lg:order-2">
+                  <LatestToolsContent />
+                </div>
               </div>
             </div>
           </section>
+
           {/* Marketing Section - Added px-4 for mobile padding */}
           <div className="px-4 sm:px-6 lg:px-8">
             <MarketingSection />
@@ -260,12 +263,16 @@ export default async function Home() {
           {/* TrustRadar Section */}
           <section className="py-24 relative overflow-hidden">
             <div className="container max-w-6xl mx-auto px-4">
-              <div className="grid lg:grid-cols-[1fr,400px] gap-12 items-center">
-                {/* Left Column - Content */}
-                <RadarTrustContent/>
+              <div className="grid lg:grid-cols-[400px,1fr] gap-12 items-center">
+                {/* Right Column - Visual (was Left) */}
+                <div className="order-2 lg:order-1">
+                  <RadarTrustVisual />
+                </div>
 
-                {/* Right Column - Visual */}
-                <RadarTrustVisual />
+                {/* Left Column - Content (was Right) */}
+                <div className="order-1 lg:order-2">
+                  <RadarTrustContent />
+                </div>
               </div>
             </div>
           </section>

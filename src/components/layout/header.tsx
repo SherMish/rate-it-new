@@ -14,8 +14,8 @@ import { useRouter, usePathname } from "next/navigation";
 
 const navigation = [
   // { name: "For Businesses", href: "/business" },
-  { name: "Blog", href: "/blog" },
-  { name: "About", href: "/about" },
+  { name: "בלוג", href: "/blog" },
+  { name: "אודות", href: "/about" },
 ];
 
 export function Header() {
@@ -44,7 +44,7 @@ export function Header() {
   else {
     return (
       <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <nav className="container mx-auto px-4" aria-label="Main navigation">
+        <nav className="container mx-auto px-4" aria-label="ניווט ראשי">
           {isBusinessRegister ? (
             <div className="flex h-16 items-center justify-center">
               {/* Only logo for business register page */}
@@ -60,7 +60,7 @@ export function Header() {
                     height={28}
                   />
                   <span className="text-sm font-medium text-muted-foreground border-border/50 mt-[11px]">
-                    Business
+                    עסקים
                   </span>
                 </div>
               </Link>
@@ -68,7 +68,7 @@ export function Header() {
           ) : (
             <div className="relative flex h-16 items-center justify-between gap-4">
               {/* Logo */}
-              <div className="flex items-center flex-shrink-0">
+              <div className="flex items-center flex-shrink-0 order-1">
                 <Link
                   href={pathname?.includes("/business") ? "/business" : "/"}
                   className="flex items-center hover:opacity-90 transition-opacity"
@@ -82,7 +82,7 @@ export function Header() {
                     />
                     {pathname?.includes("/business") && (
                       <span className="text-sm font-medium text-muted-foreground border-border/50 mt-[11px]">
-                        Business
+                        עסקים
                       </span>
                     )}
                   </div>
@@ -91,20 +91,20 @@ export function Header() {
 
               {/* Search Input - Desktop */}
               {showSearch && (
-                <div className="hidden md:flex flex-1 max-w-xl">
+                <div className="hidden md:flex flex-1 max-w-xl order-2">
                   <SearchInput onSearch={handleSearch} variant="header" />
                 </div>
               )}
 
               {/* Desktop Navigation */}
 
-              <div className="hidden md:flex md:items-center md:space-x-8">
+              <div className="hidden md:flex md:items-center md:space-x-0 md:space-x-reverse md:space-y-0 md:mr-8 order-3">
                 {isRegularSite &&
                   navigation.map((item) => (
                     <Link
                       key={item.name}
                       href={item.href}
-                      className="text-base font-medium text-muted-foreground transition-colors hover:text-foreground"
+                      className="text-base font-medium text-muted-foreground transition-colors hover:text-foreground mr-8"
                     >
                       {item.name}
                     </Link>
@@ -115,37 +115,28 @@ export function Header() {
                     href="/business"
                     className="inline-flex items-center gap-1 px-4 py-2 text-sm font-semibold text-white bg-primary rounded-full hover:bg-primary/90 transition-colors"
                   >
-                    For Businesses
+                    לעסקים
                   </Link>
                 ) : (
                   <Link
                     href="/"
                     className="text-base font-medium text-muted-foreground transition-colors hover:text-foreground"
                   >
-                    Consumer Site
+                    אתר צרכנים
                   </Link>
                 )}
 
                 {isBusinessHome && (
                   <Link
                     href="/business/register"
-                    className="inline-flex items-center gap-1 px-4 py-2 text-sm font-semibold text-white bg-primary rounded-full hover:bg-primary/90 transition-colors"
+                    className="inline-flex items-center gap-1 px-4 py-2 text-sm font-semibold text-white bg-primary rounded-full hover:bg-primary/90 transition-colors mr-4"
                   >
-                    Create free account
+                    צור חשבון חינם
                   </Link>
                 )}
 
-                {/* {session?.user && (
-                <Link
-                  href="/my-reviews"
-                  className="text-base font-medium text-muted-foreground transition-colors hover:text-foreground"
-                >
-                  My Reviews
-                </Link>
-              )} */}
-
                 {isRegularSite && (
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 mr-4">
                     {session?.user ? (
                       <UserNav
                         user={session.user}
@@ -157,7 +148,7 @@ export function Header() {
                         onClick={() => loginModal.onOpen()}
                         className="font-medium"
                       >
-                        Login
+                        התחברות
                       </Button>
                     )}
                   </div>
@@ -165,7 +156,7 @@ export function Header() {
               </div>
 
               {/* Mobile Actions */}
-              <div className="flex items-center gap-2 md:hidden">
+              <div className="flex items-center gap-2 md:hidden order-2">
                 {/* Search Icon */}
                 {showSearch && (
                   <Button
@@ -184,7 +175,7 @@ export function Header() {
                   size="icon"
                   className="relative h-10 w-10"
                   onClick={() => setIsOpen(!isOpen)}
-                  aria-label={isOpen ? "Close menu" : "Open menu"}
+                  aria-label={isOpen ? "סגור תפריט" : "פתח תפריט"}
                 >
                   {isOpen ? (
                     <X className="h-5 w-5" />
@@ -206,7 +197,7 @@ export function Header() {
           {/* Mobile Navigation */}
           {!isBusinessRegister && (
             <div className={cn("md:hidden", isOpen ? "block" : "hidden")}>
-              <div className="space-y-1 pb-3">
+              <div className="space-y-1 pb-3 text-right">
                 {isRegularSite &&
                   navigation.map((item) => (
                     <Link
@@ -225,7 +216,7 @@ export function Header() {
                     className="block rounded-md px-3 py-4 text-base font-medium text-primary hover:bg-muted/50 hover:text-primary/80 transition-colors"
                     onClick={() => setIsOpen(false)}
                   >
-                    For Businesses
+                    לעסקים
                   </Link>
                 ) : (
                   <Link
@@ -233,7 +224,7 @@ export function Header() {
                     className="block rounded-md px-3 py-4 text-base font-medium text-muted-foreground hover:bg-muted/50 hover:text-foreground transition-colors"
                     onClick={() => setIsOpen(false)}
                   >
-                    Consumer Site
+                    אתר צרכנים
                   </Link>
                 )}
 
@@ -243,7 +234,7 @@ export function Header() {
                     className="block rounded-md px-3 py-4 text-base font-medium text-primary hover:bg-muted/50 hover:text-primary/80 transition-colors"
                     onClick={() => setIsOpen(false)}
                   >
-                    Create free account
+                    צור חשבון חינם
                   </Link>
                 )}
 
@@ -253,7 +244,7 @@ export function Header() {
                     className="block rounded-md px-3 py-4 text-base font-medium text-muted-foreground hover:bg-muted/50 hover:text-foreground transition-colors"
                     onClick={() => setIsOpen(false)}
                   >
-                    My Reviews
+                    הביקורות שלי
                   </Link>
                 )}
 
@@ -273,7 +264,7 @@ export function Header() {
                         }}
                         className="px-0 w-full justify-start text-base font-medium text-muted-foreground hover:bg-muted/50 hover:text-foreground transition-colors"
                       >
-                        Login
+                        התחברות
                       </Button>
                     )}
                   </div>

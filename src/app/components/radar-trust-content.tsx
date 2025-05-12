@@ -18,7 +18,7 @@ export function RadarTrustContent({ isBusiness }: { isBusiness?: boolean }) {
 
   if (!isBusiness) {
     return (
-      <div ref={ref} className="space-y-6">
+      <div ref={ref} className="space-y-6 text-right">
         <motion.div
           initial="hidden"
           animate={isInView ? "visible" : "hidden"}
@@ -28,17 +28,14 @@ export function RadarTrustContent({ isBusiness }: { isBusiness?: boolean }) {
           <h2 className="text-3xl font-bold mb-4">
             <span className="text-primary">RadarTrust™</span>
             <br />
-            The AI Industry&apos;s Benchmark for Quality
+            סטנדרט האיכות של תעשיית הבינה המלאכותית
           </h2>
           <p className="text-muted-foreground text-lg leading-relaxed mb-6">
-            Our proprietary <strong>RadarTrust™</strong> score empowers
-            businesses and professionals to make data-driven decisions when
-            selecting AI tools. We analyze key factors like{" "}
-            <strong>
-              user feedback, innovation, reliability, and market adoption{" "}
-            </strong>
-            to ensure you invest in the most effective and trustworthy
-            solutions.
+            ציון ה-<strong>RadarTrust™</strong> הייחודי שלנו מאפשר לעסקים ואנשי
+            מקצוע לקבל החלטות מבוססות נתונים בבחירת כלי בינה מלאכותית. אנו
+            מנתחים גורמים מרכזיים כמו{" "}
+            <strong>משוב משתמשים, חדשנות, אמינות ואימוץ שוק </strong>
+            כדי להבטיח שתשקיעו בפתרונות היעילים והאמינים ביותר.
           </p>
         </motion.div>
 
@@ -46,29 +43,29 @@ export function RadarTrustContent({ isBusiness }: { isBusiness?: boolean }) {
           {[
             {
               icon: Star,
-              title: "User Reviews & Credibility",
+              title: "ביקורות משתמשים ואמינות",
               description:
-                "Authentic feedback and ratings from real users who have experienced the tools firsthand.",
+                "משוב אותנטי ודירוגים ממשתמשים אמיתיים שהתנסו בכלים באופן ישיר.",
               delay: 0.2,
             },
             {
               icon: Sparkles,
-              title: "Innovation & Technological Edge",
+              title: "חדשנות ויתרון טכנולוגי",
               description:
-                "Assessment of unique features, technological advancement, and problem-solving capabilities.",
+                "הערכה של תכונות ייחודיות, התקדמות טכנולוגית ויכולות פתרון בעיות.",
               delay: 0.4,
             },
             {
               icon: Shield,
-              title: "Reliability & Performance",
+              title: "אמינות וביצועים",
               description:
-                "A deep dive into uptime, support quality, and long-term stability, ensuring seamless business operations.",
+                "בחינה מעמיקה של זמן פעילות, איכות תמיכה ויציבות לטווח ארוך, המבטיחה פעילות עסקית חלקה.",
               delay: 0.6,
             },
           ].map((item, index) => (
             <motion.div
               key={index}
-              className="flex items-start gap-4"
+              className="flex items-start gap-4 flex-row-reverse"
               initial="hidden"
               animate={isInView ? "visible" : "hidden"}
               variants={fadeInUp}
@@ -77,7 +74,7 @@ export function RadarTrustContent({ isBusiness }: { isBusiness?: boolean }) {
               <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center mt-1">
                 <item.icon className="w-4 h-4 text-primary" />
               </div>
-              <div>
+              <div className="text-right">
                 <h3 className="text-lg font-semibold mb-1">{item.title}</h3>
                 <p className="text-muted-foreground">{item.description}</p>
               </div>
@@ -90,7 +87,7 @@ export function RadarTrustContent({ isBusiness }: { isBusiness?: boolean }) {
 
   // Business-Specific Content
   return (
-    <div ref={ref} className="space-y-6">
+    <div ref={ref} className="space-y-6 text-right">
       <motion.div
         initial="hidden"
         animate={isInView ? "visible" : "hidden"}
@@ -100,19 +97,17 @@ export function RadarTrustContent({ isBusiness }: { isBusiness?: boolean }) {
         <h2 className="text-3xl font-bold mb-4">
           <span className="text-primary">RadarTrust™</span>
           <br />
-          Build Trust, Gain Visibility, and Stand Out
+          בנה אמון, השג נראות ובלוט מהשאר
         </h2>
         <p className="text-muted-foreground text-lg leading-relaxed mb-6">
-          Claim your AI tool, establish credibility, and get recognized as a
-          trusted solution in the AI industry. <strong>RadarTrust™</strong> uses
-          advanced AI-driven analysis to evaluate tools based on{" "}
-          <strong>
-            user feedback, innovation, reliability, and market adoption
-          </strong>
-          , helping professionals discover and trust your solution.
-          <RadarTrustInfo> 
-            <span className="underline pl-2 cursor-pointer hover:text-primary hover:underline transition-colors ">
-              Learn more
+          תבע את הכלי שלך, בסס אמינות, וזכה להכרה כפתרון אמין בתעשיית הבינה
+          המלאכותית. <strong>RadarTrust™</strong> משתמש בניתוח מתקדם מבוסס בינה
+          מלאכותית להערכת כלים על בסיס{" "}
+          <strong>משוב משתמשים, חדשנות, אמינות ואימוץ שוק</strong>, המסייע לאנשי
+          מקצוע לגלות ולבטוח בפתרון שלך.
+          <RadarTrustInfo>
+            <span className="underline pr-2 cursor-pointer hover:text-primary hover:underline transition-colors ">
+              למד עוד
             </span>
           </RadarTrustInfo>
         </p>
@@ -122,36 +117,36 @@ export function RadarTrustContent({ isBusiness }: { isBusiness?: boolean }) {
         {[
           {
             icon: CheckCircle,
-            title: "Claim & Verify Your AI Tool",
+            title: "תבע ואמת את כלי הבינה המלאכותית שלך",
             description:
-              "Claim your listing to establish credibility and ensure accurate representation of your product.",
+              "תבע את הרישום שלך כדי לבסס אמינות ולהבטיח ייצוג מדויק של המוצר שלך.",
             delay: 0.2,
           },
           {
             icon: Star,
-            title: "Earn a TrustRadar™ Score",
+            title: "קבל ציון TrustRadar™",
             description:
-              "Showcase your AI tool's reliability with an official TrustRadar™ Score—trusted by professionals.",
+              "הצג את אמינות כלי הבינה המלאכותית שלך עם ציון TrustRadar™ רשמי - בו בוטחים אנשי מקצוע.",
             delay: 0.4,
           },
           {
             icon: Sparkles,
-            title: "Engage & Improve Your Score",
+            title: "שתף ושפר את הציון שלך",
             description:
-              "Encourage real user feedback and demonstrate continuous improvement to enhance your reputation.",
+              "עודד משוב אמיתי ממשתמשים והדגם שיפור מתמיד כדי לחזק את המוניטין שלך.",
             delay: 0.6,
           },
           {
             icon: Shield,
-            title: "Gain Market Recognition",
+            title: "השג הכרה בשוק",
             description:
-              "Stand out among competitors by positioning your AI tool in a trusted, curated marketplace.",
+              "בלוט מבין המתחרים באמצעות מיצוב כלי הבינה המלאכותית שלך בשוק אמין ומותאם.",
             delay: 0.8,
           },
         ].map((item, index) => (
           <motion.div
             key={index}
-            className="flex items-start gap-4"
+            className="flex items-start gap-4 flex-row-reverse"
             initial="hidden"
             animate={isInView ? "visible" : "hidden"}
             variants={fadeInUp}
@@ -160,7 +155,7 @@ export function RadarTrustContent({ isBusiness }: { isBusiness?: boolean }) {
             <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center mt-1">
               <item.icon className="w-4 h-4 text-primary" />
             </div>
-            <div>
+            <div className="text-right">
               <h3 className="text-lg font-semibold mb-1">{item.title}</h3>
               <p className="text-muted-foreground">{item.description}</p>
             </div>

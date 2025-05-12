@@ -61,14 +61,17 @@ export function LatestToolCard({ website, index }: LatestToolCardProps) {
                 {website.name}
               </h2>
             </div>
-            <div className="flex-1 min-w-0 space-y-3">
+            <div className="flex-1 min-w-0 space-y-3 text-right">
               <div>
                 <h2 className="hidden sm:block text-lg font-semibold text-zinc-50">
                   {website.name}
                 </h2>
                 <div className="flex flex-col gap-2">
                   {website.reviewCount > 0 && (
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-3 justify-end">
+                      <span className="text-sm text-zinc-400">
+                        {website.averageRating.toFixed(1)}
+                      </span>
                       <div className="flex items-center">
                         {[...Array(5)].map((_, i) => (
                           <Star
@@ -81,25 +84,22 @@ export function LatestToolCard({ website, index }: LatestToolCardProps) {
                           />
                         ))}
                       </div>
-                      <span className="text-sm text-zinc-400">
-                        {website.averageRating.toFixed(1)}
-                      </span>
                     </div>
                   )}
                   {website.radarTrust && (
-                    <div className="flex items-center gap-1 text-primary">
-                      <RadarIcon className="w-4 h-4" />
+                    <div className="flex items-center gap-1 text-primary justify-end">
                       <span className="text-sm font-medium">
+                        <span className="mr-1">RadarTrust™</span>
                         {website.radarTrust.toFixed(1)}
-                        <span className="ml-1">RadarTrust™</span>
                       </span>
+                      <RadarIcon className="w-4 h-4" />
                     </div>
                   )}
                 </div>
               </div>
 
               {website.shortDescription && (
-                <p className="text-sm text-zinc-400 line-clamp-2">
+                <p className="text-sm text-zinc-400 line-clamp-2 text-right">
                   {website.shortDescription}
                 </p>
               )}

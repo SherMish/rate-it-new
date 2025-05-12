@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     default: "AI-Radar",
     template: "%s | AI-Radar",
   },
-  description: "Find and review AI tools",
+  description: "מצא וסקור כלי בינה מלאכותית",
   icons: {
     icon: [
       {
@@ -42,9 +42,8 @@ export default async function RootLayout({
 }) {
   const isProduction = process.env.NEXT_PUBLIC_IS_PRODUCTION === "true";
 
-
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="he" dir="rtl" suppressHydrationWarning>
       <head>
         {isProduction && GA_TRACKING_ID && (
           <>

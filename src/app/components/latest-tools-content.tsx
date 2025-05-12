@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
@@ -7,7 +7,7 @@ import Link from "next/link";
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 }
+  visible: { opacity: 1, y: 0 },
 };
 
 export function LatestToolsContent() {
@@ -15,7 +15,7 @@ export function LatestToolsContent() {
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <div ref={ref} className="space-y-6">
+    <div ref={ref} className="space-y-6 text-right">
       <motion.div
         initial="hidden"
         animate={isInView ? "visible" : "hidden"}
@@ -23,17 +23,16 @@ export function LatestToolsContent() {
         variants={fadeInUp}
       >
         <h2 className="text-3xl font-bold mb-4">
-          Stay ahead.
+          היה בחזית.
           <br />
-          Optimize workflows.
+          ייעל תהליכי עבודה.
           <br />
-          Scale smarter.
+          צמח בחוכמה.
         </h2>
         <p className="text-muted-foreground text-lg leading-relaxed">
-          Unlock the latest AI solutions designed to drive
-          efficiency, innovation, and growth. From automation to
-          advanced analytics, explore cutting-edge tools that can
-          give your business a competitive edge.
+          שחרר את פתרונות הבינה המלאכותית החדשניים שעוצבו כדי לקדם יעילות,
+          חדשנות וצמיחה. מאוטומציה ועד ניתוח מתקדם, חקור כלים מתקדמים שיכולים
+          להעניק לעסק שלך יתרון תחרותי.
         </p>
       </motion.div>
 
@@ -44,17 +43,16 @@ export function LatestToolsContent() {
         variants={fadeInUp}
       >
         <p className="text-muted-foreground text-lg">
-          Want to feature your AI solution?{" "}
+          רוצה להציג את פתרון הבינה המלאכותית שלך?{" "}
           <Link
             href="/business/register"
             className="text-primary hover:text-primary/90 hover:underline transition-colors"
           >
-            List it today for free
+            רשום אותו היום בחינם
           </Link>{" "}
-          and reach professionals looking for the next big
-          innovation.
+          והגיע למקצוענים המחפשים את החדשנות הבאה.
         </p>
       </motion.div>
     </div>
   );
-} 
+}

@@ -112,10 +112,10 @@ export function SearchInput({
           <div className="relative flex-1">
             <Input
               type="search"
-              placeholder="Search for an AI tool"
+              placeholder="חפש כלי בינה מלאכותית"
               className={cn(
-                "w-full bg-secondary/50 border-secondary-foreground/10 gradient-border",
-                variant === "default" ? "h-12 pl-12 text-lg" : "h-10 pl-10"
+                "w-full bg-secondary/50 border-secondary-foreground/10 gradient-border text-right",
+                variant === "default" ? "h-12 pr-12 text-lg" : "h-10 pr-10"
               )}
               value={query}
               onChange={(e) => {
@@ -128,7 +128,7 @@ export function SearchInput({
             <Search
               className={cn(
                 "absolute top-1/2 -translate-y-1/2 text-muted-foreground",
-                variant === "default" ? "left-4 h-5 w-5" : "left-3 h-4 w-4"
+                variant === "default" ? "right-4 h-5 w-5" : "right-3 h-4 w-4"
               )}
             />
           </div>
@@ -142,7 +142,7 @@ export function SearchInput({
                 : "bg-transparent gradient-border hidden sm:inline-flex"
             )}
           >
-            Search
+            חיפוש
           </Button>
         </div>
       </form>
@@ -172,8 +172,10 @@ export function SearchInput({
                     onClick={clearSearch}
                   >
                     <div className="flex flex-col items-start">
-                      <div className="font-medium">{suggestion.name}</div>
-                      <div className="text-sm text-muted-foreground">
+                      <div className="font-medium text-right w-full">
+                        {suggestion.name}
+                      </div>
+                      <div className="text-sm text-muted-foreground text-right w-full">
                         {suggestion.url}
                       </div>
                     </div>
@@ -191,8 +193,8 @@ export function SearchInput({
                   className="flex items-center p-3 rounded-md hover:bg-muted/50 hover:text-primary transition-colors text-primary"
                   onClick={clearSearch}
                 >
-                  <div className="font-medium">
-                    Can&apos;t find the tool? Add it now in seconds!
+                  <div className="font-medium text-right w-full">
+                    לא מצאת את הכלי? הוסף אותו עכשיו בשניות!
                   </div>
                 </Link>
               </div>

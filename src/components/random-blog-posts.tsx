@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Card } from "@/components/ui/card";
-import { CalendarDays, Clock, ArrowRight } from "lucide-react";
+import { CalendarDays, Clock, ArrowRight, ArrowLeft } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 import { getRandomBlogPosts } from "@/lib/actions/blog";
 
@@ -11,7 +11,7 @@ export async function RandomBlogPosts() {
   if (posts.length === 0) return null;
 
   return (
-    <section className="relative py-20">
+    <section className="relative py-20" dir="rtl">
       {/* Background effects */}
       <div className="absolute inset-0 bg-[#0A0F1F]/40" />
       <div className="absolute inset-0 bg-[linear-gradient(110deg,#2563eb10,#9333ea10,#2563eb10)] backdrop-blur-[100px]" />
@@ -22,11 +22,11 @@ export async function RandomBlogPosts() {
       <div className="relative container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-4xl font-semibold">
-            Trending AI Topics
+            נושאי בינה מלאכותית מובילים
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto my-2">
-            Find AI tool reviews, news, and expert insights to navigate the AI
-            landscape
+            מצא ביקורות על כלי בינה מלאכותית, חדשות ותובנות מומחים לניווט בנוף
+            הבינה המלאכותית
           </p>
         </div>
 
@@ -46,37 +46,37 @@ export async function RandomBlogPosts() {
                 )}
                 <div className="p-6">
                   {/* Category & Reading Time */}
-                  <div className="flex items-center gap-4 text-sm text-muted-foreground mb-3">
+                  <div className="flex items-center justify-end gap-4 text-sm text-muted-foreground mb-3">
+                    <div className="flex items-center gap-1">
+                      <span>{post.estimatedReadTime} דקות קריאה</span>
+                      <Clock className="w-4 h-4" />
+                    </div>
                     {post.category && (
                       <span className="bg-primary/10 text-primary px-2 py-1 rounded-md">
                         {post.category}
                       </span>
                     )}
-                    <div className="flex items-center gap-1">
-                      <Clock className="w-4 h-4" />
-                      <span>{post.estimatedReadTime} min read</span>
-                    </div>
                   </div>
 
                   {/* Title & Excerpt */}
-                  <h3 className="text-xl font-semibold mb-2 group-hover:text-primary transition-colors">
+                  <h3 className="text-xl font-semibold mb-2 group-hover:text-primary transition-colors text-right">
                     {post.title}
                   </h3>
-                  <p className="text-muted-foreground mb-4 line-clamp-2">
+                  <p className="text-muted-foreground mb-4 line-clamp-2 text-right">
                     {post.excerpt}
                   </p>
 
                   {/* Date & Read More */}
                   <div className="flex items-center justify-between mt-auto pt-4 border-t border-border/50">
+                    <span className="text-primary flex items-center gap-1 text-sm">
+                      <ArrowLeft className="w-4 h-4" /> קרא עוד
+                    </span>
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <CalendarDays className="w-4 h-4" />
                       <time dateTime={post.publishedAt}>
                         {formatDate(post.publishedAt)}
                       </time>
+                      <CalendarDays className="w-4 h-4" />
                     </div>
-                    <span className="text-primary flex items-center gap-1 text-sm">
-                      Read more <ArrowRight className="w-4 h-4" />
-                    </span>
                   </div>
                 </div>
               </Card>
@@ -90,8 +90,8 @@ export async function RandomBlogPosts() {
             href="/blog"
             className="inline-flex items-center gap-2 bg-primary/10 hover:bg-primary/20 text-primary px-6 py-3 rounded-lg font-medium transition-colors"
           >
-            View All Posts
-            <ArrowRight className="w-4 h-4" />
+            צפה בכל הפוסטים
+            <ArrowLeft className="w-4 h-4" />
           </Link>
         </div>
       </div>

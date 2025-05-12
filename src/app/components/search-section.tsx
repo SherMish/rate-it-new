@@ -49,19 +49,20 @@ export function SearchSection() {
               variants={itemVariants}
               className="text-4xl md:text-6xl text-white font-semibold font-medium tracking-tight"
             >
-              Find AI you cann{" "}
+              מצא בינה מלאכותית{" "}
               <span className="relative inline-block">
                 <span className="relative bg-clip-text via-primary ">
-                  trust
+                  אמינה
                 </span>
-                <span className="absolute -bottom-1 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-primary to-transparent" />
+                <span className="absolute -bottom-1 right-0 left-0 h-[2px] bg-gradient-to-l from-transparent via-primary to-transparent" />
               </span>
             </motion.h1>
             <motion.p
               variants={itemVariants}
               className="text-xl text-muted-foreground"
             >
-              Explore the best AI tools, rated by real users.
+              חקור את כלי הבינה המלאכותית הטובים ביותר, מדורגים על ידי משתמשים
+              אמיתיים.
             </motion.p>
           </div>
 
@@ -76,7 +77,7 @@ export function SearchSection() {
             <Link href="/tool/new" className="group">
               <div className="text-muted-foreground hover:text-primary transition-colors">
                 <span className="text-sm">
-                  Missing an AI tool? Add it in seconds!
+                  חסר כלי בינה מלאכותית? הוסף אותו בשניות!
                 </span>
               </div>
             </Link>

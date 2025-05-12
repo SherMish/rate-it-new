@@ -6,7 +6,7 @@ import { Card } from "@/components/ui/card";
 
 export function MarketingSection() {
   const handleExploreClick = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
@@ -14,11 +14,11 @@ export function MarketingSection() {
       <div className="container max-w-6xl mx-auto">
         <div className="text-center mb-16 space-y-4">
           <h2 className="text-4xl font-semibold">
-            Real Reviews. Real Insights. Choose AI Tools With Confidence.
+            ביקורות אמיתיות. תובנות אמיתיות. בחר כלי בינה מלאכותית בביטחון.
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            All reviews on AI-Radar are credible, unbiased, and verified for authenticity. 
-            No filtering or manipulation—just real feedback from real users.
+            כל הביקורות ב-AI-Radar הן אמינות, אובייקטיביות ומאומתות לאותנטיות.
+            ללא סינון או מניפולציה - רק משוב אמיתי ממשתמשים אמיתיים.
           </p>
         </div>
 
@@ -30,7 +30,8 @@ export function MarketingSection() {
               </div>
               <h3 className="text-lg font-semibold">Credible Reviews</h3>
               <p className="text-muted-foreground">
-                Each review is backed by user verification and proof, ensuring trustworthy insights.
+                Each review is backed by user verification and proof, ensuring
+                trustworthy insights.
               </p>
             </div>
           </Card>
@@ -42,7 +43,8 @@ export function MarketingSection() {
               </div>
               <h3 className="text-lg font-semibold">Unbiased Platform</h3>
               <p className="text-muted-foreground">
-                AI-Radar doesn&apos;t filter or manipulate reviews—your decision is based on real-world experiences.
+                AI-Radar doesn&apos;t filter or manipulate reviews—your decision
+                is based on real-world experiences.
               </p>
             </div>
           </Card>
@@ -54,15 +56,16 @@ export function MarketingSection() {
               </div>
               <h3 className="text-lg font-semibold">Find the Best Fit</h3>
               <p className="text-muted-foreground">
-                Easily compare AI tools and make confident choices for your specific needs.
+                Easily compare AI tools and make confident choices for your
+                specific needs.
               </p>
             </div>
           </Card>
         </div>
 
         <div className="text-center">
-          <Button 
-            size="lg" 
+          <Button
+            size="lg"
             className="gradient-button"
             onClick={handleExploreClick}
           >
@@ -72,4 +75,4 @@ export function MarketingSection() {
       </div>
     </div>
   );
-} 
+}
