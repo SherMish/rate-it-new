@@ -54,7 +54,7 @@ export function Header() {
               >
                 <div className="flex items-center gap-2">
                   <Image
-                    src="/logo.png"
+                    src="/logo_new.svg"
                     alt="AI-Radar"
                     width={150}
                     height={28}
@@ -75,7 +75,7 @@ export function Header() {
                 >
                   <div className="flex items-center gap-2">
                     <Image
-                      src="/logo.png"
+                      src="/logo_new.svg"
                       alt="AI-Radar"
                       width={150}
                       height={28}

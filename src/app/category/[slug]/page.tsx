@@ -77,29 +77,28 @@ export default async function CategoryPage({ params }: PageProps) {
   ) as LucideIcon;
 
   return (
-    <div className="relative min-h-screen bg-background">
-      {/* Background effects */}
-      <div className="fixed inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:44px_44px] pointer-events-none" />
-      <div className="fixed inset-0 bg-gradient-to-tr from-blue-500/5 via-purple-500/5 to-pink-500/5 pointer-events-none" />
+    <div className="relative min-h-screen bg-background" dir="rtl">
+      {/* Background effects - match main page */}
+      <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,#3b82f620,transparent_70%),radial-gradient(ellipse_at_bottom,#6366f115,transparent_70%)] pointer-events-none" />
 
       <div className="relative container max-w-4xl mx-auto sm:px-4 py-8">
         <div className="mb-4">
           <Link
             href="/"
-            className="inline-flex items-center text-sm text-muted-foreground hover:text-white transition-colors"
+            className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors"
           >
-            <ChevronLeft className="w-4 h-4 mr-1" />
+            <ChevronLeft className="w-4 h-4 ml-1" />
             חזרה לעמוד הראשי
           </Link>
         </div>
 
-        <div className="rounded-lg border border-border/50 bg-secondary/50 backdrop-blur-sm">
-          <div className="p-6 border-b border-border/50">
+        <div className="rounded-lg border border-border bg-white shadow-sm">
+          <div className="p-6 border-b border-border">
             <div className="flex items-center gap-3 mb-2">
               <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
                 <IconComponent className="w-5 h-5 text-primary" />
               </div>
-              <h1 className="text-3xl font-bold">
+              <h1 className="text-3xl font-bold text-foreground">
                 <span>{category.name}</span>
               </h1>
             </div>
@@ -113,7 +112,8 @@ export default async function CategoryPage({ params }: PageProps) {
                   אופס, נראה שאין עדיין עסקים בקטגוריה שנבחרה :(
                 </p>
                 <p className="text-muted-foreground mb-8">
-                  אבל הסירו דאגה מליבכם, אתם יכולים להיות הראשונים שיוסיפו עסק בקטגוריה!
+                  אבל הסירו דאגה מליבכם, אתם יכולים להיות הראשונים שיוסיפו עסק
+                  בקטגוריה!
                 </p>
                 <Link href="/tool/new">
                   <Button className="gradient-button">להוספה</Button>
@@ -132,13 +132,13 @@ export default async function CategoryPage({ params }: PageProps) {
 
                 <div className="mt-8 text-center">
                   <p className="text-muted-foreground mb-4">
-                    Can&apos;t find the tool you&apos;re looking for?
+                    לא מצאת את העסק שאתה מחפש?
                   </p>
                   <Link
                     href="/tool/new"
                     className="text-primary hover:text-primary/90 transition-colors"
                   >
-                    Add it now in seconds →
+                    הוסף אותו עכשיו בשניות ←
                   </Link>
                 </div>
               </>

@@ -139,7 +139,7 @@ export function SearchInput({
             className={cn(
               variant === "default"
                 ? "h-12 w-full sm:w-[120px] gradient-button"
-                : "bg-transparent gradient-border hidden sm:inline-flex"
+                : " gradient-border hidden sm:inline-flex"
             )}
           >
             חיפוש
