@@ -10,12 +10,14 @@ import { useRouter } from "next/navigation";
 
 interface DomainVerificationFormProps {
   websiteUrl: string;
+  businessName: string;
   onComplete: () => void;
   onBack: () => void;
 }
 
 export function DomainVerificationForm({
   websiteUrl,
+  businessName,
   onComplete,
   onBack,
 }: DomainVerificationFormProps) {
@@ -53,7 +55,7 @@ export function DomainVerificationForm({
         })
       );
 
-      await sendVerificationEmail(email, websiteUrl);
+      await sendVerificationEmail(email, websiteUrl, businessName);
       setAttempts((prev) => prev + 1);
       setEmailSent(true);
     } catch (error) {

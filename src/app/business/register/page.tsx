@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { LoginModal } from "@/components/auth/login-modal";
 import { WebsiteRegistrationForm } from "@/components/business/registration/WebsiteForm";
@@ -16,6 +16,7 @@ import { toast } from "@/components/ui/use-toast";
 import { verifyDomain as verifyDomainAction } from "@/app/actions/verification";
 
 export default function BusinessRegistration() {
+  const router = useRouter();
   const { data: session, status } = useSession();
   const searchParams = useSearchParams();
   const [step, setStep] = useState(() => {
@@ -51,11 +52,11 @@ export default function BusinessRegistration() {
   useEffect(() => {
     const verifyToken = async () => {
       const token = searchParams?.get("token");
-      console.log("Token from URL:", token);
       if (token && step === 4) {
         try {
           const result = await verifyDomainAction(token);
-          setVerifiedWebsiteUrl(result.websiteUrl);
+          if (!result.success) setVerifiedWebsiteUrl(null);
+          else setVerifiedWebsiteUrl(result.websiteUrl);
           toast({
             title: "Success",
             description: "Your domain ownership has been verified.",
@@ -75,8 +76,10 @@ export default function BusinessRegistration() {
       }
     };
 
-    verifyToken();
-  }, [searchParams, step]);
+    if (!verifiedWebsiteUrl) {
+      verifyToken();
+    }
+  }, []);
 
   if (status === "loading") {
     return <LoadingSpinner />;
@@ -196,16 +199,24 @@ export default function BusinessRegistration() {
             {session && step === 3 && (
               <DomainVerificationForm
                 websiteUrl={formData.websiteUrl}
+                businessName={formData.businessName}
                 onComplete={() => setStep(4)}
                 onBack={() => setStep(2)}
               />
             )}
 
             {/* Step 4: Pricing */}
-            {session && step === 4 && (
+            {session && step === 4 && verifiedWebsiteUrl && (
               <PricingSection
                 websiteUrl={verifiedWebsiteUrl || formData.websiteUrl}
               />
+            )}
+
+            {session && step === 4 && !verifiedWebsiteUrl && (
+              <div className="text-center">
+                Oops, something went wrong.
+                <Button onClick={() => router.push("/")}>Go to homepage</Button>
+              </div>
             )}
           </CardContent>
         </Card>
