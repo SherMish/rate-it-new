@@ -8,7 +8,11 @@ import Website from "@/lib/models/Website";
 import { generateToken } from "@/lib/utils";
 import { sendEmail } from "@/lib/email";
 
-export async function sendVerificationEmail(email: string, websiteUrl: string) {
+export async function sendVerificationEmail(
+  email: string,
+  websiteUrl: string,
+  businessName: string
+) {
   try {
     await connectDB();
 
@@ -29,6 +33,7 @@ export async function sendVerificationEmail(email: string, websiteUrl: string) {
             token: verificationToken,
             expires: expires,
             websiteUrl: websiteUrl,
+            businessName: businessName,
           },
         },
       },
@@ -79,6 +84,13 @@ export async function verifyDomain(token: string) {
       "verification.expires": { $gt: new Date() },
     });
 
+    //check if its the current logged in user
+    const session = await getServerSession(authOptions);
+    const userId = session?.user?.id;
+    if (user?.id !== userId) {
+      throw new Error("User mismatch! token doesnt belong");
+    }
+
     console.log("Found user:", user ? "Yes" : "No");
 
     if (!user) {
@@ -86,7 +98,7 @@ export async function verifyDomain(token: string) {
     }
 
     const websiteUrl = user.verification.websiteUrl;
-    console.log("Website URL:", websiteUrl);
+    const businessName = user.verification.businessName;
 
     // Clean the URL to match storage format
     const cleanUrl = websiteUrl
@@ -98,27 +110,25 @@ export async function verifyDomain(token: string) {
     console.log("Clean URL:", cleanUrl);
 
     // Update website and user only if not already verified
-    if (!user.isVerifiedWebsiteOwner) {
-      const website = await Website.findOneAndUpdate(
-        { url: cleanUrl },
-        {
-          $set: {
-            url: cleanUrl,
-            isVerified: true,
-            owner: user._id,
-            verifiedAt: new Date(),
-          },
+    // if (!user.isVerifiedWebsiteOwner) {
+    const website = await Website.findOneAndUpdate(
+      { url: cleanUrl },
+      {
+        $set: {
+          url: cleanUrl,
+          isVerified: true,
+          owner: user._id,
+          verifiedAt: new Date(),
+          name: businessName,
         },
-        { upsert: true, new: true }
-      );
-    }
+      },
+      { upsert: true, new: true }
+    );
+    // }
     await User.findByIdAndUpdate(user._id, {
       $set: {
         isWebsiteOwner: true,
         isVerifiedWebsiteOwner: true,
-      },
-      $unset: {
-        verification: 1,
       },
     });
 
