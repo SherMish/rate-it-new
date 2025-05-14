@@ -60,7 +60,7 @@ export function Header() {
                     height={28}
                   />
                   <span className="text-sm font-medium text-muted-foreground border-border/50 mt-[11px]">
-                    עסקים
+                    לעסקים
                   </span>
                 </div>
               </Link>
@@ -82,7 +82,7 @@ export function Header() {
                     />
                     {pathname?.includes("/business") && (
                       <span className="text-sm font-medium text-muted-foreground border-border/50 mt-[11px]">
-                        עסקים
+                        לעסקים
                       </span>
                     )}
                   </div>

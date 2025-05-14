@@ -11,10 +11,12 @@ import {
   Bot,
   Radar as RadarIcon,
   Star,
+  ChevronLeft,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
+import Link from "next/link";
 import { AnimatedWord } from "@/components/ui/animated-word";
 import { Card } from "@/components/ui/card";
 import { fetchLatestWebsites } from "@/app/actions/website";
@@ -28,74 +30,70 @@ import { RadarTrustVisual } from "../components/radar-trust-visual";
 
 const benefits = [
   {
-    title: "Boost Visibility",
+    title: "הגדילו את החשיפה",
     description:
-      "Get discovered by professionals and businesses actively looking for AI solutions",
+      "גלו על ידי לקוחות פוטנציאליים המחפשים באופן פעיל עסקים כמו שלכם",
     icon: Search,
   },
   {
-    title: "Build Trust",
-    description:
-      "Collect and display verified user reviews to enhance credibility",
+    title: "בנו אמון",
+    description: "אספו והציגו ביקורות משתמשים מאומתות כדי לחזק את האמינות שלכם",
     icon: CheckCircle2,
   },
   {
-    title: "Engage Users",
-    description:
-      "Respond to reviews, showcase updates, and interact with potential customers",
+    title: "פנו ללקוחות",
+    description: "הגיבו לביקורות, הציגו עדכונים, ותקשרו עם לקוחות פוטנציאליים",
     icon: ArrowRight,
   },
   {
-    title: "Data & Insights",
-    description:
-      "Gain access to analytics on user engagement, market trends, and competitors",
+    title: "נתונים ותובנות",
+    description: "קבלו גישה לאנליטיקות על מעורבות משתמשים, מגמות שוק ומתחרים",
     icon: ArrowRight,
   },
 ];
 
 const steps = [
   {
-    title: "Claim Your AI Tool",
-    description: "Verify your ownership and update your profile",
+    title: "הצהירו על העסק שלכם",
+    description: "אמתו את הבעלות שלכם ועדכנו את הפרופיל שלכם",
   },
   {
-    title: "Optimize Your Listing",
-    description: "Add key details, features, and pricing to attract users",
+    title: "שפרו את הרישום שלכם",
+    description: "הוסיפו פרטים חשובים, תכונות ומחירים כדי למשוך משתמשים",
   },
   {
-    title: "Get Reviews & Feedback",
+    title: "קבלו ביקורות ומשוב",
+    description: "עודדו משתמשים להשאיר ביקורות כדי לשפר את האמון והאמינות",
+  },
+  {
+    title: "עקבו אחר ביצועים",
     description:
-      "Encourage users to leave reviews to improve trust and credibility",
-  },
-  {
-    title: "Monitor Performance",
-    description:
-      "Track engagement, user feedback, and market trends through our analytics dashboard",
+      "עקבו אחר מעורבות, משוב משתמשים ומגמות שוק באמצעות לוח המחוונים שלנו",
   },
 ];
 
 const trustedCompanies = [
-  { name: "OpenAI", logo: "O" },
-  { name: "Anthropic", logo: "A" },
-  { name: "Midjourney", logo: "M" },
-  { name: "Jasper", logo: "J" },
-  { name: "Stability AI", logo: "S" },
-  { name: "Hugging Face", logo: "H" },
+  { name: "עסק א'", logo: "א" },
+  { name: "עסק ב'", logo: "ב" },
+  { name: "עסק ג'", logo: "ג" },
+  { name: "עסק ד'", logo: "ד" },
+  { name: "עסק ה'", logo: "ה" },
+  { name: "עסק ו'", logo: "ו" },
 ];
 
 const testimonials = [
   {
     quote:
-      "AI-Radar has been instrumental in helping us understand our users&apos; needs and improve our product. The insights we&apos;ve gained are invaluable.",
-    author: "Sarah Chen",
-    role: "Product Lead at TechAI",
+      "הפלטפורמה הייתה כלי חיוני בעזרה לנו להבין את צרכי הלקוחות שלנו ולשפר את המוצר שלנו. התובנות שהשגנו הן ללא תחליף.",
+    author: "שרה כהן",
+    role: "מנהלת מוצר בחברת TechBiz",
     image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330",
   },
   {
     quote:
-      "The quality of feedback and the engagement from the AI-Radar community has exceeded our expectations. It&apos;s become an essential part of our growth strategy.",
-    author: "Michael Rodriguez",
-    role: "CEO of AITools Pro",
+      "איכות המשוב והמעורבות מהקהילה עלתה על הציפיות שלנו. זה הפך לחלק חיוני באסטרטגיית הצמיחה שלנו.",
+    author: "מיכאל רוזנברג",
+    role: 'מנכ"ל BusinessPro',
     image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e",
   },
 ];
@@ -180,7 +178,7 @@ function GrowthIndicator({
 export default function BusinessPage() {
   const router = useRouter();
   const [latestTools, setLatestTools] = useState<Tool[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setIsLoading] = useState(true);
   const [websiteUrl, setWebsiteUrl] = useState("");
 
   useEffect(() => {
@@ -209,29 +207,29 @@ export default function BusinessPage() {
         setLatestTools([
           {
             _id: "1",
-            name: "ChatGPT",
-            url: "chat.openai.com",
+            name: "עסק לדוגמה 1",
+            url: "example-business1.co.il",
             shortDescription:
-              "Advanced language model for natural conversations and content creation",
+              "עסק מוביל בתחום עם שירות איכותי ומחירים תחרותיים",
             averageRating: 4.8,
             reviewCount: 1250,
             radarTrust: 9.2,
-            businessModel: "SaaS",
+            businessModel: "פרימיום",
           },
           {
             _id: "2",
-            name: "Midjourney",
-            url: "midjourney.com",
+            name: "עסק לדוגמה 2",
+            url: "example-business2.co.il",
             shortDescription:
-              "AI-powered image generation from text descriptions",
+              "מתמחים במתן פתרונות יצירתיים ומותאמים אישית ללקוחות",
             averageRating: 4.6,
             reviewCount: 890,
             radarTrust: 8.9,
-            businessModel: "SaaS",
+            businessModel: "מנוי חודשי",
           },
         ]);
       } finally {
-        setLoading(false);
+        setIsLoading(false);
       }
     };
 
@@ -252,40 +250,43 @@ export default function BusinessPage() {
   };
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen" dir="rtl">
+      {/* Background effects - match main page */}
+      <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,#3b82f620,transparent_70%),radial-gradient(ellipse_at_bottom,#6366f115,transparent_70%)] pointer-events-none" />
+
       {/* Hero Section */}
       <section className="relative">
         <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,#3b82f615,transparent_70%),radial-gradient(ellipse_at_bottom,#6366f115,transparent_70%)] pointer-events-none" />
         <div className="relative container mx-auto px-4 py-24">
           <div className="grid md:grid-cols-2 gap-12 items-center">
-            {/* Left Column - Content */}
-            <div className="text-left space-y-8">
+            {/* Right Column - Content */}
+            <div className="text-right space-y-8" dir="rtl">
               <h1 className="text-4xl md:text-5xl font-bold">
-                <AnimatedWord /> <br /> Your AI Business with AI-Radar
+                שדרגו את <AnimatedWord /> <br /> של העסק שלכם בעזרת רייט-איט
               </h1>
               <p className="text-xl text-muted-foreground">
-                Thousands of businesses and professionals use AI-Radar to
-                discover AI tools. Make sure they find yours.
+              קבלו שליטה על איך הלקוחות רואים אתכם – הצטרפו והתחילו לבנות מוניטין חיובי.
+
               </p>
               <Button
                 size="lg"
                 className="gradient-button"
                 onClick={() => router.push("/business/register")}
               >
-                Get Started for Free
-                <ArrowRight className="ml-2 h-5 w-5" />
+                הירשמו בחינם עכשיו
+                <ArrowRight className="mr-2 h-5 w-5" />
               </Button>
             </div>
 
-            {/* Right Column - Graphic */}
+            {/* Left Column - Graphic */}
             <div className="relative aspect-square md:aspect-auto md:h-[500px] rounded-lg overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-secondary/10 backdrop-blur-sm border border-border/50 rounded-lg">
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="relative w-full max-w-[90%] md:max-w-[80%] aspect-square">
                     {/* Floating Elements */}
-                    <div className="absolute top-0 left-[10%] w-20 h-20 bg-primary/20 rounded-lg animate-float-diagonal" />
-                    <div className="absolute top-[20%] right-[10%] w-16 h-16 bg-secondary/20 rounded-full animate-float-right" />
-                    <div className="absolute bottom-[20%] left-[20%] w-24 h-24 bg-blue-500/20 rounded-lg rotate-45 animate-float-left" />
+                    <div className="absolute top-0 right-[10%] w-20 h-20 bg-primary/20 rounded-lg animate-float-diagonal" />
+                    <div className="absolute top-[20%] left-[10%] w-16 h-16 bg-secondary/20 rounded-full animate-float-right" />
+                    <div className="absolute bottom-[20%] right-[20%] w-24 h-24 bg-blue-500/20 rounded-lg rotate-45 animate-float-left" />
 
                     {/* Central Element - Adjust sizing for mobile */}
                     <div className="absolute inset-[10%] md:inset-[20%] bg-background/50 backdrop-blur-xl rounded-2xl border border-border/50 shadow-2xl p-4 md:p-6">
@@ -297,12 +298,12 @@ export default function BusinessPage() {
                               <Bot className="w-4 h-4 md:w-5 md:h-5 text-primary absolute group-hover:opacity-0 transition-opacity" />
                               <Sparkles className="w-4 h-4 md:w-5 md:h-5 text-primary absolute opacity-0 group-hover:opacity-100 transition-opacity" />
                             </div>
-                            <div>
+                            <div className="text-right">
                               <div className="font-medium text-sm md:text-base">
-                                Your AI Tool
+                                העסק שלכם
                               </div>
                               <div className="text-xs md:text-sm text-muted-foreground">
-                                Last 30 days
+                                30 הימים האחרונים
                               </div>
                             </div>
                           </div>
@@ -311,22 +312,26 @@ export default function BusinessPage() {
                         {/* Stats Grid - Adjust spacing and text sizes for mobile */}
                         <div className="grid grid-cols-2 gap-2 md:gap-4 mb-4 md:mb-6">
                           <div className="bg-background/50 rounded-lg p-2 md:p-3">
-                            <div className="text-xs md:text-sm text-muted-foreground">
-                              Page Views
+                            <div className="text-xs md:text-sm text-muted-foreground text-right">
+                              צפיות בעמוד
                             </div>
-                            <div className="text-lg md:text-2xl font-bold">
+                            <div className="text-lg md:text-2xl font-bold text-right">
                               {useCountUp(9752, 1500)}
                             </div>
-                            <GrowthIndicator value={12} />
+                            <div className="text-right">
+                              <GrowthIndicator value={12} />
+                            </div>
                           </div>
                           <div className="bg-background/50 rounded-lg p-2 md:p-3">
-                            <div className="text-xs md:text-sm text-muted-foreground">
-                              Conversions
+                            <div className="text-xs md:text-sm text-muted-foreground text-right">
+                              המרות
                             </div>
-                            <div className="text-lg md:text-2xl font-bold">
+                            <div className="text-lg md:text-2xl font-bold text-right">
                               {useCountUp(1239, 1500)}
                             </div>
-                            <GrowthIndicator value={26} />
+                            <div className="text-right">
+                              <GrowthIndicator value={26} />
+                            </div>
                           </div>
                         </div>
 
@@ -334,10 +339,10 @@ export default function BusinessPage() {
                         <div className="mt-auto">
                           <div className="flex items-center justify-between mb-2">
                             <div className="flex items-center gap-1 text-primary">
-                              <RadarIcon className="w-3 h-3 md:w-4 md:h-4" />
                               <span className="text-xs md:text-sm font-medium">
-                                RadarTrust™
+                                דירוג אמון
                               </span>
+                              <RadarIcon className="w-3 h-3 md:w-4 md:h-4" />
                             </div>
                             <div className="text-xs md:text-sm text-primary">
                               {useCountUp(9.1, 1500, 1)}
@@ -349,16 +354,16 @@ export default function BusinessPage() {
                               style={{ width: `${useCountUp(91, 1500)}%` }}
                             />
                           </div>
-                          <div className="mt-1 md:mt-2 text-[10px] md:text-xs text-muted-foreground">
-                            Top 9% of AI tools
+                          <div className="mt-1 md:mt-2 text-[10px] md:text-xs text-muted-foreground text-right">
+                            העסק שלכם בין 9% העליונים
                           </div>
                         </div>
                       </div>
                     </div>
 
                     {/* Additional Floating Elements */}
-                    <div className="absolute bottom-[10%] right-[15%] w-12 h-12 bg-purple-500/20 rounded-full animate-float" />
-                    <div className="absolute top-[40%] left-[5%] w-14 h-14 bg-pink-500/20 rounded-lg rotate-12 animate-float-right" />
+                    <div className="absolute bottom-[10%] left-[15%] w-12 h-12 bg-purple-500/20 rounded-full animate-float" />
+                    <div className="absolute top-[40%] right-[5%] w-14 h-14 bg-pink-500/20 rounded-lg rotate-12 animate-float-right" />
                   </div>
                 </div>
               </div>
@@ -367,17 +372,33 @@ export default function BusinessPage() {
         </div>
       </section>
       {/* Search Tool Section */}
-      <section className="relative py-16 bg-secondary/50 backdrop-blur-sm">
-        <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center space-y-8">
-            <p className="text-lg">Help Users Find You – Claim Your AI Tool</p>
+      <section className="relative py-16 bg-gradient-to-tr from-primary/20 via-blue-600/20 to-purple-700/25 border-y-2 border-primary/30 shadow-inner">
+        {/* Background decorative elements */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute left-0 top-0 w-full h-full bg-[radial-gradient(circle_at_30%_40%,#3b82f640,transparent_30%)]"></div>
+          <div className="absolute right-0 bottom-0 w-full h-full bg-[radial-gradient(circle_at_70%_60%,#6366f730,transparent_25%)]"></div>
+          <div className="absolute left-1/4 top-0 -translate-x-1/2 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl"></div>
+          <div className="absolute right-1/4 bottom-0 translate-x-1/2 w-72 h-72 bg-purple-500/10 rounded-full blur-3xl"></div>
+        </div>
 
-            <div className="relative max-w-xl mx-auto">
-              <div className="relative">
+        <div className="container relative z-10 mx-auto px-4">
+          <div className="max-w-3xl mx-auto text-center space-y-8">
+            <div className="inline-block px-6 py-3 bg-white/90 backdrop-blur-sm rounded-full shadow-lg shadow-primary/10 mb-4">
+              <p className="text-xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
+                עזרו ללקוחות למצוא אתכם - הוסיפו את העסק שלכם עכשיו
+              </p>
+            </div>
+
+            <div className="relative max-w-xl mx-auto p-8 bg-white backdrop-blur-xl rounded-xl border-2 border-primary/20 shadow-xl">
+              <div className="absolute -top-5 left-1/2 transform -translate-x-1/2 px-4 py-2 bg-primary text-white font-bold rounded-full shadow-lg">
+                שלב 1: הזינו את כתובת האתר שלכם
+              </div>
+
+              <div className="relative mt-4">
                 <Input
                   type="url"
-                  placeholder="Enter your website URL"
-                  className="h-14 pl-5 pr-36 text-lg"
+                  placeholder="הזינו את כתובת האתר שלכם"
+                  className="h-14 pr-5 pl-36 text-lg bg-white/80 border-2 border-primary/30 focus:border-primary/70 shadow-inner"
                   value={websiteUrl}
                   onChange={(e) => setWebsiteUrl(e.target.value)}
                   onKeyDown={(e) => {
@@ -385,16 +406,36 @@ export default function BusinessPage() {
                       handleUrlSubmit();
                     }
                   }}
+                  dir="rtl"
                 />
                 <Button
-                  className="absolute right-2 top-2 h-10 px-8 text-base"
+                  className="absolute left-2 top-2 h-10 px-8 text-base bg-gradient-to-r from-primary to-purple-600 text-white hover:shadow-md hover:shadow-primary/20 transition-all"
                   onClick={handleUrlSubmit}
                 >
-                  Claim
+                  הוסיפו עכשיו
                 </Button>
               </div>
-              <div className="mt-3 text-sm text-muted-foreground text-center">
-                ex. www.ai-radar.co
+              <div className="mt-4 text-sm text-muted-foreground text-center">
+                לדוגמה: www.your-business.co.il
+              </div>
+
+              <div className="mt-6 flex items-center justify-center gap-4">
+                <div className="flex items-center p-2">
+                  <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center text-primary mr-2 text-xs font-bold">
+                    ✓
+                  </div>
+                  <span className="text-sm font-medium">
+                    הגדילו את החשיפה שלכם
+                  </span>
+                </div>
+                <div className="flex items-center p-2">
+                  <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center text-primary mr-2 text-xs font-bold">
+                    ✓
+                  </div>
+                  <span className="text-sm font-medium">
+                    נהלו את המוניטין שלכם
+                  </span>
+                </div>
               </div>
             </div>
           </div>
@@ -406,15 +447,16 @@ export default function BusinessPage() {
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center space-y-4">
             <h2 className="text-4xl md:text-5xl font-bold">
-              <span className="text-zinc-50">
-                Claim your profile. Control your reputation.
+              <span className="text-foreground">
+                קחו שליטה על המוניטין שלכם.
               </span>{" "}
-              <span className="text-primary">Grow faster</span>
+              <span className="inline-block px-2 py-1 bg-primary text-white rounded-md transform shadow-md font-extrabold mt-2">
+                צמחו מהר יותר
+              </span>
             </h2>
             <p className="text-xl text-muted-foreground">
-              Take control of your AI tool&apos;s presence on AI-Radar. Engage
-              with users, respond to feedback, and showcase your innovation to
-              thousands of potential customers.
+              קחו שליטה על הנוכחות של העסק שלכם באתר. תקשרו עם לקוחות, הגיבו
+              למשוב, והציגו את היתרונות שלכם לאלפי לקוחות פוטנציאליים.
             </p>
           </div>
 
@@ -423,10 +465,10 @@ export default function BusinessPage() {
               <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-6">
                 <CheckCircle2 className="w-6 h-6 text-primary" />
               </div>
-              <h3 className="text-xl font-semibold mb-3">Verified Profile</h3>
+              <h3 className="text-xl font-semibold mb-3">פרופיל מאומת</h3>
               <p className="text-muted-foreground">
-                Get a verified badge, customize your listing, and maintain
-                accurate information about your AI tool.
+                קבלו תג מאומת, התאימו אישית את הרישום שלכם, ושמרו על מידע מדויק
+                אודות העסק שלכם.
               </p>
             </div>
 
@@ -434,10 +476,10 @@ export default function BusinessPage() {
               <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-6">
                 <RadarIcon className="w-6 h-6 text-primary" />
               </div>
-              <h3 className="text-xl font-semibold mb-3">Review Management</h3>
+              <h3 className="text-xl font-semibold mb-3">ניהול ביקורות</h3>
               <p className="text-muted-foreground">
-                Respond to reviews, gather feedback, and build trust with
-                transparent communication with your users.
+                הגיבו לביקורות, אספו משוב, ובנו אמון עם תקשורת שקופה עם הלקוחות
+                שלכם.
               </p>
             </div>
 
@@ -445,10 +487,10 @@ export default function BusinessPage() {
               <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-6">
                 <ArrowRight className="w-6 h-6 text-primary" />
               </div>
-              <h3 className="text-xl font-semibold mb-3">Growth Analytics</h3>
+              <h3 className="text-xl font-semibold mb-3">אנליטיקת צמיחה</h3>
               <p className="text-muted-foreground">
-                Access detailed insights about your performance, user
-                engagement, and market position.
+                קבלו גישה לתובנות מפורטות על הביצועים שלכם, מעורבות משתמשים,
+                ומיקום בשוק.
               </p>
             </div>
           </div>
@@ -460,7 +502,7 @@ export default function BusinessPage() {
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
             <h2 className="text-3xl md:text-4xl font-bold text-center mb-16">
-              Latest AI Tools on AI-Radar
+              העסקים המובילים באתר שלנו
             </h2>
 
             <div className="max-w-full mx-auto">
@@ -482,15 +524,16 @@ export default function BusinessPage() {
                 }}
                 loop={true}
                 className="rounded-xl"
+                dir="rtl"
               >
                 {latestTools.map((tool) => (
                   <SwiperSlide key={tool._id}>
                     <Card
-                      className="p-4 bg-zinc-900/50 border-zinc-700/50 h-[230px] flex flex-col cursor-pointer hover:bg-zinc-800/50 transition-colors"
+                      className="p-4 bg-white border-border shadow-sm h-[230px] flex flex-col cursor-pointer hover:bg-blue-50/50 transition-colors"
                       onClick={() => router.push(`/tool/${tool.url}`)}
                     >
                       <div className="flex items-center gap-3">
-                        <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-zinc-800/50 border border-zinc-700/50 flex items-center justify-center overflow-hidden">
+                        <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-secondary/50 border border-border flex items-center justify-center overflow-hidden">
                           {tool.logo ? (
                             <Image
                               src={tool.logo}
@@ -500,18 +543,18 @@ export default function BusinessPage() {
                               className="object-contain"
                             />
                           ) : (
-                            <div className="w-5 h-5 bg-zinc-700 rounded-full flex items-center justify-center">
-                              <span className="text-xs text-zinc-400">
+                            <div className="w-5 h-5 bg-primary/20 rounded-full flex items-center justify-center">
+                              <span className="text-xs text-primary">
                                 {tool.name.charAt(0)}
                               </span>
                             </div>
                           )}
                         </div>
-                        <div className="flex-1 min-w-0">
-                          <h3 className="text-base font-semibold text-zinc-50 truncate">
+                        <div className="flex-1 min-w-0 text-right">
+                          <h3 className="text-base font-semibold text-foreground truncate">
                             {tool.name}
                           </h3>
-                          <p className="text-xs text-zinc-400 truncate">
+                          <p className="text-xs text-muted-foreground truncate">
                             {tool.url}
                           </p>
                         </div>
@@ -519,12 +562,12 @@ export default function BusinessPage() {
                         {/* Move RadarTrust to more prominent position */}
                         {tool.radarTrust && (
                           <div className="flex items-center px-2 py-1 bg-primary/10 rounded-lg border border-primary/20">
-                            <span className="text-xs font-medium text-primary mr-1">
+                            <span className="text-xs font-medium text-primary ml-1">
                               {tool.radarTrust}
                             </span>
                             <RadarIcon className="w-3 h-3 text-primary" />
-                            <span className="text-[10px] font-medium text-primary ml-1">
-                              RadarTrust™
+                            <span className="text-[10px] font-medium text-primary mr-1">
+                              דירוג אמון
                             </span>
                           </div>
                         )}
@@ -532,14 +575,14 @@ export default function BusinessPage() {
 
                       {tool.shortDescription && (
                         <div className="mt-3 space-y-1">
-                          <p className="text-sm text-zinc-400 line-clamp-2">
+                          <p className="text-sm text-muted-foreground line-clamp-2 text-right">
                             {tool.shortDescription}
                           </p>
                           {/* Show business model with proper formatting */}
                           {tool.businessModel && (
-                            <div className="flex items-center">
-                              <span className="text-xs text-zinc-500 bg-zinc-800/50 px-2 py-0.5 rounded-full">
-                                {formatPricingModel(tool.businessModel)}
+                            <div className="flex items-center justify-end">
+                              <span className="text-xs text-muted-foreground bg-secondary/50 px-2 py-0.5 rounded-full">
+                                {tool.businessModel}
                               </span>
                             </div>
                           )}
@@ -547,9 +590,13 @@ export default function BusinessPage() {
                       )}
 
                       <div className="mt-auto pt-3">
-                        <div className="flex items-center">
+                        <div className="flex items-center justify-end">
                           {tool.reviewCount > 0 ? (
                             <div className="flex items-center gap-2">
+                              <span className="text-xs text-muted-foreground">
+                                {tool.averageRating.toFixed(1)} (
+                                {tool.reviewCount})
+                              </span>
                               <div className="flex items-center">
                                 {[...Array(5)].map((_, i) => (
                                   <Star
@@ -557,19 +604,15 @@ export default function BusinessPage() {
                                     className={`w-3 h-3 ${
                                       i < tool.averageRating
                                         ? "text-yellow-400 fill-yellow-400"
-                                        : "text-zinc-600"
+                                        : "text-secondary"
                                     }`}
                                   />
                                 ))}
                               </div>
-                              <span className="text-xs text-zinc-400">
-                                {tool.averageRating.toFixed(1)} (
-                                {tool.reviewCount})
-                              </span>
                             </div>
                           ) : (
-                            <span className="text-xs text-zinc-500">
-                              No reviews yet
+                            <span className="text-xs text-muted-foreground">
+                              אין ביקורות עדיין
                             </span>
                           )}
                         </div>
@@ -586,41 +629,70 @@ export default function BusinessPage() {
       {/* TrustRadar Section */}
       <section className="py-24 relative overflow-hidden">
         <div className="container max-w-6xl mx-auto px-4">
-          <div className="grid lg:grid-cols-[1fr,400px] gap-12 items-center">
-            {/* Left Column - Content */}
-            <RadarTrustContent isBusiness={true} />
-
+          <div className="grid lg:grid-cols-[400px,1fr] gap-12 items-center">
             {/* Right Column - Visual */}
-            <RadarTrustVisual />
+            <div>
+              <RadarTrustVisual />
+            </div>
+
+            {/* Left Column - Content */}
+            <div className="text-right">
+              <div className="space-y-6">
+                <h2 className="text-3xl font-bold">
+                  בנו <span className="text-primary">אמון</span> עם לקוחות
+                  פוטנציאליים
+                </h2>
+                <p className="text-lg text-muted-foreground">
+                  לקוחות מחפשים עסקים אמינים. באמצעות מערכת דירוג האמון החדשנית
+                  שלנו, תוכלו להציג את האמינות והמקצועיות של העסק שלכם.
+                </p>
+                <p className="text-lg text-muted-foreground">
+                  העסקים שלנו בעלי הדירוג הגבוה ביותר נהנים מיותר המרות, יותר
+                  לקוחות חוזרים ויותר המלצות.
+                </p>
+
+                <Button
+                  className="gradient-button"
+                  size="lg"
+                  onClick={() => router.push("/business/register")}
+                >
+                  הצטרפו עכשיו
+                  <ArrowRight className="mr-2 h-5 w-5" />
+                </Button>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       {/* ROI Marketing Section */}
-      <section className="py-16 bg-secondary/50 relative overflow-hidden">
+      <section className="relative py-20 bg-gradient-to-br from-primary/15 to-purple-500/15 backdrop-blur-sm border-y border-primary/20">
         <div className="container mx-auto px-4">
           {/* Background Elements */}
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            <div className="absolute top-1/2 left-1/4 w-64 h-64 bg-primary/5 rounded-full blur-3xl transform -translate-x-1/2 -translate-y-1/2" />
-            <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl" />
+            <div className="absolute top-1/3 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-[100px] transform -translate-x-1/2 -translate-y-1/2" />
+            <div className="absolute bottom-0 right-1/4 w-[30rem] h-[30rem] bg-purple-500/15 rounded-full blur-[120px]" />
+            <div className="absolute top-2/3 right-1/3 w-64 h-64 bg-blue-400/10 rounded-full blur-[80px]" />
           </div>
 
           <div className="relative z-10 max-w-5xl mx-auto">
-            <div className="text-center mb-12">
-              <h2 className="text-4xl font-bold mb-4">Maximize Your ROI</h2>
-              <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-                Join hundreds of AI businesses that have accelerated growth by
-                becoming verified on AI-Radar
+            <div className="text-center mb-16">
+              <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
+                מקסמו את ההשקעה שלכם
+              </h2>
+              <p className="text-xl text-foreground max-w-3xl mx-auto">
+                הצטרפו למאות העסקים שהאיצו את הצמיחה שלהם על ידי הפיכה למאומתים
+                באתר שלנו
               </p>
             </div>
 
             {/* ROI Stats */}
-            <div className="grid md:grid-cols-3 gap-8 mb-16">
-              <div className="bg-background/80 backdrop-blur-sm border border-primary/20 rounded-xl p-8 shadow-md text-center hover:border-primary/40 hover:shadow-lg transition-all">
-                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
+            <div className="grid md:grid-cols-3 gap-8 mb-20">
+              <div className="bg-white/90 backdrop-blur-xl border-2 border-primary/30 rounded-xl p-8 shadow-xl shadow-primary/5 text-center hover:border-primary/60 hover:shadow-primary/10 transition-all duration-300 transform hover:-translate-y-1">
+                <div className="w-20 h-20 bg-gradient-to-br from-primary to-blue-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg shadow-primary/20">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className="h-8 w-8 text-primary"
+                    className="h-10 w-10 text-white"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -633,18 +705,22 @@ export default function BusinessPage() {
                     />
                   </svg>
                 </div>
-                <h3 className="text-5xl font-bold mb-3 text-primary">3.4x</h3>
-                <p className="text-xl mb-2 font-medium">ROI</p>
-                <p className="text-muted-foreground">
-                  Average return on investment within the first 6 months
+                <h3 className="text-6xl font-extrabold mb-3 bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
+                  3.4x
+                </h3>
+                <p className="text-xl mb-3 font-bold text-foreground">
+                  תשואה להשקעה
+                </p>
+                <p className="text-muted-foreground font-medium">
+                  תשואה ממוצעת על השקעה בתוך 6 חודשים ראשונים
                 </p>
               </div>
 
-              <div className="bg-background/80 backdrop-blur-sm border border-primary/20 rounded-xl p-8 shadow-md text-center hover:border-primary/40 hover:shadow-lg transition-all">
-                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
+              <div className="bg-white/90 backdrop-blur-xl border-2 border-primary/30 rounded-xl p-8 shadow-xl shadow-primary/5 text-center hover:border-primary/60 hover:shadow-primary/10 transition-all duration-300 transform hover:-translate-y-1">
+                <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg shadow-blue-500/20">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className="h-8 w-8 text-primary"
+                    className="h-10 w-10 text-white"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -657,18 +733,22 @@ export default function BusinessPage() {
                     />
                   </svg>
                 </div>
-                <h3 className="text-5xl font-bold mb-3 text-primary">8K+</h3>
-                <p className="text-xl mb-2 font-medium">Qualified Leads</p>
-                <p className="text-muted-foreground">
-                  AI businesses gaining exposure to decision-makers and buyers
+                <h3 className="text-6xl font-extrabold mb-3 bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent">
+                  8K+
+                </h3>
+                <p className="text-xl mb-3 font-bold text-foreground">
+                  לידים איכותיים
+                </p>
+                <p className="text-muted-foreground font-medium">
+                  עסקים מקבלים חשיפה למקבלי החלטות וקונים פוטנציאליים
                 </p>
               </div>
 
-              <div className="bg-background/80 backdrop-blur-sm border border-primary/20 rounded-xl p-8 shadow-md text-center hover:border-primary/40 hover:shadow-lg transition-all">
-                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
+              <div className="bg-white/90 backdrop-blur-xl border-2 border-primary/30 rounded-xl p-8 shadow-xl shadow-primary/5 text-center hover:border-primary/60 hover:shadow-primary/10 transition-all duration-300 transform hover:-translate-y-1">
+                <div className="w-20 h-20 bg-gradient-to-br from-purple-500 to-primary rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg shadow-purple-500/20">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className="h-8 w-8 text-primary"
+                    className="h-10 w-10 text-white"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -681,103 +761,112 @@ export default function BusinessPage() {
                     />
                   </svg>
                 </div>
-                <h3 className="text-5xl font-bold mb-3 text-primary">32%</h3>
-                <p className="text-xl mb-2 font-medium">Higher Conversion</p>
-                <p className="text-muted-foreground">
-                  Compared to typical marketing channels for AI tools
+                <h3 className="text-6xl font-extrabold mb-3 bg-gradient-to-r from-purple-600 to-primary bg-clip-text text-transparent">
+                  32%
+                </h3>
+                <p className="text-xl mb-3 font-bold text-foreground">
+                  יותר המרות
+                </p>
+                <p className="text-muted-foreground font-medium">
+                  בהשוואה לערוצי שיווק רגילים לעסקים
                 </p>
               </div>
             </div>
 
             {/* ROI Calculator */}
-            <div className="bg-background/90 backdrop-blur-sm border border-primary/20 rounded-xl p-8 shadow-lg">
-              <div className="grid md:grid-cols-2 gap-12">
-                <div>
-                  <h3 className="text-2xl font-bold mb-6">
-                    Growth Opportunities
+            <div className="bg-white/90 backdrop-blur-xl border-2 border-primary/30 rounded-xl p-8 md:p-12 shadow-2xl shadow-primary/10">
+              <div className="grid md:grid-cols-2 gap-12 md:gap-16">
+                <div className="text-right">
+                  <h3 className="text-3xl font-bold mb-8 text-foreground">
+                    הזדמנויות צמיחה
                   </h3>
-                  <p className="text-muted-foreground mb-6">
-                    AI businesses featured on AI-Radar experience multiple
-                    benefits across their marketing and sales funnel. Our
-                    platform helps connect your solution with the right audience
-                    of AI solution seekers:
+                  <p className="text-lg text-foreground mb-8">
+                    עסקים המוצגים באתר שלנו חווים יתרונות רבים בכל משפך השיווק
+                    והמכירות שלהם. הפלטפורמה שלנו עוזרת לחבר את העסק שלכם עם
+                    הקהל הנכון של מחפשי שירותים:
                   </p>
 
-                  <div className="space-y-6">
+                  <div className="space-y-8">
                     <div>
-                      <h4 className="font-semibold text-lg mb-2">
-                        Enhanced Visibility
+                      <h4 className="font-bold text-xl mb-3 text-primary">
+                        חשיפה מוגברת
                       </h4>
-                      <div className="flex justify-between items-center border-b border-border pb-2">
-                        <span className="text-muted-foreground">
-                          Targeted exposure to AI solution seekers
+                      <div className="flex justify-between items-center border-b-2 border-primary/20 pb-3">
+                        <span className="font-bold text-lg text-foreground">
+                          משמעותית
                         </span>
-                        <span className="font-semibold">Significant</span>
+                        <span className="text-foreground text-lg">
+                          חשיפה ממוקדת למחפשי שירותים
+                        </span>
                       </div>
                     </div>
 
                     <div>
-                      <h4 className="font-semibold text-lg mb-2">
-                        Quality Interactions
+                      <h4 className="font-bold text-xl mb-3 text-blue-500">
+                        אינטראקציות איכותיות
                       </h4>
-                      <div className="flex justify-between items-center border-b border-border pb-2">
-                        <span className="text-muted-foreground">
-                          Higher-intent users exploring your solution
+                      <div className="flex justify-between items-center border-b-2 border-blue-500/20 pb-3">
+                        <span className="font-bold text-lg text-foreground">
+                          משופרות
                         </span>
-                        <span className="font-semibold">Improved</span>
+                        <span className="text-foreground text-lg">
+                          משתמשים בעלי כוונה גבוהה יותר לרכישה
+                        </span>
                       </div>
                     </div>
 
                     <div>
-                      <h4 className="font-semibold text-lg mb-2">
-                        Business Growth
+                      <h4 className="font-bold text-xl mb-3 text-purple-600">
+                        צמיחה עסקית
                       </h4>
-                      <div className="flex justify-between items-center border-b border-border pb-2">
-                        <span className="text-muted-foreground">
-                          Conversion from interest to business opportunity
+                      <div className="flex justify-between items-center border-b-2 border-purple-600/20 pb-3">
+                        <span className="font-bold text-lg text-foreground">
+                          מואצת
                         </span>
-                        <span className="font-semibold">Accelerated</span>
+                        <span className="text-foreground text-lg">
+                          המרה מהתעניינות להזדמנות עסקית
+                        </span>
                       </div>
                     </div>
                   </div>
                 </div>
 
                 <div className="flex flex-col justify-center">
-                  <div className="bg-gradient-to-br from-primary/20 to-background p-8 rounded-xl border border-primary/30">
-                    <h4 className="text-xl font-semibold mb-4">
-                      Value Proposition
+                  <div className="bg-gradient-to-br from-primary/20 via-blue-500/20 to-purple-500/20 p-10 rounded-xl border-2 border-primary/30 shadow-xl">
+                    <h4 className="text-2xl font-bold mb-6 text-right text-foreground">
+                      הצעת הערך שלנו
                     </h4>
 
-                    <div className="mb-8">
-                      <div className="text-sm text-muted-foreground mb-1">
-                        Targeted audience:
+                    <div className="mb-10 text-right">
+                      <div className="text-base font-medium text-primary mb-1">
+                        קהל יעד:
                       </div>
-                      <div className="text-lg font-medium">
-                        Decision-makers seeking AI solutions
+                      <div className="text-xl font-bold">
+                        מקבלי החלטות המחפשים שירותים ומוצרים
                       </div>
                     </div>
 
-                    <div className="mb-8">
-                      <div className="text-sm text-muted-foreground mb-1">
-                        Investment outcome:
+                    <div className="mb-10 text-right">
+                      <div className="text-base font-medium text-primary mb-1">
+                        תוצאת ההשקעה:
                       </div>
-                      <div className="text-4xl font-bold text-primary mb-1">
-                        Revenue-Driven Business Growth
+                      <div className="text-4xl font-extrabold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent mb-2">
+                        צמיחה עסקית מובלת הכנסות
                       </div>
-                      <div className="text-sm text-muted-foreground">
-                        Establish your AI tool as a trusted market solution
+                      <div className="text-base text-foreground font-medium">
+                        בססו את העסק שלכם כפתרון מהימן בשוק
                       </div>
                     </div>
 
                     <div className="flex justify-center">
                       <a
                         href="/business/register"
-                        className="inline-flex items-center gap-2 px-6 py-3 font-semibold text-white bg-primary rounded-full hover:bg-primary/90 transition-colors"
+                        className="inline-flex items-center gap-2 px-8 py-4 font-bold text-white text-lg bg-gradient-to-r from-primary to-purple-600 rounded-full hover:shadow-lg hover:shadow-primary/30 transition-all transform hover:-translate-y-1"
                       >
-                        Boost Your AI Business
+                        הגדילו את העסק שלכם עכשיו
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
-                          className="h-5 w-5"
+                          className="h-6 w-6"
                           viewBox="0 0 20 20"
                           fill="currentColor"
                         >
@@ -795,24 +884,34 @@ export default function BusinessPage() {
             </div>
 
             {/* Testimonial */}
-            <div className="mt-16 text-center">
-              <blockquote className="italic text-xl max-w-3xl mx-auto">
-                &quot;RadarTrust gave our AI tool the credibility it needed.
-                Within months, we saw a significant increase in qualified leads,
-                and our visibility in the market improved dramatically&quot;
-              </blockquote>
-              <footer className="mt-4">
-                <p className="font-medium">Alex Rivera, Co-Founder and CEO</p>
-              </footer>
+            <div className="mt-20 text-center">
+              <div className="relative bg-white/80 backdrop-blur-xl rounded-xl p-10 border-2 border-primary/20 shadow-xl shadow-primary/5 max-w-4xl mx-auto">
+                <div className="absolute top-0 left-8 transform -translate-y-1/2 text-6xl text-primary opacity-50">
+                  &ldquo;
+                </div>
+                <div className="absolute bottom-0 right-8 transform translate-y-1/3 text-6xl text-primary opacity-50">
+                  &rdquo;
+                </div>
+                <blockquote className="italic text-2xl font-medium text-foreground">
+                  הדירוג באתר נתן לעסק שלנו את האמינות שלה היה זקוק. תוך חודשים,
+                  ראינו עלייה משמעותית בלידים איכותיים, והנראות שלנו בשוק השתפרה
+                  באופן דרמטי
+                </blockquote>
+                <footer className="mt-6">
+                  <p className="text-lg font-bold text-primary">
+                    אלכס ריברה, מייסד ומנכ״ל
+                  </p>
+                </footer>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Control Section */}
+      {/* How it Works Section */}
       <section className="relative py-20 bg-secondary/5">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12">How It Works</h2>
+          <h2 className="text-3xl font-bold text-center mb-12">איך זה עובד</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
             {steps.map((step, index) => (
               <div
@@ -833,8 +932,8 @@ export default function BusinessPage() {
               className="gradient-button"
               onClick={() => router.push("/business/register")}
             >
-              List Your AI Tool
-              <ArrowRight className="ml-2 h-5 w-5" />
+              רשמו את העסק שלכם
+              <ArrowRight className="mr-2 h-5 w-5" />
             </Button>
           </div>
         </div>
@@ -845,7 +944,7 @@ export default function BusinessPage() {
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
             <h2 className="text-3xl md:text-4xl font-bold text-center mb-16">
-              Why Join AI-Radar?
+              למה להצטרף לפלטפורמה שלנו?
             </h2>
 
             <div className="grid md:grid-cols-3 gap-8 md:gap-12">
@@ -853,10 +952,9 @@ export default function BusinessPage() {
                 <div className="inline-flex items-center justify-center w-32 h-20 rounded-2xl bg-primary/10 mb-2">
                   <div className="text-4xl font-bold text-primary">10K+</div>
                 </div>
-                <h3 className="text-xl font-semibold">Monthly Visitors</h3>
+                <h3 className="text-xl font-semibold">מבקרים חודשיים</h3>
                 <p className="text-muted-foreground">
-                  Gain exposure to thousands of professionals searching for AI
-                  solutions
+                  קבלו חשיפה לאלפי אנשי מקצוע המחפשים שירותים כמו שלכם
                 </p>
               </div>
 
@@ -864,13 +962,10 @@ export default function BusinessPage() {
                 <div className="inline-flex items-center justify-center w-32 h-20 rounded-2xl bg-primary/10 mb-2">
                   <div className="text-4xl font-bold text-primary">200%</div>
                 </div>
-                <h3 className="text-xl font-semibold">
-                  {" "}
-                  Increase in AI Tool Visibility
-                </h3>
+                <h3 className="text-xl font-semibold"> גידול בנראות של העסק</h3>
                 <p className="text-muted-foreground">
-                  Verified AI tools see a significant boost in user interaction
-                  and conversions
+                  עסקים מאומתים רואים עלייה משמעותית באינטראקציות עם לקוחות
+                  והמרות
                 </p>
               </div>
 
@@ -878,10 +973,10 @@ export default function BusinessPage() {
                 <div className="inline-flex items-center justify-center w-32 h-20 rounded-2xl bg-primary/10 mb-2">
                   <div className="text-4xl font-bold text-primary">500+</div>
                 </div>
-                <h3 className="text-xl font-semibold">AI Companies</h3>
+                <h3 className="text-xl font-semibold">עסקים</h3>
                 <p className="text-muted-foreground">
-                  Join a growing network of AI businesses leveraging AI-Radar
-                  for visibility
+                  הצטרפו לרשת הולכת וגדלה של עסקים המנצלים את הפלטפורמה שלנו
+                  לשיפור הנראות
                 </p>
               </div>
             </div>
@@ -893,19 +988,19 @@ export default function BusinessPage() {
       <section className="relative py-20">
         <div className="relative container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center space-y-8">
-            <h2 className="text-3xl font-bold text-white">
-              Join AI-Radar Today and Scale Your AI Business
+            <h2 className="text-3xl font-bold">
+              הצטרפו היום וקדמו את העסק שלכם
             </h2>
             <p className="text-xl text-muted-foreground">
-              Start building trust and credibility with your audience today.
+              התחילו לבנות אמון ואמינות עם הקהל שלכם כבר היום.
             </p>
             <Button
               size="lg"
               className="gradient-button"
               onClick={() => router.push("/business/register")}
             >
-              List Your AI Tool for Free
-              <ArrowRight className="ml-2 h-5 w-5" />
+              רשמו את העסק שלכם בחינם
+              <ArrowRight className="mr-2 h-5 w-5" />
             </Button>
           </div>
         </div>
