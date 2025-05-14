@@ -98,18 +98,18 @@ function getTrustStatus(score: number) {
   );
   return (
     status || {
-      status: "Unrated",
-      description: "This tool has not been rated yet.",
+      status: "לא מדורג",
+      description: "העסק הזה עדיין לא דורג.",
     }
   );
 }
 
 // Function to get the appropriate icon based on trust level
 function getTrustStatusIcon(score: number) {
-  if (score >= 8.6) return Award; // Industry Leader
-  if (score >= 7.1) return ThumbsUp; // Market Approved
-  if (score >= 5.1) return Sparkles; // Emerging Player
-  return AlertTriangle; // Low Market Confidence
+  if (score >= 8.6) return Award; // מוביל בתעשייה
+  if (score >= 7.1) return ThumbsUp; // מאושר בשוק
+  if (score >= 5.1) return Sparkles; // שחקן מתפתח
+  return AlertTriangle; // אמון נמוך בשוק
 }
 
 // Function to get styles based on trust level
@@ -149,13 +149,13 @@ export default function DashboardPage() {
   const [features, setFeatures] = useState<Feature[]>([
     {
       id: "1",
-      title: "AI-Powered Writing",
-      description: "Advanced natural language processing for content creation",
+      title: "תוכן דיגיטלי",
+      description: "יצירת תוכן איכותי לפלטפורמות דיגיטליות",
     },
     {
       id: "2",
-      title: "Real-time Collaboration",
-      description: "Work together seamlessly with team members",
+      title: "שיתוף פעולה בזמן אמת",
+      description: "עבודה משותפת עם חברי הצוות",
     },
   ]);
   const [reviews, setReviews] = useState<Review[]>([]);
@@ -195,83 +195,69 @@ export default function DashboardPage() {
     totalViews > 0 ? ((totalClicks / totalViews) * 100).toFixed(1) : "0.0";
 
   return (
-    <div className="container mx-auto px-4 py-12 min-h-screen">
+    <div className="container mx-auto px-4 py-12 min-h-screen" dir="rtl">
       <div className="mb-8 flex justify-between items-center">
-        <p className="text-gray-400">
-          Welcome back, {user?.name?.split(" ")[0]}!
+        <p className="text-muted-foreground">
+          ברוך/ה הבא, {user?.name?.split(" ")[0]}!
         </p>
         <Link
           href={`/tool/${website?.url}`}
           target="_blank"
           className="text-primary hover:underline flex items-center gap-2"
         >
-          <span>View Public Page</span>
+          <span>צפייה בדף הציבורי</span>
         </Link>
       </div>
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <Card className="p-6 hover:shadow-lg transition-all bg-black/50 backdrop-blur supports-[backdrop-filter]:bg-black/30 border border-white/[0.08]">
+        <Card className="p-6 hover:shadow-lg transition-all">
           <div className="flex justify-between items-start">
             <div>
               <p className="text-sm font-medium text-muted-foreground">
-                Reviews
+                ביקורות
               </p>
               <h3 className="text-2xl font-bold mt-2">
                 {website?.reviewCount || 0}
               </h3>
-              {/* Remove or comment out the percentage change for now */}
-              {/* <p className="text-sm text-green-600 flex items-center mt-2">
-                <ArrowUpRight className="w-4 h-4 mr-1" />
-                +8.2%
-              </p> */}
             </div>
             <Star className="w-8 h-8 text-primary opacity-75" />
           </div>
         </Card>
 
-        <Card className="p-6 hover:shadow-lg transition-all bg-black/50 backdrop-blur supports-[backdrop-filter]:bg-black/30 border border-white/[0.08]">
+        <Card className="p-6 hover:shadow-lg transition-all">
           <div className="flex justify-between items-start">
             <div>
               <p className="text-sm font-medium text-muted-foreground">
-                Average Rating
+                דירוג ממוצע
               </p>
               <h3 className="text-2xl font-bold mt-2">
                 {website?.averageRating
                   ? website?.averageRating.toFixed(1)
                   : "0.0"}
               </h3>
-              {/* Remove or comment out the percentage change for now */}
-              {/* <p className="text-sm text-green-600 flex items-center mt-2">
-                <ArrowUpRight className="w-4 h-4 mr-1" />
-                +0.3
-              </p> */}
             </div>
             <Star className="w-8 h-8 text-yellow-500 opacity-75" />
           </div>
         </Card>
 
-        <Card className="p-6 hover:shadow-lg transition-all bg-black/50 backdrop-blur supports-[backdrop-filter]:bg-black/30 border border-white/[0.08]">
+        <Card className="p-6 hover:shadow-lg transition-all">
           <div className="flex justify-between items-start">
             <div>
               <p className="text-sm font-medium text-muted-foreground">
-                Total Views
+                סה״כ צפיות
               </p>
               <h3 className="text-2xl font-bold mt-2">{totalViews}</h3>
-              {/* <p className="text-sm text-green-600 flex items-center mt-2">
-                <ArrowUpRight className="w-4 h-4 mr-1" />
-                +12.5%
-              </p> */}
             </div>
             <Eye className="w-8 h-8 text-primary opacity-75" />
           </div>
         </Card>
 
-        <Card className="p-6 hover:shadow-lg transition-all bg-black/50 backdrop-blur supports-[backdrop-filter]:bg-black/30 border border-white/[0.08]">
+        <Card className="p-6 hover:shadow-lg transition-all">
           <div className="flex justify-between items-start">
             <div>
               <p className="text-sm font-medium text-muted-foreground">
-                Website Clicks
+                קליקים לאתר
               </p>
               <h3 className="text-2xl font-bold mt-2">{totalClicks}</h3>
             </div>
@@ -283,15 +269,15 @@ export default function DashboardPage() {
       {/* Second Row of Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         {/* Conversion Rate Card */}
-        <Card className="p-6 hover:shadow-lg transition-all bg-black/50 backdrop-blur supports-[backdrop-filter]:bg-black/30 border border-white/[0.08]">
+        <Card className="p-6 hover:shadow-lg transition-all">
           <div className="flex justify-between items-start">
             <div>
               <p className="text-sm font-medium text-muted-foreground">
-                Conversion Rate
+                אחוז המרה
               </p>
               <h3 className="text-2xl font-bold mt-2">{conversionRate}%</h3>
               <p className="text-xs text-muted-foreground mt-1">
-                Percentage of visitors who clicked through to your website
+                אחוז המבקרים שלחצו על הקישור לאתר שלכם
               </p>
             </div>
             <Percent className="w-8 h-8 text-primary opacity-75" />
@@ -299,11 +285,11 @@ export default function DashboardPage() {
         </Card>
 
         {/* RadarTrust Score Card */}
-        <Card className="p-6 hover:shadow-lg transition-all bg-black/50 backdrop-blur supports-[backdrop-filter]:bg-black/30 border border-white/[0.08]">
+        <Card className="p-6 hover:shadow-lg transition-all">
           <div className="flex justify-between items-start">
             <div className="space-y-2">
               <p className="text-sm font-medium text-muted-foreground">
-                RadarTrust™ Score
+                ציון אמון™
               </p>
 
               {website?.radarTrust ? (
@@ -318,7 +304,7 @@ export default function DashboardPage() {
 
                   {/* Short Benefit Statement */}
                   <p className="text-xs text-muted-foreground mt-1">
-                    A higher RadarTrust™ Score boosts visibility & credibility.
+                    ציון אמון גבוה יותר מגביר את הנראות והאמינות שלכם.
                   </p>
 
                   {/* Trust Status Badge */}
@@ -359,10 +345,10 @@ export default function DashboardPage() {
                   </TooltipProvider>
 
                   {/* Learn More Link */}
-                  <div className="text-xs text-zinc-400 mt-2">
+                  <div className="text-xs text-muted-foreground mt-2">
                     <RadarTrustInfo>
                       <span className="cursor-pointer hover:text-primary hover:underline transition-colors">
-                        Learn how this score is calculated
+                        למדו איך מחושב ציון זה
                       </span>
                     </RadarTrustInfo>
                   </div>
@@ -373,17 +359,16 @@ export default function DashboardPage() {
                   <div className="mt-2 py-2">
                     <div className="w-16 h-3 bg-primary/10 rounded-full animate-pulse mb-3"></div>
                     <h3 className="text-muted-foreground text-sm font-medium">
-                      AI Radar is calculating your score
+                      רייט-איט מחשב את הציון שלכם
                     </h3>
-                    <p className="text-xs text-zinc-500 mt-2 max-w-[250px]">
-                      Your RadarTrust™ score is being processed and will be
-                      available within a few days. This score helps users
-                      understand your tool’s market position.
+                    <p className="text-xs text-muted-foreground mt-2 max-w-[250px]">
+                      ציון האמון שלכם נמצא בתהליך עיבוד ויהיה זמין תוך מספר
+                      ימים. ציון זה עוזר למשתמשים להבין את מעמד העסק שלכם בשוק.
                     </p>
-                    <div className="text-xs text-zinc-400 mt-3">
+                    <div className="text-xs text-muted-foreground mt-3">
                       <RadarTrustInfo>
                         <span className="cursor-pointer hover:text-primary hover:underline transition-colors">
-                          Learn how this score is calculated
+                          למדו איך מחושב ציון זה
                         </span>
                       </RadarTrustInfo>
                     </div>
@@ -404,8 +389,8 @@ export default function DashboardPage() {
                     size="sm"
                     className="text-xs h-9 px-4 mt-3 bg-primary/10 border-primary/20 text-primary hover:bg-primary/20 hover:text-primary transition-all hover:scale-105"
                   >
-                    <TrendingUp className="w-4 h-4 mr-2" />
-                    Boost Your Trust Score
+                    <TrendingUp className="w-4 h-4 ml-2" />
+                    שפרו את ציון האמון שלכם
                   </Button>
                 </RadarTrustImprovementDialog>
               )}
@@ -417,28 +402,24 @@ export default function DashboardPage() {
       {/* Reviews Section */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         {/* Latest Reviews - Second Row, Spans Full Width */}
-        <Card className="col-span-full p-6 hover:shadow-lg transition-all bg-black/50 backdrop-blur supports-[backdrop-filter]:bg-black/30 border border-white/[0.08]">
+        <Card className="col-span-full p-6 hover:shadow-lg transition-all">
           <div className="flex justify-between items-center mb-6">
-            <h3 className="text-lg font-semibold text-gray-200">
-              Latest Reviews
-            </h3>
+            <h3 className="text-lg font-semibold">ביקורות אחרונות</h3>
             <Link
               href="/business/dashboard/reviews"
               className="text-sm text-primary hover:underline"
             >
-              View All
+              צפייה בכולן
             </Link>
           </div>
 
           {reviews.length === 0 ? (
             <div className="text-center py-8">
-              <MessageSquare className="w-12 h-12 mx-auto mb-4 text-gray-500" />
-              <h3 className="text-lg font-medium text-gray-200 mb-2">
-                No Reviews Yet
-              </h3>
-              <p className="text-gray-400">
-                Your tool hasn&apos;t received any reviews yet. Reviews will
-                appear here once users start sharing their experiences.
+              <MessageSquare className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
+              <h3 className="text-lg font-medium mb-2">אין ביקורות עדיין</h3>
+              <p className="text-muted-foreground">
+                העסק שלך עדיין לא קיבל ביקורות. הביקורות יופיעו כאן ברגע
+                שמשתמשים יתחילו לשתף את החוויות שלהם.
               </p>
             </div>
           ) : (
@@ -446,7 +427,7 @@ export default function DashboardPage() {
               {reviews.slice(0, 4).map((review) => (
                 <div
                   key={review._id}
-                  className="p-4 rounded-lg bg-white/5 border border-white/[0.08]"
+                  className="p-4 rounded-lg bg-accent/50 border border-border"
                 >
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex">
@@ -456,20 +437,20 @@ export default function DashboardPage() {
                           className={`w-4 h-4 ${
                             i < review.rating
                               ? "text-yellow-500"
-                              : "text-gray-600"
+                              : "text-muted-foreground"
                           }`}
                           fill={i < review.rating ? "currentColor" : "none"}
                         />
                       ))}
                     </div>
                   </div>
-                  <h4 className="font-medium text-gray-200 mb-2 line-clamp-1">
+                  <h4 className="font-medium mb-2 line-clamp-1">
                     {review.title}
                   </h4>
-                  <p className="text-gray-400 text-sm mb-2 line-clamp-2">
+                  <p className="text-muted-foreground text-sm mb-2 line-clamp-2">
                     {review.body}
                   </p>
-                  <span className="text-xs text-gray-500">
+                  <span className="text-xs text-muted-foreground">
                     {new Date(review.createdAt).toLocaleDateString()}
                   </span>
                 </div>

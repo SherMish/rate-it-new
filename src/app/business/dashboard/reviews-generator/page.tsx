@@ -42,9 +42,9 @@ export default function ReviewsGeneratorPage() {
   const [newRecipientName, setNewRecipientName] = useState("");
   const [newRecipientEmail, setNewRecipientEmail] = useState("");
   const [emailBodyText, setEmailBodyText] = useState(
-    `We'd love to know what you think of {{toolName}}!
+    `נשמח לשמוע מה דעתכם על {{toolName}}!
 
-Your insights help others explore trusted AI tools — and support the community in making smarter, faster decisions. `
+התובנות שלכם עוזרות לאחרים לחקור עסקים אמינים — ולתמוך בקהילה בקבלת החלטות חכמות ומהירות יותר.`
   );
   const [isSending, setIsSending] = useState(false);
   const [sentStatus, setSentStatus] = useState<{
@@ -74,8 +74,8 @@ Your insights help others explore trusted AI tools — and support the community
   const handleAddRecipient = () => {
     if (!newRecipientName.trim()) {
       toast({
-        title: "Name is required",
-        description: "Please enter a name for the recipient.",
+        title: "נדרש שם",
+        description: "אנא הזן שם עבור הנמען.",
         variant: "destructive",
       });
       return;
@@ -83,8 +83,8 @@ Your insights help others explore trusted AI tools — and support the community
 
     if (!validateEmail(newRecipientEmail)) {
       toast({
-        title: "Invalid email",
-        description: "Please enter a valid email address.",
+        title: "כתובת אימייל לא תקינה",
+        description: "אנא הזן כתובת אימייל תקינה.",
         variant: "destructive",
       });
       return;
@@ -95,8 +95,8 @@ Your insights help others explore trusted AI tools — and support the community
       emailRecipients.some((recipient) => recipient.email === newRecipientEmail)
     ) {
       toast({
-        title: "Duplicate email",
-        description: "This email has already been added to the list.",
+        title: "כתובת אימייל כפולה",
+        description: "כתובת האימייל הזו כבר נוספה לרשימה.",
         variant: "destructive",
       });
       return;
@@ -138,12 +138,12 @@ Your insights help others explore trusted AI tools — and support the community
         const [name, email] = line.split(",").map((item) => item.trim());
 
         if (!name || !email) {
-          errors.push(`Line ${i + 1}: Missing name or email`);
+          errors.push(`שורה ${i + 1}: חסר שם או אימייל`);
           continue;
         }
 
         if (!validateEmail(email)) {
-          errors.push(`Line ${i + 1}: Invalid email format - ${email}`);
+          errors.push(`שורה ${i + 1}: פורמט אימייל לא תקין - ${email}`);
           continue;
         }
 
@@ -151,7 +151,7 @@ Your insights help others explore trusted AI tools — and support the community
           emailRecipients.some((r) => r.email === email) ||
           newRecipients.some((r) => r.email === email)
         ) {
-          errors.push(`Line ${i + 1}: Duplicate email - ${email}`);
+          errors.push(`שורה ${i + 1}: כתובת אימייל כפולה - ${email}`);
           continue;
         }
 
@@ -160,9 +160,9 @@ Your insights help others explore trusted AI tools — and support the community
 
       if (errors.length > 0) {
         toast({
-          title: `${errors.length} issue(s) found`,
+          title: `נמצאו ${errors.length} בעיות`,
           description: (
-            <ul className="max-h-32 overflow-y-auto list-disc pl-4">
+            <ul className="max-h-32 overflow-y-auto list-disc pr-4">
               {errors.map((error, index) => (
                 <li key={index} className="text-xs">
                   {error}
@@ -177,8 +177,8 @@ Your insights help others explore trusted AI tools — and support the community
       if (newRecipients.length > 0) {
         setEmailRecipients([...emailRecipients, ...newRecipients]);
         toast({
-          title: "CSV Uploaded",
-          description: `Added ${newRecipients.length} new recipient(s) to the list`,
+          title: "קובץ CSV הועלה",
+          description: `נוספו ${newRecipients.length} נמענים חדשים לרשימה`,
         });
       }
     };
@@ -193,32 +193,32 @@ Your insights help others explore trusted AI tools — and support the community
   const getFullEmailTemplate = (bodyText: string) => {
     return `
   <!DOCTYPE html>
-  <html lang="en">
+  <html lang="he" dir="rtl">
     <head>
       <meta charset="UTF-8" />
-      <title>RadarTrust Invitation</title>
+      <title>הזמנה לביקורת</title>
     </head>
-    <body style="margin:0;padding:0;background-color:#f9f9fb;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,Cantarell,'Open Sans','Helvetica Neue',sans-serif;color:#333;">
+    <body style="margin:0;padding:0;background-color:#f9f9fb;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,Cantarell,'Open Sans','Helvetica Neue',sans-serif;color:#333;direction:rtl;text-align:right;">
       <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="padding: 24px 0;">
         <tr>
           <td align="center">
             <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="background-color:#ffffff;border-radius:8px;padding:24px 24px 20px 24px;">
               <tr>
                 <td align="center" style="padding-bottom:16px;">
-                  <img src="https://res.cloudinary.com/dwqdhp70e/image/upload/v1742649740/h3eegg5ibuwwufzevlax.png" alt="AI-Radar Logo" width="180" style="display:block;" />
+                  <img src="https://res.cloudinary.com/dwqdhp70e/image/upload/v1742649740/h3eegg5ibuwwufzevlax.png" alt="רייט-איט לוגו" width="180" style="display:block;" />
                 </td>
               </tr>
               <tr>
                 <td style="font-size:17px;font-weight:600;padding-bottom:10px;">
-                  Hi {{userName}},
+                  שלום {{userName}},
                 </td>
               </tr>
               <tr>
                 <td style="font-size:15px;line-height:1.6;color:#555;padding-bottom:20px;">
-                  We'd love to know what you think of {{toolName}}!
+                  נשמח לשמוע מה דעתך על {{toolName}}!
                   <br />
                   <br />
-                  Your insights help others explore trusted AI tools — and support the community in making smarter, faster decisions.
+                  התובנות שלך עוזרות לאחרים לחקור עסקים אמינים — ולתמוך בקהילה בקבלת החלטות חכמות ומהירות יותר.
                 </td>
               </tr>
               <tr>
@@ -234,18 +234,18 @@ Your insights help others explore trusted AI tools — and support the community
                     display: inline-block;
                     box-shadow: 0 2px 5px rgba(0,0,0,0.08);
                   ">
-                    Share Your Experience
+                    שתף/י את החוויה שלך
                   </a>
                 </td>
               </tr>
               <tr>
                 <td style="text-align:center;font-size:13px;color:#777;padding-bottom:16px;">
-                  Thank you for being a part of the journey.
+                  תודה שאתם חלק מהמסע.
                 </td>
               </tr>
               <tr>
                 <td style="text-align:center;font-size:12px;color:#aaa;">
-                  Sent via <strong style="color:#888;">AI-Radar</strong>
+                  נשלח דרך <strong style="color:#888;">רייט-איט</strong>
                 </td>
               </tr>
             </table>
@@ -259,8 +259,8 @@ Your insights help others explore trusted AI tools — and support the community
   const handleSendInvitations = async () => {
     if (emailRecipients.length === 0) {
       toast({
-        title: "No recipients",
-        description: "Please add at least one recipient to send invitations.",
+        title: "אין נמענים",
+        description: "אנא הוסף לפחות נמען אחד כדי לשלוח הזמנות.",
         variant: "destructive",
       });
       return;
@@ -278,7 +278,7 @@ Your insights help others explore trusted AI tools — and support the community
           // Replace template variables
           const personalizedMessage = fullTemplate
             .replace(/{{userName}}/g, recipient.name)
-            .replace(/{{toolName}}/g, website?.name || "our tool")
+            .replace(/{{toolName}}/g, website?.name || "העסק שלנו")
             .replace(/{{reviewLink}}/g, reviewLink);
 
           try {
@@ -297,13 +297,13 @@ Your insights help others explore trusted AI tools — and support the community
 
             if (!response.ok) {
               throw new Error(
-                `Failed to send to ${recipient.email}: ${response.statusText}`
+                `נכשל בשליחה ל-${recipient.email}: ${response.statusText}`
               );
             }
 
             return { success: true, recipient };
           } catch (error) {
-            console.error("Error sending invitation:", error);
+            console.error("שגיאה בשליחת הזמנה:", error);
             return { success: false, recipient };
           }
         })
@@ -334,15 +334,15 @@ Your insights help others explore trusted AI tools — and support the community
       }
 
       toast({
-        title: "Invitations Sent",
-        description: `Successfully sent ${successful} invitation(s). Failed: ${failed}`,
+        title: "הזמנות נשלחו",
+        description: `נשלחו בהצלחה ${successful} הזמנות. נכשלו: ${failed}`,
         variant: successful > 0 ? "default" : "destructive",
       });
     } catch (error) {
-      console.error("Error in batch sending:", error);
+      console.error("שגיאה בשליחה קבוצתית:", error);
       toast({
-        title: "Error",
-        description: "Failed to send invitations. Please try again.",
+        title: "שגיאה",
+        description: "שליחת ההזמנות נכשלה. אנא נסה שוב.",
         variant: "destructive",
       });
     } finally {
@@ -360,48 +360,47 @@ Your insights help others explore trusted AI tools — and support the community
       setTimeout(() => successStateUpdater(false), 2000);
     } catch (err) {
       toast({
-        title: "Failed to copy",
-        description: "Please try again or copy manually",
+        title: "העתקה נכשלה",
+        description: "אנא נסה שוב או העתק באופן ידני",
         variant: "destructive",
       });
     }
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold mb-6">Reviews Generator</h1>
+    <div className="container mx-auto px-4 py-8" dir="rtl">
+      <h1 className="text-2xl font-bold mb-6">יצירת ביקורות</h1>
       <p className="text-muted-foreground mb-8">
-        Generate invitations for your users to leave reviews and boost your
-        RadarTrust™ score.
+        צור הזמנות למשתמשים שלך להשאיר ביקורות ולשפר את ציון האמון שלך.
       </p>
 
       <div className="grid md:grid-cols-2 gap-8">
         {/* Email Invitation Section */}
-        <Card className="p-6 bg-black/50 backdrop-blur supports-[backdrop-filter]:bg-black/30 border border-white/[0.08]">
+        <Card className="p-6">
           <div className="flex items-center mb-4">
-            <Mail className="w-5 h-5 text-primary mr-2" />
-            <h2 className="text-lg font-medium">Email Invitations</h2>
+            <Mail className="w-5 h-5 text-primary ml-2" />
+            <h2 className="text-lg font-medium">הזמנות באימייל</h2>
           </div>
 
           <div className="space-y-6">
             <div className="grid grid-cols-1 sm:grid-cols-5 gap-3">
               <div className="sm:col-span-2">
-                <Label htmlFor="recipientName">Recipient Name</Label>
+                <Label htmlFor="recipientName">שם הנמען</Label>
                 <Input
                   id="recipientName"
                   value={newRecipientName}
                   onChange={(e) => setNewRecipientName(e.target.value)}
-                  placeholder="John Doe"
+                  placeholder="ישראל ישראלי"
                   className="mt-1"
                 />
               </div>
               <div className="sm:col-span-2">
-                <Label htmlFor="recipientEmail">Recipient Email</Label>
+                <Label htmlFor="recipientEmail">אימייל הנמען</Label>
                 <Input
                   id="recipientEmail"
                   value={newRecipientEmail}
                   onChange={(e) => setNewRecipientEmail(e.target.value)}
-                  placeholder="john@example.com"
+                  placeholder="israel@example.com"
                   className="mt-1"
                 />
               </div>
@@ -411,19 +410,19 @@ Your insights help others explore trusted AI tools — and support the community
                   className="w-full mt-1"
                   variant="outline"
                 >
-                  Add
+                  הוסף
                 </Button>
               </div>
             </div>
 
             <div className="flex items-center gap-2">
               <div className="h-px bg-border flex-1" />
-              <span className="text-xs text-muted-foreground">OR</span>
+              <span className="text-xs text-muted-foreground">או</span>
               <div className="h-px bg-border flex-1" />
             </div>
 
             <div>
-              <Label htmlFor="csvUpload">Upload CSV</Label>
+              <Label htmlFor="csvUpload">העלאת CSV</Label>
               <div className="mt-1 flex items-center gap-3">
                 <Input
                   ref={fileInputRef}
@@ -438,19 +437,19 @@ Your insights help others explore trusted AI tools — and support the community
                   onClick={() => fileInputRef.current?.click()}
                   className="w-full"
                 >
-                  <Upload className="w-4 h-4 mr-2" />
-                  Upload Recipients (CSV)
+                  <Upload className="w-4 h-4 ml-2" />
+                  העלאת נמענים (CSV)
                 </Button>
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <AlertCircle className="w-4 h-4 text-muted-foreground" />
                     </TooltipTrigger>
-                    <TooltipContent className="max-w-[300px]">
+                    <TooltipContent className="max-w-[300px]" dir="rtl">
                       <p>
-                        CSV file should have columns: name, email
+                        קובץ CSV צריך להכיל עמודות: שם, אימייל
                         <br />
-                        Example: &ldquo;John Doe,john@example.com&rdquo;
+                        דוגמה: &rdquo;ישראל ישראלי,israel@example.com&ldquo;
                       </p>
                     </TooltipContent>
                   </Tooltip>
@@ -460,13 +459,13 @@ Your insights help others explore trusted AI tools — and support the community
 
             {emailRecipients.length > 0 && (
               <div>
-                <Label>Recipients List ({emailRecipients.length})</Label>
+                <Label>רשימת נמענים ({emailRecipients.length})</Label>
                 <div className="mt-1 max-h-40 overflow-y-auto border border-border rounded-md">
                   <div className="p-2 space-y-1">
                     {emailRecipients.map((recipient, index) => (
                       <div
                         key={index}
-                        className="flex items-center justify-between bg-secondary/30 rounded px-3 py-1.5 text-sm"
+                        className="flex items-center justify-between bg-accent/50 rounded px-3 py-1.5 text-sm"
                       >
                         <div className="truncate">
                           <span className="font-medium">{recipient.name}</span>{" "}
@@ -491,15 +490,15 @@ Your insights help others explore trusted AI tools — and support the community
 
             <div className="opacity-70 pointer-events-none">
               <div className="flex items-center mb-2">
-                <Label htmlFor="emailTemplate" className="mr-2">
-                  Edit Email Body Text
+                <Label htmlFor="emailTemplate" className="ml-2">
+                  עריכת תוכן האימייל
                 </Label>
                 <span className="text-xs bg-yellow-900/30 text-yellow-300 px-2 py-0.5 rounded">
-                  Coming Soon
+                  בקרוב
                 </span>
               </div>
               <p className="mt-1 text-xs text-muted-foreground mb-2">
-                Customize your message. Available variables: {"{{userName}}"},{" "}
+                התאם אישית את ההודעה שלך. משתנים זמינים: {"{{userName}}"},{" "}
                 {"{{toolName}}"}, {"{{reviewLink}}"}
               </p>
               <Textarea
@@ -508,7 +507,7 @@ Your insights help others explore trusted AI tools — and support the community
                 disabled
                 readOnly
                 className="min-h-[150px] bg-muted/50 cursor-not-allowed"
-                placeholder="Enter your message here..."
+                placeholder="הזן את ההודעה שלך כאן..."
               />
             </div>
 
@@ -520,13 +519,13 @@ Your insights help others explore trusted AI tools — and support the community
               >
                 {isSending ? (
                   <>
-                    <Loader2 className="animate-spin mr-2 h-4 w-4" />
-                    Sending Invitations...
+                    <Loader2 className="animate-spin ml-2 h-4 w-4" />
+                    שולח הזמנות...
                   </>
                 ) : (
                   <>
-                    <Send className="mr-2 h-4 w-4" />
-                    Send Invitations ({emailRecipients.length})
+                    <Send className="ml-2 h-4 w-4" />
+                    שלח הזמנות ({emailRecipients.length})
                   </>
                 )}
               </Button>
@@ -537,15 +536,12 @@ Your insights help others explore trusted AI tools — and support the community
                 variant={sentStatus.failed > 0 ? "destructive" : "default"}
                 className="bg-green-900/20"
               >
-                <AlertTitle>Invitations Sent</AlertTitle>
+                <AlertTitle>הזמנות נשלחו</AlertTitle>
                 <AlertDescription>
-                  Successfully sent {sentStatus.success} of {sentStatus.total}{" "}
-                  invitations.
+                  נשלחו בהצלחה {sentStatus.success} מתוך {sentStatus.total}{" "}
+                  הזמנות.
                   {sentStatus.failed > 0 && (
-                    <span>
-                      {" "}
-                      Failed to send {sentStatus.failed} invitation(s).
-                    </span>
+                    <span> נכשלו בשליחה {sentStatus.failed} הזמנות.</span>
                   )}
                 </AlertDescription>
               </Alert>
@@ -555,15 +551,15 @@ Your insights help others explore trusted AI tools — and support the community
 
         <div className="space-y-8">
           {/* Shareable Link Section */}
-          <Card className="p-6 bg-black/50 backdrop-blur supports-[backdrop-filter]:bg-black/30 border border-white/[0.08]">
+          <Card className="p-6">
             <div className="flex items-center mb-4">
-              <LinkIcon className="w-5 h-5 text-primary mr-2" />
-              <h2 className="text-lg font-medium">Shareable Review Link</h2>
+              <LinkIcon className="w-5 h-5 text-primary ml-2" />
+              <h2 className="text-lg font-medium">קישור לשיתוף ביקורת</h2>
             </div>
 
             <p className="text-sm text-muted-foreground mb-4">
-              You can also invite users to leave a review by sharing this link
-              manually through your own channels.
+              ניתן גם להזמין משתמשים להשאיר ביקורת על ידי שיתוף הקישור הזה באופן
+              ידני דרך הערוצים שלך.
             </p>
 
             <div className="flex items-center gap-2">
@@ -587,20 +583,20 @@ Your insights help others explore trusted AI tools — and support the community
           </Card>
 
           {/* API Integration Section (Coming Soon) */}
-          <Card className="p-6 bg-black/50 backdrop-blur supports-[backdrop-filter]:bg-black/30 border border-white/[0.08] opacity-70">
+          <Card className="p-6 opacity-70">
             <div className="flex items-center mb-4">
-              <Code className="w-5 h-5 text-primary mr-2" />
+              <Code className="w-5 h-5 text-primary ml-2" />
               <h2 className="text-lg font-medium">
-                Programmatic Review Invites (API)
+                הזמנות ביקורת תכנותיות (API)
               </h2>
-              <span className="ml-2 text-xs bg-yellow-900/30 text-yellow-300 px-2 py-0.5 rounded">
-                Coming Soon
+              <span className="mr-2 text-xs bg-yellow-900/30 text-yellow-300 px-2 py-0.5 rounded">
+                בקרוב
               </span>
             </div>
 
             <p className="text-sm text-muted-foreground mb-4">
-              Connect your product directly to trigger review invites
-              programmatically via our API.
+              חבר את המוצר שלך ישירות כדי להפעיל הזמנות ביקורת באופן תכנותי
+              באמצעות ה-API שלנו.
             </p>
 
             <div className="flex items-center gap-2">

@@ -14,7 +14,9 @@ export default function ReviewsPage() {
   useEffect(() => {
     const fetchReviews = async () => {
       try {
-        const response = await fetch(`/api/reviews/get?websiteId=${website?._id}`);
+        const response = await fetch(
+          `/api/reviews/get?websiteId=${website?._id}`
+        );
         const data = await response.json();
         setReviews(data);
       } catch (error) {
@@ -34,15 +36,16 @@ export default function ReviewsPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold mb-8">Reviews</h1>
-      
+    <div className="container mx-auto px-4 py-8" dir="rtl">
+      <h1 className="text-2xl font-bold mb-8">ביקורות</h1>
+
       {reviews.length === 0 ? (
         <div className="text-center py-8">
-          <MessageSquare className="w-12 h-12 mx-auto mb-4 text-gray-500" />
-          <h3 className="text-lg font-medium text-gray-200 mb-2">No Reviews Yet</h3>
-          <p className="text-gray-400">
-            Your tool hasn&apos;t received any reviews yet. Reviews will appear here once users start sharing their experiences.
+          <MessageSquare className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
+          <h3 className="text-lg font-medium mb-2">אין ביקורות עדיין</h3>
+          <p className="text-muted-foreground">
+            העסק שלך עדיין לא קיבל ביקורות. הביקורות יופיעו כאן ברגע שמשתמשים
+            יתחילו לשתף את החוויות שלהם.
           </p>
         </div>
       ) : (
@@ -50,7 +53,7 @@ export default function ReviewsPage() {
           {reviews.map((review) => (
             <div
               key={review._id}
-              className="p-6 rounded-lg bg-white/5 border border-white/[0.08]"
+              className="p-6 rounded-lg bg-card border border-border shadow-sm"
             >
               <div className="flex items-center justify-between mb-4">
                 <div className="flex">
@@ -58,20 +61,24 @@ export default function ReviewsPage() {
                     <Star
                       key={i}
                       className={`w-4 h-4 ${
-                        i < review.rating ? "text-yellow-500" : "text-gray-600"
+                        i < review.rating
+                          ? "text-yellow-500"
+                          : "text-muted-foreground"
                       }`}
                       fill={i < review.rating ? "currentColor" : "none"}
                     />
                   ))}
                 </div>
-                <span className="text-sm text-gray-500">
+                <span className="text-sm text-muted-foreground">
                   {new Date(review.createdAt).toLocaleDateString()}
                 </span>
               </div>
-              <h4 className="font-medium text-gray-200 mb-2">{review.title}</h4>
-              <p className="text-gray-400 text-sm mb-4">{review.body}</p>
-              <div className="text-sm text-gray-500">
-                By {review.relatedUser?.name || "Anonymous"}
+              <h4 className="font-medium mb-2">{review.title}</h4>
+              <p className="text-muted-foreground text-sm mb-4">
+                {review.body}
+              </p>
+              <div className="text-sm text-muted-foreground">
+                מאת {review.relatedUser?.name || "אנונימי"}
               </div>
             </div>
           ))}
@@ -79,4 +86,4 @@ export default function ReviewsPage() {
       )}
     </div>
   );
-} 
+}

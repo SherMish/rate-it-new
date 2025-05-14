@@ -19,7 +19,16 @@ import { ImageUpload } from "@/components/image-upload";
 import { Switch } from "@/components/ui/switch";
 import { WebsiteType, PricingModel } from "@/lib/types/website";
 import { Wand2 } from "lucide-react";
-import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter, AlertDialogCancel, AlertDialogAction } from "@/components/ui/alert-dialog";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogCancel,
+  AlertDialogAction,
+} from "@/components/ui/alert-dialog";
 
 const CHAR_LIMITS = {
   name: 50,
@@ -79,7 +88,9 @@ export default function ToolPage() {
   const [showSuccess, setShowSuccess] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
-  const [generatedData, setGeneratedData] = useState<GeneratedData | null>(null);
+  const [generatedData, setGeneratedData] = useState<GeneratedData | null>(
+    null
+  );
   const [alertError, setAlertError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -106,19 +117,19 @@ export default function ToolPage() {
       const newErrors: FormErrors = {};
 
       if (!formData.name.trim()) {
-        newErrors.name = "Tool name is required";
+        newErrors.name = "נדרש שם עסק";
       }
       if (!formData.shortDescription.trim()) {
-        newErrors.shortDescription = "Short description is required";
+        newErrors.shortDescription = "נדרש תיאור קצר";
       }
       if (!formData.description.trim()) {
-        newErrors.description = "Description is required";
+        newErrors.description = "נדרש תיאור";
       }
 
       setFormErrors(newErrors);
 
       if (Object.keys(newErrors).length > 0) {
-        toast.error("Please fill in all required fields");
+        toast.error("אנא מלאו את כל השדות הנדרשים");
         return;
       }
 
@@ -132,7 +143,7 @@ export default function ToolPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || "Failed to update");
+        throw new Error(data.error || "עדכון נכשל");
       }
 
       setShowSuccess(true);
@@ -143,9 +154,7 @@ export default function ToolPage() {
     } catch (error) {
       console.error("Error updating website:", error);
       toast.error(
-        error instanceof Error
-          ? error.message
-          : "Failed to update tool. Please try again."
+        error instanceof Error ? error.message : "עדכון העסק נכשל. אנא נסו שוב."
       );
     } finally {
       setIsSaving(false);
@@ -163,7 +172,7 @@ export default function ToolPage() {
       });
 
       if (!response.ok) {
-        throw new Error("Generation failed");
+        throw new Error("הייצור נכשל");
       }
 
       const data = await response.json();
@@ -181,7 +190,9 @@ export default function ToolPage() {
       setGeneratedData(formattedData);
       setShowAlert(true);
     } catch (error) {
-      setAlertError("Our AI service is temporarily unavailable. Please try again later.");
+      setAlertError(
+        "שירות הבינה המלאכותית שלנו אינו זמין כרגע. אנא נסו שוב מאוחר יותר."
+      );
       setShowAlert(true);
     } finally {
       setIsGenerating(false);
@@ -190,20 +201,23 @@ export default function ToolPage() {
 
   const handleApplyGenerated = () => {
     if (generatedData) {
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
         name: generatedData.name || prev.name,
         description: generatedData.description || prev.description,
-        shortDescription: generatedData.shortDescription || prev.shortDescription,
+        shortDescription:
+          generatedData.shortDescription || prev.shortDescription,
         category: generatedData.category || prev.category,
         pricingModel: generatedData.pricingModel || prev.pricingModel,
         launchYear: generatedData.launchYear || prev.launchYear,
-        hasFreeTrialPeriod: typeof generatedData.hasFreeTrialPeriod === 'boolean' 
-          ? generatedData.hasFreeTrialPeriod 
-          : prev.hasFreeTrialPeriod,
-        hasAPI: typeof generatedData.hasAPI === 'boolean' 
-          ? generatedData.hasAPI 
-          : prev.hasAPI,
+        hasFreeTrialPeriod:
+          typeof generatedData.hasFreeTrialPeriod === "boolean"
+            ? generatedData.hasFreeTrialPeriod
+            : prev.hasFreeTrialPeriod,
+        hasAPI:
+          typeof generatedData.hasAPI === "boolean"
+            ? generatedData.hasAPI
+            : prev.hasAPI,
         radarTrust: generatedData.radarTrust || prev.radarTrust,
       }));
     }
@@ -214,9 +228,9 @@ export default function ToolPage() {
 
   return (
     <>
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-8" dir="rtl">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-2xl font-bold">Tool Settings</h1>
+          <h1 className="text-2xl font-bold">הגדרות עסק</h1>
           {!website?.radarTrust && (
             <Button
               onClick={handleGenerateAI}
@@ -224,15 +238,15 @@ export default function ToolPage() {
               className="flex items-center gap-2"
             >
               <Wand2 className="w-4 h-4" />
-              {isGenerating ? "Generating..." : "Generate with AI"}
+              {isGenerating ? "מייצר..." : "יצירה בעזרת בינה מלאכותית"}
             </Button>
           )}
         </div>
 
-        <Card className="p-6 bg-black/50 backdrop-blur border border-white/[0.08]">
+        <Card className="p-6">
           <div className="space-y-6">
             <div className="grid gap-2">
-              <label className="text-sm font-medium">Logo</label>
+              <label className="text-sm font-medium">לוגו</label>
               <ImageUpload
                 value={formData.logo || ""}
                 onChange={(url) =>
@@ -244,36 +258,37 @@ export default function ToolPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
               <div className="grid gap-2 md:col-span-1">
-                <label className="text-sm font-medium">Tool Name</label>
+                <label className="text-sm font-medium">שם העסק</label>
                 <Input
                   value={formData.name}
                   onChange={(e) =>
                     setFormData({ ...formData, name: e.target.value })
                   }
-                  placeholder="Enter tool name"
+                  placeholder="הזן את שם העסק"
                   maxLength={CHAR_LIMITS.name}
-                  className={`bg-background/50 ${
-                    formErrors.name ? "border-red-500" : ""
-                  }`}
+                  className={`${formErrors.name ? "border-red-500" : ""}`}
                 />
                 {formErrors.name && (
                   <p className="text-sm text-red-500">{formErrors.name}</p>
                 )}
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-muted-foreground">
                   {formData.name.length} / {CHAR_LIMITS.name}
                 </p>
               </div>
 
               <div className="grid gap-2 md:col-span-3">
-                <label className="text-sm font-medium">Short Description</label>
+                <label className="text-sm font-medium">תיאור קצר</label>
                 <Input
                   value={formData.shortDescription}
                   onChange={(e) =>
-                    setFormData({ ...formData, shortDescription: e.target.value })
+                    setFormData({
+                      ...formData,
+                      shortDescription: e.target.value,
+                    })
                   }
-                  placeholder="Brief description of your tool"
+                  placeholder="תיאור קצר של העסק שלך"
                   maxLength={CHAR_LIMITS.shortDescription}
-                  className={`bg-background/50 ${
+                  className={`${
                     formErrors.shortDescription ? "border-red-500" : ""
                   }`}
                 />
@@ -282,7 +297,7 @@ export default function ToolPage() {
                     {formErrors.shortDescription}
                   </p>
                 )}
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-muted-foreground">
                   {formData.shortDescription.length} /{" "}
                   {CHAR_LIMITS.shortDescription}
                 </p>
@@ -291,20 +306,19 @@ export default function ToolPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="grid gap-2">
-                <label className="text-sm font-medium">URL</label>
+                <label className="text-sm font-medium">כתובת URL</label>
                 <Input
                   disabled={true}
                   value={formData.url}
                   onChange={(e) =>
                     setFormData({ ...formData, url: e.target.value })
                   }
-                  placeholder="Enter tool URL"
-                  className="bg-background/50"
+                  placeholder="הזן את כתובת האתר"
                 />
               </div>
 
               <div className="grid gap-2">
-                <label className="text-sm font-medium">Category</label>
+                <label className="text-sm font-medium">קטגוריה</label>
                 <Select
                   value={formData.category}
                   onValueChange={(value) =>
@@ -312,7 +326,7 @@ export default function ToolPage() {
                   }
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Select a category" />
+                    <SelectValue placeholder="בחר קטגוריה" />
                   </SelectTrigger>
                   <SelectContent>
                     {categoriesData.categories.map((category) => (
@@ -326,14 +340,14 @@ export default function ToolPage() {
             </div>
 
             <div className="grid gap-2">
-              <label className="text-sm font-medium">Description</label>
+              <label className="text-sm font-medium">תיאור</label>
               <textarea
                 value={formData.description}
                 onChange={(e) =>
                   setFormData({ ...formData, description: e.target.value })
                 }
-                placeholder="Detailed description of your tool"
-                className={`w-full h-32 rounded-md border bg-background/50 px-3 py-2 text-sm ${
+                placeholder="תיאור מפורט של העסק שלך"
+                className={`w-full h-32 rounded-md border px-3 py-2 text-sm ${
                   formErrors.description ? "border-red-500" : ""
                 }`}
                 maxLength={CHAR_LIMITS.description}
@@ -341,14 +355,14 @@ export default function ToolPage() {
               {formErrors.description && (
                 <p className="text-sm text-red-500">{formErrors.description}</p>
               )}
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-muted-foreground">
                 {formData.description.length} / {CHAR_LIMITS.description}
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               <div className="grid gap-2">
-                <label className="text-sm font-medium">Pricing Model</label>
+                <label className="text-sm font-medium">מודל מחירים</label>
                 <Select
                   value={formData.pricingModel}
                   onValueChange={(value) =>
@@ -356,7 +370,7 @@ export default function ToolPage() {
                   }
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Select pricing model" />
+                    <SelectValue placeholder="בחר מודל מחירים" />
                   </SelectTrigger>
                   <SelectContent>
                     {Object.values(PricingModel).map((model) => (
@@ -370,24 +384,25 @@ export default function ToolPage() {
               </div>
 
               <div className="grid gap-2">
-                <label className="text-sm font-medium">Launch Year</label>
+                <label className="text-sm font-medium">שנת השקה</label>
                 <Input
                   type="number"
                   value={formData.launchYear?.toString() || ""}
                   onChange={(e) =>
                     setFormData((prev) => ({
                       ...prev,
-                      launchYear: e.target.value ? parseInt(e.target.value) : null,
+                      launchYear: e.target.value
+                        ? parseInt(e.target.value)
+                        : null,
                     }))
                   }
                   min={2000}
                   max={new Date().getFullYear()}
-                  className="bg-background/50"
                 />
               </div>
 
               <div className="grid gap-2">
-                <label className="text-sm font-medium">Has Free Trial</label>
+                <label className="text-sm font-medium">תקופת ניסיון חינם</label>
                 <div className="h-10 flex items-center">
                   <Switch
                     checked={formData.hasFreeTrialPeriod}
@@ -402,7 +417,7 @@ export default function ToolPage() {
               </div>
 
               <div className="grid gap-2">
-                <label className="text-sm font-medium">Has API</label>
+                <label className="text-sm font-medium">כולל API</label>
                 <div className="h-10 flex items-center">
                   <Switch
                     checked={formData.hasAPI}
@@ -420,7 +435,7 @@ export default function ToolPage() {
             <div className="flex flex-col gap-4">
               {showSuccess && (
                 <p className="text-sm text-green-500">
-                  ✅ Your tool information has been updated successfully!
+                  ✅ פרטי העסק שלך עודכנו בהצלחה!
                 </p>
               )}
               <div className="flex justify-end">
@@ -429,7 +444,7 @@ export default function ToolPage() {
                   disabled={isSaving}
                   className="gradient-button"
                 >
-                  {isSaving ? "Saving..." : "Save Changes"}
+                  {isSaving ? "שומר..." : "שמור שינויים"}
                 </Button>
               </div>
             </div>
@@ -441,50 +456,70 @@ export default function ToolPage() {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              {alertError ? "Generation Failed" : "AI Generation Complete"}
+              {alertError ? "הייצור נכשל" : "יצירה בעזרת בינה מלאכותית הושלמה"}
             </AlertDialogTitle>
             <AlertDialogDescription>
               {alertError ? (
                 alertError
               ) : (
                 <>
-                  AI has generated new content for your tool. Would you like to apply these changes?
+                  הבינה המלאכותית יצרה תוכן חדש עבור העסק שלך. האם ברצונך להחיל
+                  שינויים אלה?
                   <div className="mt-4 space-y-2 text-sm">
                     {generatedData?.name && (
-                      <p><strong>Name:</strong> {generatedData.name}</p>
+                      <p>
+                        <strong>שם:</strong> {generatedData.name}
+                      </p>
                     )}
                     {generatedData?.shortDescription && (
-                      <p><strong>Short Description:</strong> {generatedData.shortDescription}</p>
+                      <p>
+                        <strong>תיאור קצר:</strong>{" "}
+                        {generatedData.shortDescription}
+                      </p>
                     )}
                     {generatedData?.description && (
-                      <p><strong>Description:</strong> {generatedData.description}</p>
+                      <p>
+                        <strong>תיאור:</strong> {generatedData.description}
+                      </p>
                     )}
                     {generatedData?.category && (
-                      <p><strong>Category:</strong> {generatedData.category}</p>
+                      <p>
+                        <strong>קטגוריה:</strong> {generatedData.category}
+                      </p>
                     )}
                     {generatedData?.pricingModel && (
-                      <p><strong>Pricing Model:</strong> {generatedData.pricingModel}</p>
+                      <p>
+                        <strong>מודל מחירים:</strong>{" "}
+                        {generatedData.pricingModel}
+                      </p>
                     )}
                     {generatedData?.launchYear && (
-                      <p><strong>Launch Year:</strong> {generatedData.launchYear}</p>
+                      <p>
+                        <strong>שנת השקה:</strong> {generatedData.launchYear}
+                      </p>
                     )}
                     {generatedData?.hasFreeTrialPeriod !== undefined && (
-                      <p><strong>Has Free Trial:</strong> {generatedData.hasFreeTrialPeriod ? 'Yes' : 'No'}</p>
+                      <p>
+                        <strong>תקופת ניסיון חינם:</strong>{" "}
+                        {generatedData.hasFreeTrialPeriod ? "כן" : "לא"}
+                      </p>
                     )}
                     {generatedData?.hasAPI !== undefined && (
-                      <p><strong>Has API:</strong> {generatedData.hasAPI ? 'Yes' : 'No'}</p>
+                      <p>
+                        <strong>כולל API:</strong>{" "}
+                        {generatedData.hasAPI ? "כן" : "לא"}
+                      </p>
                     )}
-                    
                   </div>
                 </>
               )}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>ביטול</AlertDialogCancel>
             {!alertError && (
               <AlertDialogAction onClick={handleApplyGenerated}>
-                Apply Changes
+                החל שינויים
               </AlertDialogAction>
             )}
           </AlertDialogFooter>

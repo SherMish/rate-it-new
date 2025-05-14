@@ -18,27 +18,27 @@ import { UserNav } from "@/components/user-nav";
 
 const menuItems = [
   {
-    title: "Overview",
+    title: "סקירה כללית",
     href: "/business/dashboard",
     icon: LayoutDashboard,
   },
   {
-    title: "Reviews",
+    title: "ביקורות",
     href: "/business/dashboard/reviews",
     icon: MessageSquare,
   },
   {
-    title: "Reviews Generator",
+    title: "יצירת ביקורות",
     href: "/business/dashboard/reviews-generator",
     icon: Users,
   },
   {
-    title: "Tool Page",
+    title: "דף העסק",
     href: "/business/dashboard/tool",
     icon: FileText,
   },
   {
-    title: "Settings",
+    title: "הגדרות",
     href: "/business/dashboard/settings",
     icon: Settings,
   },
@@ -49,7 +49,7 @@ export function SideNav() {
   const { data: session } = useSession();
 
   return (
-    <nav className="sticky top-0 h-[100vh] w-64 border-r border-white/[0.08] bg-black/50 backdrop-blur supports-[backdrop-filter]:bg-black/30 z-40">
+    <nav className="sticky top-0 h-[100vh] w-64 border-r border-border bg-background z-40">
       <div className="flex flex-col h-full">
         <div className="p-6">
           <Link
@@ -64,7 +64,7 @@ export function SideNav() {
                 height={28}
               />
               <span className="text-sm font-medium text-gray-400 border-border/50 mt-[11px]">
-                Business
+                עסקים
               </span>
             </div>
           </Link>
@@ -77,16 +77,18 @@ export function SideNav() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all hover:bg-white/[0.06]",
+                  "flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all hover:bg-primary/10",
                   pathname === item.href
-                    ? "bg-gradient-to-r from-[#6366f1] to-[#8b5cf6] text-white font-medium shadow-lg shadow-purple-500/20"
-                    : "text-gray-400 hover:text-gray-200"
+                    ? "bg-gradient-to-r from-primary to-purple-600 text-white font-medium shadow-lg shadow-primary/20"
+                    : "text-foreground hover:text-primary"
                 )}
               >
                 <Icon
                   className={cn(
                     "w-4 h-4",
-                    pathname === item.href ? "text-white" : "text-gray-400"
+                    pathname === item.href
+                      ? "text-white"
+                      : "text-muted-foreground"
                   )}
                 />
                 {item.title}
@@ -109,13 +111,13 @@ export function SideNav() {
 
         {/* User Profile at Bottom */}
         {session?.user && (
-          <div className="px-3 py-4 mt-auto border-t border-white/[0.08]">
+          <div className="px-3 py-4 mt-auto border-t border-border">
             <div className="flex items-center justify-between">
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-gray-300 truncate">
+                <p className="text-sm font-medium text-foreground truncate">
                   {session.user.name}
                 </p>
-                <p className="text-xs text-gray-500 truncate">
+                <p className="text-xs text-muted-foreground truncate">
                   {session.user.email}
                 </p>
               </div>
