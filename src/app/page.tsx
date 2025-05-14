@@ -255,30 +255,15 @@ export default async function Home() {
             </div>
           </section>
 
-          {/* Marketing Section - Added px-4 for mobile padding */}
+          {/* Marketing Section - Added px-4 for mobile padding
           <div className="px-4 sm:px-6 lg:px-8">
             <MarketingSection />
-          </div>
+          </div> */}
 
           {/* TrustRadar Section */}
-          <section className="py-24 relative overflow-hidden bg-gradient-to-b from-white to-secondary/50">
-            <div className="container max-w-6xl mx-auto px-4">
-              <div className="grid lg:grid-cols-[400px,1fr] gap-12 items-center">
-                {/* Right Column - Visual (was Left) */}
-                <div className="order-2 lg:order-1">
-                  <RadarTrustVisual />
-                </div>
-
-                {/* Left Column - Content (was Right) */}
-                <div className="order-1 lg:order-2">
-                  <RadarTrustContent />
-                </div>
-              </div>
-            </div>
-          </section>
         </div>
       </main>
-      <RandomBlogPosts />
+      {/* <RandomBlogPosts /> */}
     </>
   );
 }

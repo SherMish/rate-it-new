@@ -76,7 +76,7 @@ export function SearchSection() {
             <Link href="/tool/new" className="group">
               <div className="text-muted-foreground hover:text-primary transition-colors">
                 <span className="text-sm">
-                  העסק לא מופיע? לחצו כאן כדי להוסיף אותו בקלות!{" "}
+                  העסק שחיפשתם לא מופיע? לחצו כאן כדי להוסיף אותו בקלות!{" "}
                 </span>
               </div>
             </Link>

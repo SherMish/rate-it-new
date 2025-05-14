@@ -12,6 +12,7 @@ import {
   Radar as RadarIcon,
   Star,
   ChevronLeft,
+  ArrowUp,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -54,21 +55,24 @@ const benefits = [
 
 const steps = [
   {
-    title: "הצהירו על העסק שלכם",
-    description: "אמתו את הבעלות שלכם ועדכנו את הפרופיל שלכם",
-  },
-  {
-    title: "שפרו את הרישום שלכם",
-    description: "הוסיפו פרטים חשובים, תכונות ומחירים כדי למשוך משתמשים",
-  },
-  {
-    title: "קבלו ביקורות ומשוב",
-    description: "עודדו משתמשים להשאיר ביקורות כדי לשפר את האמון והאמינות",
-  },
-  {
-    title: "עקבו אחר ביצועים",
+    title: "פתחו פרופיל עסקי ברייט-איט",
     description:
-      "עקבו אחר מעורבות, משוב משתמשים ומגמות שוק באמצעות לוח המחוונים שלנו",
+      "אמתו את הבעלות על האתר שלכם והתחילו לבנות נוכחות אמינה מול לקוחות.",
+  },
+  {
+    title: "שפרו את הפרופיל העסקי שלכם",
+    description:
+      " הוסיפו תיאור, שירותים, שעות פעילות ומחירים – כדי להפוך מבקרים ללקוחות.",
+  },
+  {
+    title: " קבלו חוות דעת אמיתיות מלקוחות אמיתיים",
+    description:
+      "עודדו לקוחות מרוצים להשאיר ביקורות – זה מחזק אמון ומניע לפעולה.",
+  },
+  {
+    title: "הפיקו יותר מהביקורות שלכם",
+    description:
+      "גשו לנתונים, נתחו תובנות ושפרו את הביצועים דרך לוח הבקרה שלנו.",
   },
 ];
 
@@ -265,8 +269,7 @@ export default function BusinessPage() {
                 שדרגו את <AnimatedWord /> <br /> של העסק שלכם בעזרת רייט-איט
               </h1>
               <p className="text-xl text-muted-foreground">
-              קבלו שליטה על איך הלקוחות רואים אתכם – הצטרפו והתחילו לבנות מוניטין חיובי.
-
+                הפכו ביקורות אמיתיות לנכס שיווקי שמושך לקוחות חדשים.
               </p>
               <Button
                 size="lg"
@@ -433,7 +436,7 @@ export default function BusinessPage() {
                     ✓
                   </div>
                   <span className="text-sm font-medium">
-                    נהלו את המוניטין שלכם
+                    נהלו פרופיל עסקי מקצועי
                   </span>
                 </div>
               </div>
@@ -455,8 +458,10 @@ export default function BusinessPage() {
               </span>
             </h2>
             <p className="text-xl text-muted-foreground">
-              קחו שליטה על הנוכחות של העסק שלכם באתר. תקשרו עם לקוחות, הגיבו
-              למשוב, והציגו את היתרונות שלכם לאלפי לקוחות פוטנציאליים.
+              הלקוחות הישראלים הם לא פרייארים – הם בודקים, משווים ורוצים לראות
+              ביקורות אמיתיות מאנשים אמיתיים.
+              <br />
+              תנו להם את השקיפות שמגיעה להם – ובנו אמון שמוביל לפעולה.
             </p>
           </div>
 
@@ -467,8 +472,8 @@ export default function BusinessPage() {
               </div>
               <h3 className="text-xl font-semibold mb-3">פרופיל מאומת</h3>
               <p className="text-muted-foreground">
-                קבלו תג מאומת, התאימו אישית את הרישום שלכם, ושמרו על מידע מדויק
-                אודות העסק שלכם.
+                קבלו תג מאומת, צרו נוכחות מקצועית, שדרו אמינות, והראו ללקוחות
+                שאתם עסק איכותי.
               </p>
             </div>
 
@@ -478,16 +483,15 @@ export default function BusinessPage() {
               </div>
               <h3 className="text-xl font-semibold mb-3">ניהול ביקורות</h3>
               <p className="text-muted-foreground">
-                הגיבו לביקורות, אספו משוב, ובנו אמון עם תקשורת שקופה עם הלקוחות
-                שלכם.
+                הגיבו לביקורות, אספו פידבק אמיתי וצרו קשר מתמשך עם הקהל שלכם.{" "}
               </p>
             </div>
 
             <div className="p-6 rounded-xl border border-border/50 bg-card/50 backdrop-blur-sm">
               <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-6">
-                <ArrowRight className="w-6 h-6 text-primary" />
+                <ArrowUp className="w-6 h-6 text-primary" />
               </div>
-              <h3 className="text-xl font-semibold mb-3">אנליטיקת צמיחה</h3>
+              <h3 className="text-xl font-semibold mb-3">דאשבורד ביצועים</h3>
               <p className="text-muted-foreground">
                 קבלו גישה לתובנות מפורטות על הביצועים שלכם, מעורבות משתמשים,
                 ומיקום בשוק.
@@ -502,7 +506,7 @@ export default function BusinessPage() {
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
             <h2 className="text-3xl md:text-4xl font-bold text-center mb-16">
-              העסקים המובילים באתר שלנו
+              העסקים האחרונים שהצטרפו לרייט-איט:
             </h2>
 
             <div className="max-w-full mx-auto">
@@ -626,6 +630,37 @@ export default function BusinessPage() {
         </div>
       </section>
 
+      {/* How it Works Section */}
+      <section className="relative py-20 bg-secondary/5">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold text-center mb-12">איך זה עובד</h2>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
+            {steps.map((step, index) => (
+              <div
+                key={index}
+                className="p-6 rounded-xl border border-border/50 bg-background/50 backdrop-blur-sm"
+              >
+                <div className="text-4xl font-bold text-primary mb-4">
+                  {(index + 1).toString().padStart(2, "0")}
+                </div>
+                <h3 className="text-xl font-semibold mb-2">{step.title}</h3>
+                <p className="text-muted-foreground">{step.description}</p>
+              </div>
+            ))}
+          </div>
+          <div className="mt-16 text-center">
+            <Button
+              size="lg"
+              className="gradient-button"
+              onClick={() => router.push("/business/register")}
+            >
+              רשמו את העסק שלכם
+              <ArrowRight className="mr-2 h-5 w-5" />
+            </Button>
+          </div>
+        </div>
+      </section>
+
       {/* TrustRadar Section */}
       <section className="py-24 relative overflow-hidden">
         <div className="container max-w-6xl mx-auto px-4">
@@ -678,11 +713,11 @@ export default function BusinessPage() {
           <div className="relative z-10 max-w-5xl mx-auto">
             <div className="text-center mb-16">
               <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
-                מקסמו את ההשקעה שלכם
+                למה להצטרף לרייט-איט?
               </h2>
               <p className="text-xl text-foreground max-w-3xl mx-auto">
-                הצטרפו למאות העסקים שהאיצו את הצמיחה שלהם על ידי הפיכה למאומתים
-                באתר שלנו
+                מאות עסקים מכל התחומים כבר הופכים ביקורות לאמון והמלצות לצמיחה –
+                הצטרפו אליהם.
               </p>
             </div>
 
@@ -706,13 +741,13 @@ export default function BusinessPage() {
                   </svg>
                 </div>
                 <h3 className="text-6xl font-extrabold mb-3 bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
-                  3.4x
+                  2.2x
                 </h3>
                 <p className="text-xl mb-3 font-bold text-foreground">
-                  תשואה להשקעה
+                  שיפור ביחס ההמרה
                 </p>
                 <p className="text-muted-foreground font-medium">
-                  תשואה ממוצעת על השקעה בתוך 6 חודשים ראשונים
+                  בקרב לקוחות שהטמיעו את הוויידג’ט של רייט-איט בדף הנחיתה שלהם
                 </p>
               </div>
 
@@ -737,10 +772,10 @@ export default function BusinessPage() {
                   8K+
                 </h3>
                 <p className="text-xl mb-3 font-bold text-foreground">
-                  לידים איכותיים
+                  מבקרים חודשיים
                 </p>
                 <p className="text-muted-foreground font-medium">
-                  עסקים מקבלים חשיפה למקבלי החלטות וקונים פוטנציאליים
+                  שהחליטו לחפש עסקים בדרך הבטוחה והשקופה ביותר
                 </p>
               </div>
 
@@ -762,221 +797,13 @@ export default function BusinessPage() {
                   </svg>
                 </div>
                 <h3 className="text-6xl font-extrabold mb-3 bg-gradient-to-r from-purple-600 to-primary bg-clip-text text-transparent">
-                  32%
+                  200%
                 </h3>
                 <p className="text-xl mb-3 font-bold text-foreground">
-                  יותר המרות
+                  יותר חשיפה
                 </p>
                 <p className="text-muted-foreground font-medium">
-                  בהשוואה לערוצי שיווק רגילים לעסקים
-                </p>
-              </div>
-            </div>
-
-            {/* ROI Calculator */}
-            <div className="bg-white/90 backdrop-blur-xl border-2 border-primary/30 rounded-xl p-8 md:p-12 shadow-2xl shadow-primary/10">
-              <div className="grid md:grid-cols-2 gap-12 md:gap-16">
-                <div className="text-right">
-                  <h3 className="text-3xl font-bold mb-8 text-foreground">
-                    הזדמנויות צמיחה
-                  </h3>
-                  <p className="text-lg text-foreground mb-8">
-                    עסקים המוצגים באתר שלנו חווים יתרונות רבים בכל משפך השיווק
-                    והמכירות שלהם. הפלטפורמה שלנו עוזרת לחבר את העסק שלכם עם
-                    הקהל הנכון של מחפשי שירותים:
-                  </p>
-
-                  <div className="space-y-8">
-                    <div>
-                      <h4 className="font-bold text-xl mb-3 text-primary">
-                        חשיפה מוגברת
-                      </h4>
-                      <div className="flex justify-between items-center border-b-2 border-primary/20 pb-3">
-                        <span className="font-bold text-lg text-foreground">
-                          משמעותית
-                        </span>
-                        <span className="text-foreground text-lg">
-                          חשיפה ממוקדת למחפשי שירותים
-                        </span>
-                      </div>
-                    </div>
-
-                    <div>
-                      <h4 className="font-bold text-xl mb-3 text-blue-500">
-                        אינטראקציות איכותיות
-                      </h4>
-                      <div className="flex justify-between items-center border-b-2 border-blue-500/20 pb-3">
-                        <span className="font-bold text-lg text-foreground">
-                          משופרות
-                        </span>
-                        <span className="text-foreground text-lg">
-                          משתמשים בעלי כוונה גבוהה יותר לרכישה
-                        </span>
-                      </div>
-                    </div>
-
-                    <div>
-                      <h4 className="font-bold text-xl mb-3 text-purple-600">
-                        צמיחה עסקית
-                      </h4>
-                      <div className="flex justify-between items-center border-b-2 border-purple-600/20 pb-3">
-                        <span className="font-bold text-lg text-foreground">
-                          מואצת
-                        </span>
-                        <span className="text-foreground text-lg">
-                          המרה מהתעניינות להזדמנות עסקית
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex flex-col justify-center">
-                  <div className="bg-gradient-to-br from-primary/20 via-blue-500/20 to-purple-500/20 p-10 rounded-xl border-2 border-primary/30 shadow-xl">
-                    <h4 className="text-2xl font-bold mb-6 text-right text-foreground">
-                      הצעת הערך שלנו
-                    </h4>
-
-                    <div className="mb-10 text-right">
-                      <div className="text-base font-medium text-primary mb-1">
-                        קהל יעד:
-                      </div>
-                      <div className="text-xl font-bold">
-                        מקבלי החלטות המחפשים שירותים ומוצרים
-                      </div>
-                    </div>
-
-                    <div className="mb-10 text-right">
-                      <div className="text-base font-medium text-primary mb-1">
-                        תוצאת ההשקעה:
-                      </div>
-                      <div className="text-4xl font-extrabold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent mb-2">
-                        צמיחה עסקית מובלת הכנסות
-                      </div>
-                      <div className="text-base text-foreground font-medium">
-                        בססו את העסק שלכם כפתרון מהימן בשוק
-                      </div>
-                    </div>
-
-                    <div className="flex justify-center">
-                      <a
-                        href="/business/register"
-                        className="inline-flex items-center gap-2 px-8 py-4 font-bold text-white text-lg bg-gradient-to-r from-primary to-purple-600 rounded-full hover:shadow-lg hover:shadow-primary/30 transition-all transform hover:-translate-y-1"
-                      >
-                        הגדילו את העסק שלכם עכשיו
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-6 w-6"
-                          viewBox="0 0 20 20"
-                          fill="currentColor"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Testimonial */}
-            <div className="mt-20 text-center">
-              <div className="relative bg-white/80 backdrop-blur-xl rounded-xl p-10 border-2 border-primary/20 shadow-xl shadow-primary/5 max-w-4xl mx-auto">
-                <div className="absolute top-0 left-8 transform -translate-y-1/2 text-6xl text-primary opacity-50">
-                  &ldquo;
-                </div>
-                <div className="absolute bottom-0 right-8 transform translate-y-1/3 text-6xl text-primary opacity-50">
-                  &rdquo;
-                </div>
-                <blockquote className="italic text-2xl font-medium text-foreground">
-                  הדירוג באתר נתן לעסק שלנו את האמינות שלה היה זקוק. תוך חודשים,
-                  ראינו עלייה משמעותית בלידים איכותיים, והנראות שלנו בשוק השתפרה
-                  באופן דרמטי
-                </blockquote>
-                <footer className="mt-6">
-                  <p className="text-lg font-bold text-primary">
-                    אלכס ריברה, מייסד ומנכ״ל
-                  </p>
-                </footer>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* How it Works Section */}
-      <section className="relative py-20 bg-secondary/5">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12">איך זה עובד</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
-            {steps.map((step, index) => (
-              <div
-                key={index}
-                className="p-6 rounded-xl border border-border/50 bg-background/50 backdrop-blur-sm"
-              >
-                <div className="text-4xl font-bold text-primary mb-4">
-                  {(index + 1).toString().padStart(2, "0")}
-                </div>
-                <h3 className="text-xl font-semibold mb-2">{step.title}</h3>
-                <p className="text-muted-foreground">{step.description}</p>
-              </div>
-            ))}
-          </div>
-          <div className="mt-16 text-center">
-            <Button
-              size="lg"
-              className="gradient-button"
-              onClick={() => router.push("/business/register")}
-            >
-              רשמו את העסק שלכם
-              <ArrowRight className="mr-2 h-5 w-5" />
-            </Button>
-          </div>
-        </div>
-      </section>
-
-      {/* Stats Section */}
-      <section className="relative py-24 bg-secondary/50 backdrop-blur-sm border-y border-border">
-        <div className="container mx-auto px-4">
-          <div className="max-w-6xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-bold text-center mb-16">
-              למה להצטרף לפלטפורמה שלנו?
-            </h2>
-
-            <div className="grid md:grid-cols-3 gap-8 md:gap-12">
-              <div className="text-center space-y-4">
-                <div className="inline-flex items-center justify-center w-32 h-20 rounded-2xl bg-primary/10 mb-2">
-                  <div className="text-4xl font-bold text-primary">10K+</div>
-                </div>
-                <h3 className="text-xl font-semibold">מבקרים חודשיים</h3>
-                <p className="text-muted-foreground">
-                  קבלו חשיפה לאלפי אנשי מקצוע המחפשים שירותים כמו שלכם
-                </p>
-              </div>
-
-              <div className="text-center space-y-4">
-                <div className="inline-flex items-center justify-center w-32 h-20 rounded-2xl bg-primary/10 mb-2">
-                  <div className="text-4xl font-bold text-primary">200%</div>
-                </div>
-                <h3 className="text-xl font-semibold"> גידול בנראות של העסק</h3>
-                <p className="text-muted-foreground">
-                  עסקים מאומתים רואים עלייה משמעותית באינטראקציות עם לקוחות
-                  והמרות
-                </p>
-              </div>
-
-              <div className="text-center space-y-4">
-                <div className="inline-flex items-center justify-center w-32 h-20 rounded-2xl bg-primary/10 mb-2">
-                  <div className="text-4xl font-bold text-primary">500+</div>
-                </div>
-                <h3 className="text-xl font-semibold">עסקים</h3>
-                <p className="text-muted-foreground">
-                  הצטרפו לרשת הולכת וגדלה של עסקים המנצלים את הפלטפורמה שלנו
-                  לשיפור הנראות
+                  לעסקים שעברו את האימות של רייט-איט
                 </p>
               </div>
             </div>
@@ -992,7 +819,7 @@ export default function BusinessPage() {
               הצטרפו היום וקדמו את העסק שלכם
             </h2>
             <p className="text-xl text-muted-foreground">
-              התחילו לבנות אמון ואמינות עם הקהל שלכם כבר היום.
+              התחילו לבנות אמון ושקיפות עם הקהל שלכם כבר היום.
             </p>
             <Button
               size="lg"

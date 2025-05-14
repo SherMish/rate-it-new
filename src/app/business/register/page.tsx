@@ -83,13 +83,10 @@ export default function BusinessRegistration() {
   }
 
   const steps = [
-    { title: "Authentication", description: "Sign in or create an account" },
-    { title: "Business Details", description: "Tell us about your business" },
-    { title: "Verify Ownership", description: "Confirm your domain ownership" },
-    {
-      title: "Set Your Preferences",
-      description: "How you'd like your tool featured",
-    },
+    { title: "כניסה למערכת", description: "התחברו או צרו חשבון חדש" },
+    { title: "פרטי העסק", description: "ספרו לנו על העסק שלכם" },
+    { title: "אימות בעלות", description: "אמתו את הבעלות על האתר" },
+    { title: "הגדרות תצוגה", description: "בחרו כיצד יופיע הפרופיל שלכם באתר" },
   ];
 
   return (
@@ -101,11 +98,11 @@ export default function BusinessRegistration() {
       <div className="relative max-w-4xl mx-auto px-4 py-8">
         <div className="text-center mb-12">
           <h1 className="text-3xl font-bold mb-4">
-            Claim Your Spot Among the Most Trusted AI Tools
+            תפסו את המקום שלכם בין העסקים האמינים בישראל
           </h1>
           <p className="text-muted-foreground text-lg">
-            Join the platform where professionals find, trust, and adopt AI
-            solutions.
+            הצטרפו לפלטפורמה שבה לקוחות בוחרים, סומכים וממליצים על עסקים
+            אמיתיים.
           </p>
         </div>
 
@@ -162,7 +159,7 @@ export default function BusinessRegistration() {
             <div className={`${step !== 1 ? "hidden" : ""}`}>
               <div className="text-center">
                 <h2 className="text-2xl font-semibold mb-4">
-                  Sign in to continue
+                  התחברות להתחלת ההרשמה
                 </h2>
                 {!session ? (
                   <Button
@@ -170,13 +167,13 @@ export default function BusinessRegistration() {
                     onClick={() => loginModal.onOpen()}
                     className="w-full max-w-sm"
                   >
-                    Sign in / Sign up
+                    התחברות / הרשמה
                   </Button>
                 ) : (
                   <div className="flex flex-col items-center gap-4">
                     <div className="flex items-center gap-2 text-success">
                       <CheckCircle2 className="w-5 h-5" />
-                      <span>Signed in as {session.user.email}</span>
+                      <span>מחובר/ת בתור {session.user.email}</span>
                     </div>
                     <Button onClick={() => setStep(2)}>Continue</Button>
                   </div>
@@ -215,19 +212,19 @@ export default function BusinessRegistration() {
       {/* Why Join Section */}
       <div className="mt-12 max-w-4xl mx-auto px-4 pb-12 relative z-10">
         <h2 className="text-3xl font-bold text-center mb-8">
-          Why Join AI-Radar?
+          למה כדאי להצטרף לרייט-איט?
         </h2>
         <div className="grid md:grid-cols-2 gap-8">
           <div className="bg-background/80 backdrop-blur-sm border border-border/50 rounded-xl p-6 shadow-md">
             <h3 className="text-xl font-semibold mb-4 text-primary">
-              Be Seen by the Right Audience
+              הגיעו לקהל שמחפש אתכם
             </h3>
             <ul className="space-y-3">
               <li className="flex items-start gap-2">
                 <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
                 <span>
-                  Make your AI tool visible to business professionals actively
-                  searching for trusted AI solutions.
+                  הציגו את העסק בפני לקוחות שמחפשים שירותים אמינים ומומלצים
+                  בתחומכם.
                 </span>
               </li>
             </ul>
@@ -235,14 +232,14 @@ export default function BusinessRegistration() {
 
           <div className="bg-background/80 backdrop-blur-sm border border-border/50 rounded-xl p-6 shadow-md">
             <h3 className="text-xl font-semibold mb-4 text-primary">
-              Gain Credibility with RadarTrust™
+              הגבירו את האמון בעסק
             </h3>
             <ul className="space-y-3">
               <li className="flex items-start gap-2">
                 <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
                 <span>
-                  Show professionals you’re a verified, high-quality AI tool
-                  that stands out from the rest.
+                  הראו שאתם עסק מאומת, עם ביקורות אמיתיות ופרופיל מקצועי שמעיד
+                  עליכם.
                 </span>
               </li>
             </ul>
@@ -250,14 +247,14 @@ export default function BusinessRegistration() {
 
           <div className="bg-background/80 backdrop-blur-sm border border-border/50 rounded-xl p-6 shadow-md">
             <h3 className="text-xl font-semibold mb-4 text-primary">
-              Drive Business Growth
+              משכו לקוחות חדשים
             </h3>
             <ul className="space-y-3">
               <li className="flex items-start gap-2">
                 <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
                 <span>
-                  Attract decision-makers looking for AI solutions they can
-                  trust—not just casual browsers.
+                  לקוחות סומכים יותר על עסקים עם ביקורות – זה הזמן להתחיל לקבל
+                  אותן.
                 </span>
               </li>
             </ul>
@@ -265,14 +262,14 @@ export default function BusinessRegistration() {
 
           <div className="bg-background/80 backdrop-blur-sm border border-border/50 rounded-xl p-6 shadow-md">
             <h3 className="text-xl font-semibold mb-4 text-primary">
-              Earn Trust Faster
+              קחו שליטה על איך שרואים אתכם
             </h3>
             <ul className="space-y-3">
               <li className="flex items-start gap-2">
                 <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
                 <span>
-                  94% of AI tools that actively engage with user reviews see a
-                  TrustRadar™ Score improvement.
+                  עדכנו פרטים, הגיבו לביקורות, ושפרו את המוניטין הדיגיטלי של
+                  העסק.
                 </span>
               </li>
             </ul>

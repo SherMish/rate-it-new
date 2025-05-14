@@ -23,6 +23,8 @@ export function LatestToolsContent() {
         variants={fadeInUp}
       >
         <h2 className="text-3xl font-bold mb-4">
+          בעלי עסקים,
+          <br />
           אל תישארו מאחור.
           <br />
           תנו לעסק שלכם את המקום{" "}
