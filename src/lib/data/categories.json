@@ -139,9 +139,9 @@
       "icon": "Repeat"
     },
     {
-      "id": "marketplaces",
-      "name": "מרקטפלייס ואתרי מכר",
-      "description": "פלטפורמות מסחר גדולות כמו אמזון, איביי, עלי אקספרס וכו׳",
+      "id": "other",
+      "name": "אחר",
+      "description": "אחר",
       "icon": "Store"
     },
     {

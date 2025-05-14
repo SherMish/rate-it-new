@@ -16,9 +16,10 @@ export function LoadingModal({ open }: LoadingModalProps) {
     <Dialog open={open}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Setting up your dashboard</DialogTitle>
+          <DialogTitle>הדשבורד בהכנה!</DialogTitle>
           <DialogDescription>
-            We&apos;re analyzing your AI tool and preparing your dashboard. This may take a few minutes. Please don&apos;t close this window.
+            אנחנו מעבדים את פרטי העסק ומכינים עבורכם את הדשבורד. זה עשוי להימשך
+            כמה דקות – נא לא לסגור את החלון.{" "}
           </DialogDescription>
         </DialogHeader>
         <div className="flex justify-center py-6">
@@ -27,4 +28,4 @@ export function LoadingModal({ open }: LoadingModalProps) {
       </DialogContent>
     </Dialog>
   );
-} 
+}

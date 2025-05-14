@@ -10,19 +10,15 @@ import { LoadingModal } from "@/components/ui/loading-modal";
 import { toast } from "@/components/ui/use-toast";
 import { signOut, signIn, useSession } from "next-auth/react";
 
-const freeFeatures = [
-  "Verified business profile",
-  "Basic analytics dashboard",
-  "Review management",
-];
+const freeFeatures = ["פרופיל עסקי מאומת", "לוח בקרה בסיסי", "ניהול ביקורות"];
 
 const proOnlyFeatures = [
-  "Featured listing",
-  "Full analytics dashboard",
-  "Custom branding",
-  "Priority support",
-  "Full control over tool page",
-  "Early access to new features",
+  "רישום מומלץ",
+  "לוח בקרה מלא",
+  "מיתוג מותאם אישית",
+  "תמיכה בעדיפות גבוהה",
+  "שליטה מלאה בדף העסק",
+  "גישה מוקדמת לתכונות חדשות",
 ];
 
 export function PricingSection({ websiteUrl }: { websiteUrl: string }) {
@@ -49,8 +45,8 @@ export function PricingSection({ websiteUrl }: { websiteUrl: string }) {
       console.error("No website URL provided");
       toast({
         variant: "destructive",
-        title: "Error",
-        description: "Website URL is missing. Please try again.",
+        title: "שגיאה",
+        description: "כתובת האתר חסרה. אנא נסו שוב.",
       });
       return;
     }
@@ -80,23 +76,11 @@ export function PricingSection({ websiteUrl }: { websiteUrl: string }) {
       const existingWebsite = await websiteRes.json();
 
       const userId = session?.user?.id;
-      if (!userId) throw new Error("User not authenticated");
+      if (!userId) throw new Error("המשתמש אינו מחובר");
 
       // Generate metadata only if needed
       let metadata = null;
-      if (!existingWebsite.radarTrust) {
-        const metadataResponse = await fetch("/api/admin/generate-metadata", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ url: websiteUrl }),
-        });
 
-        if (metadataResponse.ok) {
-          metadata = await metadataResponse.json();
-        }
-      }
-
-      // If website doesn't exist or metadata was generated, update/create it
       let websiteId = existingWebsite?._id; // Use existing website ID if available
       // if (!websiteId || metadata) {
       const websiteUpdateRes = await fetch("/api/website/update", {
@@ -107,12 +91,11 @@ export function PricingSection({ websiteUrl }: { websiteUrl: string }) {
           name: savedData.businessName,
           owner: userId,
           isVerified: true,
-          category: "general-ai",
-          ...(metadata || {}),
+          category: "other",
         }),
       });
 
-      if (!websiteUpdateRes.ok) throw new Error("Failed to update website");
+      if (!websiteUpdateRes.ok) throw new Error("נכשל בעדכון האתר");
       const newWebsiteData = await websiteUpdateRes.json();
       websiteId = newWebsiteData._id;
       // }
@@ -134,7 +117,7 @@ export function PricingSection({ websiteUrl }: { websiteUrl: string }) {
         }),
       });
 
-      if (!userUpdateRes.ok) throw new Error("Failed to update user");
+      if (!userUpdateRes.ok) throw new Error("נכשל בעדכון פרטי המשתמש");
 
       // Force session update and wait for it
       await updateSession();
@@ -147,7 +130,7 @@ export function PricingSection({ websiteUrl }: { websiteUrl: string }) {
       const updatedSession = await verifySessionRes.json();
       console.log("Updated session:", updatedSession);
       if (!updatedSession?.user?.websites) {
-        throw new Error("Session update failed");
+        throw new Error("עדכון הסשן נכשל");
       }
 
       // Clear registration data and redirect
@@ -157,11 +140,9 @@ export function PricingSection({ websiteUrl }: { websiteUrl: string }) {
       console.error("Error:", error);
       toast({
         variant: "destructive",
-        title: "Error",
+        title: "שגיאה",
         description:
-          error instanceof Error
-            ? error.message
-            : "Something went wrong. Please try again.",
+          error instanceof Error ? error.message : "משהו השתבש. אנא נסו שוב.",
       });
     } finally {
       setLoading(false);
@@ -169,22 +150,21 @@ export function PricingSection({ websiteUrl }: { websiteUrl: string }) {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8" dir="rtl">
       <LoadingModal open={loading} />
 
       {/* Success Message */}
       <Alert className="bg-success/10 border-success/20 text-success">
         <CheckCircle2 className="h-4 w-4" />
         <AlertDescription>
-          Your domain has been successfully verified! Choose your plan to
-          continue.
+          הדומיין שלך אומת בהצלחה! בחר/י את המסלול המתאים לך כדי להמשיך.
         </AlertDescription>
       </Alert>
 
       {/* Billing Toggle */}
       {/* <div className="flex justify-center items-center gap-4">
         <span className={!isAnnual ? "font-semibold" : "text-muted-foreground"}>
-          Monthly
+          חודשי
         </span>
         <button
           onClick={() => setIsAnnual(!isAnnual)}
@@ -202,10 +182,10 @@ export function PricingSection({ websiteUrl }: { websiteUrl: string }) {
           <span
             className={isAnnual ? "font-semibold" : "text-muted-foreground"}
           >
-            Annual
+            שנתי
           </span>
           <span className="bg-green-100 text-green-700 text-xs px-2 py-1 rounded-full">
-            Save 37%
+            חסכו 37%
           </span>
         </div>
       </div> */}
@@ -216,12 +196,12 @@ export function PricingSection({ websiteUrl }: { websiteUrl: string }) {
         <Card className="p-6 border-2 border-border/50">
           <div className="space-y-6">
             <div>
-              <h3 className="text-2xl font-bold">Free</h3>
+              <h3 className="text-2xl font-bold">חינם</h3>
               <p className="text-muted-foreground mt-2">
-                Basic features for getting started
+                תכונות בסיסיות להתחלה
               </p>
             </div>
-            <div className="text-3xl font-bold">$0</div>
+            <div className="text-3xl font-bold">0 ₪</div>
             <ul className="space-y-3">
               {freeFeatures.map((feature) => (
                 <li
@@ -239,7 +219,7 @@ export function PricingSection({ websiteUrl }: { websiteUrl: string }) {
               onClick={handleFreePlan}
               disabled={loading}
             >
-              Start with Free
+              התחילו בחינם
             </Button>
           </div>
         </Card>
@@ -247,35 +227,35 @@ export function PricingSection({ websiteUrl }: { websiteUrl: string }) {
         {/* Pro Plan */}
         {/* <Card className="p-6 border-2 border-primary relative overflow-hidden">
           <div className="absolute top-0 right-0 bg-primary text-primary-foreground text-sm px-3 py-1 rounded-bl-lg">
-            RECOMMENDED
+            מומלץ
           </div>
           <div className="space-y-6">
             <div>
-              <h3 className="text-2xl font-bold">Pro</h3>
+              <h3 className="text-2xl font-bold">פרו</h3>
               <p className="text-muted-foreground mt-2">
-                Advanced features to scale your AI business
+                תכונות מתקדמות לעסק שלכם
               </p>
             </div>
             <div>
               <div className="text-3xl font-bold">
-                ${isAnnual ? Math.round(annualPrice / 12) : monthlyPrice}
+                {isAnnual ? Math.round(annualPrice / 12) : monthlyPrice} ₪
                 <span className="text-lg font-normal text-muted-foreground">
-                  /mo
+                  /לחודש
                 </span>
               </div>
               {isAnnual && (
                 <div className="text-sm text-muted-foreground mt-1">
-                  Billed annually (${Math.round(annualPrice)}/year)
+                  חיוב שנתי ({Math.round(annualPrice)} ₪/לשנה)
                 </div>
               )}
             </div>
             <ul className="space-y-3">
               <li className="flex items-center gap-2 font-medium text-primary">
                 <ArrowRight className="h-5 w-5" />
-                Everything in Free, plus:
+                כל מה שבחינם, ובנוסף:
               </li>
               {proOnlyFeatures.map((feature) => (
-                <li key={feature} className="flex items-center gap-2 pl-5">
+                <li key={feature} className="flex items-center gap-2 pr-5">
                   <CheckCircle2 className="h-5 w-5 text-success" />
                   {feature}
                 </li>
@@ -288,10 +268,10 @@ export function PricingSection({ websiteUrl }: { websiteUrl: string }) {
               disabled={loading}
             >
               {loading
-                ? "Processing..."
+                ? "מעבד..."
                 : isAnnual
-                ? "Get Pro Annual"
-                : "Get Pro Monthly"}
+                ? "קבלו פרו שנתי"
+                : "קבלו פרו חודשי"}
             </Button>
           </div>
         </Card> */}
@@ -299,7 +279,7 @@ export function PricingSection({ websiteUrl }: { websiteUrl: string }) {
 
       {/* Trust Message */}
       <div className="text-center text-sm text-muted-foreground">
-        <p>Secure payment powered by Stripe. Cancel anytime.</p>
+        <p>תשלום מאובטח באמצעות Stripe. ניתן לבטל בכל עת.</p>
       </div>
     </div>
   );

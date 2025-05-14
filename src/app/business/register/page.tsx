@@ -107,19 +107,37 @@ export default function BusinessRegistration() {
         </div>
 
         {/* Progress Steps */}
-        <div className="mb-12 relative z-10 px-2">
-          <div className="flex justify-between items-center">
+        <div className="mb-12 relative z-10 px-2" dir="rtl">
+          <div className="flex justify-between relative">
+            {/* Step divider lines */}
+            <div
+              className="absolute top-5 left-0 right-0 h-[2px] bg-border -z-10"
+              style={{ margin: "0 auto", width: "75%" }}
+            ></div>
+
             {steps.map((s, i) => (
               <div
                 key={s.title}
-                className={`flex-1 relative ${
-                  i !== steps.length - 1
-                    ? 'after:content-[""] after:h-[2px] after:w-[calc(100%-10px)] after:bg-gradient-to-r after:from-transparent after:via-border after:to-transparent after:absolute after:top-1/2 after:left-[calc(50%+5px)] after:-z-10'
-                    : ""
-                }`}
+                className="flex-1 relative flex flex-col items-center"
               >
                 <div
-                  className={`flex flex-col items-center ${
+                  className={`w-10 h-10 rounded-full flex items-center justify-center mb-2 border z-[5] bg-background
+                  ${
+                    i + 1 === step
+                      ? "bg-primary text-primary-foreground border-primary/30 shadow-[0_0_10px_rgba(99,102,241,0.5)]"
+                      : i + 1 < step
+                      ? "bg-success text-success-foreground border-success/30"
+                      : "bg-muted border-muted-foreground/20"
+                  }`}
+                >
+                  {i + 1 < step ? (
+                    <CheckCircle2 className="w-6 h-6" />
+                  ) : (
+                    <span className="font-medium">{i + 1}</span>
+                  )}
+                </div>
+                <div
+                  className={`text-sm font-medium ${
                     i + 1 === step
                       ? "text-primary"
                       : i + 1 < step
@@ -127,26 +145,10 @@ export default function BusinessRegistration() {
                       : "text-muted-foreground"
                   }`}
                 >
-                  <div
-                    className={`w-10 h-10 rounded-full flex items-center justify-center mb-2 border
-                    ${
-                      i + 1 === step
-                        ? "bg-primary text-primary-foreground border-primary/30 shadow-[0_0_10px_rgba(99,102,241,0.5)]"
-                        : i + 1 < step
-                        ? "bg-success text-success-foreground border-success/30"
-                        : "bg-muted border-muted-foreground/20"
-                    }`}
-                  >
-                    {i + 1 < step ? (
-                      <CheckCircle2 className="w-6 h-6" />
-                    ) : (
-                      <span className="font-medium">{i + 1}</span>
-                    )}
-                  </div>
-                  <div className="text-sm font-medium">{s.title}</div>
-                  <div className="text-xs text-muted-foreground text-center px-1">
-                    {s.description}
-                  </div>
+                  {s.title}
+                </div>
+                <div className="text-xs text-muted-foreground text-center px-1">
+                  {s.description}
                 </div>
               </div>
             ))}
@@ -175,7 +177,7 @@ export default function BusinessRegistration() {
                       <CheckCircle2 className="w-5 h-5" />
                       <span>מחובר/ת בתור {session.user.email}</span>
                     </div>
-                    <Button onClick={() => setStep(2)}>Continue</Button>
+                    <Button onClick={() => setStep(2)}>להמשך ההרשמה</Button>
                   </div>
                 )}
               </div>

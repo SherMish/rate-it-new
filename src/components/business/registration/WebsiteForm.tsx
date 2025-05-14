@@ -25,22 +25,20 @@ import { useSession } from "next-auth/react";
 const formSchema = z.object({
   websiteUrl: z
     .string()
-    .min(1, "Website URL is required")
+    .min(1, "כתובת האתר נדרשת")
     .transform((val) => {
       if (!val.startsWith("http://") && !val.startsWith("https://")) {
         return `https://${val}`;
       }
       return val;
     })
-    .pipe(z.string().url("Please enter a valid URL")),
-  businessName: z
-    .string()
-    .min(2, "Business name must be at least 2 characters"),
-  fullName: z.string().min(2, "Full name must be at least 2 characters"),
-  phoneNumber: z.string().min(10, "Please enter a valid phone number"),
-  role: z.string().min(2, "Please specify your role"),
+    .pipe(z.string().url("אנא הזינו כתובת אתר תקינה")),
+  businessName: z.string().min(2, "שם העסק חייב להכיל לפחות 2 תווים"),
+  fullName: z.string().min(2, "השם המלא חייב להכיל לפחות 2 תווים"),
+  phoneNumber: z.string().min(10, "אנא הזינו מספר טלפון תקין"),
+  role: z.string().min(2, "אנא ציינו את התפקיד שלכם"),
   agreedToTerms: z.boolean().refine((val) => val === true, {
-    message: "You must agree to the terms and conditions",
+    message: "יש להסכים לתנאי השימוש",
   }),
 });
 
@@ -110,7 +108,7 @@ export function WebsiteRegistrationForm({
         form.setValue("businessName", website.name);
       }
     } catch (error) {
-      form.setError("websiteUrl", { message: "Error checking website" });
+      form.setError("websiteUrl", { message: "שגיאה בבדיקת האתר" });
     }
     setLoading(false);
   };
@@ -120,8 +118,7 @@ export function WebsiteRegistrationForm({
 
     if (existingWebsite?.isVerified) {
       form.setError("websiteUrl", {
-        message:
-          "This website has already been verified. Please contact the website admin to request access.",
+        message: "אתר זה כבר אומת. אנא צרו קשר עם מנהל האתר כדי לבקש גישה.",
       });
       return;
     }
@@ -150,14 +147,18 @@ export function WebsiteRegistrationForm({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="space-y-6"
+        dir="rtl"
+      >
         <div className="grid gap-6">
           <FormField
             control={form.control}
             name="websiteUrl"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Website URL</FormLabel>
+                <FormLabel>כתובת האתר</FormLabel>
                 <FormControl>
                   <Input
                     {...field}
@@ -173,16 +174,15 @@ export function WebsiteRegistrationForm({
                 {existingWebsite && !existingWebsite.isVerified && (
                   <Alert className="bg-muted/50 border-muted text-muted-foreground text-sm">
                     <AlertDescription className="flex items-center gap-1">
-                      <span className="opacity-75">Note:</span> This tool is
-                      already in our database.{" "}
+                      <span className="opacity-75">הערה:</span> אתר זה כבר קיים
+                      במערכת שלנו.{" "}
                       <Link
                         href={`/tool/${existingWebsite.url}`}
                         className="text-primary/75 hover:text-primary hover:underline inline-flex items-center gap-1"
                         target="_blank"
                         rel="noopener noreferrer"
                       >
-                        View tool&apos;s page{" "}
-                        <ExternalLink className="h-3 w-3" />
+                        צפייה בדף האתר <ExternalLink className="h-3 w-3" />
                       </Link>
                     </AlertDescription>
                   </Alert>
@@ -196,9 +196,9 @@ export function WebsiteRegistrationForm({
             name="businessName"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Business Name</FormLabel>
+                <FormLabel>שם העסק</FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder="Your company name" />
+                  <Input {...field} placeholder="שם החברה שלך" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -211,9 +211,9 @@ export function WebsiteRegistrationForm({
               name="fullName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Full Name</FormLabel>
+                  <FormLabel>שם מלא</FormLabel>
                   <FormControl>
-                    <Input {...field} placeholder="Your full name" />
+                    <Input {...field} placeholder="השם המלא שלך" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -225,13 +225,9 @@ export function WebsiteRegistrationForm({
               name="phoneNumber"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Phone Number</FormLabel>
+                  <FormLabel>מספר טלפון</FormLabel>
                   <FormControl>
-                    <Input
-                      {...field}
-                      placeholder="+1 (555) 000-0000"
-                      type="tel"
-                    />
+                    <Input {...field} placeholder="0540000000" type="tel" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -244,9 +240,9 @@ export function WebsiteRegistrationForm({
             name="role"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Your Role</FormLabel>
+                <FormLabel>התפקיד שלך</FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder="e.g. CEO, Marketing Manager" />
+                  <Input {...field} placeholder="לדוגמה: מנכ״ל, מנהל שיווק" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -257,7 +253,7 @@ export function WebsiteRegistrationForm({
             control={form.control}
             name="agreedToTerms"
             render={({ field }) => (
-              <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+              <FormItem className="flex flex-row items-start space-x-0 space-y-0 rtl:space-x-reverse gap-3">
                 <FormControl>
                   <Checkbox
                     checked={field.value}
@@ -266,13 +262,13 @@ export function WebsiteRegistrationForm({
                 </FormControl>
                 <div className="space-y-1 leading-none">
                   <FormLabel>
-                    I agree to the{" "}
+                    אני מסכים/ה ל
                     <Link
                       href="/terms"
                       className="text-primary hover:underline"
                       target="_blank"
                     >
-                      Terms of Service
+                      תנאי השימוש
                     </Link>
                   </FormLabel>
                   <FormMessage />
@@ -287,7 +283,7 @@ export function WebsiteRegistrationForm({
             type="submit"
             disabled={loading || Object.keys(form.formState.errors).length > 0}
           >
-            {loading ? "Checking..." : "Continue"}
+            {loading ? "בודק..." : "המשך"}
           </Button>
         </div>
       </form>

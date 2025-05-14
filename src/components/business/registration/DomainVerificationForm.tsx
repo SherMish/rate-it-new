@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Mail, AlertCircle, CheckCircle } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { useRouter } from "next/navigation";
 
 interface DomainVerificationFormProps {
   websiteUrl: string;
@@ -22,6 +23,11 @@ export function DomainVerificationForm({
   const [attempts, setAttempts] = useState(0);
   const [loading, setLoading] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
+  const router = useRouter();
+  if (!websiteUrl) {
+    router.push("/business");
+    return;
+  }
   const domain = websiteUrl
     .toLowerCase()
     .replace(/^(?:https?:\/\/)?(?:www\.)?/i, "") // Remove protocol and www
@@ -57,11 +63,11 @@ export function DomainVerificationForm({
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" dir="rtl">
       <div className="text-center space-y-2">
-        <h2 className="text-2xl font-semibold">Verify Domain Ownership</h2>
+        <h2 className="text-2xl font-semibold">אימות בעלות על הדומיין</h2>
         <p className="text-muted-foreground">
-          Enter your work email to verify ownership of {domain}
+          הזינו את כתובת האימייל העסקית שלכם כדי לאמת בעלות על {domain}
         </p>
       </div>
 
@@ -70,12 +76,14 @@ export function DomainVerificationForm({
           <div className="flex items-center gap-2 bg-muted/50 p-4 rounded-lg">
             <Mail className="h-5 w-5 text-muted-foreground" />
             <p className="text-sm text-muted-foreground">
-              Your email must match the domain of your website
+              כתובת האימייל שלכם חייבת להתאים לדומיין של האתר שלכם
             </p>
           </div>
 
           <div className="flex items-center gap-2">
+            <span className="text-muted-foreground">{domain}@</span>
             <Input
+              dir="ltr"
               type="text"
               value={email.split("@")[0]}
               onChange={(e) => setEmail(`${e.target.value}@${domain}`)}
@@ -83,7 +91,6 @@ export function DomainVerificationForm({
               className="flex-1"
               disabled={loading || attempts >= 3}
             />
-            <span className="text-muted-foreground">@{domain}</span>
           </div>
 
           <div className="space-y-3">
@@ -92,25 +99,21 @@ export function DomainVerificationForm({
               className="w-full"
               disabled={loading || attempts >= 3 || !email}
             >
-              {loading
-                ? "Sending..."
-                : emailSent
-                ? "Send Again"
-                : "Send Verification Email"}
+              {loading ? "שולח..." : emailSent ? "שלח שוב" : "שלח אימייל אימות"}
             </Button>
 
             {emailSent && (
               <Alert className="bg-success/10 border-success/20 text-success">
                 <CheckCircle className="h-4 w-4" />
                 <AlertDescription>
-                  Verification email sent! Please check your inbox.
+                  אימייל אימות נשלח! אנא בדקו את תיבת הדואר הנכנס שלכם.
                 </AlertDescription>
               </Alert>
             )}
 
             {attempts > 0 && attempts < 3 && (
               <p className="text-sm text-center text-muted-foreground">
-                {3 - attempts} attempts remaining
+                נותרו {3 - attempts} ניסיונות
               </p>
             )}
 
@@ -118,7 +121,7 @@ export function DomainVerificationForm({
               <Alert variant="destructive">
                 <AlertCircle className="h-4 w-4" />
                 <AlertDescription>
-                  Maximum attempts reached. Please contact support at{" "}
+                  הגעתם למקסימום הניסיונות. אנא צרו קשר עם התמיכה בכתובת{" "}
                   <a
                     href="mailto:info@ai-radar.com"
                     className="underline hover:no-underline"
@@ -139,7 +142,7 @@ export function DomainVerificationForm({
           className="text-sm"
           disabled={loading}
         >
-          Use a different email
+          השתמש בכתובת אימייל אחרת
         </Button>
       </div>
     </div>
