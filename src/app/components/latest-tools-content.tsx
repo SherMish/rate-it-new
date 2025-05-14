@@ -25,12 +25,15 @@ export function LatestToolsContent() {
         <h2 className="text-3xl font-bold mb-4">
           אל תישארו מאחור.
           <br />
-          תנו לעסק שלכם את המקום שמגיע לו
+          תנו לעסק שלכם את המקום{" "}
+          <span className="inline-block px-1 py-0.5 bg-primary text-white rounded-md transform -rotate-9 shadow-md font-extrabold">
+            שמגיע לו
+          </span>
         </h2>
         <p className="text-muted-foreground text-lg leading-relaxed">
-          לקוחות מחפשים עסקים אמינים – תנו להם למצוא אתכם עם דירוגים שקופים וחוות
-          דעת אמיתיות. חזקו את הנוכחות הדיגיטלית שלכם, בנו אמון, והפכו למותג
-          שהלקוחות זוכרים וממליצים עליו.
+          ישראלים מחפשים עסקים אמינים – תנו להם למצוא אתכם עם דירוגים שקופים
+          וחוות דעת אמיתיות. חזקו את הנוכחות הדיגיטלית שלכם, בנו אמון, והפכו
+          למותג שכולם זוכרים וממליצים עליו.
         </p>
       </motion.div>
 

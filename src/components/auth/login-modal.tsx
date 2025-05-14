@@ -172,7 +172,7 @@ export function LoginModal() {
           <DialogDescription className="text-base text-right">
             {" "}
             {/* 🆕 */}
-            התחבר כדי לשתף את החוויה שלך ולדרג עסקים אונליין
+            הירשמו בחינם כדי לשתף את החוויה שלכם ולדרג עסקים
           </DialogDescription>
         </DialogHeader>
 
