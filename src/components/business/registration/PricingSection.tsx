@@ -52,14 +52,8 @@ export function PricingSection({ websiteUrl }: { websiteUrl: string }) {
     }
 
     setLoading(true);
-    console.log("Starting free plan registration for:", websiteUrl);
 
     try {
-      // Get saved registration data
-      const savedData = JSON.parse(
-        localStorage.getItem("businessRegistration") || "{}"
-      );
-
       // Normalize and clean URL
       let cleanUrl = websiteUrl
         .toLowerCase()
@@ -88,7 +82,6 @@ export function PricingSection({ websiteUrl }: { websiteUrl: string }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           url: cleanUrl,
-          name: savedData.businessName,
           owner: userId,
           isVerified: true,
           category: "other",
@@ -105,10 +98,6 @@ export function PricingSection({ websiteUrl }: { websiteUrl: string }) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name: savedData.fullName,
-          phone: savedData.phoneNumber,
-          workRole: savedData.role,
-          workEmail: savedData.workEmail,
           role: "business_owner",
           isWebsiteOwner: true,
           isVerifiedWebsiteOwner: true,
@@ -128,7 +117,6 @@ export function PricingSection({ websiteUrl }: { websiteUrl: string }) {
       // Verify session before redirect
       const verifySessionRes = await fetch("/api/auth/session");
       const updatedSession = await verifySessionRes.json();
-      console.log("Updated session:", updatedSession);
       if (!updatedSession?.user?.websites) {
         throw new Error("עדכון הסשן נכשל");
       }

@@ -129,9 +129,18 @@ export function WebsiteRegistrationForm({
       step: 3,
       email: data.email, // Use email directly from form data
     };
-    console.log("Saving form data to localStorage:", formData);
     localStorage.setItem("businessRegistration", JSON.stringify(formData));
 
+    await fetch("/api/user/update", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: data.fullName,
+        phone: data.phoneNumber,
+        workRole: data.role,
+        // workEmail: data.email,
+      }),
+    });
     setFormData(data);
     onComplete();
   };
