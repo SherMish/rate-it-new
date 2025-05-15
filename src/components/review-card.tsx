@@ -82,7 +82,10 @@ export function ReviewCard({ review }: ReviewCardProps) {
 
   return (
     <>
-      <Card className="p-6 bg-zinc-900/50 hover:bg-zinc-800/50 transition-colors border-zinc-700/50">
+      <Card
+        className="p-6 bg-white hover:bg-gray-50 transition-colors border-border"
+        dir="rtl"
+      >
         <div className="flex gap-4">
           <div className="flex-shrink-0 pt-1">
             {review.relatedUser?.image ? (
@@ -106,7 +109,7 @@ export function ReviewCard({ review }: ReviewCardProps) {
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between gap-4">
               <div className="flex-1 min-w-0 space-y-2">
-                <h3 className="text-lg font-semibold text-zinc-50">
+                <h3 className="text-lg font-semibold text-foreground">
                   {review.title}
                 </h3>
                 <div className="flex items-center gap-3">
@@ -117,13 +120,13 @@ export function ReviewCard({ review }: ReviewCardProps) {
                         className={`w-4 h-4 ${
                           i < review.rating
                             ? "text-yellow-400 fill-yellow-400"
-                            : "text-zinc-600"
+                            : "text-zinc-300"
                         }`}
                       />
                     ))}
                   </div>
-                  <span className="text-sm text-zinc-400">
-                    by {review.relatedUser?.name || "Anonymous"}
+                  <span className="text-sm text-muted-foreground">
+                    מאת {review.relatedUser?.name || "אנונימי"}
                   </span>
                   <TooltipProvider>
                     <Tooltip>
@@ -131,38 +134,36 @@ export function ReviewCard({ review }: ReviewCardProps) {
                         {review.isVerified ? (
                           <div className="flex items-center gap-1 text-emerald-500">
                             <ShieldCheck className="w-4 h-4 fill-emerald-500/10" />
-                            <span className="text-xs font-medium">
-                              Verified
-                            </span>
+                            <span className="text-xs font-medium">מאומת</span>
                           </div>
                         ) : (
-                          <div className="flex items-center gap-1 text-zinc-400">
+                          <div className="flex items-center gap-1 text-muted-foreground">
                             <ShieldAlert className="w-4 h-4" />
                             <span className="text-xs font-medium">
-                              Unverified
+                              לא מאומת
                             </span>
                           </div>
                         )}
                       </TooltipTrigger>
                       <TooltipContent>
                         {review.isVerified
-                          ? "This review is verified with proof of using the service"
-                          : "This review was submitted without proof of using the service"}
+                          ? "הביקורת הזו אומתה עם הוכחת שימוש בשירות"
+                          : "הביקורת הזו נמסרה ללא הוכחת שימוש בשירות"}
                       </TooltipContent>
                     </Tooltip>
                   </TooltipProvider>
                 </div>
               </div>
-              <span className="text-xs text-zinc-500 whitespace-nowrap">
-                {new Date(review.createdAt).toLocaleDateString("en-US", {
+              <span className="text-xs text-muted-foreground whitespace-nowrap">
+                {new Date(review.createdAt).toLocaleDateString("he-IL", {
                   year: "numeric",
                   month: "short",
                   day: "numeric",
                 })}
               </span>
             </div>
-            <p className="text-zinc-300 mt-6">{review.body}</p>
-            <div className="flex items-center gap-4 mt-4 pt-4 border-t border-zinc-700/50">
+            <p className="text-foreground mt-6">{review.body}</p>
+            <div className="flex items-center gap-4 mt-4 pt-4 border-t border-border">
               <Button
                 variant="outline"
                 size="sm"
@@ -171,9 +172,9 @@ export function ReviewCard({ review }: ReviewCardProps) {
                 className={hasVoted ? "opacity-50 cursor-not-allowed" : ""}
               >
                 <ThumbsUp
-                  className={`w-4 h-4 mr-2 ${hasVoted ? "fill-current" : ""}`}
+                  className={`w-4 h-4 ml-2 ${hasVoted ? "fill-current" : ""}`}
                 />
-                Helpful (
+                מועיל (
                 <span id={`helpful-count-${review._id}`}>
                   {review.helpfulCount || 0}
                 </span>
@@ -184,8 +185,8 @@ export function ReviewCard({ review }: ReviewCardProps) {
                 size="sm"
                 onClick={() => setIsReportModalOpen(true)}
               >
-                <Flag className="w-4 h-4 mr-2" />
-                Report
+                <Flag className="w-4 h-4 ml-2" />
+                דווח
               </Button>
             </div>
           </div>

@@ -167,14 +167,13 @@ const getReviews = async (websiteId: string) => {
 };
 
 function getRatingStatus(rating: number): { label: string; color: string } {
-  if (rating === 0) return { label: "Neutral", color: "text-zinc-500" };
-  if (rating >= 4.5) return { label: "Excellent", color: "text-emerald-500" };
-  if (rating >= 4.0) return { label: "Very Good", color: "text-green-500" };
-  if (rating >= 3.5) return { label: "Good", color: "text-blue-500" };
-  if (rating >= 3.0) return { label: "Average", color: "text-yellow-500" };
-  if (rating >= 2.0)
-    return { label: "Below Average", color: "text-orange-500" };
-  return { label: "Poor", color: "text-red-500" };
+  if (rating === 0) return { label: "ניטרלי", color: "text-zinc-500" };
+  if (rating >= 4.5) return { label: "מצוין", color: "text-emerald-500" };
+  if (rating >= 4.0) return { label: "טוב מאוד", color: "text-green-500" };
+  if (rating >= 3.5) return { label: "טוב", color: "text-blue-500" };
+  if (rating >= 3.0) return { label: "ממוצע", color: "text-yellow-500" };
+  if (rating >= 2.0) return { label: "מתחת לממוצע", color: "text-orange-500" };
+  return { label: "חלש", color: "text-red-500" };
 }
 
 // Generate metadata for SEO
@@ -187,44 +186,44 @@ export async function generateMetadata(
 
   if (!website) {
     return {
-      title: "Tool Not Found",
+      title: "עסק לא נמצא",
     };
   }
 
-  const averageRating = website.averageRating?.toFixed(1) || "No";
+  const averageRating = website.averageRating?.toFixed(1) || "אין";
   const reviewText = `${website.reviewCount} ${
-    website.reviewCount === 1 ? "Review" : "Reviews"
+    website.reviewCount === 1 ? "ביקורת" : "ביקורות"
   }`;
 
   return {
-    title: `${website.name} Reviews - ${averageRating}★ Rating (${reviewText})`,
+    title: `${website.name} ביקורות - ${averageRating}★ דירוג (${reviewText})`,
     description:
       website.description ||
-      `Read ${reviewText} of ${website.name}. User ratings, feedback, and detailed reviews. Average rating: ${averageRating} out of 5 stars.`,
+      `קרא ${reviewText} על ${website.name}. דירוגי משתמשים, משוב, וביקורות מפורטות. דירוג ממוצע: ${averageRating} מתוך 5 כוכבים.`,
     keywords: [
       website.name,
-      `${website.name} reviews`,
-      `${website.name} ratings`,
-      `${website.name} user reviews`,
-      `${website.name} feedback`,
+      `${website.name} ביקורות`,
+      `${website.name} דירוגים`,
+      `${website.name} ביקורות משתמשים`,
+      `${website.name} משוב`,
       website.category?.name || "",
-      "AI tool reviews",
-      "AI software reviews",
-      "user reviews",
-      "ratings and reviews",
+      "ביקורות עסקים",
+      "ביקורות שירות",
+      "ביקורות משתמשים",
+      "דירוגים וביקורות",
     ].filter(Boolean),
     openGraph: {
-      title: `${website.name} - Reviews & Ratings`,
+      title: `${website.name} - ביקורות ודירוגים`,
       description:
         website.description ||
-        `Read user reviews and ratings for ${website.name}. Average rating: ${averageRating} out of 5 stars based on ${reviewText}.`,
+        `קרא ביקורות ודירוגי משתמשים עבור ${website.name}. דירוג ממוצע: ${averageRating} מתוך 5 כוכבים על בסיס ${reviewText}.`,
       type: "website",
       url: `${process.env.NEXT_PUBLIC_APP_URL}/tool/${params.url}`,
     },
     twitter: {
       card: "summary_large_image",
-      title: `${website.name} Reviews & Ratings`,
-      description: `${averageRating}★ rating based on ${reviewText}`,
+      title: `${website.name} ביקורות ודירוגים`,
+      description: `${averageRating}★ דירוג על בסיס ${reviewText}`,
     },
     alternates: {
       canonical: `${process.env.NEXT_PUBLIC_APP_URL}/tool/${params.url}`,
@@ -248,11 +247,11 @@ export async function generateStaticParams() {
 // Add this helper function to format the pricing model text
 function formatPricingModel(model: PricingModel): string {
   const formats: Record<PricingModel, string> = {
-    free: "Free",
-    freemium: "🎁 Freemium",
-    subscription: "📅 Subscription-based",
-    pay_per_use: "💰 Pay per use",
-    enterprise: "🏢 Enterprise (Custom pricing)",
+    free: "חינם",
+    freemium: "🎁 פרימיום-חינמי",
+    subscription: "📅 מבוסס מנוי",
+    pay_per_use: "💰 תשלום לפי שימוש",
+    enterprise: "🏢 תאגידי (תמחור מותאם)",
   };
   return formats[model];
 }
@@ -284,47 +283,47 @@ function getTrustStatus(score: number) {
   );
   return (
     status || {
-      status: "Unrated",
-      description: "This tool has not been rated yet.",
+      status: "לא מדורג",
+      description: "עסק זה עדיין לא דורג.",
     }
   );
 }
 
 // Function to get the appropriate icon based on trust level
 function getTrustStatusIcon(score: number) {
-  if (score >= 8.6) return Award; // Industry Leader
-  if (score >= 7.1) return ThumbsUp; // Market Approved
-  if (score >= 5.1) return Sparkles; // Emerging Player
-  return AlertTriangle; // Low Market Confidence
+  if (score >= 8.6) return Award; // מוביל בתעשייה
+  if (score >= 7.1) return ThumbsUp; // מאושר שוק
+  if (score >= 5.1) return Sparkles; // שחקן מתפתח
+  return AlertTriangle; // אמון שוק נמוך
 }
 
 // Function to get styles based on trust level
 function getTrustStatusStyles(score: number) {
   if (score >= 8.6) {
     return {
-      badge: "bg-blue-950/40 border-blue-500/30 text-blue-400",
-      icon: "text-blue-400",
-      gradient: "from-blue-600/20 to-blue-400/5",
+      badge: "bg-blue-50 border-blue-200 text-blue-700",
+      icon: "text-blue-600",
+      gradient: "from-blue-100 to-blue-50",
     };
   }
   if (score >= 7.1) {
     return {
-      badge: "bg-green-950/40 border-green-500/30 text-green-400",
-      icon: "text-green-400",
-      gradient: "from-green-600/20 to-green-400/5",
+      badge: "bg-green-50 border-green-200 text-green-700",
+      icon: "text-green-600",
+      gradient: "from-green-100 to-green-50",
     };
   }
   if (score >= 5.1) {
     return {
-      badge: "bg-yellow-950/40 border-yellow-500/30 text-yellow-400",
-      icon: "text-yellow-400",
-      gradient: "from-yellow-600/20 to-yellow-400/5",
+      badge: "bg-yellow-50 border-yellow-200 text-yellow-700",
+      icon: "text-yellow-600",
+      gradient: "from-yellow-100 to-yellow-50",
     };
   }
   return {
-    badge: "bg-red-950/40 border-red-500/30 text-red-400",
-    icon: "text-red-400",
-    gradient: "from-red-600/20 to-red-400/5",
+    badge: "bg-red-50 border-red-200 text-red-700",
+    icon: "text-red-600",
+    gradient: "from-red-100 to-red-50",
   };
 }
 
@@ -344,25 +343,31 @@ export default async function ToolPage({ params }: PageProps) {
     "@type": "Product",
     name: website.name,
     description: website.description,
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: website.averageRating,
-      reviewCount: website.reviewCount,
-      bestRating: "5",
-      worstRating: "1",
-    },
-    review: reviews.map((review) => ({
-      "@type": "Review",
-      reviewRating: {
-        "@type": "Rating",
-        ratingValue: review.rating,
-      },
-      author: {
-        "@type": "Person",
-        name: review.relatedUser?.name || "Anonymous",
-      },
-      reviewBody: review.body,
-    })),
+    aggregateRating:
+      website.reviewCount > 0
+        ? {
+            "@type": "AggregateRating",
+            ratingValue: website.averageRating,
+            reviewCount: website.reviewCount,
+            bestRating: "5",
+            worstRating: "1",
+          }
+        : undefined,
+    review:
+      reviews && reviews.length > 0
+        ? reviews.map((review) => ({
+            "@type": "Review",
+            reviewRating: {
+              "@type": "Rating",
+              ratingValue: review.rating,
+            },
+            author: {
+              "@type": "Person",
+              name: review.relatedUser?.name || "אנונימי",
+            },
+            reviewBody: review.body,
+          }))
+        : undefined,
   };
 
   const suggestedTools = website.category
@@ -377,11 +382,11 @@ export default async function ToolPage({ params }: PageProps) {
       />
       {/* Tracking component */}
       <TrackPageVisit websiteId={website._id.toString()} />
-      <div className="min-h-screen bg-background relative">
+      <div className="min-h-screen bg-background relative" dir="rtl">
         <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,#3b82f615,transparent_70%),radial-gradient(ellipse_at_bottom,#6366f115,transparent_70%)] pointer-events-none" />
 
         <div className="relative container max-w-6xl mx-auto sm:px-4 py-8">
-          <div className="rounded-lg border border-border/50 bg-secondary/50 backdrop-blur-sm">
+          <div className="rounded-lg border border-border bg-white shadow-sm">
             <div className="p-6 space-y-5">
               {/* Full width sections */}
               <div>
@@ -389,7 +394,7 @@ export default async function ToolPage({ params }: PageProps) {
                 <div className="mb-8">
                   <div className="flex flex-col gap-6 lg:gap-0">
                     <div className="flex items-start gap-6">
-                      <div className="flex-shrink-0 w-[64px] h-[64px] rounded-xl bg-zinc-800/50 border border-zinc-700/50 flex items-center justify-center overflow-hidden">
+                      <div className="flex-shrink-0 w-[64px] h-[64px] rounded-xl bg-secondary border border-border flex items-center justify-center overflow-hidden">
                         {website.logo ? (
                           <Image
                             src={website.logo}
@@ -399,8 +404,8 @@ export default async function ToolPage({ params }: PageProps) {
                             className="rounded-xl object-cover"
                           />
                         ) : (
-                          <div className="w-6 h-6 bg-zinc-700 rounded-full flex items-center justify-center">
-                            <span className="text-xs text-zinc-400">
+                          <div className="w-6 h-6 bg-secondary rounded-full flex items-center justify-center">
+                            <span className="text-xs text-muted-foreground">
                               {website.name.charAt(0)}
                             </span>
                           </div>
@@ -417,15 +422,15 @@ export default async function ToolPage({ params }: PageProps) {
                                 <Tooltip>
                                   <TooltipTrigger>
                                     {website.isVerified ? (
-                                      <ShieldCheck className="w-5 h-5 text-white fill-blue-500 cursor-default" />
+                                      <ShieldCheck className="w-5 h-5 text-background fill-blue-500 cursor-default" />
                                     ) : (
                                       <ShieldAlert className="w-5 h-5 text-muted-foreground cursor-default" />
                                     )}
                                   </TooltipTrigger>
                                   <TooltipContent>
                                     {website.isVerified
-                                      ? "This tool has been verified by its owner"
-                                      : "This tool hasn't been verified by its owner yet"}
+                                      ? "עסק זה אומת על ידי הבעלים"
+                                      : "עסק זה טרם אומת על ידי הבעלים"}
                                   </TooltipContent>
                                 </Tooltip>
                               </TooltipProvider>
@@ -463,7 +468,7 @@ export default async function ToolPage({ params }: PageProps) {
                 </div>
 
                 {/* Rating Overview */}
-                <div className="p-6 rounded-lg border border-border/50 bg-background/50">
+                <div className="p-6 rounded-lg border border-border bg-background/50">
                   <div className="flex flex-col md:flex-row gap-6 md:gap-8">
                     {/* User Rating Column - Only show if there are reviews */}
                     {website.reviewCount > 0 && (
@@ -480,7 +485,7 @@ export default async function ToolPage({ params }: PageProps) {
                               className={`w-6 h-6 ${
                                 i < (website.averageRating || 0)
                                   ? "text-yellow-400 fill-yellow-400"
-                                  : "text-zinc-600"
+                                  : "text-zinc-300"
                               }`}
                             />
                           ))}
@@ -490,22 +495,22 @@ export default async function ToolPage({ params }: PageProps) {
                         >
                           {ratingStatus.label}
                         </div>
-                        <div className="text-sm text-zinc-400">
-                          Based on {website.reviewCount} reviews
+                        <div className="text-sm text-muted-foreground">
+                          על בסיס {website.reviewCount} ביקורות
                         </div>
                       </div>
                     )}
 
                     {/* Mobile Divider - Only show if there are reviews */}
                     {website.reviewCount > 0 && (
-                      <div className="block md:hidden w-full h-px bg-border/50" />
+                      <div className="block md:hidden w-full h-px bg-border" />
                     )}
 
                     {/* RadarTrust Score */}
                     {website.radarTrust > 0 && (
                       <>
                         {website.reviewCount > 0 && (
-                          <div className="hidden md:block w-px bg-border/50 self-stretch" />
+                          <div className="hidden md:block w-px bg-border self-stretch" />
                         )}
                         <div className="flex flex-col items-center justify-center text-center md:w-48">
                           <div className="text-5xl font-bold mb-2">
@@ -518,7 +523,7 @@ export default async function ToolPage({ params }: PageProps) {
                             <RadarIcon className="w-6 h-6 text-primary" />
                           </div>
                           <div className="text-sm font-medium text-primary mb-1">
-                            RadarTrust™ Score
+                            ציון אמון רייט-איט™
                           </div>
                           {/* Trust Status Badge */}
                           <div className="mb-3">
@@ -564,10 +569,10 @@ export default async function ToolPage({ params }: PageProps) {
                               </Tooltip>
                             </TooltipProvider>
                           </div>
-                          <div className="text-xs text-zinc-400">
+                          <div className="text-xs text-muted-foreground">
                             <RadarTrustInfo>
                               <span className="cursor-pointer hover:text-primary hover:underline transition-colors">
-                                Learn how this score is calculated
+                                למד איך מחושב הציון
                               </span>
                             </RadarTrustInfo>
                           </div>
@@ -576,20 +581,20 @@ export default async function ToolPage({ params }: PageProps) {
                     )}
 
                     {/* Vertical/Horizontal Divider */}
-                    <div className="block md:hidden w-full h-px bg-border/50" />
-                    <div className="hidden md:block w-px bg-border/50 self-stretch" />
+                    <div className="block md:hidden w-full h-px bg-border" />
+                    <div className="hidden md:block w-px bg-border self-stretch" />
 
                     {/* Description Column */}
                     <div className="flex-1 space-y-1">
                       <h3 className="text-lg font-semibold">
-                        About {website.name}
+                        אודות {website.name}
                       </h3>
                       <div className="space-y-4 text-muted-foreground">
                         {website.description ? (
                           <p>{website.description}</p>
                         ) : (
                           <>
-                            <p>Description unavailable</p>
+                            <p>תיאור לא זמין</p>
                           </>
                         )}
                       </div>
@@ -600,7 +605,7 @@ export default async function ToolPage({ params }: PageProps) {
               {/* Claim ownership section */}
               {!website.isVerified && (
                 <div className="flex items-center text-muted-foreground text-sm">
-                  <p className="mr-1">Are you the owner of this tool?</p>
+                  <p className="ml-1">האם אתה הבעלים של עסק זה?</p>
                   <ClaimToolButton websiteUrl={website.url} />
                 </div>
               )}
@@ -614,18 +619,18 @@ export default async function ToolPage({ params }: PageProps) {
                     website.launchYear ||
                     website.hasFreeTrialPeriod ||
                     website.hasAPI ? (
-                      <h2 className="text-2xl font-semibold mb-4">Details</h2>
+                      <h2 className="text-2xl font-semibold mb-4">פרטים</h2>
                     ) : null}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       {website.pricingModel && (
-                        <div className="p-4 bg-secondary/50 backdrop-blur-sm rounded-lg border border-border">
+                        <div className="p-4 bg-background/50 rounded-lg border border-border">
                           <div className="flex items-start gap-3">
                             <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
                               <CreditCard className="w-4 h-4 text-primary" />
                             </div>
                             <div>
                               <h3 className="text-sm font-medium text-muted-foreground">
-                                Pricing
+                                תמחור
                               </h3>
                               <p className="text-base mt-1">
                                 {formatPricingModel(website.pricingModel)}
@@ -636,14 +641,14 @@ export default async function ToolPage({ params }: PageProps) {
                       )}
 
                       {website.launchYear && (
-                        <div className="p-4 bg-secondary/50 backdrop-blur-sm rounded-lg border border-border">
+                        <div className="p-4 bg-background/50 rounded-lg border border-border">
                           <div className="flex items-start gap-3">
                             <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
                               <Calendar className="w-4 h-4 text-primary" />
                             </div>
                             <div>
                               <h3 className="text-sm font-medium text-muted-foreground">
-                                Launch Year
+                                שנת השקה
                               </h3>
                               <p className="text-base mt-1">
                                 {website.launchYear}
@@ -654,7 +659,7 @@ export default async function ToolPage({ params }: PageProps) {
                       )}
 
                       {website.hasAPI && (
-                        <div className="p-4 bg-secondary/50 backdrop-blur-sm rounded-lg border border-border">
+                        <div className="p-4 bg-background/50 rounded-lg border border-border">
                           <div className="flex items-start gap-3">
                             <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
                               <Code2 className="w-4 h-4 text-primary" />
@@ -664,7 +669,7 @@ export default async function ToolPage({ params }: PageProps) {
                                 API
                               </h3>
                               <p className="text-base mt-1">
-                                {website.hasAPI ? "✅ Available" : "No"}
+                                {website.hasAPI ? "✅ זמין" : "לא"}
                               </p>
                             </div>
                           </div>
@@ -672,19 +677,17 @@ export default async function ToolPage({ params }: PageProps) {
                       )}
 
                       {website.hasFreeTrialPeriod && (
-                        <div className="p-4 bg-secondary/50 backdrop-blur-sm rounded-lg border border-border">
+                        <div className="p-4 bg-background/50 rounded-lg border border-border">
                           <div className="flex items-start gap-3">
                             <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
                               <Clock className="w-4 h-4 text-primary" />
                             </div>
                             <div>
                               <h3 className="text-sm font-medium text-muted-foreground">
-                                Free Trial
+                                ניסיון חינם
                               </h3>
                               <p className="text-base mt-1">
-                                {website.hasFreeTrialPeriod
-                                  ? "✅ Available"
-                                  : "No"}
+                                {website.hasFreeTrialPeriod ? "✅ זמין" : "לא"}
                               </p>
                             </div>
                           </div>
@@ -694,25 +697,24 @@ export default async function ToolPage({ params }: PageProps) {
                   </div>
 
                   {/* Reviews Section */}
-                  <div className="border-t border-border/50 pt-6">
+                  <div className="border-t border-border pt-6">
                     {reviews.length > 0 ? (
                       <ReviewsSection reviews={reviews} />
                     ) : (
                       <div className="text-center py-12">
                         <h3 className="text-2xl font-semibold mb-3">
-                          No Reviews Yet
+                          אין ביקורות עדיין
                         </h3>
                         <p className="text-muted-foreground mb-6 max-w-md mx-auto">
-                          Be the first to share your experience with{" "}
-                          {website.name} and help others make informed
-                          decisions.
+                          היה הראשון לשתף את החוויה שלך עם {website.name} ועזור
+                          לאחרים לקבל החלטות מושכלות.
                         </p>
                         <Link
                           href={`/tool/${params.url}/review`}
                           className="inline-flex items-center gap-2 bg-primary/10 hover:bg-primary/20 text-primary px-6 py-3 rounded-lg font-medium transition-colors"
                         >
-                          Write the First Review
-                          <ArrowRight className="w-4 h-4" />
+                          <ArrowRight className="w-4 h-4 mr-1 order-last" />
+                          כתוב את הביקורת הראשונה
                         </Link>
                       </div>
                     )}
@@ -722,9 +724,7 @@ export default async function ToolPage({ params }: PageProps) {
                 {/* Similar Tools Column */}
                 {suggestedTools.length > 0 && (
                   <div>
-                    <h2 className="text-2xl font-semibold mb-4">
-                      Similar Tools
-                    </h2>
+                    <h2 className="text-2xl font-semibold mb-4">עסקים דומים</h2>
                     <div className="flex flex-col gap-3">
                       {suggestedTools.map((tool) => (
                         <SuggestedToolCard

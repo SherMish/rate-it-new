@@ -493,7 +493,7 @@ export default function ReviewsGeneratorPage() {
                 <Label htmlFor="emailTemplate" className="ml-2">
                   עריכת תוכן האימייל
                 </Label>
-                <span className="text-xs bg-yellow-900/30 text-yellow-300 px-2 py-0.5 rounded">
+                <span className="text-xs bg-yellow-50 text-yellow-600 px-2 py-0.5 rounded border border-yellow-200">
                   בקרוב
                 </span>
               </div>
@@ -506,7 +506,7 @@ export default function ReviewsGeneratorPage() {
                 value={emailBodyText}
                 disabled
                 readOnly
-                className="min-h-[150px] bg-muted/50 cursor-not-allowed"
+                className="min-h-[150px] bg-muted/30 cursor-not-allowed border-muted"
                 placeholder="הזן את ההודעה שלך כאן..."
               />
             </div>
@@ -534,7 +534,7 @@ export default function ReviewsGeneratorPage() {
             {sentStatus && (
               <Alert
                 variant={sentStatus.failed > 0 ? "destructive" : "default"}
-                className="bg-green-900/20"
+                className="bg-green-50"
               >
                 <AlertTitle>הזמנות נשלחו</AlertTitle>
                 <AlertDescription>
@@ -589,7 +589,7 @@ export default function ReviewsGeneratorPage() {
               <h2 className="text-lg font-medium">
                 הזמנות ביקורת תכנותיות (API)
               </h2>
-              <span className="mr-2 text-xs bg-yellow-900/30 text-yellow-300 px-2 py-0.5 rounded">
+              <span className="mr-2 text-xs bg-yellow-50 text-yellow-600 px-2 py-0.5 rounded border border-yellow-200">
                 בקרוב
               </span>
             </div>

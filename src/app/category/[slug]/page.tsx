@@ -25,30 +25,30 @@ export async function generateMetadata({
 
   if (!category) {
     return {
-      title: "Category Not Found | AI-Radar",
+      title: "קטגוריה לא נמצאה | רייט-איט",
     };
   }
 
   return {
-    title: `${category.name} AI Tools & Reviews | AI-Radar`,
-    description: `Discover and compare the best ${category.name.toLowerCase()} AI tools. Read authentic reviews, ratings, and insights from real users.`,
+    title: `${category.name} עסקים וביקורות | רייט-איט`,
+    description: `גלה והשווה את העסקים הטובים ביותר ב${category.name}. קרא ביקורות אותנטיות, דירוגים ותובנות ממשתמשים אמיתיים.`,
     keywords: [
-      `${category.name.toLowerCase()} ai tools`,
-      "ai software reviews",
-      "ai tool comparison",
-      "best ai tools",
-      `${category.name.toLowerCase()} ai software`,
-      "ai tool ratings",
-      "user reviews",
+      `${category.name.toLowerCase()} עסקים`,
+      "ביקורות עסקים",
+      "השוואת עסקים",
+      "עסקים מובילים",
+      `${category.name.toLowerCase()} ביקורות`,
+      "דירוגי עסקים",
+      "ביקורות משתמשים",
     ],
     openGraph: {
-      title: `Best ${category.name} AI Tools - Reviews & Ratings`,
-      description: `Find and compare top ${category.name.toLowerCase()} AI tools with authentic user reviews and ratings.`,
+      title: `העסקים הטובים ביותר ב${category.name} - ביקורות ודירוגים`,
+      description: `מצא והשווה עסקים מובילים ב${category.name.toLowerCase()} עם ביקורות ודירוגים אותנטיים ממשתמשים.`,
     },
     twitter: {
       card: "summary_large_image",
-      title: `Best ${category.name} AI Tools - Reviews & Ratings`,
-      description: `Find and compare top ${category.name.toLowerCase()} AI tools with authentic user reviews and ratings.`,
+      title: `העסקים הטובים ביותר ב${category.name} - ביקורות ודירוגים`,
+      description: `מצא והשווה עסקים מובילים ב${category.name.toLowerCase()} עם ביקורות ודירוגים אותנטיים ממשתמשים.`,
     },
   };
 }

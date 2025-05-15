@@ -53,7 +53,7 @@ export function ReviewsSection({ reviews }: ReviewsSectionProps) {
     <div>
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <h2 className="text-2xl font-semibold">
-          Reviews ({reviews.length})
+          חוות דעת ({reviews.length})
         </h2>
         <div className="flex items-center gap-3">
           <Select onValueChange={setFilterBy} defaultValue="all">
