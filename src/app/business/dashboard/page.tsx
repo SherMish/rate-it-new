@@ -27,23 +27,12 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-  DialogClose,
-} from "@/components/ui/dialog";
+
 import { Button } from "@/components/ui/button";
 
 import { useBusinessGuard } from "@/hooks/use-business-guard";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
-import { BarChart, LineChart } from "@tremor/react";
 import { Review } from "@/components/reviews-section";
-import { RadarTrustInfo } from "@/components/radar-trust-info";
-import { RadarTrustImprovementDialog } from "@/app/components/radar-trust-improvement-dialog";
 import trustStatuses from "@/lib/data/trustStatuses.json";
 
 type Feature = {
@@ -287,113 +276,9 @@ export default function DashboardPage() {
         {/* RadarTrust Score Card */}
         <Card className="p-6 hover:shadow-lg transition-all">
           <div className="flex justify-between items-start">
-            <div className="space-y-2">
-              <p className="text-sm font-medium text-muted-foreground">
-                ציון אמון™
-              </p>
-
-              {website?.radarTrust ? (
-                <>
-                  {/* Score Display */}
-                  <div className="flex items-center gap-2 mt-2">
-                    <h3 className="text-3xl font-bold">
-                      {website.radarTrust.toFixed(1)}
-                    </h3>
-                    <span className="text-sm text-muted-foreground">/10</span>
-                  </div>
-
-                  {/* Short Benefit Statement */}
-                  <p className="text-xs text-muted-foreground mt-1">
-                    ציון אמון גבוה יותר מגביר את הנראות והאמינות שלכם.
-                  </p>
-
-                  {/* Trust Status Badge */}
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger>
-                        {(() => {
-                          const status = getTrustStatus(website.radarTrust);
-                          const styles = getTrustStatusStyles(
-                            website.radarTrust
-                          );
-                          const StatusIcon = getTrustStatusIcon(
-                            website.radarTrust
-                          );
-                          return (
-                            <div
-                              className={`relative flex items-center gap-2 px-3 py-1.5 rounded-lg border ${styles.badge} transition-all hover:scale-105`}
-                            >
-                              <div
-                                className={`absolute inset-0 rounded-lg bg-gradient-to-r ${styles.gradient} opacity-50`}
-                              ></div>
-                              <StatusIcon
-                                className={`w-4 h-4 ${styles.icon} relative z-10`}
-                              />
-                              <span className="relative z-10 font-medium text-sm">
-                                {status.status}
-                              </span>
-                            </div>
-                          );
-                        })()}
-                      </TooltipTrigger>
-                      <TooltipContent className="max-w-[250px] p-3">
-                        <p className="text-xs">
-                          {getTrustStatus(website.radarTrust).description}
-                        </p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-
-                  {/* Learn More Link */}
-                  <div className="text-xs text-muted-foreground mt-2">
-                    <RadarTrustInfo>
-                      <span className="cursor-pointer hover:text-primary hover:underline transition-colors">
-                        למדו איך מחושב ציון זה
-                      </span>
-                    </RadarTrustInfo>
-                  </div>
-                </>
-              ) : (
-                <>
-                  {/* Loading State */}
-                  <div className="mt-2 py-2">
-                    <div className="w-16 h-3 bg-primary/10 rounded-full animate-pulse mb-3"></div>
-                    <h3 className="text-muted-foreground text-sm font-medium">
-                      רייט-איט מחשב את הציון שלכם
-                    </h3>
-                    <p className="text-xs text-muted-foreground mt-2 max-w-[250px]">
-                      ציון האמון שלכם נמצא בתהליך עיבוד ויהיה זמין תוך מספר
-                      ימים. ציון זה עוזר למשתמשים להבין את מעמד העסק שלכם בשוק.
-                    </p>
-                    <div className="text-xs text-muted-foreground mt-3">
-                      <RadarTrustInfo>
-                        <span className="cursor-pointer hover:text-primary hover:underline transition-colors">
-                          למדו איך מחושב ציון זה
-                        </span>
-                      </RadarTrustInfo>
-                    </div>
-                  </div>
-                </>
-              )}
-            </div>
-
             {/* Right Section */}
             <div className="flex flex-col items-end gap-2">
               <RadarIcon className="w-8 h-8 text-primary opacity-75" />
-
-              {/* Improve Score Button (Only if Score Exists) */}
-              {website?.radarTrust && (
-                <RadarTrustImprovementDialog>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="text-xs h-9 px-4 mt-3 bg-primary/10 border-primary/20 text-primary hover:bg-primary/20 hover:text-primary transition-all hover:scale-105"
-                  >
-                    <TrendingUp className="w-4 h-4 ml-2" />
-                    שפרו את ציון האמון שלכם
-                  </Button>
-                </RadarTrustImprovementDialog>
-              )}
             </div>
           </div>
         </Card>

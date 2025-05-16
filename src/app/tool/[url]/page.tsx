@@ -42,7 +42,6 @@ import WriteReviewButton from "@/app/components/WriteReviewButton";
 import { PricingModel } from "@/lib/types/website";
 import { WebsiteCard } from "@/components/website-card";
 import { SuggestedToolCard } from "@/components/suggested-tool-card";
-import { RadarTrustInfo } from "@/components/radar-trust-info";
 import { ClaimToolButton } from "@/app/components/claim-tool-button";
 import { trackEvent } from "@/lib/analytics";
 import {
@@ -99,7 +98,7 @@ async function getWebsiteData(url: string) {
   // Get website data
   const website = await Website.findOne({ url: url })
     .select(
-      "name url description shortDescription logo category averageRating reviewCount isVerified pricingModel launchYear hasAPI hasFreeTrialPeriod radarTrust"
+      "name url description shortDescription logo category averageRating reviewCount isVerified launchYear"
     )
     .lean();
 
@@ -134,7 +133,6 @@ async function getWebsiteData(url: string) {
     _id: website._id.toString(),
     averageRating: Math.round(averageRating * 10) / 10,
     reviewCount,
-    radarTrust: website.radarTrust,
     category: categoryData
       ? {
           ...categoryData,
@@ -501,89 +499,6 @@ export default async function ToolPage({ params }: PageProps) {
                       </div>
                     )}
 
-                    {/* Mobile Divider - Only show if there are reviews */}
-                    {website.reviewCount > 0 && (
-                      <div className="block md:hidden w-full h-px bg-border" />
-                    )}
-
-                    {/* RadarTrust Score */}
-                    {website.radarTrust > 0 && (
-                      <>
-                        {website.reviewCount > 0 && (
-                          <div className="hidden md:block w-px bg-border self-stretch" />
-                        )}
-                        <div className="flex flex-col items-center justify-center text-center md:w-48">
-                          <div className="text-5xl font-bold mb-2">
-                            {website.radarTrust.toFixed(1)}
-                            <span className="text-2xl text-muted-foreground">
-                              /10
-                            </span>
-                          </div>
-                          <div className="flex items-center gap-1 mb-2">
-                            <RadarIcon className="w-6 h-6 text-primary" />
-                          </div>
-                          <div className="text-sm font-medium text-primary mb-1">
-                            ציון אמון רייט-איט™
-                          </div>
-                          {/* Trust Status Badge */}
-                          <div className="mb-3">
-                            <TooltipProvider>
-                              <Tooltip>
-                                <TooltipTrigger>
-                                  {(() => {
-                                    const status = getTrustStatus(
-                                      website.radarTrust
-                                    );
-                                    const styles = getTrustStatusStyles(
-                                      website.radarTrust
-                                    );
-                                    const StatusIcon = getTrustStatusIcon(
-                                      website.radarTrust
-                                    );
-                                    return (
-                                      <div
-                                        className={`relative inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border ${styles.badge}`}
-                                      >
-                                        <div
-                                          className={`absolute inset-0 rounded-lg bg-gradient-to-r ${styles.gradient} opacity-50`}
-                                        ></div>
-                                        <StatusIcon
-                                          className={`w-4 h-4 ${styles.icon} relative z-10`}
-                                        />
-                                        <span className="relative z-10 font-medium text-sm">
-                                          {status.status}
-                                        </span>
-                                        <Info className="w-3.5 h-3.5 relative z-10 opacity-70" />
-                                      </div>
-                                    );
-                                  })()}
-                                </TooltipTrigger>
-                                <TooltipContent className="max-w-[250px] p-3">
-                                  <p className="text-xs">
-                                    {
-                                      getTrustStatus(website.radarTrust)
-                                        .description
-                                    }
-                                  </p>
-                                </TooltipContent>
-                              </Tooltip>
-                            </TooltipProvider>
-                          </div>
-                          <div className="text-xs text-muted-foreground">
-                            <RadarTrustInfo>
-                              <span className="cursor-pointer hover:text-primary hover:underline transition-colors">
-                                למד איך מחושב הציון
-                              </span>
-                            </RadarTrustInfo>
-                          </div>
-                        </div>
-                      </>
-                    )}
-
-                    {/* Vertical/Horizontal Divider */}
-                    <div className="block md:hidden w-full h-px bg-border" />
-                    <div className="hidden md:block w-px bg-border self-stretch" />
-
                     {/* Description Column */}
                     <div className="flex-1 space-y-1">
                       <h3 className="text-lg font-semibold">
@@ -615,31 +530,10 @@ export default async function ToolPage({ params }: PageProps) {
                 <div>
                   {/* Details Section */}
                   <div className="mb-8">
-                    {website.pricingModel ||
-                    website.launchYear ||
-                    website.hasFreeTrialPeriod ||
-                    website.hasAPI ? (
+                    {website.launchYear ? (
                       <h2 className="text-2xl font-semibold mb-4">פרטים</h2>
                     ) : null}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      {website.pricingModel && (
-                        <div className="p-4 bg-background/50 rounded-lg border border-border">
-                          <div className="flex items-start gap-3">
-                            <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                              <CreditCard className="w-4 h-4 text-primary" />
-                            </div>
-                            <div>
-                              <h3 className="text-sm font-medium text-muted-foreground">
-                                תמחור
-                              </h3>
-                              <p className="text-base mt-1">
-                                {formatPricingModel(website.pricingModel)}
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                      )}
-
                       {website.launchYear && (
                         <div className="p-4 bg-background/50 rounded-lg border border-border">
                           <div className="flex items-start gap-3">
@@ -652,42 +546,6 @@ export default async function ToolPage({ params }: PageProps) {
                               </h3>
                               <p className="text-base mt-1">
                                 {website.launchYear}
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                      )}
-
-                      {website.hasAPI && (
-                        <div className="p-4 bg-background/50 rounded-lg border border-border">
-                          <div className="flex items-start gap-3">
-                            <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                              <Code2 className="w-4 h-4 text-primary" />
-                            </div>
-                            <div>
-                              <h3 className="text-sm font-medium text-muted-foreground">
-                                API
-                              </h3>
-                              <p className="text-base mt-1">
-                                {website.hasAPI ? "✅ זמין" : "לא"}
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                      )}
-
-                      {website.hasFreeTrialPeriod && (
-                        <div className="p-4 bg-background/50 rounded-lg border border-border">
-                          <div className="flex items-start gap-3">
-                            <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                              <Clock className="w-4 h-4 text-primary" />
-                            </div>
-                            <div>
-                              <h3 className="text-sm font-medium text-muted-foreground">
-                                ניסיון חינם
-                              </h3>
-                              <p className="text-base mt-1">
-                                {website.hasFreeTrialPeriod ? "✅ זמין" : "לא"}
                               </p>
                             </div>
                           </div>

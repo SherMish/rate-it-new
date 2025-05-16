@@ -44,28 +44,13 @@ interface FormData {
   shortDescription: string;
   logo: string | undefined;
   pricingModel: string;
-  hasFreeTrialPeriod: boolean;
-  hasAPI: boolean;
   launchYear: number | null;
-  radarTrust?: number;
 }
 
 interface FormErrors {
   name?: string;
   shortDescription?: string;
   description?: string;
-}
-
-interface GeneratedData {
-  name?: string;
-  description?: string;
-  shortDescription?: string;
-  category?: string;
-  pricingModel?: PricingModel;
-  launchYear?: number;
-  hasFreeTrialPeriod?: boolean;
-  hasAPI?: boolean;
-  radarTrust?: number;
 }
 
 export default function ToolPage() {
@@ -79,18 +64,12 @@ export default function ToolPage() {
     shortDescription: "",
     logo: undefined,
     pricingModel: "",
-    hasFreeTrialPeriod: false,
-    hasAPI: false,
     launchYear: null,
-    radarTrust: undefined,
   });
   const [formErrors, setFormErrors] = useState<FormErrors>({});
   const [showSuccess, setShowSuccess] = useState(false);
-  const [isGenerating, setIsGenerating] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
-  const [generatedData, setGeneratedData] = useState<GeneratedData | null>(
-    null
-  );
+
   const [alertError, setAlertError] = useState<string | null>(null);
   const [hasAppliedCurrentData, setHasAppliedCurrentData] = useState(false);
 
@@ -104,10 +83,7 @@ export default function ToolPage() {
         shortDescription: website.shortDescription || "",
         logo: website.logo || undefined,
         pricingModel: website.pricingModel || "",
-        hasFreeTrialPeriod: website.hasFreeTrialPeriod || false,
-        hasAPI: website.hasAPI || false,
         launchYear: website.launchYear || null,
-        radarTrust: website.radarTrust || undefined,
       });
       setHasAppliedCurrentData(true);
     }
@@ -161,69 +137,6 @@ export default function ToolPage() {
     } finally {
       setIsSaving(false);
     }
-  };
-
-  const handleGenerateAI = async () => {
-    setIsGenerating(true);
-    setAlertError(null);
-    try {
-      const response = await fetch("/api/admin/generate-metadata", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url: website?.url }),
-      });
-
-      if (!response.ok) {
-        throw new Error("הייצור נכשל");
-      }
-
-      const data = await response.json();
-      const formattedData: GeneratedData = {
-        name: data.name,
-        description: data.description,
-        shortDescription: data.shortDescription,
-        category: data.category,
-        pricingModel: data.pricingModel as PricingModel,
-        launchYear: data.launchYear ? parseInt(data.launchYear) : undefined,
-        hasFreeTrialPeriod: data.hasFreeTrialPeriod,
-        hasAPI: data.hasAPI,
-        radarTrust: data.radarTrust ? parseFloat(data.radarTrust) : undefined,
-      };
-      setGeneratedData(formattedData);
-      setShowAlert(true);
-    } catch (error) {
-      setAlertError(
-        "שירות הבינה המלאכותית שלנו אינו זמין כרגע. אנא נסו שוב מאוחר יותר."
-      );
-      setShowAlert(true);
-    } finally {
-      setIsGenerating(false);
-    }
-  };
-
-  const handleApplyGenerated = () => {
-    if (generatedData) {
-      setFormData((prev) => ({
-        ...prev,
-        name: generatedData.name || prev.name,
-        description: generatedData.description || prev.description,
-        shortDescription:
-          generatedData.shortDescription || prev.shortDescription,
-        category: generatedData.category || prev.category,
-        pricingModel: generatedData.pricingModel || prev.pricingModel,
-        launchYear: generatedData.launchYear || prev.launchYear,
-        hasFreeTrialPeriod:
-          typeof generatedData.hasFreeTrialPeriod === "boolean"
-            ? generatedData.hasFreeTrialPeriod
-            : prev.hasFreeTrialPeriod,
-        hasAPI:
-          typeof generatedData.hasAPI === "boolean"
-            ? generatedData.hasAPI
-            : prev.hasAPI,
-        radarTrust: generatedData.radarTrust || prev.radarTrust,
-      }));
-    }
-    setShowAlert(false);
   };
 
   if (isLoading) return <LoadingSpinner />;
@@ -371,7 +284,6 @@ export default function ToolPage() {
                   </SelectContent>
                 </Select>
               </div>
-
               <div className="grid gap-2">
                 <label className="text-sm font-medium">שנת השקה</label>
                 <Input
@@ -388,36 +300,6 @@ export default function ToolPage() {
                   min={2000}
                   max={new Date().getFullYear()}
                 />
-              </div>
-
-              <div className="grid gap-2">
-                <label className="text-sm font-medium">תקופת ניסיון חינם</label>
-                <div className="h-10 flex items-center">
-                  <Switch
-                    checked={formData.hasFreeTrialPeriod}
-                    onCheckedChange={(checked) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        hasFreeTrialPeriod: checked,
-                      }))
-                    }
-                  />
-                </div>
-              </div>
-
-              <div className="grid gap-2">
-                <label className="text-sm font-medium">כולל API</label>
-                <div className="h-10 flex items-center">
-                  <Switch
-                    checked={formData.hasAPI}
-                    onCheckedChange={(checked) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        hasAPI: checked,
-                      }))
-                    }
-                  />
-                </div>
               </div>
             </div>
 
@@ -440,80 +322,6 @@ export default function ToolPage() {
           </div>
         </Card>
       </div>
-
-      <AlertDialog open={showAlert} onOpenChange={setShowAlert}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>
-              {alertError ? "הייצור נכשל" : "יצירה בעזרת בינה מלאכותית הושלמה"}
-            </AlertDialogTitle>
-            <AlertDialogDescription>
-              {alertError ? (
-                alertError
-              ) : (
-                <>
-                  הבינה המלאכותית יצרה תוכן חדש עבור העסק שלך. האם ברצונך להחיל
-                  שינויים אלה?
-                  <div className="mt-4 space-y-2 text-sm">
-                    {generatedData?.name && (
-                      <p>
-                        <strong>שם:</strong> {generatedData.name}
-                      </p>
-                    )}
-                    {generatedData?.shortDescription && (
-                      <p>
-                        <strong>תיאור קצר:</strong>{" "}
-                        {generatedData.shortDescription}
-                      </p>
-                    )}
-                    {generatedData?.description && (
-                      <p>
-                        <strong>תיאור:</strong> {generatedData.description}
-                      </p>
-                    )}
-                    {generatedData?.category && (
-                      <p>
-                        <strong>קטגוריה:</strong> {generatedData.category}
-                      </p>
-                    )}
-                    {generatedData?.pricingModel && (
-                      <p>
-                        <strong>מודל מחירים:</strong>{" "}
-                        {generatedData.pricingModel}
-                      </p>
-                    )}
-                    {generatedData?.launchYear && (
-                      <p>
-                        <strong>שנת השקה:</strong> {generatedData.launchYear}
-                      </p>
-                    )}
-                    {generatedData?.hasFreeTrialPeriod !== undefined && (
-                      <p>
-                        <strong>תקופת ניסיון חינם:</strong>{" "}
-                        {generatedData.hasFreeTrialPeriod ? "כן" : "לא"}
-                      </p>
-                    )}
-                    {generatedData?.hasAPI !== undefined && (
-                      <p>
-                        <strong>כולל API:</strong>{" "}
-                        {generatedData.hasAPI ? "כן" : "לא"}
-                      </p>
-                    )}
-                  </div>
-                </>
-              )}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>ביטול</AlertDialogCancel>
-            {!alertError && (
-              <AlertDialogAction onClick={handleApplyGenerated}>
-                החל שינויים
-              </AlertDialogAction>
-            )}
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </>
   );
 }

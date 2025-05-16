@@ -26,8 +26,6 @@ import { Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/autoplay";
 import { formatPricingModel } from "@/lib/utils/formatting";
-import { RadarTrustContent } from "../components/radar-trust-content";
-import { RadarTrustVisual } from "../components/radar-trust-visual";
 
 const benefits = [
   {
@@ -200,8 +198,6 @@ export default function BusinessPage() {
           logo: website.logo,
           averageRating: website.averageRating || 0,
           reviewCount: website.reviewCount || 0,
-          radarTrust: website.radarTrust || 0,
-          businessModel: formatPricingModel(website.pricingModel || "Free"),
         }));
 
         setLatestTools(toolsData);
@@ -666,9 +662,7 @@ export default function BusinessPage() {
         <div className="container max-w-6xl mx-auto px-4">
           <div className="grid lg:grid-cols-[400px,1fr] gap-12 items-center">
             {/* Right Column - Visual */}
-            <div>
-              <RadarTrustVisual />
-            </div>
+            <div>//TODO add visual</div>
 
             {/* Left Column - Content */}
             <div className="text-right">

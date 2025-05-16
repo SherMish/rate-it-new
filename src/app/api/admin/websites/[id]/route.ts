@@ -24,12 +24,7 @@ export async function PATCH(
           shortDescription: body.shortDescription,
           category: body.category,
           logo: body.logo,
-          pricingModel: body.pricingModel,
-          hasFreeTrialPeriod: body.hasFreeTrialPeriod,
-          hasAPI: body.hasAPI,
           launchYear: body.launchYear,
-          radarTrust: body.radarTrust,
-          radarTrustExplanation: body.radarTrustExplanation,
         }
       },
       { new: true }

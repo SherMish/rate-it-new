@@ -14,9 +14,6 @@ export interface WebsiteType {
   shortDescription?: string;
   category: string;
   logo?: string;
-  pricingModel?: PricingModel;
-  hasFreeTrialPeriod?: boolean;
-  hasAPI?: boolean;
   launchYear?: number;
   createdBy?: string;
   owner?: string;
@@ -24,8 +21,6 @@ export interface WebsiteType {
   averageRating?: number;
   isVerified?: boolean;
   isActive?: boolean;
-  radarTrust?: number;
-  radarTrustExplanation?: string;
   createdAt?: Date;
   updatedAt?: Date;
 } 

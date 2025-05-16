@@ -19,24 +19,16 @@ import {
   Radar as RadarIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import Link from "next/link";
-import useEmblaCarousel from "embla-carousel-react";
+
 import { Review, Website } from "@/lib/models";
 import connectDB from "@/lib/mongodb";
-import { Card } from "@/components/ui/card";
 import { SearchSection } from "./components/search-section";
-import { MarketingSection } from "./components/marketing-section";
 import { CategoriesSection } from "./components/categories-section";
-import { LatestReviewsCarousel } from "./components/latest-reviews-carousel";
-import { RadarAnimation } from "./components/radar-animation";
+
 import { Metadata } from "next";
 import { Types, Document } from "mongoose";
-import { RandomBlogPosts } from "@/components/random-blog-posts";
-import { WebsiteCard } from "@/components/website-card";
+
 import { LatestToolCard } from "@/app/components/latest-tool-card";
-import { RadarTrustVisual } from "@/app/components/radar-trust-visual";
-import { RadarTrustContent } from "@/app/components/radar-trust-content";
 import { LatestToolsContent } from "@/app/components/latest-tools-content";
 
 const categories = [

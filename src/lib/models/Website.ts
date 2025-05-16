@@ -17,13 +17,6 @@ export interface WebsiteType {
   reviewCount?: number;
   averageRating?: number;
   verifiedAt?: Date;
-  radarTrust?: number;
-  userReviewsScore?: number;
-  featureRobustnessScore?: number;
-  marketAdoptionScore?: number;
-  pricingAccessibilityScore?: number;
-  hasAPI?: boolean;
-  hasFreeTrialPeriod?: boolean;
   launchYear?: number;
   isActive?: boolean;
   createdAt?: Date;
@@ -91,32 +84,10 @@ const WebsiteSchema = new Schema(
       type: Boolean,
       default: true,
     },
-    pricingModel: {
-      type: String,
-      enum: Object.values(PricingModel),
-      default: null,
-    },
-    hasFreeTrialPeriod: {
-      type: Boolean,
-      default: null,
-    },
-    hasAPI: {
-      type: Boolean,
-      default: null,
-    },
+
     launchYear: {
       type: Number,
       default: null,
-    },
-    radarTrust: {
-      type: Number,
-      min: 0,
-      max: 10,
-      default: 0,
-    },
-    radarTrustExplanation: {
-      type: String,
-      default: "",
     },
   },
   {
