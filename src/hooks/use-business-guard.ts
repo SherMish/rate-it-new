@@ -29,7 +29,6 @@ export function useBusinessGuard() {
     // Fetch website details
     const fetchWebsite = async () => {
       try {
-        console.log('Fetching website for ID:', session.user.websites);
         const res = await fetch(`/api/website/get?id=${session.user.websites}`);
         
         if (res.ok) {

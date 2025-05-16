@@ -92,9 +92,10 @@ export default function ToolPage() {
     null
   );
   const [alertError, setAlertError] = useState<string | null>(null);
+  const [hasAppliedCurrentData, setHasAppliedCurrentData] = useState(false);
 
   useEffect(() => {
-    if (website) {
+    if (website && !hasAppliedCurrentData) {
       setFormData({
         name: website.name,
         url: website.url,
@@ -108,6 +109,7 @@ export default function ToolPage() {
         launchYear: website.launchYear || null,
         radarTrust: website.radarTrust || undefined,
       });
+      setHasAppliedCurrentData(true);
     }
   }, [website]);
 
@@ -229,20 +231,6 @@ export default function ToolPage() {
   return (
     <>
       <div className="container mx-auto px-4 py-8" dir="rtl">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-2xl font-bold">הגדרות עסק</h1>
-          {!website?.radarTrust && (
-            <Button
-              onClick={handleGenerateAI}
-              disabled={isGenerating}
-              className="flex items-center gap-2"
-            >
-              <Wand2 className="w-4 h-4" />
-              {isGenerating ? "מייצר..." : "יצירה בעזרת בינה מלאכותית"}
-            </Button>
-          )}
-        </div>
-
         <Card className="p-6">
           <div className="space-y-6">
             <div className="grid gap-2">
@@ -320,6 +308,7 @@ export default function ToolPage() {
               <div className="grid gap-2">
                 <label className="text-sm font-medium">קטגוריה</label>
                 <Select
+                  dir="rtl"
                   value={formData.category}
                   onValueChange={(value) =>
                     setFormData({ ...formData, category: value })
