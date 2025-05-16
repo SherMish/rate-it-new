@@ -7,7 +7,7 @@ export default function WriteReviewPage({
   params: { url: string } 
 }) {
   return (
-    <ReviewLayout title="Write a Review">
+    <ReviewLayout title="כתיבת חוות דעת">
       <ReviewForm initialUrl={decodeURIComponent(params.url)} />
     </ReviewLayout>
   );
