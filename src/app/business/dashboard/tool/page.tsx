@@ -45,12 +45,24 @@ interface FormData {
   logo: string | undefined;
   pricingModel: string;
   launchYear: number | null;
+  socialUrls: {
+    facebook?: string;
+    instagram?: string;
+    twitter?: string;
+    tiktok?: string;
+  };
 }
 
 interface FormErrors {
   name?: string;
   shortDescription?: string;
   description?: string;
+  socialUrls?: {
+    facebook?: string;
+    instagram?: string;
+    twitter?: string;
+    tiktok?: string;
+  };
 }
 
 export default function ToolPage() {
@@ -65,6 +77,7 @@ export default function ToolPage() {
     logo: undefined,
     pricingModel: "",
     launchYear: null,
+    socialUrls: {},
   });
   const [formErrors, setFormErrors] = useState<FormErrors>({});
   const [showSuccess, setShowSuccess] = useState(false);
@@ -72,6 +85,21 @@ export default function ToolPage() {
 
   const [alertError, setAlertError] = useState<string | null>(null);
   const [hasAppliedCurrentData, setHasAppliedCurrentData] = useState(false);
+
+  // URL validation helper function
+  const isValidUrl = (url: string) => {
+    if (!url) return true; // Empty URLs are valid (not required)
+
+    // If URL doesn't have protocol, add https://
+    const urlWithProtocol = url.match(/^https?:\/\//) ? url : `https://${url}`;
+
+    try {
+      new URL(urlWithProtocol);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  };
 
   useEffect(() => {
     if (website && !hasAppliedCurrentData) {
@@ -84,6 +112,7 @@ export default function ToolPage() {
         logo: website.logo || undefined,
         pricingModel: website.pricingModel || "",
         launchYear: website.launchYear || null,
+        socialUrls: website.socialUrls || {},
       });
       setHasAppliedCurrentData(true);
     }
@@ -102,6 +131,38 @@ export default function ToolPage() {
       }
       if (!formData.description.trim()) {
         newErrors.description = "נדרש תיאור";
+      }
+
+      // Validate social media URLs if provided
+      const socialErrors: { [key: string]: string } = {};
+
+      if (
+        formData.socialUrls.facebook &&
+        !isValidUrl(formData.socialUrls.facebook)
+      ) {
+        socialErrors.facebook = "נא להזין כתובת URL תקינה";
+      }
+      if (
+        formData.socialUrls.instagram &&
+        !isValidUrl(formData.socialUrls.instagram)
+      ) {
+        socialErrors.instagram = "נא להזין כתובת URL תקינה";
+      }
+      if (
+        formData.socialUrls.twitter &&
+        !isValidUrl(formData.socialUrls.twitter)
+      ) {
+        socialErrors.twitter = "נא להזין כתובת URL תקינה";
+      }
+      if (
+        formData.socialUrls.tiktok &&
+        !isValidUrl(formData.socialUrls.tiktok)
+      ) {
+        socialErrors.tiktok = "נא להזין כתובת URL תקינה";
+      }
+
+      if (Object.keys(socialErrors).length > 0) {
+        newErrors.socialUrls = socialErrors as any;
       }
 
       setFormErrors(newErrors);
@@ -264,27 +325,6 @@ export default function ToolPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               <div className="grid gap-2">
-                <label className="text-sm font-medium">מודל מחירים</label>
-                <Select
-                  value={formData.pricingModel}
-                  onValueChange={(value) =>
-                    setFormData((prev) => ({ ...prev, pricingModel: value }))
-                  }
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="בחר מודל מחירים" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {Object.values(PricingModel).map((model) => (
-                      <SelectItem key={model} value={model}>
-                        {model.charAt(0).toUpperCase() +
-                          model.slice(1).replace("_", " ")}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="grid gap-2">
                 <label className="text-sm font-medium">שנת השקה</label>
                 <Input
                   type="number"
@@ -300,6 +340,112 @@ export default function ToolPage() {
                   min={2000}
                   max={new Date().getFullYear()}
                 />
+              </div>
+            </div>
+
+            {/* Social Media Links */}
+            <div className="border-t border-border pt-4 mt-2">
+              <h3 className="text-lg font-medium mb-4">רשתות חברתיות</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid gap-2">
+                  <label className="text-sm font-medium">פייסבוק</label>
+                  <Input
+                    value={formData.socialUrls?.facebook || ""}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        socialUrls: {
+                          ...prev.socialUrls,
+                          facebook: e.target.value,
+                        },
+                      }))
+                    }
+                    placeholder="https://facebook.com/yourpage"
+                    className={
+                      formErrors.socialUrls?.facebook ? "border-red-500" : ""
+                    }
+                  />
+                  {formErrors.socialUrls?.facebook && (
+                    <p className="text-sm text-red-500">
+                      {formErrors.socialUrls.facebook}
+                    </p>
+                  )}
+                </div>
+
+                <div className="grid gap-2">
+                  <label className="text-sm font-medium">אינסטגרם</label>
+                  <Input
+                    value={formData.socialUrls?.instagram || ""}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        socialUrls: {
+                          ...prev.socialUrls,
+                          instagram: e.target.value,
+                        },
+                      }))
+                    }
+                    placeholder="https://instagram.com/yourhandle"
+                    className={
+                      formErrors.socialUrls?.instagram ? "border-red-500" : ""
+                    }
+                  />
+                  {formErrors.socialUrls?.instagram && (
+                    <p className="text-sm text-red-500">
+                      {formErrors.socialUrls.instagram}
+                    </p>
+                  )}
+                </div>
+
+                <div className="grid gap-2">
+                  <label className="text-sm font-medium">טוויטר</label>
+                  <Input
+                    value={formData.socialUrls?.twitter || ""}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        socialUrls: {
+                          ...prev.socialUrls,
+                          twitter: e.target.value,
+                        },
+                      }))
+                    }
+                    placeholder="https://twitter.com/yourhandle"
+                    className={
+                      formErrors.socialUrls?.twitter ? "border-red-500" : ""
+                    }
+                  />
+                  {formErrors.socialUrls?.twitter && (
+                    <p className="text-sm text-red-500">
+                      {formErrors.socialUrls.twitter}
+                    </p>
+                  )}
+                </div>
+
+                <div className="grid gap-2">
+                  <label className="text-sm font-medium">טיקטוק</label>
+                  <Input
+                    value={formData.socialUrls?.tiktok || ""}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        socialUrls: {
+                          ...prev.socialUrls,
+                          tiktok: e.target.value,
+                        },
+                      }))
+                    }
+                    placeholder="https://tiktok.com/@yourhandle"
+                    className={
+                      formErrors.socialUrls?.tiktok ? "border-red-500" : ""
+                    }
+                  />
+                  {formErrors.socialUrls?.tiktok && (
+                    <p className="text-sm text-red-500">
+                      {formErrors.socialUrls.tiktok}
+                    </p>
+                  )}
+                </div>
               </div>
             </div>
 

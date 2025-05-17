@@ -5,9 +5,11 @@ import { ExternalLink } from "lucide-react";
 export function VisitToolButtonMobile({
   websiteId,
   url,
+  buttonText = "בקר באתר",
 }: {
   websiteId: string;
   url: string;
+  buttonText?: string;
 }) {
   const handleClick = async () => {
     try {
@@ -32,11 +34,10 @@ export function VisitToolButtonMobile({
   return (
     <button
       onClick={handleClick}
-      className="inline-flex items-center justify-center gap-2 px-4 py-3 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 rounded-md transition-colors h-[40px]"
+      className="inline-flex items-center justify-center gap-2 px-4 py-3 bg-background text-foreground rounded-md border border-border hover:bg-background/80 transition-colors h-[40px]"
     >
       <ExternalLink className="w-5 h-5" />
-      <span className="font-medium">Visit</span>
-      <span className="text-zinc-400">{url}</span>
+      <span className="font-medium">{buttonText}</span>
     </button>
   );
 }
@@ -44,9 +45,11 @@ export function VisitToolButtonMobile({
 export function VisitToolButtonDesktop({
   websiteId,
   url,
+  buttonText = "בקר באתר",
 }: {
   websiteId: string;
   url: string;
+  buttonText?: string;
 }) {
   const handleClick = async () => {
     try {
@@ -71,10 +74,10 @@ export function VisitToolButtonDesktop({
   return (
     <button
       onClick={handleClick}
-      className="inline-flex items-center justify-center gap-2 px-4 py-3 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 rounded-md transition-colors h-[40px]"
+      className="inline-flex items-center justify-center gap-2 px-4 py-3 bg-background text-foreground rounded-md border border-border hover:bg-background/80 transition-colors h-[40px]"
     >
       <ExternalLink className="w-5 h-5" />
-      <span className="font-medium">Visit</span>
+      <span className="font-medium">{buttonText}</span>
     </button>
   );
 }

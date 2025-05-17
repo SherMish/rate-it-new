@@ -19,6 +19,10 @@ import {
   ThumbsUp,
   Sparkles,
   AlertTriangle,
+  Facebook,
+  Instagram,
+  Twitter,
+  Globe,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import connectDB from "@/lib/mongodb";
@@ -50,6 +54,8 @@ import {
 } from "@/app/components/VisitToolButton";
 import { TrackPageVisit } from "@/app/components/TrackPageVisit";
 import trustStatuses from "@/lib/data/trustStatuses.json";
+import { FaTiktok } from "react-icons/fa6";
+import SocialMediaSection from "@/app/components/SocialMediaSection";
 
 interface WebsiteDoc {
   _id: Types.ObjectId;
@@ -98,7 +104,7 @@ async function getWebsiteData(url: string) {
   // Get website data
   const website = await Website.findOne({ url: url })
     .select(
-      "name url description shortDescription logo category averageRating reviewCount isVerified launchYear"
+      "name url description shortDescription logo category averageRating reviewCount isVerified launchYear socialUrls"
     )
     .lean();
 
@@ -449,8 +455,12 @@ export default async function ToolPage({ params }: PageProps) {
                             <VisitToolButtonMobile
                               websiteId={website._id.toString()}
                               url={website.url}
+                              buttonText="בקר באתר"
                             />
-                            <WriteReviewButton url={params.url} />
+                            <WriteReviewButton
+                              url={params.url}
+                              buttonText="כתוב ביקורת"
+                            />
                           </div>
                         </div>
                       </div>
@@ -459,8 +469,12 @@ export default async function ToolPage({ params }: PageProps) {
                       <VisitToolButtonDesktop
                         websiteId={website._id.toString()}
                         url={website.url}
+                        buttonText="בקר באתר"
                       />
-                      <WriteReviewButton url={params.url} />
+                      <WriteReviewButton
+                        url={params.url}
+                        buttonText="כתוב ביקורת"
+                      />
                     </div>
                   </div>
                 </div>
@@ -582,7 +596,12 @@ export default async function ToolPage({ params }: PageProps) {
                 {/* Similar Tools Column */}
                 {suggestedTools.length > 0 && (
                   <div>
-                    <h2 className="text-2xl font-semibold mb-4">עסקים דומים</h2>
+                    {website.socialUrls && (
+                      <SocialMediaSection socialUrls={website.socialUrls} />
+                    )}
+                    <h2 className="text-2xl font-semibold mb-4 mt-3">
+                      עסקים דומים
+                    </h2>
                     <div className="flex flex-col gap-3">
                       {suggestedTools.map((tool) => (
                         <SuggestedToolCard

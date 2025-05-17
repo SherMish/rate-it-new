@@ -19,6 +19,12 @@ export interface WebsiteType {
   verifiedAt?: Date;
   launchYear?: number;
   isActive?: boolean;
+  socialUrls: {
+    facebook?: string;
+    instagram?: string;
+    twitter?: string;
+    tiktok?: string;
+  };
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -84,7 +90,10 @@ const WebsiteSchema = new Schema(
       type: Boolean,
       default: true,
     },
-
+    socialUrls: {
+      type: Object,
+      default: {},
+    },
     launchYear: {
       type: Number,
       default: null,

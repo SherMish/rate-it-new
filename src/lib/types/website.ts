@@ -1,9 +1,9 @@
 export enum PricingModel {
-  FREE = 'free',
-  FREEMIUM = 'freemium',
-  SUBSCRIPTION = 'subscription',
-  PAY_PER_USE = 'pay_per_use',
-  ENTERPRISE = 'enterprise'
+  FREE = "free",
+  FREEMIUM = "freemium",
+  SUBSCRIPTION = "subscription",
+  PAY_PER_USE = "pay_per_use",
+  ENTERPRISE = "enterprise",
 }
 
 export interface WebsiteType {
@@ -21,6 +21,12 @@ export interface WebsiteType {
   averageRating?: number;
   isVerified?: boolean;
   isActive?: boolean;
+  socialUrls: {
+    facebook?: string;
+    instagram?: string;
+    twitter?: string;
+    tiktok?: string;
+  };
   createdAt?: Date;
   updatedAt?: Date;
-} 
+}

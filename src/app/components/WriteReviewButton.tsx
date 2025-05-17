@@ -7,9 +7,13 @@ import { Button } from "@/components/ui/button";
 
 interface WriteReviewButtonProps {
   url: string;
+  buttonText?: string;
 }
 
-export default function WriteReviewButton({ url }: WriteReviewButtonProps) {
+export default function WriteReviewButton({
+  url,
+  buttonText = "כתוב ביקורת",
+}: WriteReviewButtonProps) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -20,12 +24,12 @@ export default function WriteReviewButton({ url }: WriteReviewButtonProps) {
   };
 
   return (
-    <Button 
+    <Button
       className="gradient-button px-4 h-[40px]"
       disabled={isLoading}
       onClick={handleClick}
     >
-      {isLoading ? <Loader2 className="animate-spin" size={16} /> : "Write Review"}
+      {isLoading ? <Loader2 className="animate-spin" size={16} /> : buttonText}
     </Button>
   );
-} 
+}
