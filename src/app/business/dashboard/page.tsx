@@ -34,6 +34,8 @@ import { useBusinessGuard } from "@/hooks/use-business-guard";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Review } from "@/components/reviews-section";
 import trustStatuses from "@/lib/data/trustStatuses.json";
+import FirstTimeDialog from "@/app/components/FirstTimeDialog";
+import { useSearchParams, useRouter } from "next/navigation";
 
 type Feature = {
   id: string;
@@ -133,6 +135,9 @@ function getTrustStatusStyles(score: number) {
 
 export default function DashboardPage() {
   const { isLoading, website, user } = useBusinessGuard();
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const [showFirstTimeDialog, setShowFirstTimeDialog] = useState(false);
   const [logo, setLogo] = useState<File | null>(null);
   const [logoPreview, setLogoPreview] = useState<string>("");
   const [features, setFeatures] = useState<Feature[]>([
@@ -175,6 +180,26 @@ export default function DashboardPage() {
     }
   }, [website]);
 
+  // Check for firstTime parameter
+  useEffect(() => {
+    const isFirstTime = searchParams?.get("firstTime") === "true";
+    if (isFirstTime) {
+      setShowFirstTimeDialog(true);
+    }
+  }, [searchParams]);
+
+  // Handle dialog close
+  const handleDialogClose = () => {
+    setShowFirstTimeDialog(false);
+    // Remove the firstTime parameter from the URL without refreshing the page
+    const url = new URL(window.location.href);
+    url.searchParams.delete("firstTime");
+    router.replace(url.pathname + url.search);
+
+    // Redirect to the business profile page
+    router.push("/business/dashboard/tool");
+  };
+
   if (isLoading || isLoadingReviews) {
     return <LoadingSpinner />;
   }
@@ -184,166 +209,174 @@ export default function DashboardPage() {
     totalViews > 0 ? ((totalClicks / totalViews) * 100).toFixed(1) : "0.0";
 
   return (
-    <div className="container mx-auto px-4 py-12 min-h-screen" dir="rtl">
-      <div className="mb-8 flex justify-between items-center">
-        <p className="text-muted-foreground">
-          ברוך/ה הבא, {user?.name?.split(" ")[0]}!
-        </p>
-        <Link
-          href={`/tool/${website?.url}`}
-          target="_blank"
-          className="text-primary hover:underline flex items-center gap-2"
-        >
-          <span>צפייה בדף הציבורי</span>
-        </Link>
-      </div>
+    <>
+      <FirstTimeDialog
+        open={showFirstTimeDialog}
+        onClose={handleDialogClose}
+        userName={user?.name?.split(" ")[0]}
+      />
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <Card className="p-6 hover:shadow-lg transition-all">
-          <div className="flex justify-between items-start">
-            <div>
-              <p className="text-sm font-medium text-muted-foreground">
-                ביקורות
-              </p>
-              <h3 className="text-2xl font-bold mt-2">
-                {website?.reviewCount || 0}
-              </h3>
+      <div className="container mx-auto px-4 py-12 min-h-screen" dir="rtl">
+        <div className="mb-8 flex justify-between items-center">
+          <p className="text-muted-foreground">
+            ברוך/ה הבא, {user?.name?.split(" ")[0]}!
+          </p>
+          <Link
+            href={`/tool/${website?.url}`}
+            target="_blank"
+            className="text-primary hover:underline flex items-center gap-2"
+          >
+            <span>צפייה בדף הציבורי</span>
+          </Link>
+        </div>
+
+        {/* Stats Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <Card className="p-6 hover:shadow-lg transition-all">
+            <div className="flex justify-between items-start">
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">
+                  ביקורות
+                </p>
+                <h3 className="text-2xl font-bold mt-2">
+                  {website?.reviewCount || 0}
+                </h3>
+              </div>
+              <Star className="w-8 h-8 text-primary opacity-75" />
             </div>
-            <Star className="w-8 h-8 text-primary opacity-75" />
-          </div>
-        </Card>
+          </Card>
 
-        <Card className="p-6 hover:shadow-lg transition-all">
-          <div className="flex justify-between items-start">
-            <div>
-              <p className="text-sm font-medium text-muted-foreground">
-                דירוג ממוצע
-              </p>
-              <h3 className="text-2xl font-bold mt-2">
-                {website?.averageRating
-                  ? website?.averageRating.toFixed(1)
-                  : "0.0"}
-              </h3>
+          <Card className="p-6 hover:shadow-lg transition-all">
+            <div className="flex justify-between items-start">
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">
+                  דירוג ממוצע
+                </p>
+                <h3 className="text-2xl font-bold mt-2">
+                  {website?.averageRating
+                    ? website?.averageRating.toFixed(1)
+                    : "0.0"}
+                </h3>
+              </div>
+              <Star className="w-8 h-8 text-yellow-500 opacity-75" />
             </div>
-            <Star className="w-8 h-8 text-yellow-500 opacity-75" />
-          </div>
-        </Card>
+          </Card>
 
-        <Card className="p-6 hover:shadow-lg transition-all">
-          <div className="flex justify-between items-start">
-            <div>
-              <p className="text-sm font-medium text-muted-foreground">
-                סה״כ צפיות
-              </p>
-              <h3 className="text-2xl font-bold mt-2">{totalViews}</h3>
+          <Card className="p-6 hover:shadow-lg transition-all">
+            <div className="flex justify-between items-start">
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">
+                  סה״כ צפיות
+                </p>
+                <h3 className="text-2xl font-bold mt-2">{totalViews}</h3>
+              </div>
+              <Eye className="w-8 h-8 text-primary opacity-75" />
             </div>
-            <Eye className="w-8 h-8 text-primary opacity-75" />
-          </div>
-        </Card>
+          </Card>
 
-        <Card className="p-6 hover:shadow-lg transition-all">
-          <div className="flex justify-between items-start">
-            <div>
-              <p className="text-sm font-medium text-muted-foreground">
-                קליקים לאתר
-              </p>
-              <h3 className="text-2xl font-bold mt-2">{totalClicks}</h3>
+          <Card className="p-6 hover:shadow-lg transition-all">
+            <div className="flex justify-between items-start">
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">
+                  קליקים לאתר
+                </p>
+                <h3 className="text-2xl font-bold mt-2">{totalClicks}</h3>
+              </div>
+              <MousePointer className="w-8 h-8 text-primary opacity-75" />
             </div>
-            <MousePointer className="w-8 h-8 text-primary opacity-75" />
-          </div>
-        </Card>
-      </div>
+          </Card>
+        </div>
 
-      {/* Second Row of Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        {/* Conversion Rate Card */}
-        <Card className="p-6 hover:shadow-lg transition-all">
-          <div className="flex justify-between items-start">
-            <div>
-              <p className="text-sm font-medium text-muted-foreground">
-                אחוז המרה
-              </p>
-              <h3 className="text-2xl font-bold mt-2">{conversionRate}%</h3>
-              <p className="text-xs text-muted-foreground mt-1">
-                אחוז המבקרים שלחצו על הקישור לאתר שלכם
-              </p>
+        {/* Second Row of Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          {/* Conversion Rate Card */}
+          <Card className="p-6 hover:shadow-lg transition-all">
+            <div className="flex justify-between items-start">
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">
+                  אחוז המרה
+                </p>
+                <h3 className="text-2xl font-bold mt-2">{conversionRate}%</h3>
+                <p className="text-xs text-muted-foreground mt-1">
+                  אחוז המבקרים שלחצו על הקישור לאתר שלכם
+                </p>
+              </div>
+              <Percent className="w-8 h-8 text-primary opacity-75" />
             </div>
-            <Percent className="w-8 h-8 text-primary opacity-75" />
-          </div>
-        </Card>
+          </Card>
 
-        {/* RadarTrust Score Card */}
-        <Card className="p-6 hover:shadow-lg transition-all">
-          <div className="flex justify-between items-start">
-            {/* Right Section */}
-            <div className="flex flex-col items-end gap-2">
-              <RadarIcon className="w-8 h-8 text-primary opacity-75" />
+          {/* RadarTrust Score Card */}
+          <Card className="p-6 hover:shadow-lg transition-all">
+            <div className="flex justify-between items-start">
+              {/* Right Section */}
+              <div className="flex flex-col items-end gap-2">
+                <RadarIcon className="w-8 h-8 text-primary opacity-75" />
+              </div>
             </div>
-          </div>
-        </Card>
-      </div>
+          </Card>
+        </div>
 
-      {/* Reviews Section */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        {/* Latest Reviews - Second Row, Spans Full Width */}
-        <Card className="col-span-full p-6 hover:shadow-lg transition-all">
-          <div className="flex justify-between items-center mb-6">
-            <h3 className="text-lg font-semibold">ביקורות אחרונות</h3>
-            <Link
-              href="/business/dashboard/reviews"
-              className="text-sm text-primary hover:underline"
-            >
-              צפייה בכולן
-            </Link>
-          </div>
-
-          {reviews.length === 0 ? (
-            <div className="text-center py-8">
-              <MessageSquare className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
-              <h3 className="text-lg font-medium mb-2">אין ביקורות עדיין</h3>
-              <p className="text-muted-foreground">
-                העסק שלך עדיין לא קיבל ביקורות. הביקורות יופיעו כאן ברגע
-                שמשתמשים יתחילו לשתף את החוויות שלהם.
-              </p>
+        {/* Reviews Section */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          {/* Latest Reviews - Second Row, Spans Full Width */}
+          <Card className="col-span-full p-6 hover:shadow-lg transition-all">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-lg font-semibold">ביקורות אחרונות</h3>
+              <Link
+                href="/business/dashboard/reviews"
+                className="text-sm text-primary hover:underline"
+              >
+                צפייה בכולן
+              </Link>
             </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {reviews.slice(0, 4).map((review) => (
-                <div
-                  key={review._id}
-                  className="p-4 rounded-lg bg-accent/50 border border-border"
-                >
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex">
-                      {[...Array(5)].map((_, i) => (
-                        <Star
-                          key={i}
-                          className={`w-4 h-4 ${
-                            i < review.rating
-                              ? "text-yellow-500"
-                              : "text-muted-foreground"
-                          }`}
-                          fill={i < review.rating ? "currentColor" : "none"}
-                        />
-                      ))}
+
+            {reviews.length === 0 ? (
+              <div className="text-center py-8">
+                <MessageSquare className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
+                <h3 className="text-lg font-medium mb-2">אין ביקורות עדיין</h3>
+                <p className="text-muted-foreground">
+                  העסק שלך עדיין לא קיבל ביקורות. הביקורות יופיעו כאן ברגע
+                  שמשתמשים יתחילו לשתף את החוויות שלהם.
+                </p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {reviews.slice(0, 4).map((review) => (
+                  <div
+                    key={review._id}
+                    className="p-4 rounded-lg bg-accent/50 border border-border"
+                  >
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex">
+                        {[...Array(5)].map((_, i) => (
+                          <Star
+                            key={i}
+                            className={`w-4 h-4 ${
+                              i < review.rating
+                                ? "text-yellow-500"
+                                : "text-muted-foreground"
+                            }`}
+                            fill={i < review.rating ? "currentColor" : "none"}
+                          />
+                        ))}
+                      </div>
                     </div>
+                    <h4 className="font-medium mb-2 line-clamp-1">
+                      {review.title}
+                    </h4>
+                    <p className="text-muted-foreground text-sm mb-2 line-clamp-2">
+                      {review.body}
+                    </p>
+                    <span className="text-xs text-muted-foreground">
+                      {new Date(review.createdAt).toLocaleDateString()}
+                    </span>
                   </div>
-                  <h4 className="font-medium mb-2 line-clamp-1">
-                    {review.title}
-                  </h4>
-                  <p className="text-muted-foreground text-sm mb-2 line-clamp-2">
-                    {review.body}
-                  </p>
-                  <span className="text-xs text-muted-foreground">
-                    {new Date(review.createdAt).toLocaleDateString()}
-                  </span>
-                </div>
-              ))}
-            </div>
-          )}
-        </Card>
+                ))}
+              </div>
+            )}
+          </Card>
+        </div>
       </div>
-    </div>
+    </>
   );
 }

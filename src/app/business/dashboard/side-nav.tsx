@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { cn } from "@/lib/utils";
 import {
   LayoutDashboard,
@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { useSession, signOut } from "next-auth/react";
 import { UserNav } from "@/components/user-nav";
+import BusinessTabHighlight from "@/app/components/BusinessTabHighlight";
 
 const menuItems = [
   {
@@ -36,6 +37,7 @@ const menuItems = [
     title: "דף העסק",
     href: "/business/dashboard/tool",
     icon: FileText,
+    highlight: true,
   },
   {
     title: "הגדרות",
@@ -46,7 +48,11 @@ const menuItems = [
 
 export function SideNav() {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const { data: session } = useSession();
+
+  // Check if we should highlight the business tab
+  const isFirstTime = searchParams?.get("firstTime") === "true";
 
   return (
     <nav className="sticky top-0 h-[100vh] w-64 border-r border-border bg-background z-40">
@@ -72,7 +78,10 @@ export function SideNav() {
         <div className="px-3 space-y-1">
           {menuItems.map((item) => {
             const Icon = item.icon;
-            return (
+            // Determine if this item should be highlighted
+            const shouldHighlight = isFirstTime && item.highlight;
+
+            const menuItemElement = (
               <Link
                 key={item.href}
                 href={item.href}
@@ -93,6 +102,14 @@ export function SideNav() {
                 />
                 {item.title}
               </Link>
+            );
+
+            return shouldHighlight ? (
+              <BusinessTabHighlight key={item.href}>
+                {menuItemElement}
+              </BusinessTabHighlight>
+            ) : (
+              menuItemElement
             );
           })}
         </div>

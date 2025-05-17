@@ -62,7 +62,7 @@ export default function PricingPage() {
 
   const handlePlanSelection = (planName: string) => {
     if (planName === "Basic") {
-      router.push("/business/dashboard");
+      router.push("/business/dashboard?firstTime=true");
     } else {
       router.push("/business/checkout");
     }
