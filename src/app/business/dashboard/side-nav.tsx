@@ -29,7 +29,7 @@ const menuItems = [
     icon: MessageSquare,
   },
   {
-    title: "יצירת ביקורות",
+    title: "מחולל הביקורות",
     href: "/business/dashboard/reviews-generator",
     icon: Users,
   },

@@ -18,6 +18,7 @@ import {
   AlertTriangle,
   TrendingUp,
   X,
+  Lightbulb,
 } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import Link from "next/link";
@@ -36,6 +37,7 @@ import { Review } from "@/components/reviews-section";
 import trustStatuses from "@/lib/data/trustStatuses.json";
 import FirstTimeDialog from "@/app/components/FirstTimeDialog";
 import { useSearchParams, useRouter } from "next/navigation";
+import { DailyTipCard } from "@/app/components/DailyTipCard";
 
 type Feature = {
   id: string;
@@ -305,15 +307,8 @@ export default function DashboardPage() {
             </div>
           </Card>
 
-          {/* RadarTrust Score Card */}
-          <Card className="p-6 hover:shadow-lg transition-all">
-            <div className="flex justify-between items-start">
-              {/* Right Section */}
-              <div className="flex flex-col items-end gap-2">
-                <RadarIcon className="w-8 h-8 text-primary opacity-75" />
-              </div>
-            </div>
-          </Card>
+          {/* Daily Tip Card */}
+          <DailyTipCard />
         </div>
 
         {/* Reviews Section */}
