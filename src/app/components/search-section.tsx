@@ -92,8 +92,7 @@ export function SearchSection() {
             variants={itemVariants}
             className="text-xl md:text-2xl text-foreground/80 mb-10 max-w-2xl mx-auto"
           >
-            מבוסס על ביקורות אמיתיות ואימות בעלות עסקים לקבלת החלטות רכישה
-            בטוחות יותר
+           קבלו החלטות מושכלות יותר — באמצעות ביקורות אמיתיות מלקוחות ממשיים
           </motion.p>
 
           {/* Premium search box with glow effect */}
