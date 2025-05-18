@@ -21,6 +21,14 @@ export function DailyTipCard() {
     config: { tension: 280, friction: 20 },
   });
 
+  // Subtle floating animation for the lightbulb
+  const floatAnimation = useSpring({
+    from: { transform: "translateY(0px)" },
+    to: { transform: "translateY(-4px)" },
+    loop: { reverse: true },
+    config: { tension: 100, friction: 10, duration: 2500 },
+  });
+
   useEffect(() => {
     // Get the current day of the month (1-31)
     const today = new Date().getDate();
@@ -37,22 +45,32 @@ export function DailyTipCard() {
 
   return (
     <animated.div style={fadeIn}>
-      <Card className="p-6 hover:shadow-lg transition-all overflow-hidden relative">
-        <div className="absolute top-0 left-0 w-24 h-24 bg-gradient-to-bl from-primary/5 to-primary/20 rounded-br-[100px] -ml-6 -mt-6 z-0" />
+      <Card className="p-6 hover:shadow-lg transition-all overflow-hidden relative border-0">
+        {/* Main gradient background with multiple layers */}
 
-        <div className="flex justify-between items-start relative z-10">
-          <div>
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                <Lightbulb className="w-4 h-4 text-primary" />
+        {/* Decorative border */}
+        <div className="absolute inset-0 border-2 border-primary/10 rounded-lg" />
+
+        {/* Content container */}
+        <div className="relative z-10">
+          <div className="flex justify-between items-start">
+            <div className="w-full">
+              {/* Header with badge-like design */}
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-primary/10 rounded-full mb-4">
+                <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center">
+                  <Lightbulb className="w-3.5 h-3.5 text-primary" />
+                </div>
+                <p className="text-sm font-medium text-primary">טיפ היום</p>
               </div>
-              <p className="text-sm font-medium text-muted-foreground">
-                טיפ היום ✨
+
+              {/* Tip content with improved typography */}
+              <h3 className="text-xl font-bold mb-3 text-foreground/90 relative">
+                {tip.title}
+              </h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                {tip.content}
               </p>
             </div>
-
-            <h3 className="text-lg font-semibold mt-3 mb-2">{tip.title}</h3>
-            <p className="text-sm text-muted-foreground">{tip.content}</p>
           </div>
         </div>
       </Card>
