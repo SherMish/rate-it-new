@@ -21,8 +21,8 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: {
-    default: "AI-Radar",
-    template: "%s | AI-Radar",
+    default: "Rate It",
+    template: "%s | Rate It",
   },
   description: "מצא וסקור כלי בינה מלאכותית",
   icons: {
