@@ -109,6 +109,11 @@ export function DomainVerificationForm({
                 <CheckCircle className="h-4 w-4" />
                 <AlertDescription>
                   אימייל אימות נשלח! אנא בדקו את תיבת הדואר הנכנס שלכם.
+                  <br />
+                  <b>
+                    * שימו לב! לצורך המשך תהליך הרשמה תקין וחלק, יש לפתוח את
+                    הלינק במכשיר ובדפדפן הנוכחיים.
+                  </b>
                 </AlertDescription>
               </Alert>
             )}
@@ -125,10 +130,10 @@ export function DomainVerificationForm({
                 <AlertDescription>
                   הגעתם למקסימום הניסיונות. אנא צרו קשר עם התמיכה בכתובת{" "}
                   <a
-                    href="mailto:info@ai-radar.com"
+                    href="mailto:hello@rate-it.co.il"
                     className="underline hover:no-underline"
                   >
-                    info@ai-radar.com
+                    hello@rate-it.co.il
                   </a>
                 </AlertDescription>
               </Alert>

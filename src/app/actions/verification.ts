@@ -49,18 +49,20 @@ export async function sendVerificationEmail(
     // Send verification email
     await sendEmail({
       to: email,
-      subject: "Verify your domain ownership - AI Radar",
+      subject: "אמת את הבעלות על הדומיין שלך",
       html: `
         <div style="font-family: sans-serif;">
-          <h2>Verify Your Domain Ownership</h2>
-          <p>Click the button below to verify your domain ownership for ${websiteUrl}:</p>
+          <h2>אמת את הבעלות על הדומיין שלך</h2>
+          <p>לחץ על הכפתור למטה כדי לאמת את הבעלות על הדומיין עבור ${websiteUrl}:</p>
+          <p style="color: #666;"> שימו לב! לצורך המשך תהליך הרשמה תקין וחלק, יש לפתוח את הלינק במכשיר ובדפדפן בהם התחלת את ההרשמה.</p>
+
           <a 
             href="${verificationUrl}"
             style="display: inline-block; background-color: #0070f3; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; margin: 16px 0;"
           >
-            Verify Domain
+            אמת דומיין
           </a>
-          <p style="color: #666;">If the button doesn't work, copy and paste this link:</p>
+          <p style="color: #666;"> אם הכפתור לא עובד, העתק והדבק את הקישור הזה:</p>
           <p style="color: #666; word-break: break-all;">${verificationUrl}</p>
         </div>
       `,

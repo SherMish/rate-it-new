@@ -164,7 +164,7 @@ export default function BusinessRegistration() {
             <div className={`${step !== 1 ? "hidden" : ""}`}>
               <div className="text-center">
                 <h2 className="text-2xl font-semibold mb-4">
-                  התחברות להתחלת ההרשמה
+                  התחברות להתחלת רישום
                 </h2>
                 {!session ? (
                   <Button
@@ -212,10 +212,11 @@ export default function BusinessRegistration() {
               />
             )}
 
-            {session && step === 4 && !verifiedWebsiteUrl && (
+            {(session && step === 4 && !verifiedWebsiteUrl) || (!session && step > 1) && (
               <div className="text-center">
-                Oops, something went wrong.
-                <Button onClick={() => router.push("/")}>Go to homepage</Button>
+                משהו השתבש בדרך :( נסו שוב מאוחר יותר או שצרו קשר עם התמיכה
+                <br />
+                <Button onClick={() => router.push("/business")}>חזרה לדף הבית</Button>
               </div>
             )}
           </CardContent>
