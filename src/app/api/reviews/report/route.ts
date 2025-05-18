@@ -15,8 +15,8 @@ export async function POST(req: Request) {
     } = await req.json();
 
     await resend.emails.send({
-      from: "noreply@ai-radar.co",
-      to: "info@ai-radar.co",
+      from: "noreply@rate-it.co.il",
+      to: "hello@rate-it.co.il",
       subject: `Review Report: ${reviewTitle}`,
       html: `
         <h2>Review Report</h2>

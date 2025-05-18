@@ -7,7 +7,7 @@ import mongoose from "mongoose";
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export const maxDuration = 10; // Set max duration to 10 seconds
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 export async function POST(req: Request) {
   try {
@@ -32,7 +32,7 @@ export async function POST(req: Request) {
     // Add timeout to the database update
     await User.updateOne(
       { email },
-      { 
+      {
         resetToken,
         resetTokenExpiry,
       }
@@ -44,40 +44,39 @@ export async function POST(req: Request) {
     // Add timeout to email sending
     await Promise.race([
       resend.emails.send({
-        from: "noreply@ai-radar.co",
+        from: "no-reply@rate-it.co.il",
         to: email,
-        subject: "Reset Your Password - AI Radar",
+        subject: "איפוס סיסמא",
         html: `
-          <h2>Reset Your Password</h2>
-          <p>Click the link below to reset your password. This link will expire in 1 hour.</p>
-          <a href="${process.env.NEXT_PUBLIC_APP_URL}/reset-password?token=${resetToken}">Reset Password</a>
-          <p>If you didn't request this, please ignore this email.</p>
+          <h2>אפסו את סיסמתכם</h2>
+          <p>לחץ/י כאן על מנת לאפס את סיסמתך. תוקף הקישור - 60 דקות.</p>
+          <a href="${process.env.NEXT_PUBLIC_APP_URL}/reset-password?token=${resetToken}">איפוס סיסמא</a>
         `,
       }),
-      new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('Email sending timeout')), 5000)
-      )
+      new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("Email sending timeout")), 5000)
+      ),
     ]);
 
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Password reset error:", error);
-    
+
     let errorMessage = "Unknown error";
     if (error instanceof Error) {
       errorMessage = error.message;
       // Add connection state to error message if it's a database timeout
-      if (errorMessage.includes('Database timeout')) {
+      if (errorMessage.includes("Database timeout")) {
         errorMessage += ` (Connection state: ${mongoose.connection.readyState})`;
       }
     }
 
     return NextResponse.json(
-      { 
+      {
         error: "Failed to process password reset",
-        details: errorMessage
+        details: errorMessage,
       },
       { status: 500 }
     );
   }
-} 
+}

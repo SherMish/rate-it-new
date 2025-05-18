@@ -27,7 +27,7 @@ export function WebsiteCard({ website }: WebsiteCardProps) {
       ? website.url
       : `https://${website.url}`;
     window.open(
-      `${url}?utm_source=ai-radar&utm_medium=marketplace&utm_campaign=ai-radar`,
+      `${url}?utm_source=rate-it&utm_medium=marketplace&utm_campaign=rate-it`,
       "_blank",
       "noopener,noreferrer"
     );

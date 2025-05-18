@@ -23,7 +23,7 @@ export function VisitToolButtonMobile({
 
       const fullUrl = url.startsWith("http")
         ? url
-        : `https://${url}?utm_source=ai-radar&utm_medium=marketplace&utm_campaign=ai-radar`;
+        : `https://${url}?utm_source=rate-it&utm_medium=marketplace&utm_campaign=rate-it`;
 
       window.open(fullUrl, "_blank", "noopener,noreferrer");
     } catch (error) {
@@ -63,7 +63,7 @@ export function VisitToolButtonDesktop({
 
       const fullUrl = url.startsWith("http")
         ? url
-        : `https://${url}?utm_source=ai-radar&utm_medium=marketplace&utm_campaign=ai-radar`;
+        : `https://${url}?utm_source=rate-it&utm_medium=marketplace&utm_campaign=rate-it`;
 
       window.open(fullUrl, "_blank", "noopener,noreferrer");
     } catch (error) {

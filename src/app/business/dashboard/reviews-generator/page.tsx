@@ -57,7 +57,7 @@ export default function ReviewsGeneratorPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const reviewLink = website
-    ? `${process.env.NEXT_PUBLIC_BASE_URL || "https://ai-radar.co"}/tool/${
+    ? `${process.env.NEXT_PUBLIC_BASE_URL || "https://rate-it.co.il"}/tool/${
         website.url
       }/review`
     : "";
@@ -603,7 +603,7 @@ export default function ReviewsGeneratorPage() {
               <Input
                 readOnly
                 value={`${
-                  process.env.NEXT_PUBLIC_BASE_URL || "https://ai-radar.co"
+                  process.env.NEXT_PUBLIC_BASE_URL || "https://rate-it.co.il"
                 }/api/invite-review`}
                 className="font-mono text-sm"
                 disabled
@@ -615,7 +615,7 @@ export default function ReviewsGeneratorPage() {
                 onClick={() =>
                   copyToClipboard(
                     `${
-                      process.env.NEXT_PUBLIC_BASE_URL || "https://ai-radar.co"
+                      process.env.NEXT_PUBLIC_BASE_URL || "https://rate-it.co.il"
                     }/api/invite-review`,
                     setCopyApiSuccess
                   )

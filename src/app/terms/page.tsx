@@ -168,7 +168,7 @@ export default function TermsPage() {
               <p className="text-muted-foreground">
                 For questions about these Terms of Service, please contact us at:
                 <br />
-                Email: legal@ai-radar.com
+                Email: hello@rate-it.co.il
               </p>
             </section>
 

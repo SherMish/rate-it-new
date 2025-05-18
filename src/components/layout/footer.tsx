@@ -63,8 +63,7 @@ export function Footer() {
               יצירת קשר
             </h3>
             <ul className="space-y-3 text-muted-foreground">
-              <li>אימייל: info@ai-radar.co</li>
-              {/* <li>Support: support@ai-radar.com</li> */}
+              <li>אימייל: hello@rate-it.co.il</li>
             </ul>
           </div>
 

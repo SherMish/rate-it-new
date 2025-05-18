@@ -183,7 +183,7 @@ export default function PrivacyPolicyPage() {
                 If you have any questions about this Privacy Policy or our data practices, please contact us at:
               </p>
               <p className="text-muted-foreground mt-2">
-                Email: info@ai-radar.co<br />
+                Email: hello@rate-it.co.il<br />
               </p>
             </section>
 

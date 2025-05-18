@@ -20,7 +20,7 @@ export async function sendEmail({
   // Add timeout to email sending like in forgot-password route
   return Promise.race([
     resend.emails.send({
-      from: "noreply@ai-radar.co", // Match the working from address
+      from: "no-reply@rate-it.co.il", // Match the working from address
       to,
       subject,
       html,
