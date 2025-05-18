@@ -123,7 +123,7 @@ export function PricingSection({ websiteUrl }: { websiteUrl: string }) {
 
       // Clear registration data and redirect
       localStorage.removeItem("businessRegistration");
-      router.push("/business/dashboard");
+      router.push("/business/dashboard?firstTime=true");
     } catch (error) {
       console.error("Error:", error);
       toast({

@@ -21,20 +21,12 @@ export function DailyTipCard() {
     config: { tension: 280, friction: 20 },
   });
 
-  // Subtle floating animation for the lightbulb
-  const floatAnimation = useSpring({
-    from: { transform: "translateY(0px)" },
-    to: { transform: "translateY(-4px)" },
-    loop: { reverse: true },
-    config: { tension: 100, friction: 10, duration: 2500 },
-  });
-
   useEffect(() => {
     // Get the current day of the month (1-31)
-    const today = new Date().getDate();
+    const currentDay = new Date().getDate();
 
     // Use the day to pick a tip (cycling through the tips)
-    const tipIndex = today % tipsData.tips.length || tipsData.tips.length;
+    const tipIndex = currentDay % tipsData.tips.length || tipsData.tips.length;
     const todaysTip =
       tipsData.tips.find((t) => t.id === tipIndex) || tipsData.tips[0];
 
@@ -46,10 +38,54 @@ export function DailyTipCard() {
   return (
     <animated.div style={fadeIn}>
       <Card className="p-6 hover:shadow-lg transition-all overflow-hidden relative border-0">
-        {/* Main gradient background with multiple layers */}
+        {/* Background pattern */}
+        <div
+          className="absolute inset-0 opacity-5 z-0"
+          style={{
+            backgroundImage:
+              "radial-gradient(hsl(var(--primary)) 1px, transparent 1px)",
+            backgroundSize: "20px 20px",
+          }}
+        />
 
-        {/* Decorative border */}
-        <div className="absolute inset-0 border-2 border-primary/10 rounded-lg" />
+        {/* Unique decorative border */}
+        <div
+          className="absolute inset-0 rounded-lg"
+          style={{
+            background:
+              "linear-gradient(to bottom right, transparent, transparent)",
+            border: "2px solid",
+            borderStyle: "solid solid dashed dotted",
+            borderWidth: "3px 2px 3px 2px",
+            borderImage:
+              "linear-gradient(45deg, hsl(var(--primary)/30%), hsl(var(--primary)/10%)) 1",
+            borderRadius: "12px",
+            boxShadow: "inset 0 0 20px rgba(0,0,0,0.03)",
+          }}
+        />
+
+        {/* Accent corners */}
+        <div
+          className="absolute left-0 top-0 w-6 h-6"
+          style={{
+            borderTop: "3px solid",
+            borderLeft: "3px solid",
+            borderColor: "hsl(var(--primary))",
+            borderTopLeftRadius: "8px",
+          }}
+        />
+        <div
+          className="absolute right-0 bottom-0 w-6 h-6"
+          style={{
+            borderBottom: "3px solid",
+            borderRight: "3px solid",
+            borderColor: "hsl(var(--primary))",
+            borderBottomRightRadius: "8px",
+          }}
+        />
+
+        {/* Twist: Rotated decorative element */}
+        <div className="absolute -left-6 top-1/2 -translate-y-1/2 w-16 h-16 bg-primary/5 rounded-md rotate-45 z-0" />
 
         {/* Content container */}
         <div className="relative z-10">
