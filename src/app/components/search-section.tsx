@@ -68,7 +68,7 @@ export function SearchSection() {
             variants={itemVariants}
             className="text-5xl md:text-7xl font-bold tracking-tight text-foreground mb-4"
           >
-            גלו עסקים אמינים
+            מצאו עסקים אמינים
             <br />
             בישראל
           </motion.h1>
@@ -92,7 +92,7 @@ export function SearchSection() {
             variants={itemVariants}
             className="text-xl md:text-2xl text-foreground/80 mb-10 max-w-2xl mx-auto"
           >
-           קבלו החלטות מושכלות יותר — באמצעות ביקורות אמיתיות מלקוחות ממשיים
+            גלו עסקים, קראו ביקורות אמיתיות – ושתפו גם את החוויות שלכם
           </motion.p>
 
           {/* Premium search box with glow effect */}
