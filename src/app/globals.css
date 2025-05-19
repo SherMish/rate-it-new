@@ -86,11 +86,11 @@
 }
 
 .animate-float {
-  animation: float 6s ease-in-out infinite;
+  animation: float 10s ease-in-out infinite;
 }
 
 .animate-float-delayed {
-  animation: float-delayed 8s ease-in-out infinite;
+  animation: float-delayed 12s ease-in-out infinite;
 }
 
 @keyframes float-left {
@@ -121,13 +121,44 @@
 }
 
 .animate-float-left {
-  animation: float-left 7s ease-in-out infinite;
+  animation: float-left 12s ease-in-out infinite;
 }
 
 .animate-float-right {
-  animation: float-right 8s ease-in-out infinite;
+  animation: float-right 14s ease-in-out infinite;
 }
 
 .animate-float-diagonal {
-  animation: float-diagonal 9s ease-in-out infinite;
+  animation: float-diagonal 16s ease-in-out infinite;
+}
+
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-gradient-shift {
+  animation: gradient-shift 12s ease infinite;
+  background-size: 200% 200%;
+}
+
+/* Custom slow pulse animation */
+@keyframes slow-pulse {
+  0%, 100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.animate-slow-pulse {
+  animation: slow-pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }

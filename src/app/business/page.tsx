@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import {
   Search,
@@ -26,6 +26,8 @@ import { Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/autoplay";
 import { formatPricingModel } from "@/lib/utils/formatting";
+import { motion } from "framer-motion";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 const benefits = [
   {
@@ -177,11 +179,101 @@ function GrowthIndicator({
   );
 }
 
+// Animations variants
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.3,
+      delayChildren: 0.3,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 1.0,
+      ease: [0.22, 1, 0.36, 1], // Custom easing
+    },
+  },
+};
+
+const cardVariants = {
+  hidden: { opacity: 0, scale: 0.95 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: {
+      duration: 0.8,
+      ease: "easeOut",
+    },
+  },
+};
+
+const fadeInUpVariants = {
+  hidden: { opacity: 0, y: 50 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 1.2,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  },
+};
+
+const fadeInRightVariants = {
+  hidden: { opacity: 0, x: -50 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: {
+      duration: 1.2,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  },
+};
+
+const fadeInLeftVariants = {
+  hidden: { opacity: 0, x: 50 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: {
+      duration: 1.2,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  },
+};
+
 export default function BusinessPage() {
   const router = useRouter();
   const [latestTools, setLatestTools] = useState<Tool[]>([]);
   const [loading, setIsLoading] = useState(true);
   const [websiteUrl, setWebsiteUrl] = useState("");
+
+  // Refs for scroll animations
+  const controlSectionRef = useRef<HTMLDivElement>(null);
+  const trustRadarRef = useRef<HTMLDivElement>(null);
+  const howItWorksRef = useRef<HTMLDivElement>(null);
+  const marketingStatsRef = useRef<HTMLDivElement>(null);
+  const searchSectionRef = useRef<HTMLDivElement>(null);
+  const latestListingsRef = useRef<HTMLDivElement>(null);
+  const finalCtaRef = useRef<HTMLDivElement>(null);
+
+  // Intersection observers
+  const controlSectionInView = useScrollAnimation(controlSectionRef);
+  const trustRadarInView = useScrollAnimation(trustRadarRef);
+  const howItWorksInView = useScrollAnimation(howItWorksRef);
+  const marketingStatsInView = useScrollAnimation(marketingStatsRef);
+  const searchSectionInView = useScrollAnimation(searchSectionRef);
+  const latestListingsInView = useScrollAnimation(latestListingsRef);
+  const finalCtaInView = useScrollAnimation(finalCtaRef);
 
   useEffect(() => {
     const getWebsites = async () => {
@@ -254,13 +346,22 @@ export default function BusinessPage() {
       {/* Background effects - match main page */}
       <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,#3b82f620,transparent_70%),radial-gradient(ellipse_at_bottom,#6366f115,transparent_70%)] pointer-events-none" />
 
-      {/* Hero Section */}
+      {/* Hero Section - No scroll animation for first view */}
       <section className="relative">
         <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,#3b82f615,transparent_70%),radial-gradient(ellipse_at_bottom,#6366f115,transparent_70%)] pointer-events-none" />
         <div className="relative container mx-auto px-4 py-24">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
+          <motion.div
+            className="grid md:grid-cols-2 gap-12 items-center"
+            initial="hidden"
+            animate="visible"
+            variants={containerVariants}
+          >
             {/* Right Column - Content */}
-            <div className="text-right space-y-8" dir="rtl">
+            <motion.div
+              className="text-right space-y-8"
+              dir="rtl"
+              variants={fadeInRightVariants}
+            >
               <h1 className="text-4xl md:text-5xl font-bold">
                 שדרגו את <AnimatedWord /> <br /> של העסק שלכם בעזרת רייט-איט
               </h1>
@@ -275,10 +376,13 @@ export default function BusinessPage() {
                 הירשמו בחינם עכשיו
                 <ArrowRight className="mr-2 h-5 w-5" />
               </Button>
-            </div>
+            </motion.div>
 
             {/* Left Column - Graphic */}
-            <div className="relative aspect-square md:aspect-auto md:h-[500px] rounded-lg overflow-hidden">
+            <motion.div
+              className="relative aspect-square md:aspect-auto md:h-[500px] rounded-lg overflow-hidden"
+              variants={fadeInLeftVariants}
+            >
               <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-secondary/10 backdrop-blur-sm border border-border/50 rounded-lg">
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="relative w-full max-w-[90%] md:max-w-[80%] aspect-square">
@@ -366,12 +470,16 @@ export default function BusinessPage() {
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         </div>
       </section>
-      {/* Search Tool Section */}
-      <section className="relative py-16 bg-gradient-to-tr from-primary/20 via-blue-600/20 to-purple-700/25 border-y-2 border-primary/30 shadow-inner">
+
+      {/* Search Tool Section - Scroll animation */}
+      <section
+        ref={searchSectionRef}
+        className="relative py-16 bg-gradient-to-tr from-primary/20 via-blue-600/20 to-purple-700/25 border-y-2 border-primary/30 shadow-inner"
+      >
         {/* Background decorative elements */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute left-0 top-0 w-full h-full bg-[radial-gradient(circle_at_30%_40%,#3b82f640,transparent_30%)]"></div>
@@ -381,14 +489,25 @@ export default function BusinessPage() {
         </div>
 
         <div className="container relative z-10 mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center space-y-8">
-            <div className="inline-block px-6 py-3 bg-white/90 backdrop-blur-sm rounded-full shadow-lg shadow-primary/10 mb-4">
+          <motion.div
+            className="max-w-3xl mx-auto text-center space-y-8"
+            variants={containerVariants}
+            initial="hidden"
+            animate={searchSectionInView ? "visible" : "hidden"}
+          >
+            <motion.div
+              className="inline-block px-6 py-3 bg-white/90 backdrop-blur-sm rounded-full shadow-lg shadow-primary/10 mb-4"
+              variants={itemVariants}
+            >
               <p className="text-xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
                 עזרו ללקוחות למצוא אתכם - הוסיפו את העסק שלכם עכשיו
               </p>
-            </div>
+            </motion.div>
 
-            <div className="relative max-w-xl mx-auto p-8 bg-white backdrop-blur-xl rounded-xl border-2 border-primary/20 shadow-xl">
+            <motion.div
+              className="relative max-w-xl mx-auto p-8 bg-white backdrop-blur-xl rounded-xl border-2 border-primary/20 shadow-xl"
+              variants={itemVariants}
+            >
               <div className="absolute -top-5 left-1/2 transform -translate-x-1/2 px-4 py-2 bg-primary text-white font-bold rounded-full shadow-lg">
                 שלב 1: הזינו את כתובת האתר שלכם
               </div>
@@ -436,33 +555,55 @@ export default function BusinessPage() {
                   </span>
                 </div>
               </div>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         </div>
       </section>
 
-      {/* Control Section */}
-      <section className="relative py-24 bg-secondary/5">
+      {/* Control Section - Scroll animation */}
+      <section
+        ref={controlSectionRef}
+        className="relative py-24 bg-secondary/5"
+      >
         <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center space-y-4">
-            <h2 className="text-4xl md:text-5xl font-bold">
+          <motion.div
+            className="max-w-4xl mx-auto text-center space-y-4"
+            variants={containerVariants}
+            initial="hidden"
+            animate={controlSectionInView ? "visible" : "hidden"}
+          >
+            <motion.h2
+              className="text-4xl md:text-5xl font-bold"
+              variants={itemVariants}
+            >
               <span className="text-foreground">
                 קחו שליטה על המוניטין שלכם.
               </span>{" "}
               <span className="inline-block px-2 py-1 bg-primary text-white rounded-md transform shadow-md font-extrabold mt-2">
                 צמחו מהר יותר
               </span>
-            </h2>
-            <p className="text-xl text-muted-foreground">
+            </motion.h2>
+            <motion.p
+              className="text-xl text-muted-foreground"
+              variants={itemVariants}
+            >
               הלקוחות הישראלים הם לא פרייארים – הם בודקים, משווים ורוצים לראות
               ביקורות אמיתיות מאנשים אמיתיים.
               <br />
               תנו להם את השקיפות שמגיעה להם – ובנו אמון שמוביל לפעולה.
-            </p>
-          </div>
+            </motion.p>
+          </motion.div>
 
-          <div className="mt-16 grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            <div className="p-6 rounded-xl border border-border/50 bg-card/50 backdrop-blur-sm">
+          <motion.div
+            className="mt-16 grid md:grid-cols-3 gap-8 max-w-6xl mx-auto"
+            variants={containerVariants}
+            initial="hidden"
+            animate={controlSectionInView ? "visible" : "hidden"}
+          >
+            <motion.div
+              className="p-6 rounded-xl border border-border/50 bg-card/50 backdrop-blur-sm"
+              variants={cardVariants}
+            >
               <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-6">
                 <CheckCircle2 className="w-6 h-6 text-primary" />
               </div>
@@ -471,9 +612,12 @@ export default function BusinessPage() {
                 קבלו תג מאומת, צרו נוכחות מקצועית, שדרו אמינות, והראו ללקוחות
                 שאתם עסק איכותי.
               </p>
-            </div>
+            </motion.div>
 
-            <div className="p-6 rounded-xl border border-border/50 bg-card/50 backdrop-blur-sm">
+            <motion.div
+              className="p-6 rounded-xl border border-border/50 bg-card/50 backdrop-blur-sm"
+              variants={cardVariants}
+            >
               <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-6">
                 <RadarIcon className="w-6 h-6 text-primary" />
               </div>
@@ -481,9 +625,12 @@ export default function BusinessPage() {
               <p className="text-muted-foreground">
                 הגיבו לביקורות, אספו פידבק אמיתי וצרו קשר מתמשך עם הקהל שלכם.{" "}
               </p>
-            </div>
+            </motion.div>
 
-            <div className="p-6 rounded-xl border border-border/50 bg-card/50 backdrop-blur-sm">
+            <motion.div
+              className="p-6 rounded-xl border border-border/50 bg-card/50 backdrop-blur-sm"
+              variants={cardVariants}
+            >
               <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-6">
                 <ArrowUp className="w-6 h-6 text-primary" />
               </div>
@@ -492,20 +639,34 @@ export default function BusinessPage() {
                 קבלו גישה לתובנות מפורטות על הביצועים שלכם, מעורבות משתמשים,
                 ומיקום בשוק.
               </p>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         </div>
       </section>
 
-      {/* Latest Listings Section */}
-      <section className="relative py-24 bg-secondary/50 backdrop-blur-sm">
+      {/* Latest Listings Section - Scroll animation */}
+      <section
+        ref={latestListingsRef}
+        className="relative py-24 bg-secondary/50 backdrop-blur-sm"
+      >
         <div className="container mx-auto px-4">
-          <div className="max-w-6xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-bold text-center mb-16">
+          <motion.div
+            className="max-w-6xl mx-auto"
+            variants={containerVariants}
+            initial="hidden"
+            animate={latestListingsInView ? "visible" : "hidden"}
+          >
+            <motion.h2
+              className="text-3xl md:text-4xl font-bold text-center mb-16"
+              variants={fadeInUpVariants}
+            >
               העסקים האחרונים שהצטרפו לרייט-איט:
-            </h2>
+            </motion.h2>
 
-            <div className="max-w-full mx-auto">
+            <motion.div
+              className="max-w-full mx-auto"
+              variants={fadeInUpVariants}
+            >
               <Swiper
                 modules={[Autoplay]}
                 spaceBetween={20}
@@ -621,30 +782,51 @@ export default function BusinessPage() {
                   </SwiperSlide>
                 ))}
               </Swiper>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         </div>
       </section>
 
-      {/* How it Works Section */}
-      <section className="relative py-20 bg-secondary/5">
+      {/* How it Works Section - Scroll animation */}
+      <section ref={howItWorksRef} className="relative py-20 bg-secondary/5">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12">איך זה עובד</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
+          <motion.h2
+            className="text-3xl font-bold text-center mb-12"
+            variants={fadeInUpVariants}
+            initial="hidden"
+            animate={howItWorksInView ? "visible" : "hidden"}
+          >
+            איך זה עובד
+          </motion.h2>
+
+          <motion.div
+            className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto"
+            variants={containerVariants}
+            initial="hidden"
+            animate={howItWorksInView ? "visible" : "hidden"}
+          >
             {steps.map((step, index) => (
-              <div
+              <motion.div
                 key={index}
                 className="p-6 rounded-xl border border-border/50 bg-background/50 backdrop-blur-sm"
+                variants={cardVariants}
+                custom={index}
               >
                 <div className="text-4xl font-bold text-primary mb-4">
                   {(index + 1).toString().padStart(2, "0")}
                 </div>
                 <h3 className="text-xl font-semibold mb-2">{step.title}</h3>
                 <p className="text-muted-foreground">{step.description}</p>
-              </div>
+              </motion.div>
             ))}
-          </div>
-          <div className="mt-16 text-center">
+          </motion.div>
+
+          <motion.div
+            className="mt-16 text-center"
+            variants={fadeInUpVariants}
+            initial="hidden"
+            animate={howItWorksInView ? "visible" : "hidden"}
+          >
             <Button
               size="lg"
               className="gradient-button"
@@ -653,25 +835,37 @@ export default function BusinessPage() {
               רשמו את העסק שלכם
               <ArrowRight className="mr-2 h-5 w-5" />
             </Button>
-          </div>
+          </motion.div>
         </div>
       </section>
 
-      {/* TrustRadar Section */}
-      <section className="py-24 relative overflow-hidden">
+      {/* TrustRadar Section - Scroll animation */}
+      <section ref={trustRadarRef} className="py-24 relative overflow-hidden">
         <div className="container max-w-6xl mx-auto px-4">
-          <div className="grid lg:grid-cols-[400px,1fr] gap-12 items-center">
+          <motion.div
+            className="grid lg:grid-cols-[400px,1fr] gap-12 items-center"
+            variants={containerVariants}
+            initial="hidden"
+            animate={trustRadarInView ? "visible" : "hidden"}
+          >
             {/* Right Column - Visual */}
-            <div className="relative lg:order-1 order-2 flex justify-center items-center h-[300px]">
+            <motion.div
+              className="relative lg:order-1 order-2 flex justify-center items-center h-[300px]"
+              variants={fadeInRightVariants}
+            >
               {/* Background blobs */}
-              <div className="absolute inset-0 w-72 h-72 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/10 blur-3xl animate-pulse"></div>
+              <div className="absolute inset-0 w-72 h-72 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/10 blur-3xl animate-slow-pulse"></div>
               <div className="absolute w-40 h-40 rounded-full top-0 right-0 bg-blue-400/10 blur-2xl animate-float-diagonal"></div>
               <div className="absolute w-32 h-32 rounded-full bottom-0 left-0 bg-indigo-500/10 blur-2xl animate-float-left"></div>
 
               {/* Logo with floating animation */}
-              <div className="relative animate-float">
+              <motion.div
+                className="relative animate-float"
+                variants={itemVariants}
+                transition={{ delay: 0.6, duration: 1.2 }}
+              >
                 {/* Glow effect */}
-                <div className="absolute inset-0 -m-6 bg-gradient-to-r from-primary/20 to-blue-600/20 rounded-full blur-md opacity-70 animate-pulse"></div>
+                <div className="absolute inset-0 -m-6 bg-gradient-to-r from-primary/20 to-blue-600/20 rounded-full blur-md opacity-70 animate-slow-pulse"></div>
 
                 {/* Logo */}
                 <Image
@@ -681,11 +875,14 @@ export default function BusinessPage() {
                   height={180}
                   className="relative z-10 drop-shadow-xl"
                 />
-              </div>
-            </div>
+              </motion.div>
+            </motion.div>
 
             {/* Left Column - Content */}
-            <div className="text-right lg:order-2 order-1">
+            <motion.div
+              className="text-right lg:order-2 order-1"
+              variants={fadeInLeftVariants}
+            >
               <div className="space-y-6">
                 <h2 className="text-3xl font-bold">
                   בנו <span className="text-primary">אמון</span> עם לקוחות
@@ -709,13 +906,16 @@ export default function BusinessPage() {
                   <ArrowRight className="mr-2 h-5 w-5" />
                 </Button>
               </div>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         </div>
       </section>
 
-      {/* ROI Marketing Section */}
-      <section className="relative py-20 bg-gradient-to-br from-primary/15 to-purple-500/15 backdrop-blur-sm border-y border-primary/20">
+      {/* ROI Marketing Section - Scroll animation */}
+      <section
+        ref={marketingStatsRef}
+        className="relative py-20 bg-gradient-to-br from-primary/15 to-purple-500/15 backdrop-blur-sm border-y border-primary/20"
+      >
         <div className="container mx-auto px-4">
           {/* Background Elements */}
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -725,7 +925,12 @@ export default function BusinessPage() {
           </div>
 
           <div className="relative z-10 max-w-5xl mx-auto">
-            <div className="text-center mb-16">
+            <motion.div
+              className="text-center mb-16"
+              variants={fadeInUpVariants}
+              initial="hidden"
+              animate={marketingStatsInView ? "visible" : "hidden"}
+            >
               <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
                 למה להצטרף לרייט-איט?
               </h2>
@@ -733,11 +938,19 @@ export default function BusinessPage() {
                 מאות עסקים מכל התחומים כבר הופכים ביקורות לאמון והמלצות לצמיחה –
                 הצטרפו אליהם.
               </p>
-            </div>
+            </motion.div>
 
             {/* ROI Stats */}
-            <div className="grid md:grid-cols-3 gap-8 mb-20">
-              <div className="bg-white/90 backdrop-blur-xl border-2 border-primary/30 rounded-xl p-8 shadow-xl shadow-primary/5 text-center hover:border-primary/60 hover:shadow-primary/10 transition-all duration-300 transform hover:-translate-y-1">
+            <motion.div
+              className="grid md:grid-cols-3 gap-8 mb-20"
+              variants={containerVariants}
+              initial="hidden"
+              animate={marketingStatsInView ? "visible" : "hidden"}
+            >
+              <motion.div
+                className="bg-white/90 backdrop-blur-xl border-2 border-primary/30 rounded-xl p-8 shadow-xl shadow-primary/5 text-center hover:border-primary/60 hover:shadow-primary/10 transition-all duration-300 transform hover:-translate-y-1"
+                variants={cardVariants}
+              >
                 <div className="w-20 h-20 bg-gradient-to-br from-primary to-blue-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg shadow-primary/20">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -763,9 +976,12 @@ export default function BusinessPage() {
                 <p className="text-muted-foreground font-medium">
                   בקרב לקוחות שהטמיעו את הוויידג'ט של רייט-איט בדף הנחיתה שלהם
                 </p>
-              </div>
+              </motion.div>
 
-              <div className="bg-white/90 backdrop-blur-xl border-2 border-primary/30 rounded-xl p-8 shadow-xl shadow-primary/5 text-center hover:border-primary/60 hover:shadow-primary/10 transition-all duration-300 transform hover:-translate-y-1">
+              <motion.div
+                className="bg-white/90 backdrop-blur-xl border-2 border-primary/30 rounded-xl p-8 shadow-xl shadow-primary/5 text-center hover:border-primary/60 hover:shadow-primary/10 transition-all duration-300 transform hover:-translate-y-1"
+                variants={cardVariants}
+              >
                 <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg shadow-blue-500/20">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -791,9 +1007,12 @@ export default function BusinessPage() {
                 <p className="text-muted-foreground font-medium">
                   שהחליטו לחפש עסקים בדרך הבטוחה והשקופה ביותר
                 </p>
-              </div>
+              </motion.div>
 
-              <div className="bg-white/90 backdrop-blur-xl border-2 border-primary/30 rounded-xl p-8 shadow-xl shadow-primary/5 text-center hover:border-primary/60 hover:shadow-primary/10 transition-all duration-300 transform hover:-translate-y-1">
+              <motion.div
+                className="bg-white/90 backdrop-blur-xl border-2 border-primary/30 rounded-xl p-8 shadow-xl shadow-primary/5 text-center hover:border-primary/60 hover:shadow-primary/10 transition-all duration-300 transform hover:-translate-y-1"
+                variants={cardVariants}
+              >
                 <div className="w-20 h-20 bg-gradient-to-br from-purple-500 to-primary rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg shadow-purple-500/20">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -819,31 +1038,44 @@ export default function BusinessPage() {
                 <p className="text-muted-foreground font-medium">
                   לעסקים שעברו את האימות של רייט-איט
                 </p>
-              </div>
-            </div>
+              </motion.div>
+            </motion.div>
           </div>
         </div>
       </section>
 
-      {/* Final CTA Section */}
-      <section className="relative py-20">
+      {/* Final CTA Section - Scroll animation */}
+      <section ref={finalCtaRef} className="relative py-20">
         <div className="relative container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center space-y-8">
-            <h2 className="text-3xl font-bold">
-              הצטרפו היום וקדמו את העסק שלכם
-            </h2>
-            <p className="text-xl text-muted-foreground">
-              התחילו לבנות אמון ושקיפות עם הקהל שלכם כבר היום.
-            </p>
-            <Button
-              size="lg"
-              className="gradient-button"
-              onClick={() => router.push("/business/register")}
+          <motion.div
+            className="max-w-3xl mx-auto text-center space-y-8"
+            variants={containerVariants}
+            initial="hidden"
+            animate={finalCtaInView ? "visible" : "hidden"}
+          >
+            <motion.h2
+              className="text-3xl font-bold"
+              variants={fadeInUpVariants}
             >
-              רשמו את העסק שלכם בחינם
-              <ArrowRight className="mr-2 h-5 w-5" />
-            </Button>
-          </div>
+              הצטרפו היום וקדמו את העסק שלכם
+            </motion.h2>
+            <motion.p
+              className="text-xl text-muted-foreground"
+              variants={fadeInUpVariants}
+            >
+              התחילו לבנות אמון ושקיפות עם הקהל שלכם כבר היום.
+            </motion.p>
+            <motion.div variants={fadeInUpVariants}>
+              <Button
+                size="lg"
+                className="gradient-button"
+                onClick={() => router.push("/business/register")}
+              >
+                רשמו את העסק שלכם בחינם
+                <ArrowRight className="mr-2 h-5 w-5" />
+              </Button>
+            </motion.div>
+          </motion.div>
         </div>
       </section>
     </div>

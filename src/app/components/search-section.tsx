@@ -98,9 +98,9 @@ export function SearchSection() {
           {/* Premium search box with glow effect */}
           <motion.div
             variants={itemVariants}
-            className="relative mx-auto max-w-2xl mb-6"
+            className="relative mx-auto max-w-2xl mb-8"
           >
-            <div className="absolute -inset-0.5 bg-gradient-to-r from-primary to-blue-600 rounded-xl blur opacity-30 group-hover:opacity-100 transition duration-1000 animate-pulse"></div>
+            <div className="absolute -inset-0.5 bg-gradient-to-r from-primary to-blue-600 rounded-xl blur opacity-30 group-hover:opacity-100 transition duration-1000 animate-slow-pulse"></div>
             <div className="relative bg-background/90 backdrop-blur-sm rounded-lg p-1.5 shadow-xl border border-white/20">
               <SearchInput onSearch={handleSearch} />
             </div>
