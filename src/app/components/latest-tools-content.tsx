@@ -33,9 +33,9 @@ export function LatestToolsContent() {
           </span>
         </h2>
         <p className="text-muted-foreground text-lg leading-relaxed">
-          ישראלים מחפשים עסקים אמינים – תנו להם למצוא אתכם עם דירוגים שקופים
-          וחוות דעת אמיתיות. חזקו את הנוכחות הדיגיטלית שלכם, בנו אמון, והפכו
-          למותג שכולם זוכרים וממליצים עליו.
+          ישראלים מחפשים עסקים אמינים – עזרו להם למצוא אתכם עם דירוגים אמיתיים
+          וחוות דעת חיוביות. חזקו את הנוכחות הדיגיטלית שלכם, בנו אמון, והפכו
+          למותג שכולם זוכרים וממליצים עליו.{" "}
         </p>
       </motion.div>
 
@@ -46,12 +46,12 @@ export function LatestToolsContent() {
         variants={fadeInUp}
       >
         <p className="text-muted-foreground text-lg">
-          רוצים שהעסק שלכם יופיע בפלטפורמה?{" "}
+          
           <Link
             href="/business/register"
             className="text-primary hover:text-primary/90 hover:underline transition-colors"
           >
-            הוסיפו אותו עכשיו בחינם
+            הוסיפו את העסק שלכם עכשיו בחינם
           </Link>{" "}
           ותנו ללקוחות הנכונים להגיע אליכם.{" "}
         </p>

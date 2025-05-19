@@ -662,10 +662,30 @@ export default function BusinessPage() {
         <div className="container max-w-6xl mx-auto px-4">
           <div className="grid lg:grid-cols-[400px,1fr] gap-12 items-center">
             {/* Right Column - Visual */}
-            <div>//TODO add visual</div>
+            <div className="relative lg:order-1 order-2 flex justify-center items-center h-[300px]">
+              {/* Background blobs */}
+              <div className="absolute inset-0 w-72 h-72 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/10 blur-3xl animate-pulse"></div>
+              <div className="absolute w-40 h-40 rounded-full top-0 right-0 bg-blue-400/10 blur-2xl animate-float-diagonal"></div>
+              <div className="absolute w-32 h-32 rounded-full bottom-0 left-0 bg-indigo-500/10 blur-2xl animate-float-left"></div>
+
+              {/* Logo with floating animation */}
+              <div className="relative animate-float">
+                {/* Glow effect */}
+                <div className="absolute inset-0 -m-6 bg-gradient-to-r from-primary/20 to-blue-600/20 rounded-full blur-md opacity-70 animate-pulse"></div>
+
+                {/* Logo */}
+                <Image
+                  src="/logo_icon.svg"
+                  alt="Rate It Logo"
+                  width={180}
+                  height={180}
+                  className="relative z-10 drop-shadow-xl"
+                />
+              </div>
+            </div>
 
             {/* Left Column - Content */}
-            <div className="text-right">
+            <div className="text-right lg:order-2 order-1">
               <div className="space-y-6">
                 <h2 className="text-3xl font-bold">
                   בנו <span className="text-primary">אמון</span> עם לקוחות
@@ -741,7 +761,7 @@ export default function BusinessPage() {
                   שיפור ביחס ההמרה
                 </p>
                 <p className="text-muted-foreground font-medium">
-                  בקרב לקוחות שהטמיעו את הוויידג’ט של רייט-איט בדף הנחיתה שלהם
+                  בקרב לקוחות שהטמיעו את הוויידג'ט של רייט-איט בדף הנחיתה שלהם
                 </p>
               </div>
 

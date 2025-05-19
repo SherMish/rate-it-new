@@ -45,7 +45,7 @@ export function SearchSection() {
   };
 
   return (
-    <div className="min-h-[90vh] w-full relative overflow-hidden">
+    <div className="min-h-[70vh] w-full relative overflow-hidden">
       {/* Floating elements with animation */}
       <div className="absolute top-1/3 left-[15%] w-64 h-64 rounded-full bg-blue-600/20 blur-3xl animate-float-delayed"></div>
       <div className="absolute top-2/3 right-[10%] w-72 h-72 rounded-full bg-primary/20 blur-3xl animate-float"></div>
@@ -56,7 +56,7 @@ export function SearchSection() {
       <div className="absolute bottom-1/4 left-[25%] w-56 h-56 rounded-full bg-blue-400/10 blur-3xl animate-float-left"></div>
       <div className="absolute top-2/3 left-[40%] w-40 h-40 rounded-full bg-indigo-500/10 blur-3xl animate-float-right"></div>
 
-      <div className="relative w-full flex flex-col items-center justify-center min-h-[90vh] py-16">
+      <div className="relative w-full flex flex-col items-center justify-center min-h-[70vh] py-8">
         <motion.div
           className="max-w-3xl mx-auto text-center"
           variants={containerVariants}
@@ -66,7 +66,7 @@ export function SearchSection() {
           {/* Main headline with animated underline */}
           <motion.h1
             variants={itemVariants}
-            className="text-5xl md:text-7xl font-bold tracking-tight text-foreground mb-4"
+            className="text-5xl md:text-7xl font-bold tracking-tight text-foreground mb-3"
           >
             מצאו עסקים אמינים
             <br />
@@ -75,7 +75,7 @@ export function SearchSection() {
 
           {/* Animated highlight */}
           <motion.div
-            className="h-[6px] w-64 mx-auto mb-10 rounded-full"
+            className="h-[6px] w-64 mx-auto mb-6 rounded-full"
             initial={{ opacity: 0, width: "40%" }}
             animate={{ opacity: 1, width: "30%" }}
             transition={{ delay: 0.5, duration: 0.8 }}
@@ -90,7 +90,7 @@ export function SearchSection() {
           {/* Trust-building subheadline */}
           <motion.p
             variants={itemVariants}
-            className="text-xl md:text-2xl text-foreground/80 mb-10 max-w-2xl mx-auto"
+            className="text-xl md:text-2xl text-foreground/80 mb-6 max-w-2xl mx-auto"
           >
             גלו עסקים, קראו ביקורות אמיתיות – ושתפו גם את החוויות שלכם
           </motion.p>
@@ -98,7 +98,7 @@ export function SearchSection() {
           {/* Premium search box with glow effect */}
           <motion.div
             variants={itemVariants}
-            className="relative mx-auto max-w-2xl mb-8"
+            className="relative mx-auto max-w-2xl mb-6"
           >
             <div className="absolute -inset-0.5 bg-gradient-to-r from-primary to-blue-600 rounded-xl blur opacity-30 group-hover:opacity-100 transition duration-1000 animate-pulse"></div>
             <div className="relative bg-background/90 backdrop-blur-sm rounded-lg p-1.5 shadow-xl border border-white/20">
@@ -109,7 +109,7 @@ export function SearchSection() {
           {/* Trust stats */}
           <motion.div
             variants={itemVariants}
-            className="grid grid-cols-3 gap-8 max-w-xl mx-auto mt-12 mb-6"
+            className="grid grid-cols-3 gap-8 max-w-xl mx-auto mt-8 mb-4"
           >
             <div className="text-center">
               <div className="text-3xl font-bold text-primary">5K+</div>
@@ -126,7 +126,7 @@ export function SearchSection() {
           </motion.div>
 
           {/* Add business link */}
-          <motion.div variants={itemVariants} className="mt-8">
+          <motion.div variants={itemVariants} className="mt-4">
             <Link href="/tool/new" className="group">
               <div className="text-foreground/60 hover:text-primary transition-colors font-medium">
                 <span className="text-sm border-b border-dotted border-foreground/30 hover:border-primary pb-0.5">
