@@ -56,6 +56,7 @@ import { TrackPageVisit } from "@/app/components/TrackPageVisit";
 import trustStatuses from "@/lib/data/trustStatuses.json";
 import { FaTiktok } from "react-icons/fa6";
 import SocialMediaSection from "@/app/components/SocialMediaSection";
+import "@/lib/models/User"; // Ensure User model is registered before populate calls
 
 interface WebsiteDoc {
   _id: Types.ObjectId;

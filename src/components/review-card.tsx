@@ -133,17 +133,10 @@ export function ReviewCard({ review }: ReviewCardProps) {
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger>
-                        {review.isVerified ? (
+                        {review.isVerified && (
                           <div className="flex items-center gap-1 text-emerald-500">
                             <ShieldCheck className="w-4 h-4 fill-emerald-500/10" />
                             <span className="text-xs font-medium">מאומת</span>
-                          </div>
-                        ) : (
-                          <div className="flex items-center gap-1 text-muted-foreground">
-                            <ShieldAlert className="w-4 h-4" />
-                            <span className="text-xs font-medium">
-                              לא מאומת
-                            </span>
                           </div>
                         )}
                       </TooltipTrigger>
@@ -167,7 +160,7 @@ export function ReviewCard({ review }: ReviewCardProps) {
             <p className="text-foreground mt-6">{review.body}</p>
 
             {/* Business Response Section */}
-            {review.businessResponse && (
+            {review.businessResponse?.text && (
               <div className="mt-4 p-4 bg-blue-50 border border-blue-100 rounded-md">
                 <div className="flex items-center gap-2 mb-2">
                   <ShieldCheck className="w-4 h-4 text-blue-600" />
