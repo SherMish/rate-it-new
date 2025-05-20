@@ -4,10 +4,17 @@ import { useState, useEffect } from "react";
 import { useBusinessGuard } from "@/hooks/use-business-guard";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Review } from "@/components/reviews-section";
-import { Star, MessageSquare, Reply, AlertTriangle } from "lucide-react";
+import {
+  Star,
+  MessageSquare,
+  Reply,
+  AlertTriangle,
+  ShieldCheck,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ReviewResponseDialog } from "@/components/business/review-response-dialog";
 import { ReviewRemovalDialog } from "@/components/business/review-removal-dialog";
+import { useSession } from "next-auth/react";
 
 export default function ReviewsPage() {
   const { website, isLoading } = useBusinessGuard();
@@ -16,6 +23,7 @@ export default function ReviewsPage() {
   const [selectedReview, setSelectedReview] = useState<Review | null>(null);
   const [isResponseDialogOpen, setIsResponseDialogOpen] = useState(false);
   const [isRemovalDialogOpen, setIsRemovalDialogOpen] = useState(false);
+  const { data: session } = useSession();
 
   useEffect(() => {
     const fetchReviews = async () => {
@@ -110,19 +118,26 @@ export default function ReviewsPage() {
               </div>
 
               {/* Business Response Section */}
-              {review.businessResponse && (
+              {review.businessResponse?.text && (
                 <div className="mt-2 mb-4 p-3 bg-blue-50 border border-blue-100 rounded-md">
-                  <div className="flex items-center gap-2 mb-1">
-                    <h4 className="text-xs font-medium text-blue-700">
-                      התגובה שלך
-                    </h4>
-                    <span className="text-xs text-blue-500 ml-auto">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-1">
+                      <ShieldCheck className="w-3 h-3 text-blue-600" />
+                      <h4 className="text-xs font-medium text-blue-700">
+                        התגובה שלך
+                      </h4>
+                    </div>
+                    <span className="text-xs text-blue-500">
                       {new Date(
                         review.businessResponse.lastUpdated
-                      ).toLocaleDateString()}
+                      ).toLocaleDateString("he-IL", {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                      })}
                     </span>
                   </div>
-                  <p className="text-xs text-blue-800">
+                  <p className="text-sm text-blue-800 whitespace-pre-line">
                     {review.businessResponse.text}
                   </p>
                 </div>
@@ -133,16 +148,24 @@ export default function ReviewsPage() {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="w-full"
+                  className={`w-full ${
+                    review.businessResponse?.text
+                      ? "bg-blue-50 hover:bg-blue-100 border-blue-200"
+                      : ""
+                  }`}
                   onClick={() => handleResponseClick(review)}
                 >
-                  <Reply className="w-3 h-3 ml-1" />
-                  {review.businessResponse ? "ערוך תגובה" : "הגב"}
+                  <Reply
+                    className={`w-3 h-3 ml-1 ${
+                      review.businessResponse?.text ? "text-blue-600" : ""
+                    }`}
+                  />
+                  {review.businessResponse?.text ? "ערוך תגובה" : "הגב"}
                 </Button>
                 <Button
                   variant="outline"
                   size="sm"
-                  className="w-full text-red-600 hover:text-red-700"
+                  className="w-full text-red-600 hover:bg-red-50 hover:text-red-700"
                   onClick={() => handleRemovalClick(review)}
                 >
                   <AlertTriangle className="w-3 h-3 ml-1" />
@@ -171,7 +194,7 @@ export default function ReviewsPage() {
           onClose={() => setIsRemovalDialogOpen(false)}
           review={selectedReview}
           businessName={website.name}
-          businessEmail={website.owner?.email || ""}
+          businessEmail={session?.user?.email || ""}
         />
       )}
     </div>

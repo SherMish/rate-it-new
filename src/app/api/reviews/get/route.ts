@@ -13,6 +13,10 @@ interface ReviewDoc {
   helpfulCount?: number;
   relatedUser?: { name: string };
   isVerified?: boolean;
+  businessResponse?: {
+    text: string;
+    lastUpdated: Date;
+  };
 }
 
 export async function GET(request: Request) {
@@ -27,7 +31,9 @@ export async function GET(request: Request) {
     await connectDB();
 
     const reviews = await Review.find({ relatedWebsite: websiteId })
-      .select("title body rating createdAt helpfulCount relatedUser isVerified")
+      .select(
+        "title body rating createdAt helpfulCount relatedUser isVerified businessResponse"
+      )
       .populate("relatedUser", "name")
       .lean<ReviewDoc[]>();
 
@@ -42,6 +48,12 @@ export async function GET(request: Request) {
         ? { name: review.relatedUser.name }
         : undefined,
       isVerified: review.isVerified || false,
+      businessResponse: review.businessResponse
+        ? {
+            text: review.businessResponse.text,
+            lastUpdated: review.businessResponse.lastUpdated.toISOString(),
+          }
+        : undefined,
     }));
 
     return NextResponse.json(formattedReviews);
