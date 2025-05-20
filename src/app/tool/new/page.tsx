@@ -358,7 +358,7 @@ export default function NewTool() {
                   className="gradient-button"
                   disabled={isLoading}
                 >
-                  {isLoading ? "מוסיף..." : "הוסף כלי"}
+                  {isLoading ? "מוסיף..." : "הוסף עסק"}
                 </Button>
               </div>
             </form>

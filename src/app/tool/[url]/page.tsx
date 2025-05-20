@@ -534,7 +534,7 @@ export default async function ToolPage({ params }: PageProps) {
               {/* Claim ownership section */}
               {!website.isVerified && (
                 <div className="flex items-center text-muted-foreground text-sm">
-                  <p className="ml-1">האם אתה הבעלים של עסק זה?</p>
+                  <p className="ml-1">האם אתם הבעלים של עסק זה?</p>
                   <ClaimToolButton websiteUrl={website.url} />
                 </div>
               )}

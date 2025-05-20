@@ -16,13 +16,15 @@ export function ClaimToolButton({ websiteUrl }: { websiteUrl: string }) {
   };
 
   return (
-    <Button 
+    <Button
       onClick={handleClaim}
       variant="ghost"
       size="sm"
       className="text-muted-foreground hover:text-foreground mr-0 ml-0 px-[2px]"
     >
-      Claim Ownership
+      <span className="border-b border-dotted border-foreground/30 hover:border-primary">
+        לאימות בעלות על העסק לחצו כאן
+      </span>
     </Button>
   );
-} 
+}

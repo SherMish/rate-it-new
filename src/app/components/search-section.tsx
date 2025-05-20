@@ -49,7 +49,6 @@ export function SearchSection() {
       {/* Floating elements with animation */}
       <div className="absolute top-1/3 left-[15%] w-64 h-64 rounded-full bg-blue-600/20 blur-3xl animate-float-delayed"></div>
       <div className="absolute top-2/3 right-[10%] w-72 h-72 rounded-full bg-primary/20 blur-3xl animate-float"></div>
-      <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-background to-transparent z-10"></div>
 
       {/* Additional animated background elements */}
       <div className="absolute top-1/4 right-[20%] w-48 h-48 rounded-full bg-purple-500/10 blur-3xl animate-float-diagonal"></div>
@@ -127,12 +126,13 @@ export function SearchSection() {
 
           {/* Add business link */}
           <motion.div variants={itemVariants} className="mt-4">
-            <Link href="/tool/new" className="group">
-              <div className="text-foreground/60 hover:text-primary transition-colors font-medium">
-                <span className="text-sm border-b border-dotted border-foreground/30 hover:border-primary pb-0.5">
-                  העסק שחיפשתם לא מופיע? הוסיפו אותו בקלות
-                </span>
-              </div>
+            <Link
+              href="/tool/new"
+              className="inline-block px-4 py-2 text-sm font-medium text-foreground/80 hover:text-primary transition-colors rounded-md hover:bg-primary/5 active:bg-primary/10"
+            >
+              <span className="border-b border-dotted border-foreground/30 hover:border-primary">
+                העסק שחיפשתם לא מופיע? הוסיפו אותו בקלות
+              </span>
             </Link>
           </motion.div>
         </motion.div>
