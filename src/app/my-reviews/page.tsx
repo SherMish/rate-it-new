@@ -15,9 +15,7 @@ export default async function MyReviewsPage() {
 
   try {
     await connectDB();
-    
-    // Log the user ID we're searching for
-    console.log('Searching for reviews with user ID:', session.user.id);
+
     
     const reviews = await Review.find({ 
       relatedUser: session.user.id 
@@ -33,8 +31,6 @@ export default async function MyReviewsPage() {
     .sort({ createdAt: -1 })
     .lean();
 
-    // Log the found reviews
-    console.log('Found reviews:', reviews);
 
     const formattedReviews = reviews.map((review: any) => ({
       _id: review._id.toString(),
@@ -51,9 +47,6 @@ export default async function MyReviewsPage() {
         url: review.relatedWebsite?.url || '#'
       }
     }));
-
-    // Log the formatted reviews
-    console.log('Formatted reviews:', formattedReviews);
 
     return (
       <div className="relative min-h-screen bg-background">

@@ -38,9 +38,6 @@ export async function POST(req: Request) {
       }
     ).maxTimeMS(8000);
     console.log("Reset token:", resetToken);
-    console.log("Email:", email);
-    console.log("Sending email to:", email);
-    console.log("Reset token expiry:", resetTokenExpiry);
     // Add timeout to email sending
     await Promise.race([
       resend.emails.send({

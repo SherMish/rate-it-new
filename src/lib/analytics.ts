@@ -20,7 +20,8 @@ function hasAnalyticsConsent(): boolean {
 
 // Only initialize Mixpanel if we have consent
 try {
-  if (IS_PRODUCTION && MIXPANEL_TOKEN) { // && hasAnalyticsConsent()
+  if (IS_PRODUCTION && MIXPANEL_TOKEN) {
+    // && hasAnalyticsConsent()
     mixpanel.init(MIXPANEL_TOKEN, {
       debug: false,
       track_pageview: true,
@@ -47,12 +48,6 @@ export function trackEvent(
   //   console.log('Analytics tracking disabled - no consent');
   //   return;
   // }
-
-  // Only track in production
-  if (!IS_PRODUCTION) {
-    console.log("📊 [DEV] Track Event:", eventName, properties);
-    return;
-  }
 
   // Track in Mixpanel
   try {
@@ -96,7 +91,6 @@ export function identifyUser(
   userProperties: TrackingEventProperties = {}
 ) {
   if (!IS_PRODUCTION) {
-    console.log("📊 [DEV] Identify User:", userId, userProperties);
     return;
   }
 
@@ -118,7 +112,6 @@ export function identifyUser(
  */
 export function resetAnalytics() {
   if (!IS_PRODUCTION) {
-    console.log("📊 [DEV] Reset Analytics");
     return;
   }
 

@@ -2,23 +2,32 @@
 
 import { useState } from "react";
 import { ReviewCard } from "@/components/review-card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Filter } from "lucide-react";
 
-
 export interface Review {
-    _id: string;
-    title: string;
-    body: string;
-    rating: number;
-    createdAt: string;
-    helpfulCount?: number;
-    isVerified?: boolean;
-    relatedUser?: {
-      name: string;
-      image?: string;
-    };
-  } 
+  _id: string;
+  title: string;
+  body: string;
+  rating: number;
+  createdAt: string;
+  helpfulCount?: number;
+  isVerified?: boolean;
+  relatedUser?: {
+    name: string;
+    image?: string;
+  };
+  businessResponse?: {
+    text: string;
+    lastUpdated: string;
+  };
+}
 
 interface ReviewsSectionProps {
   reviews: Review[];
@@ -27,9 +36,11 @@ interface ReviewsSectionProps {
 export function ReviewsSection({ reviews }: ReviewsSectionProps) {
   const [sortBy, setSortBy] = useState("newest");
   const [filterBy, setFilterBy] = useState("all");
+  console.log("in reviews section");
+  console.log(reviews);
 
   const sortedAndFilteredReviews = reviews
-    .filter(review => {
+    .filter((review) => {
       if (filterBy === "verified") return review.isVerified;
       if (filterBy === "unverified") return !review.isVerified;
       return true;
@@ -37,7 +48,9 @@ export function ReviewsSection({ reviews }: ReviewsSectionProps) {
     .sort((a, b) => {
       switch (sortBy) {
         case "oldest":
-          return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+          return (
+            new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+          );
         case "highest":
           return b.rating - a.rating;
         case "lowest":
@@ -45,16 +58,16 @@ export function ReviewsSection({ reviews }: ReviewsSectionProps) {
         case "helpful":
           return (b.helpfulCount || 0) - (a.helpfulCount || 0);
         default: // newest
-          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+          return (
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          );
       }
     });
 
   return (
     <div>
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-        <h2 className="text-2xl font-semibold">
-          חוות דעת ({reviews.length})
-        </h2>
+        <h2 className="text-2xl font-semibold">חוות דעת ({reviews.length})</h2>
         <div className="flex items-center gap-3">
           <Select onValueChange={setFilterBy} defaultValue="all">
             <SelectTrigger className="w-[140px]">
@@ -96,4 +109,4 @@ export function ReviewsSection({ reviews }: ReviewsSectionProps) {
       </div>
     </div>
   );
-} 
+}

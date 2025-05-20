@@ -34,6 +34,8 @@ export function ReviewCard({ review }: ReviewCardProps) {
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const { data: session } = useSession();
 
+  console.log("in review card");
+  console.log(review);
   // Check if user has already voted on mount
   useEffect(() => {
     const votedReviews = JSON.parse(
@@ -163,6 +165,31 @@ export function ReviewCard({ review }: ReviewCardProps) {
               </span>
             </div>
             <p className="text-foreground mt-6">{review.body}</p>
+
+            {/* Business Response Section */}
+            {review.businessResponse && (
+              <div className="mt-4 p-4 bg-blue-50 border border-blue-100 rounded-md">
+                <div className="flex items-center gap-2 mb-2">
+                  <ShieldCheck className="w-4 h-4 text-blue-600" />
+                  <h4 className="text-sm font-medium text-blue-700">
+                    תגובת העסק
+                  </h4>
+                  <span className="text-xs text-blue-500 ml-auto">
+                    {new Date(
+                      review.businessResponse.lastUpdated
+                    ).toLocaleDateString("he-IL", {
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
+                    })}
+                  </span>
+                </div>
+                <p className="text-sm text-blue-800">
+                  {review.businessResponse.text}
+                </p>
+              </div>
+            )}
+
             <div className="flex items-center gap-4 mt-4 pt-4 border-t border-border">
               <Button
                 variant="outline"

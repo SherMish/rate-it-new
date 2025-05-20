@@ -13,7 +13,6 @@ export async function POST(request: Request) {
     }
 
     const { url, metadata, ...updateData } = await request.json();
-    console.log('Received website update data:', { url, metadata, ...updateData });
 
     if (!url) {
       return NextResponse.json({ error: "URL is required" }, { status: 400 });
@@ -33,7 +32,6 @@ export async function POST(request: Request) {
       updatedAt: new Date()
     };
 
-    console.log('Final website data:', websiteData);
 
     const website = await Website.findOneAndUpdate(
       { url: cleanUrl },
@@ -41,7 +39,6 @@ export async function POST(request: Request) {
       { upsert: true, new: true }
     );
 
-    console.log('Updated/Created website:', website);
     return NextResponse.json(website);
   } catch (error) {
     console.error('Error in website update:', error);

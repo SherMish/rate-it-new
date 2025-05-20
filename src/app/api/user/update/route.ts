@@ -13,7 +13,6 @@ export async function POST(request: Request) {
 
     await connectDB();
     const updateData = await request.json();
-    console.log('Updating user with data:', updateData);
 
     // First, ensure the user exists with default values
     await User.findOneAndUpdate(
@@ -63,7 +62,6 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    console.log('Updated user:', updatedUser);
     return NextResponse.json({ success: true, user: updatedUser });
   } catch (error) {
     console.error("Error updating user:", error);

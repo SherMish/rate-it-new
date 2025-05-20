@@ -77,6 +77,10 @@ interface ReviewDoc extends Document {
   relatedWebsite: Types.ObjectId;
   relatedUser?: { _id: Types.ObjectId; name: string; image?: string };
   helpfulCount?: number;
+  businessResponse?: {
+    text: string;
+    lastUpdated: Date;
+  };
 }
 
 interface Review {
@@ -150,10 +154,14 @@ async function getWebsiteData(url: string) {
 
 const getReviews = async (websiteId: string) => {
   const reviews = await Review.find({ relatedWebsite: websiteId })
-    .select("title body rating createdAt helpfulCount relatedUser isVerified")
+    .select(
+      "title body rating createdAt helpfulCount relatedUser isVerified businessResponse"
+    )
     .populate("relatedUser", "name")
     .lean<ReviewDoc[]>();
 
+  console.log("in get reviews");
+  console.log(reviews);
   return reviews.map((review) => ({
     _id: review._id.toString(),
     title: review.title,
@@ -167,6 +175,7 @@ const getReviews = async (websiteId: string) => {
         }
       : undefined,
     isVerified: review.isVerified || false,
+    businessResponse: review.businessResponse ?? undefined,
   })) as Review[];
 };
 
@@ -335,9 +344,8 @@ export default async function ToolPage({ params }: PageProps) {
   const decodedUrl = decodeURIComponent(params.url);
   const website = await getWebsiteData(decodedUrl);
   const reviews = await getReviews(website._id.toString());
-
-  // For debugging
-  console.log("Processed website data:", website);
+  console.log("in ToolPage  ");
+  console.log(reviews);
 
   const ratingStatus = getRatingStatus(website.averageRating || 0);
 

@@ -16,7 +16,6 @@ declare global {
 // https://developers.google.com/analytics/devguides/collection/gtagjs/pages
 export const pageview = (url: string) => {
   if (!IS_PRODUCTION || !GA_TRACKING_ID) {
-    console.log('📊 [DEV] GA Pageview:', url);
     return;
   }
   
@@ -33,7 +32,6 @@ export const event = ({ action, category, label, value }: {
   value?: number;
 }) => {
   if (!IS_PRODUCTION || !GA_TRACKING_ID) {
-    console.log('📊 [DEV] GA Event:', { action, category, label, value });
     return;
   }
 

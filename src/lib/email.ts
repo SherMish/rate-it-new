@@ -1,21 +1,18 @@
-import { Resend } from 'resend';
+import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-export async function sendEmail({ 
-  to, 
-  subject, 
-  html, 
-  text 
-}: { 
-  to: string; 
-  subject: string; 
-  html: string; 
+export async function sendEmail({
+  to,
+  subject,
+  html,
+  text,
+}: {
+  to: string;
+  subject: string;
+  html: string;
   text?: string;
 }) {
-  console.log("Sending email to:", to);
-  console.log("Subject:", subject);
-  console.log("HTML:", html);
 
   // Add timeout to email sending like in forgot-password route
   return Promise.race([
@@ -25,11 +22,11 @@ export async function sendEmail({
       subject,
       html,
       text,
-      react: null
+      react: null,
     }),
-    new Promise((_, reject) => 
-      setTimeout(() => reject(new Error('Email sending timeout')), 5000)
-    )
+    new Promise((_, reject) =>
+      setTimeout(() => reject(new Error("Email sending timeout")), 5000)
+    ),
   ]);
 }
 
@@ -48,6 +45,6 @@ export async function sendVerificationEmail(
       <p>Please click the link below to verify your ownership of ${websiteName}:</p>
       <a href="${verificationUrl}">${verificationUrl}</a>
       <p>This link will expire in 24 hours.</p>
-    `
+    `,
   });
-} 
+}

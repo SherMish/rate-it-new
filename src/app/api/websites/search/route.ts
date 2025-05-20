@@ -21,7 +21,6 @@ export async function GET(request: Request) {
     })
     .lean();
 
-    console.log('Raw websites from DB:', JSON.stringify(websites, null, 2));
 
     const normalizedResults = websites.map(website => {
       const result = {
@@ -29,11 +28,9 @@ export async function GET(request: Request) {
         name: website.name,
         url: website.url || website.url
       };
-      console.log('Normalized website:', result);
       return result;
     });
     
-    console.log('Final results:', JSON.stringify(normalizedResults, null, 2));
     
     return NextResponse.json(normalizedResults);
   } catch (error) {

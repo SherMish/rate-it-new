@@ -4,12 +4,18 @@ import { useState, useEffect } from "react";
 import { useBusinessGuard } from "@/hooks/use-business-guard";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Review } from "@/components/reviews-section";
-import { Star, MessageSquare } from "lucide-react";
+import { Star, MessageSquare, Reply, AlertTriangle } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { ReviewResponseDialog } from "@/components/business/review-response-dialog";
+import { ReviewRemovalDialog } from "@/components/business/review-removal-dialog";
 
 export default function ReviewsPage() {
   const { website, isLoading } = useBusinessGuard();
   const [reviews, setReviews] = useState<Review[]>([]);
   const [isLoadingReviews, setIsLoadingReviews] = useState(true);
+  const [selectedReview, setSelectedReview] = useState<Review | null>(null);
+  const [isResponseDialogOpen, setIsResponseDialogOpen] = useState(false);
+  const [isRemovalDialogOpen, setIsRemovalDialogOpen] = useState(false);
 
   useEffect(() => {
     const fetchReviews = async () => {
@@ -30,6 +36,28 @@ export default function ReviewsPage() {
       fetchReviews();
     }
   }, [website]);
+
+  const handleResponseClick = (review: Review) => {
+    setSelectedReview(review);
+    setIsResponseDialogOpen(true);
+  };
+
+  const handleRemovalClick = (review: Review) => {
+    setSelectedReview(review);
+    setIsRemovalDialogOpen(true);
+  };
+
+  const handleResponseSubmitted = () => {
+    // Refresh reviews after a response is submitted
+    if (website?._id) {
+      setIsLoadingReviews(true);
+      fetch(`/api/reviews/get?websiteId=${website._id}`)
+        .then((response) => response.json())
+        .then((data) => setReviews(data))
+        .catch((error) => console.error("Error refreshing reviews:", error))
+        .finally(() => setIsLoadingReviews(false));
+    }
+  };
 
   if (isLoading || isLoadingReviews) {
     return <LoadingSpinner />;
@@ -77,12 +105,74 @@ export default function ReviewsPage() {
               <p className="text-muted-foreground text-sm mb-4">
                 {review.body}
               </p>
-              <div className="text-sm text-muted-foreground">
+              <div className="text-sm text-muted-foreground mb-4">
                 מאת {review.relatedUser?.name || "אנונימי"}
+              </div>
+
+              {/* Business Response Section */}
+              {review.businessResponse && (
+                <div className="mt-2 mb-4 p-3 bg-blue-50 border border-blue-100 rounded-md">
+                  <div className="flex items-center gap-2 mb-1">
+                    <h4 className="text-xs font-medium text-blue-700">
+                      התגובה שלך
+                    </h4>
+                    <span className="text-xs text-blue-500 ml-auto">
+                      {new Date(
+                        review.businessResponse.lastUpdated
+                      ).toLocaleDateString()}
+                    </span>
+                  </div>
+                  <p className="text-xs text-blue-800">
+                    {review.businessResponse.text}
+                  </p>
+                </div>
+              )}
+
+              {/* Action Buttons */}
+              <div className="flex gap-2 mt-3">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-full"
+                  onClick={() => handleResponseClick(review)}
+                >
+                  <Reply className="w-3 h-3 ml-1" />
+                  {review.businessResponse ? "ערוך תגובה" : "הגב"}
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-full text-red-600 hover:text-red-700"
+                  onClick={() => handleRemovalClick(review)}
+                >
+                  <AlertTriangle className="w-3 h-3 ml-1" />
+                  בקש הסרה
+                </Button>
               </div>
             </div>
           ))}
         </div>
+      )}
+
+      {/* Response Dialog */}
+      {selectedReview && (
+        <ReviewResponseDialog
+          isOpen={isResponseDialogOpen}
+          onClose={() => setIsResponseDialogOpen(false)}
+          review={selectedReview}
+          onResponseSubmitted={handleResponseSubmitted}
+        />
+      )}
+
+      {/* Removal Dialog */}
+      {selectedReview && website && (
+        <ReviewRemovalDialog
+          isOpen={isRemovalDialogOpen}
+          onClose={() => setIsRemovalDialogOpen(false)}
+          review={selectedReview}
+          businessName={website.name}
+          businessEmail={website.owner?.email || ""}
+        />
       )}
     </div>
   );

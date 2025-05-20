@@ -34,6 +34,17 @@ const ReviewSchema = new mongoose.Schema(
       min: 1,
       max: 5,
     },
+    businessResponse: {
+      text: {
+        type: String,
+        default: "",
+        required: false,
+      },
+      lastUpdated: {
+        type: Date,
+        default: Date.now,
+      },
+    },
     isVerified: {
       type: Boolean,
       default: false,

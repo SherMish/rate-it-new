@@ -78,7 +78,6 @@ export async function sendVerificationEmail(
 export async function verifyDomain(token: string) {
   try {
     await connectDB();
-    console.log("Verifying token:", token);
 
     // Find user with this verification token
     const user = await User.findOne({
@@ -93,7 +92,6 @@ export async function verifyDomain(token: string) {
       throw new Error("User mismatch! token doesnt belong");
     }
 
-    console.log("Found user:", user ? "Yes" : "No");
 
     if (!user) {
       throw new Error("Invalid or expired verification token");
@@ -109,7 +107,6 @@ export async function verifyDomain(token: string) {
       .split("/")[0]
       .split(":")[0];
 
-    console.log("Clean URL:", cleanUrl);
 
     // Update website and user only if not already verified
     // if (!user.isVerifiedWebsiteOwner) {
