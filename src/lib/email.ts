@@ -13,7 +13,6 @@ export async function sendEmail({
   html: string;
   text?: string;
 }) {
-
   // Add timeout to email sending like in forgot-password route
   return Promise.race([
     resend.emails.send({
@@ -39,12 +38,20 @@ export async function sendVerificationEmail(
 
   return sendEmail({
     to,
-    subject: `Verify ownership of ${websiteName}`,
+    subject: `אימות בעלות על ${websiteName}`,
     html: `
-      <h1>Website Ownership Verification</h1>
-      <p>Please click the link below to verify your ownership of ${websiteName}:</p>
+      <h1>אימות בעלות על אתר</h1>
+      <p>אנא לחצו על הקישור למטה כדי לאמת את הבעלות שלכם על ${websiteName}:</p>
       <a href="${verificationUrl}">${verificationUrl}</a>
-      <p>This link will expire in 24 hours.</p>
+      <p>קישור זה יפוג תוך 24 שעות.</p>
+    `,
+    text: `
+  אימות בעלות על אתר
+  
+  אנא לחצו על הקישור הבא כדי לאמת את הבעלות שלכם על ${websiteName}:
+  ${verificationUrl}
+  
+  קישור זה יפוג תוך 24 שעות.
     `,
   });
 }

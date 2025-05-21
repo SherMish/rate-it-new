@@ -3,6 +3,7 @@ import { Resend } from "resend";
 import { randomBytes } from "crypto";
 import User from "@/lib/models/User";
 import mongoose from "mongoose";
+import { sendEmail } from "@/lib/email";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -39,21 +40,21 @@ export async function POST(req: Request) {
     ).maxTimeMS(8000);
     console.log("Reset token:", resetToken);
     // Add timeout to email sending
-    await Promise.race([
-      resend.emails.send({
-        from: "no-reply@rate-it.co.il",
-        to: email,
-        subject: "איפוס סיסמא",
-        html: `
-          <h2>אפסו את סיסמתכם</h2>
-          <p>לחץ/י כאן על מנת לאפס את סיסמתך. תוקף הקישור - 60 דקות.</p>
-          <a href="${process.env.NEXT_PUBLIC_APP_URL}/reset-password?token=${resetToken}">איפוס סיסמא</a>
-        `,
-      }),
-      new Promise((_, reject) =>
-        setTimeout(() => reject(new Error("Email sending timeout")), 5000)
-      ),
-    ]);
+    await sendEmail({
+      to: email,
+      subject: "איפוס סיסמא",
+      html: `
+        <h2>אפסו את סיסמתכם</h2>
+        <p>לחץ/י כאן על מנת לאפס את סיסמתך. תוקף הקישור - 60 דקות.</p>
+        <a href="${process.env.NEXT_PUBLIC_APP_URL}/reset-password?token=${resetToken}">איפוס סיסמא</a>
+      `,
+      text: `
+        איפוס סיסמא
+        
+        לחץ/י כאן על מנת לאפס את סיסמתך. תוקף הקישור - 60 דקות.
+        ${process.env.NEXT_PUBLIC_APP_URL}/reset-password?token=${resetToken}
+      `,
+    });
 
     return NextResponse.json({ success: true });
   } catch (error) {
