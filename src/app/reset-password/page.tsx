@@ -19,11 +19,11 @@ import { Form, FormField, FormItem, FormControl } from "@/components/ui/form";
 
 const resetPasswordSchema = z
   .object({
-    password: z.string().min(6, "Password must be at least 6 characters"),
+    password: z.string().min(6, "הסיסמה חייבת להכיל לפחות 6 תווים"),
     confirmPassword: z.string(),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
+    message: "הסיסמאות אינן תואמות",
     path: ["confirmPassword"],
   });
 
@@ -47,8 +47,8 @@ export default function ResetPasswordPage() {
     if (!token) {
       toast({
         variant: "destructive",
-        title: "Error",
-        description: "Invalid reset token",
+        title: "שגיאה",
+        description: "קישור לאיפוס סיסמה אינו תקף",
       });
       return;
     }
@@ -71,17 +71,16 @@ export default function ResetPasswordPage() {
       }
 
       toast({
-        title: "Success",
-        description: "Your password has been reset. Please login with your new password.",
+        title: "הסיסמה אופסה בהצלחה",
+        description: "הסיסמה שלך אופסה. ניתן להתחבר עם הסיסמה החדשה.",
       });
 
-      // Redirect to login page
       window.location.href = "/";
     } catch (error) {
       toast({
         variant: "destructive",
-        title: "Error",
-        description: "Failed to reset password. Please try again.",
+        title: "שגיאה",
+        description: "איפוס הסיסמה נכשל. נסה שוב.",
       });
     } finally {
       setIsLoading(false);
@@ -90,12 +89,15 @@ export default function ResetPasswordPage() {
 
   if (!token) {
     return (
-      <div className="container flex items-center justify-center min-h-[calc(100vh-4rem)]">
+      <div
+        dir="rtl"
+        className="container flex items-center justify-center min-h-[calc(100vh-4rem)]"
+      >
         <Card className="w-full max-w-md">
           <CardHeader>
-            <CardTitle>Invalid Reset Link</CardTitle>
+            <CardTitle>קישור איפוס לא תקין</CardTitle>
             <CardDescription>
-              This password reset link is invalid or has expired.
+              קישור האיפוס הזה לא תקף או שפג תוקפו.
             </CardDescription>
           </CardHeader>
         </Card>
@@ -104,13 +106,14 @@ export default function ResetPasswordPage() {
   }
 
   return (
-    <div className="container flex items-center justify-center min-h-[calc(100vh-4rem)]">
+    <div
+      dir="rtl"
+      className="container flex items-center justify-center min-h-[calc(100vh-4rem)]"
+    >
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle>Reset Your Password</CardTitle>
-          <CardDescription>
-            Please enter your new password below.
-          </CardDescription>
+          <CardTitle>איפוס סיסמה</CardTitle>
+          <CardDescription>אנא הזינו סיסמה חדשה למטה.</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -124,7 +127,7 @@ export default function ResetPasswordPage() {
                       <Input
                         {...field}
                         type="password"
-                        placeholder="New Password"
+                        placeholder="סיסמה חדשה"
                         disabled={isLoading}
                       />
                     </FormControl>
@@ -140,7 +143,7 @@ export default function ResetPasswordPage() {
                       <Input
                         {...field}
                         type="password"
-                        placeholder="Confirm Password"
+                        placeholder="אימות סיסמה"
                         disabled={isLoading}
                       />
                     </FormControl>
@@ -148,7 +151,7 @@ export default function ResetPasswordPage() {
                 )}
               />
               <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? "Resetting..." : "Reset Password"}
+                {isLoading ? "מאפס..." : "אפס סיסמה"}
               </Button>
             </form>
           </Form>
@@ -156,4 +159,4 @@ export default function ResetPasswordPage() {
       </Card>
     </div>
   );
-} 
+}

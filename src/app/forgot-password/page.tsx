@@ -17,7 +17,7 @@ import {
 import { Form, FormField, FormItem, FormControl } from "@/components/ui/form";
 
 const forgotPasswordSchema = z.object({
-  email: z.string().email("Please enter a valid email address"),
+  email: z.string().email("אנא הזינו כתובת אימייל תקינה"),
 });
 
 type ForgotPasswordValues = z.infer<typeof forgotPasswordSchema>;
@@ -43,27 +43,28 @@ export default function ForgotPasswordPage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
-        signal: AbortSignal.timeout(8000)
+        signal: AbortSignal.timeout(8000),
       });
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.details || "Failed to send reset email");
+        throw new Error(errorData.details || "שליחת המייל נכשלה");
       }
 
       setEmailSent(true);
       toast({
-        title: "Email Sent",
-        description: "Check your inbox for password reset instructions",
+        title: "המייל נשלח",
+        description: "בדקו את תיבת הדואר לקבלת הוראות לאיפוס הסיסמה.",
       });
     } catch (error) {
-      console.error("Password reset error:", error);
+      console.error("שגיאת איפוס סיסמה:", error);
       toast({
         variant: "destructive",
-        title: "Error",
-        description: error instanceof Error 
-          ? error.message 
-          : "Failed to send reset email. Please try again.",
+        title: "שגיאה",
+        description:
+          error instanceof Error
+            ? error.message
+            : "שליחת מייל האיפוס נכשלה. נסו שוב.",
       });
     } finally {
       setIsLoading(false);
@@ -71,28 +72,30 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className="container flex items-center justify-center min-h-[calc(100vh-4rem)]">
+    <div
+      dir="rtl"
+      className="container flex items-center justify-center min-h-[calc(100vh-4rem)]"
+    >
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle>Reset Password</CardTitle>
+          <CardTitle>איפוס סיסמה</CardTitle>
           <CardDescription>
-            Enter your email address and we&apos;ll send you instructions to reset your
-            password.
+            הזינו את כתובת האימייל שלכם ונשלח אליכם הוראות לאיפוס הסיסמה.
           </CardDescription>
         </CardHeader>
         <CardContent>
           {emailSent ? (
             <div className="text-center space-y-4">
               <p className="text-sm text-muted-foreground">
-                We&apos;ve sent you an email with instructions to reset your password.
-                Please check your inbox.
+                שלחנו אליכם מייל עם הוראות לאיפוס הסיסמה. בדקו את תיבת הדואר
+                שלכם.
               </p>
               <Button
                 variant="outline"
                 onClick={() => setEmailSent(false)}
                 className="w-full"
               >
-                Send again
+                שלחו שוב
               </Button>
             </div>
           ) : (
@@ -110,19 +113,15 @@ export default function ForgotPasswordPage() {
                         <Input
                           {...field}
                           type="email"
-                          placeholder="Enter your email"
+                          placeholder="הזינו את כתובת האימייל שלכם"
                           disabled={isLoading}
                         />
                       </FormControl>
                     </FormItem>
                   )}
                 />
-                <Button
-                  type="submit"
-                  className="w-full"
-                  disabled={isLoading}
-                >
-                  {isLoading ? "Sending..." : "Send Reset Instructions"}
+                <Button type="submit" className="w-full" disabled={isLoading}>
+                  {isLoading ? "שולח..." : "שלח הוראות לאיפוס"}
                 </Button>
               </form>
             </Form>
@@ -131,4 +130,4 @@ export default function ForgotPasswordPage() {
       </Card>
     </div>
   );
-} 
+}
