@@ -841,7 +841,17 @@ export default function BusinessPage() {
 
       {/* TrustRadar Section - Scroll animation */}
       <section ref={trustRadarRef} className="py-24 relative overflow-hidden">
-        <div className="container max-w-6xl mx-auto px-4">
+        {/* Add decorative background elements */}
+        <div className="absolute inset-0">
+          <div className="absolute top-0 left-1/4 w-64 h-64 bg-gradient-to-br from-primary/10 to-purple-500/5 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-gradient-to-tr from-blue-500/10 to-primary/5 rounded-full blur-3xl"></div>
+          <div className="absolute top-1/3 right-1/3 w-32 h-32 bg-yellow-400/5 rounded-full blur-2xl"></div>
+        </div>
+
+        <div className="container max-w-6xl mx-auto px-4 relative z-10">
+          {/* Decorative line */}
+          <div className="absolute left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-transparent via-primary/20 to-transparent hidden lg:block"></div>
+
           <motion.div
             className="grid lg:grid-cols-[400px,1fr] gap-12 items-center"
             variants={containerVariants}
@@ -858,14 +868,27 @@ export default function BusinessPage() {
               <div className="absolute w-40 h-40 rounded-full top-0 right-0 bg-blue-400/10 blur-2xl animate-float-diagonal"></div>
               <div className="absolute w-32 h-32 rounded-full bottom-0 left-0 bg-indigo-500/10 blur-2xl animate-float-left"></div>
 
-              {/* Logo with floating animation */}
+              {/* Logo with enhanced floating animation */}
               <motion.div
-                className="relative animate-float"
+                className="relative"
                 variants={itemVariants}
-                transition={{ delay: 0.6, duration: 1.2 }}
+                animate={{
+                  y: [0, -15, 0],
+                  rotate: [0, 3, 0, -3, 0],
+                }}
+                transition={{
+                  duration: 6,
+                  ease: "easeInOut",
+                  repeat: Infinity,
+                  delay: 0.6,
+                }}
               >
-                {/* Glow effect */}
-                <div className="absolute inset-0 -m-6 bg-gradient-to-r from-primary/20 to-blue-600/20 rounded-full blur-md opacity-70 animate-slow-pulse"></div>
+                {/* Enhanced glow effect */}
+                <div className="absolute inset-0 -m-8 bg-gradient-to-r from-primary/30 to-blue-600/30 rounded-full blur-xl opacity-70 animate-pulse"></div>
+
+                {/* Decorative circles */}
+                <div className="absolute -inset-4 border-2 border-dashed border-primary/20 rounded-full animate-spin-slow"></div>
+                <div className="absolute -inset-12 border border-primary/10 rounded-full"></div>
 
                 {/* Logo */}
                 <Image
@@ -883,45 +906,53 @@ export default function BusinessPage() {
               className="text-right lg:order-2 order-1"
               variants={fadeInLeftVariants}
             >
-              <div className="space-y-6">
+              <div className="space-y-8 bg-gradient-to-br from-white/70 to-white/30 backdrop-blur-sm p-8 rounded-2xl border border-primary/10 shadow-xl">
                 <h2 className="text-3xl font-bold">
-                  כל מה שצריך כדי לבנות{" "}
-                  <span className="text-primary">אמון</span> - במקום אחד
+                  <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-600">
+                    כל מה שצריך
+                  </span>{" "}
+                  כדי לבנות{" "}
+                  <span className="relative">
+                    <span className="text-primary">אמון</span>
+                    <span className="absolute -bottom-1 left-0 right-0 h-1 bg-primary/30 rounded-full"></span>
+                  </span>{" "}
+                  - במקום אחד
                 </h2>
 
-                <ul className="space-y-3 text-lg">
-                  <li className="flex items-start">
-                    <span className="text-primary text-xl ml-2">•</span>
-                    <span>להשיב לביקורות של לקוחות ולבנות שיח פתוח ואמין.</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-primary text-xl ml-2">•</span>
-                    <span>
-                      להזמין לקוחות מרוצים להשאיר ביקורת בקלות ובמהירות.
-                    </span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-primary text-xl ml-2">•</span>
-                    <span>
-                      להמיר לקוחות מתעניינים בעזרת ביקורות חיוביות שמחזקות אמון.
-                    </span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-primary text-xl ml-2">•</span>
-                    <span>
-                      להציג את הביקורות שלכם באתר וברשתות ולהיראות עסק רציני
-                      ומומלץ.
-                    </span>
-                  </li>
+                <ul className="space-y-5">
+                  {[
+                    "להשיב לביקורות של לקוחות ולבנות שיח פתוח ואמין.",
+                    "להזמין לקוחות מרוצים להשאיר ביקורת בקלות ובמהירות.",
+                    "להמיר לקוחות מתעניינים בעזרת ביקורות חיוביות שמחזקות אמון.",
+                    "להציג את הביקורות שלכם באתר וברשתות ולהיראות עסק רציני ומומלץ.",
+                  ].map((text, index) => (
+                    <motion.li
+                      key={index}
+                      className="flex items-start group"
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.8 + index * 0.2 }}
+                    >
+                      <div className="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-primary/20 to-blue-500/20 border border-primary/30 ml-4 group-hover:from-primary/30 group-hover:to-blue-500/30 transition-all duration-300">
+                        <span className="text-primary group-hover:scale-110 transition-transform duration-300">
+                          •
+                        </span>
+                      </div>
+                      <span className="text-lg">{text}</span>
+                    </motion.li>
+                  ))}
                 </ul>
 
                 <Button
-                  className="gradient-button"
+                  className="gradient-button relative overflow-hidden group transition-all duration-300 transform hover:scale-105"
                   size="lg"
                   onClick={() => router.push("/business/register")}
                 >
-                  הצטרפו עכשיו
-                  <ArrowRight className="mr-2 h-5 w-5" />
+                  <span className="relative z-10 flex items-center">
+                    הצטרפו עכשיו
+                    <ArrowRight className="mr-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                  </span>
+                  <span className="absolute inset-0 bg-gradient-to-r from-primary/80 to-blue-600/80 group-hover:from-primary group-hover:to-blue-600 transition-all duration-300"></span>
                 </Button>
               </div>
             </motion.div>
