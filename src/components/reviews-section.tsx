@@ -68,8 +68,8 @@ export function ReviewsSection({ reviews }: ReviewsSectionProps) {
     <div>
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <h2 className="text-2xl font-semibold">חוות דעת ({reviews.length})</h2>
-        <div className="flex items-center gap-3">
-          <Select onValueChange={setFilterBy} defaultValue="all">
+        {/* <div className="flex items-center gap-3"> */}
+          {/* <Select onValueChange={setFilterBy} defaultValue="all">
             <SelectTrigger className="w-[140px]">
               <Filter className="w-4 h-4 mr-2" />
               <SelectValue placeholder="Filter by" />
@@ -92,8 +92,8 @@ export function ReviewsSection({ reviews }: ReviewsSectionProps) {
               <SelectItem value="lowest">Lowest Rated</SelectItem>
               <SelectItem value="helpful">Most Helpful</SelectItem>
             </SelectContent>
-          </Select>
-        </div>
+          </Select> */}
+        {/* </div> */}
       </div>
 
       <div className="space-y-6">

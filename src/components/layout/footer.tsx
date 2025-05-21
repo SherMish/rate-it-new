@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { FaGithub, FaXTwitter, FaLinkedin } from "react-icons/fa6";
 
 const navigation = {
@@ -29,12 +30,19 @@ export function Footer() {
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
           {/* Brand */}
           <div className="space-y-4 text-right">
-            <Link href="/" className="text-xl font-bold gradient-text">
-              AI-Radar
+            <Link
+              href="/"
+              className="block hover:opacity-90 transition-opacity"
+            >
+              <Image
+                src="/logo_new.svg"
+                alt="AI-Radar"
+                width={150}
+                height={28}
+              />
             </Link>
             <p className="text-sm text-muted-foreground">
-              גלה ושתף תובנות על כלי הבינה המלאכותית הטובים ביותר. המקור האמין
-              שלך לביקורות והמלצות על כלי בינה מלאכותית.
+              גלו עסקים, קראו ביקורות אמיתיות – ושתפו גם את החוויות שלכם
             </p>
           </div>
 
@@ -94,7 +102,7 @@ export function Footer() {
 
         <div className="mt-8 border-t border-border pt-8 md:flex md:items-center md:justify-between">
           <p className="text-sm text-muted-foreground text-right md:text-right">
-            &copy; {new Date().getFullYear()} AI-Radar. כל הזכויות שמורות.
+            &copy; {new Date().getFullYear()} Rate-it. כל הזכויות שמורות.
           </p>
           <div className="mt-4 flex space-x-6 space-x-reverse rtl:space-x-reverse md:mt-0">
             <Link

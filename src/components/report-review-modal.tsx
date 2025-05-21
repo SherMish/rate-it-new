@@ -22,21 +22,24 @@ interface ReportReviewModalProps {
   userEmail: string;
 }
 
-export function ReportReviewModal({ isOpen, onClose, review, userEmail }: ReportReviewModalProps) {
+export function ReportReviewModal({
+  isOpen,
+  onClose,
+  review,
+  userEmail,
+}: ReportReviewModalProps) {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const { toast } = useToast();
 
-  // Set email when userEmail prop changes or modal opens
   useEffect(() => {
     if (userEmail) {
       setEmail(userEmail);
     }
   }, [userEmail]);
 
-  // Reset state when modal closes
   useEffect(() => {
     if (!isOpen) {
       setIsSubmitted(false);
@@ -59,26 +62,26 @@ export function ReportReviewModal({ isOpen, onClose, review, userEmail }: Report
           reviewId: review._id,
           reviewTitle: review.title,
           reviewBody: review.body,
-          reviewAuthor: review.relatedUser?.name || "Anonymous",
+          reviewAuthor: review.relatedUser?.name || "אנונימי",
           reporterEmail: email,
           message,
         }),
       });
 
       if (!response.ok) {
-        throw new Error("Failed to submit report");
+        throw new Error("שליחת הדיווח נכשלה");
       }
 
       setIsSubmitted(true);
       toast({
-        title: "Report Submitted",
-        description: "Thank you for helping us maintain the quality of our platform.",
+        title: "הדיווח נשלח",
+        description: "תודה שעזרת לנו לשמור על איכות הפלטפורמה.",
       });
     } catch (error) {
       toast({
         variant: "destructive",
-        title: "Error",
-        description: "Failed to submit report. Please try again.",
+        title: "שגיאה",
+        description: "שליחת הדיווח נכשלה. נסה שוב.",
       });
     } finally {
       setIsSubmitting(false);
@@ -87,61 +90,63 @@ export function ReportReviewModal({ isOpen, onClose, review, userEmail }: Report
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[425px]" dir="rtl">
         <DialogHeader>
-          <DialogTitle>Report Review</DialogTitle>
+          <DialogTitle>דיווח על ביקורת</DialogTitle>
           <DialogDescription>
-            Help us maintain the quality of our platform by reporting inappropriate or misleading content.
+            עזרו לנו לשמור על איכות הפלטפורמה על ידי דיווח על תוכן פוגעני או
+            מטעה.
           </DialogDescription>
         </DialogHeader>
 
         {isSubmitted ? (
           <div className="space-y-4 py-4">
-            <h3 className="font-semibold text-lg">Thank You for Your Report</h3>
+            <h3 className="font-semibold text-lg">תודה על הדיווח</h3>
             <p className="text-muted-foreground">
-              We appreciate you taking the time to help maintain the quality of our platform. Our team will review your report carefully.
+              אנו מעריכים את הזמן שהקדשת לדווח על הביקורת. הצוות שלנו יבחן את
+              הדיווח בקפידה.
             </p>
             <p className="text-muted-foreground">
-              If we need additional information, we will contact you at {email}.
+              אם נזדקק למידע נוסף, ניצור איתך קשר בכתובת {email}.
             </p>
             <DialogFooter>
-              <Button onClick={onClose}>Close</Button>
+              <Button onClick={onClose}>סגור</Button>
             </DialogFooter>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
               <label htmlFor="email" className="text-sm font-medium">
-                Your Email
+                כתובת אימייל
               </label>
               <Input
                 id="email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter your email"
+                placeholder="הכנס/י כתובת אימייל"
                 required
                 disabled={!!userEmail}
               />
             </div>
             <div className="space-y-2">
               <label htmlFor="message" className="text-sm font-medium">
-                Message (Optional)
+                הודעה (אופציונלי)
               </label>
               <Textarea
                 id="message"
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
-                placeholder="Tell us why you're reporting this review"
+                placeholder="ספר/י לנו מדוע את/ה מדווח/ת על הביקורת"
                 className="min-h-[100px]"
               />
             </div>
             <DialogFooter>
               <Button type="button" variant="outline" onClick={onClose}>
-                Cancel
+                ביטול
               </Button>
               <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? "Submitting..." : "Submit Report"}
+                {isSubmitting ? "שולח..." : "שלח דיווח"}
               </Button>
             </DialogFooter>
           </form>
@@ -149,4 +154,4 @@ export function ReportReviewModal({ isOpen, onClose, review, userEmail }: Report
       </DialogContent>
     </Dialog>
   );
-} 
+}
