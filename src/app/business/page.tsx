@@ -974,7 +974,8 @@ export default function BusinessPage() {
                   שיפור ביחס ההמרה
                 </p>
                 <p className="text-muted-foreground font-medium">
-                  בקרב לקוחות שהטמיעו את הוויידג'ט של רייט-איט בדף הנחיתה שלהם
+                  בקרב לקוחות שהטמיעו את הוויידג&apos;ט של רייט-איט בדף הנחיתה
+                  שלהם
                 </p>
               </motion.div>
 
