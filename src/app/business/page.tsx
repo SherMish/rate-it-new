@@ -587,7 +587,7 @@ export default function BusinessPage() {
               className="text-xl text-muted-foreground"
               variants={itemVariants}
             >
-              לקוחות הישראלים הם לא פרייארים – הם בודקים, משווים ורוצים לראות
+              הלקוחות הישראלים הם לא פרייארים – הם בודקים, משווים ורוצים לראות
               ביקורות חיוביות מאנשים אמיתיים.
               <br />
               תנו להם לראות את מה שעושה אתכם טובים – ותזכו באמון שמוביל לפעולה{" "}
@@ -894,8 +894,8 @@ export default function BusinessPage() {
                 <Image
                   src="/logo_icon.svg"
                   alt="Rate It Logo"
-                  width={180}
-                  height={180}
+                  width={300}
+                  height={300}
                   className="relative z-10 drop-shadow-xl"
                 />
               </motion.div>
@@ -914,7 +914,6 @@ export default function BusinessPage() {
                   כדי לבנות{" "}
                   <span className="relative">
                     <span className="text-primary">אמון</span>
-                    <span className="absolute -bottom-1 left-0 right-0 h-1 bg-primary/30 rounded-full"></span>
                   </span>{" "}
                   - במקום אחד
                 </h2>
