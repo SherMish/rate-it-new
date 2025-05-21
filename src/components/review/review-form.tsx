@@ -18,6 +18,13 @@ import {
   AlertDialogCancel,
   AlertDialogAction,
 } from "@/components/ui/alert-dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { z } from "zod";
 import { Label } from "@/components/ui/label";
 import {
@@ -306,7 +313,7 @@ export default function ReviewForm({
 
         setTimeout(() => {
           router.push(`/tool/${encodeURIComponent(initialUrl)}`);
-        }, 5000);
+        }, 7000);
       }
     } catch (error) {
       console.error("Error submitting:", error);
@@ -616,21 +623,23 @@ export default function ReviewForm({
         </AlertDialogContent>
       </AlertDialog>
 
-      <AlertDialog open={showSuccessDialog}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>תודה על הביקורת שלך! 🎉</AlertDialogTitle>
-            <AlertDialogDescription className="space-y-2">
-              <p>הביקורת שלך הוגשה בהצלחה ✅</p>
+      <Dialog open={showSuccessDialog}>
+        <DialogContent dir="rtl">
+          <DialogHeader>
+            <DialogTitle>תודה רבה!</DialogTitle>
+            <DialogDescription className="space-y-2">
+              <p>הביקורת שלך התקבלה בהצלחה.</p>
               <p>
-                ייתכן שייקח מספר רגעים עד שהיא תופיע באתר בזמן שאנו מעבדים אותה
-                ⏳
+                היא תופיע באתר לאחר סיום תהליך הבדיקה והאישור, אשר עשוי להימשך
+                מספר רגעים.
               </p>
-              <p className="text-muted-foreground">מפנה אותך לדף העסק...</p>
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-        </AlertDialogContent>
-      </AlertDialog>
+              <p className="text-muted-foreground">
+                אנחנו מפנים אותך כעת לדף העסק.
+              </p>
+            </DialogDescription>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
     </Card>
   );
 }
