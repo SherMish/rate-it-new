@@ -885,29 +885,29 @@ export default function BusinessPage() {
             >
               <div className="space-y-6">
                 <h2 className="text-3xl font-bold">
-                  בנו <span className="text-primary">אמון</span> עם לקוחות
-                  פוטנציאליים
+                  כל מה שצריך כדי לבנות{" "}
+                  <span className="text-primary">אמון</span> - במקום אחד
                 </h2>
 
                 <ul className="space-y-3 text-lg">
                   <li className="flex items-start">
-                    <span className="text-primary text-xl mr-2">•</span>
+                    <span className="text-primary text-xl ml-2">•</span>
                     <span>להשיב לביקורות של לקוחות ולבנות שיח פתוח ואמין.</span>
                   </li>
                   <li className="flex items-start">
-                    <span className="text-primary text-xl mr-2">•</span>
+                    <span className="text-primary text-xl ml-2">•</span>
                     <span>
                       להזמין לקוחות מרוצים להשאיר ביקורת בקלות ובמהירות.
                     </span>
                   </li>
                   <li className="flex items-start">
-                    <span className="text-primary text-xl mr-2">•</span>
+                    <span className="text-primary text-xl ml-2">•</span>
                     <span>
                       להמיר לקוחות מתעניינים בעזרת ביקורות חיוביות שמחזקות אמון.
                     </span>
                   </li>
                   <li className="flex items-start">
-                    <span className="text-primary text-xl mr-2">•</span>
+                    <span className="text-primary text-xl ml-2">•</span>
                     <span>
                       להציג את הביקורות שלכם באתר וברשתות ולהיראות עסק רציני
                       ומומלץ.
