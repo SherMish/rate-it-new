@@ -101,11 +101,11 @@ export default function BusinessRegistration() {
       <div className="relative max-w-4xl mx-auto px-4 py-8">
         <div className="text-center mb-12">
           <h1 className="text-3xl font-bold mb-4">
-            תפסו את המקום שלכם בין העסקים האמינים בישראל
+            הדרך הנכונה להפוך לקוחות מרוצים לשגרירים{" "}
           </h1>
           <p className="text-muted-foreground text-lg">
-            הצטרפו לפלטפורמה שבה לקוחות בוחרים, סומכים וממליצים על עסקים
-            אמיתיים.
+            רייט-איט עוזרת לעסקים לבנות אמון, למשוך יותר לקוחות ולהבליט את הערך
+            שלכם{" "}
           </p>
         </div>
 
@@ -212,13 +212,16 @@ export default function BusinessRegistration() {
               />
             )}
 
-            {(session && step === 4 && !verifiedWebsiteUrl) || (!session && step > 1) && (
-              <div className="text-center">
-                משהו השתבש בדרך :( נסו שוב מאוחר יותר או שצרו קשר עם התמיכה
-                <br />
-                <Button onClick={() => router.push("/business")}>חזרה לדף הבית</Button>
-              </div>
-            )}
+            {(session && step === 4 && !verifiedWebsiteUrl) ||
+              (!session && step > 1 && (
+                <div className="text-center">
+                  משהו השתבש בדרך :( נסו שוב מאוחר יותר או שצרו קשר עם התמיכה
+                  <br />
+                  <Button onClick={() => router.push("/business")}>
+                    חזרה לדף הבית
+                  </Button>
+                </div>
+              ))}
           </CardContent>
         </Card>
       </div>
@@ -231,14 +234,14 @@ export default function BusinessRegistration() {
         <div className="grid md:grid-cols-2 gap-8">
           <div className="bg-background/80 backdrop-blur-sm border border-border/50 rounded-xl p-6 shadow-md">
             <h3 className="text-xl font-semibold mb-4 text-primary">
-              הגיעו לקהל שמחפש אתכם
+              הראו שאתם עסק שאפשר לסמוך עליו
             </h3>
             <ul className="space-y-3">
               <li className="flex items-start gap-2">
                 <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
                 <span>
-                  הציגו את העסק בפני לקוחות שמחפשים שירותים אמינים ומומלצים
-                  בתחומכם.
+                  ביקורות אמיתיות יעזרו לכם לבנות אמון ולהיראות מקצועיים בעיני
+                  לקוחות חדשים.
                 </span>
               </li>
             </ul>
@@ -246,14 +249,13 @@ export default function BusinessRegistration() {
 
           <div className="bg-background/80 backdrop-blur-sm border border-border/50 rounded-xl p-6 shadow-md">
             <h3 className="text-xl font-semibold mb-4 text-primary">
-              הגבירו את האמון בעסק
+              בלטו מול מתחרים בלי ביקורות
             </h3>
             <ul className="space-y-3">
               <li className="flex items-start gap-2">
                 <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
                 <span>
-                  הראו שאתם עסק מאומת, עם ביקורות אמיתיות ופרופיל מקצועי שמעיד
-                  עליכם.
+                  עסק עם חוות דעת חיוביות תמיד ייבחר על פני עסקים אנונימיים.
                 </span>
               </li>
             </ul>
@@ -261,14 +263,14 @@ export default function BusinessRegistration() {
 
           <div className="bg-background/80 backdrop-blur-sm border border-border/50 rounded-xl p-6 shadow-md">
             <h3 className="text-xl font-semibold mb-4 text-primary">
-              משכו לקוחות חדשים
+              קחו שליטה על המוניטין שלכם
             </h3>
             <ul className="space-y-3">
               <li className="flex items-start gap-2">
                 <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
                 <span>
-                  לקוחות סומכים יותר על עסקים עם ביקורות – זה הזמן להתחיל לקבל
-                  אותן.
+                  עדכנו פרטים, הגיבו לביקורות ובנו לעצמכם נוכחות דיגיטלית
+                  חיובית.
                 </span>
               </li>
             </ul>
@@ -276,14 +278,13 @@ export default function BusinessRegistration() {
 
           <div className="bg-background/80 backdrop-blur-sm border border-border/50 rounded-xl p-6 shadow-md">
             <h3 className="text-xl font-semibold mb-4 text-primary">
-              קחו שליטה על איך שרואים אתכם
+              הגיעו ללקוחות שמחפשים אתכם
             </h3>
             <ul className="space-y-3">
               <li className="flex items-start gap-2">
                 <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
                 <span>
-                  עדכנו פרטים, הגיבו לביקורות, ושפרו את המוניטין הדיגיטלי של
-                  העסק.
+                  הציגו את העסק שלכם במקום שבו לקוחות בודקים לפני שהם בוחרים.
                 </span>
               </li>
             </ul>

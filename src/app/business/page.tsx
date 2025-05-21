@@ -587,10 +587,10 @@ export default function BusinessPage() {
               className="text-xl text-muted-foreground"
               variants={itemVariants}
             >
-              הלקוחות הישראלים הם לא פרייארים – הם בודקים, משווים ורוצים לראות
-              ביקורות אמיתיות מאנשים אמיתיים.
+              לקוחות הישראלים הם לא פרייארים – הם בודקים, משווים ורוצים לראות
+              ביקורות חיוביות מאנשים אמיתיים.
               <br />
-              תנו להם את השקיפות שמגיעה להם – ובנו אמון שמוביל לפעולה.
+              תנו להם לראות את מה שעושה אתכם טובים – ותזכו באמון שמוביל לפעולה{" "}
             </motion.p>
           </motion.div>
 
@@ -888,14 +888,32 @@ export default function BusinessPage() {
                   בנו <span className="text-primary">אמון</span> עם לקוחות
                   פוטנציאליים
                 </h2>
-                <p className="text-lg text-muted-foreground">
-                  לקוחות מחפשים עסקים אמינים. באמצעות מערכת דירוג האמון החדשנית
-                  שלנו, תוכלו להציג את האמינות והמקצועיות של העסק שלכם.
-                </p>
-                <p className="text-lg text-muted-foreground">
-                  העסקים שלנו בעלי הדירוג הגבוה ביותר נהנים מיותר המרות, יותר
-                  לקוחות חוזרים ויותר המלצות.
-                </p>
+
+                <ul className="space-y-3 text-lg">
+                  <li className="flex items-start">
+                    <span className="text-primary text-xl mr-2">•</span>
+                    <span>להשיב לביקורות של לקוחות ולבנות שיח פתוח ואמין.</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-primary text-xl mr-2">•</span>
+                    <span>
+                      להזמין לקוחות מרוצים להשאיר ביקורת בקלות ובמהירות.
+                    </span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-primary text-xl mr-2">•</span>
+                    <span>
+                      להמיר לקוחות מתעניינים בעזרת ביקורות חיוביות שמחזקות אמון.
+                    </span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-primary text-xl mr-2">•</span>
+                    <span>
+                      להציג את הביקורות שלכם באתר וברשתות ולהיראות עסק רציני
+                      ומומלץ.
+                    </span>
+                  </li>
+                </ul>
 
                 <Button
                   className="gradient-button"
@@ -1058,7 +1076,7 @@ export default function BusinessPage() {
               className="text-3xl font-bold"
               variants={fadeInUpVariants}
             >
-              הצטרפו היום וקדמו את העסק שלכם
+              ביקורת אחת יכולה להפוך התלבטות להחלטה.{" "}
             </motion.h2>
             <motion.p
               className="text-xl text-muted-foreground"
