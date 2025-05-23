@@ -36,8 +36,8 @@ export function DailyTipCard() {
   if (!tip) return null;
 
   return (
-    <animated.div style={fadeIn}>
-      <Card className="p-6 hover:shadow-lg transition-all overflow-hidden relative border-0">
+    <animated.div style={fadeIn} className="h-full">
+      <Card className="p-6 hover:shadow-lg transition-all overflow-hidden relative border-0 h-full flex flex-col">
         {/* Background pattern */}
         <div
           className="absolute inset-0 opacity-5 z-0"
@@ -88,7 +88,7 @@ export function DailyTipCard() {
         <div className="absolute -left-6 top-1/2 -translate-y-1/2 w-16 h-16 bg-primary/5 rounded-md rotate-45 z-0" />
 
         {/* Content container */}
-        <div className="relative z-10">
+        <div className="relative z-10 flex-grow flex flex-col justify-center">
           <div className="flex justify-between items-start">
             <div className="w-full">
               {/* Header with badge-like design */}

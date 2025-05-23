@@ -277,8 +277,8 @@ export default function DashboardPage() {
                 isPlus(website.pricingModel as PricingModel) ? (
                   <h3 className="text-2xl font-bold mt-2">{totalViews}</h3>
                 ) : (
-                  <div className="mt-2">
-                    <div className="relative">
+                  <div className="mt-2 self-center text-center">
+                    <div className="relative inline-block">
                       <h3 className="text-2xl font-bold text-muted-foreground/50 blur-sm select-none">
                         1,247
                       </h3>
@@ -311,8 +311,8 @@ export default function DashboardPage() {
                 isPlus(website.pricingModel as PricingModel) ? (
                   <h3 className="text-2xl font-bold mt-2">{totalClicks}</h3>
                 ) : (
-                  <div className="mt-2">
-                    <div className="relative">
+                  <div className="mt-2 self-center text-center">
+                    <div className="relative inline-block">
                       <h3 className="text-2xl font-bold text-muted-foreground/50 blur-sm select-none">
                         89
                       </h3>
@@ -339,36 +339,11 @@ export default function DashboardPage() {
         {/* Second Row of Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 items-stretch">
           {/* Conversion Rate Card */}
-          <Card className="p-6 hover:shadow-lg transition-all">
+          <Card className="p-6 hover:shadow-lg transition-all flex flex-col h-full">
             <div className="flex justify-between items-start">
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">
-                  אחוז המרה
-                </p>
-                {website?.pricingModel &&
-                isPlus(website.pricingModel as PricingModel) ? (
-                  <>
-                    <h3 className="text-2xl font-bold mt-2">
-                      {conversionRate}%
-                    </h3>
-                    <p className="text-xs text-muted-foreground mt-1">
-                      אחוז המבקרים שלחצו על הקישור לאתר שלכם
-                    </p>
-                  </>
-                ) : (
-                  <div className="mt-2">
-                    <div className="relative">
-                      <h3 className="text-2xl font-bold text-muted-foreground/50 blur-sm select-none">
-                        7.1%
-                      </h3>
-                    </div>
-                    <p className="text-xs text-muted-foreground mt-1 mb-3">
-                      זמין ללקוחות פלוס בלבד
-                    </p>
-                    <UpgradeButton />
-                  </div>
-                )}
-              </div>
+              <h2 className="text-sm font-medium text-muted-foreground mb-2">
+                אחוז המרה
+              </h2>
               <Percent
                 className={`w-8 h-8 opacity-75 ${
                   website?.pricingModel &&
@@ -377,6 +352,29 @@ export default function DashboardPage() {
                     : "text-muted-foreground"
                 }`}
               />
+            </div>
+            <div className="flex-grow flex flex-col justify-center">
+              {website?.pricingModel &&
+              isPlus(website.pricingModel as PricingModel) ? (
+                <>
+                  <h3 className="text-3xl font-bold">{conversionRate}%</h3>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    אחוז המבקרים שלחצו על הקישור לאתר שלכם
+                  </p>
+                </>
+              ) : (
+                <div className="mt-2 self-center text-center">
+                  <div className="relative inline-block">
+                    <h3 className="text-3xl font-bold text-muted-foreground/50 blur-sm select-none">
+                      7.1%
+                    </h3>
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-1 mb-3">
+                    זמין ללקוחות פלוס בלבד
+                  </p>
+                  <UpgradeButton />
+                </div>
+              )}
             </div>
           </Card>
 

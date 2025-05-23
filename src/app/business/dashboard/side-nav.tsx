@@ -12,6 +12,7 @@ import {
   Users,
   ArrowRight,
   FileText,
+  BadgeCheck,
 } from "lucide-react";
 import { useSession, signOut } from "next-auth/react";
 import { UserNav } from "@/components/user-nav";
@@ -55,8 +56,8 @@ export function SideNav() {
   const isFirstTime = searchParams?.get("firstTime") === "true";
 
   return (
-    <nav className="sticky top-0 h-[100vh] w-64 border-r border-border bg-background z-40">
-      <div className="flex flex-col h-full">
+    <nav className="sticky top-0 h-[100vh] w-64 border-r border-border bg-background z-40 flex flex-col">
+      <div className="flex-grow overflow-y-auto">
         <div className="p-6">
           <Link
             href="/business"
@@ -113,36 +114,46 @@ export function SideNav() {
             );
           })}
         </div>
-        {/* <div className="p-4 mx-3 mt-6 rounded-lg bg-gradient-to-r from-[#6366f1]/10 to-[#8b5cf6]/10 border border-purple-500/20">
-          <h3 className="font-medium text-white mb-1">Upgrade to Pro</h3>
-          <p className="text-sm text-gray-400 mb-3">Get advanced analytics and premium features</p>
+      </div>
+
+      {/* Upgrade to Plus CTA - Placed before User Profile */}
+      <div className="px-4 pt-4 pb-2 mt-auto border-t border-border">
+        <div className="p-4 rounded-lg bg-gradient-to-br from-primary/10 via-purple-600/10 to-pink-500/10 border border-primary/20 shadow-md">
+          <div className="flex items-center gap-2 mb-2">
+            <BadgeCheck className="w-5 h-5 text-primary" />
+            <h3 className="font-semibold text-sm text-foreground">
+              שדרגו לפלוס
+            </h3>
+          </div>
+          <p className="text-xs text-muted-foreground mb-3">
+            קבלו תג מאומת, אנליטיקות מתקדמות ועוד כלים שיעזרו לכם להגדיל המרות.
+          </p>
           <Link
             href="/business/pricing"
-            className="flex items-center justify-center gap-2 w-full bg-gradient-to-r from-[#6366f1] to-[#8b5cf6] text-white rounded-md px-3 py-2 text-sm font-medium hover:opacity-90 transition-opacity"
+            className="flex items-center justify-center gap-2 w-full bg-gradient-to-r from-primary via-purple-600 to-pink-600 text-white rounded-md px-3 py-2 text-xs font-medium hover:opacity-90 transition-opacity shadow-sm hover:shadow-lg"
           >
-            Upgrade Now
-            <ArrowRight className="w-4 h-4" />
+            צפו במסלולים
+            <ArrowRight className="w-3.5 h-3.5" />
           </Link>
-        </div> */}
-        <div className="flex-1" />
-
-        {/* User Profile at Bottom */}
-        {session?.user && (
-          <div className="px-3 py-4 mt-auto border-t border-border">
-            <div className="flex items-center justify-between">
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-foreground truncate">
-                  {session.user.name}
-                </p>
-                <p className="text-xs text-muted-foreground truncate">
-                  {session.user.email}
-                </p>
-              </div>
-              <UserNav user={session.user} onSignOut={() => signOut()} />
-            </div>
-          </div>
-        )}
+        </div>
       </div>
+
+      {/* User Profile at Bottom */}
+      {session?.user && (
+        <div className="px-3 py-4 border-t border-border">
+          <div className="flex items-center justify-between">
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium text-foreground truncate">
+                {session.user.name}
+              </p>
+              <p className="text-xs text-muted-foreground truncate">
+                {session.user.email}
+              </p>
+            </div>
+            <UserNav user={session.user} onSignOut={() => signOut()} />
+          </div>
+        </div>
+      )}
     </nav>
   );
 }
