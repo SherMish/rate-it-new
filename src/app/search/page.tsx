@@ -16,7 +16,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
   const query = searchParams.q?.trim();
 
   if (!query) {
-    redirect('/');
+    redirect("/");
   }
 
   try {
@@ -24,117 +24,124 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
 
     const websites = await Website.find({
       $or: [
-        { name: { $regex: query, $options: 'i' } },
-        { url: { $regex: query, $options: 'i' } },
-        { category: { $regex: query, $options: 'i' } }
-      ]
+        { name: { $regex: query, $options: "i" } },
+        { url: { $regex: query, $options: "i" } },
+        { category: { $regex: query, $options: "i" } },
+      ],
     })
-    .select('name url category averageRating reviewCount')
-    .lean();
+      .select("name url category averageRating reviewCount")
+      .lean();
 
     return (
-      <div className="relative min-h-screen bg-background">
-        {/* Background effects */}
-        <div className="fixed inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:44px_44px] pointer-events-none" />
-        <div className="fixed inset-0 bg-gradient-to-tr from-blue-500/5 via-purple-500/5 to-pink-500/5 pointer-events-none" />
-        
+      <main className="relative min-h-screen" dir="rtl">
+        {/* Main background gradient - matching homepage */}
+        <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,#3b82f620,transparent_70%),radial-gradient(ellipse_at_bottom,#6366f115,transparent_70%)] pointer-events-none" />
+
         <div className="relative container max-w-4xl mx-auto px-4 py-8">
-          <div className="rounded-lg border border-border/50 bg-secondary/50 backdrop-blur-sm">
+          <div className="rounded-lg border border-border/50 bg-card/50 backdrop-blur-sm shadow-lg">
             <div className="p-6 border-b border-border/50">
-              <h1 className="text-3xl font-bold gradient-text">
-                Search Results
+              <h1 className="text-3xl font-bold text-foreground mb-2">
+                תוצאות חיפוש
               </h1>
-              <p className="text-muted-foreground mt-2">
-                Found {websites.length} results for &quot;{query}&quot;
+              <p className="text-muted-foreground">
+                נמצאו {websites.length} תוצאות עבור &quot;{query}&quot;
               </p>
             </div>
 
             {websites.length === 0 ? (
               <div className="text-center p-12">
                 <p className="text-muted-foreground text-lg mb-4">
-                  No AI tools found matching your search.
+                  לא נמצאו עסקים דיגיטליים התואמים לחיפוש שלכם.
                 </p>
                 <p className="text-muted-foreground mb-8">
-                  Try searching with different keywords or browse our categories.
+                  נסו לחפש עם מילות מפתח שונות או עיינו בקטגוריות שלנו.
                 </p>
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                   <Link href="/tool/new">
                     <Button className="gradient-button w-full sm:w-auto">
-                      Add New Tool in Seconds
+                      הוסיפו עסק חדש תוך שניות
                     </Button>
                   </Link>
                   <Link href="/">
                     <Button variant="outline" className="w-full sm:w-auto">
-                      Browse Categories
+                      עיינו בקטגוריות
                     </Button>
                   </Link>
                 </div>
               </div>
             ) : (
-              <div className="p-6 space-y-6">
+              <div className="p-6 space-y-4">
                 {websites.map((website, index) => (
-                  <div key={website._id.toString()} 
-                    className={index % 2 === 1 ? "mb-12" : ""}>
-                    <Link 
-                      href={`/tool/${encodeURIComponent(website.url)}`}
-                    >
-                      <Card className="p-6 bg-zinc-900/50 hover:bg-zinc-800/50 transition-colors border-zinc-700/50">
-                        <div className="flex items-start justify-between gap-4">
-                          <div className="flex-1 min-w-0">
-                            <h2 className="text-lg font-semibold mb-1 text-zinc-50">
-                              {website.name}
-                            </h2>
-                            <p className="text-sm text-zinc-300 mb-3 truncate">
-                              {website.url}
-                            </p>
-                            <div className="flex items-center gap-4">
-                              <div className="flex items-center">
-                                {[...Array(5)].map((_, i) => (
-                                  <Star
-                                    key={i}
-                                    className={`w-4 h-4 ${
-                                      i < (website.averageRating || 0)
-                                        ? "text-yellow-400 fill-yellow-400"
-                                        : "text-zinc-600"
-                                    }`}
-                                  />
-                                ))}
-                              </div>
-                              <span className="text-sm text-zinc-400">
-                                {website.reviewCount || 0} reviews
+                  <Link
+                    key={website._id.toString()}
+                    href={`/tool/${encodeURIComponent(website.url)}`}
+                    className="block"
+                  >
+                    <Card className="p-6 hover:shadow-md transition-all duration-200 border-border/50 bg-background/80 hover:bg-background/90">
+                      <div className="flex items-start justify-between gap-4">
+                        <div className="flex-1 min-w-0">
+                          <h2 className="text-xl font-semibold mb-2 text-foreground">
+                            {website.name}
+                          </h2>
+                          <p className="text-sm text-muted-foreground mb-3 break-all">
+                            {website.url}
+                          </p>
+                          <div className="flex items-center gap-4">
+                            <div className="flex items-center">
+                              {[...Array(5)].map((_, i) => (
+                                <Star
+                                  key={i}
+                                  className={`w-4 h-4 ${
+                                    i < Math.floor(website.averageRating || 0)
+                                      ? "text-yellow-400 fill-yellow-400"
+                                      : "text-muted-foreground/30"
+                                  }`}
+                                />
+                              ))}
+                              <span className="mr-2 text-sm text-muted-foreground">
+                                ({website.averageRating?.toFixed(1) || "0.0"})
                               </span>
                             </div>
+                            <span className="text-sm text-muted-foreground">
+                              {website.reviewCount || 0} ביקורות
+                            </span>
                           </div>
-                          <span className="px-3 py-1 bg-zinc-800 text-zinc-300 text-sm rounded-full whitespace-nowrap">
-                            {website.category}
-                          </span>
                         </div>
-                      </Card>
-                    </Link>
-                  </div>
+                        <span className="px-3 py-1 bg-secondary text-secondary-foreground text-sm rounded-full whitespace-nowrap">
+                          {website.category}
+                        </span>
+                      </div>
+                    </Card>
+                  </Link>
                 ))}
               </div>
             )}
           </div>
         </div>
-      </div>
+      </main>
     );
   } catch (error) {
-    console.error('Error searching websites:', error);
+    console.error("Error searching websites:", error);
     return (
-      <div className="relative min-h-screen bg-background">
-        <div className="fixed inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:44px_44px] pointer-events-none" />
-        <div className="fixed inset-0 bg-gradient-to-tr from-blue-500/5 via-purple-500/5 to-pink-500/5 pointer-events-none" />
-        
+      <main className="relative min-h-screen" dir="rtl">
+        {/* Main background gradient - matching homepage */}
+        <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,#3b82f620,transparent_70%),radial-gradient(ellipse_at_bottom,#6366f115,transparent_70%)] pointer-events-none" />
+
         <div className="relative container max-w-4xl mx-auto px-4 py-8">
-          <h1 className="text-3xl font-bold mb-8 gradient-text">Search Results</h1>
-          <div className="text-center py-12">
-            <p className="text-muted-foreground text-lg">
-              Unable to load search results. Please try again later.
-            </p>
+          <div className="rounded-lg border border-border/50 bg-card/50 backdrop-blur-sm shadow-lg">
+            <div className="p-6 border-b border-border/50">
+              <h1 className="text-3xl font-bold text-foreground mb-2">
+                תוצאות חיפוש
+              </h1>
+            </div>
+            <div className="text-center py-12">
+              <p className="text-muted-foreground text-lg">
+                לא ניתן לטעון את תוצאות החיפוש. אנא נסו שוב מאוחר יותר.
+              </p>
+            </div>
           </div>
         </div>
-      </div>
+      </main>
     );
   }
-} 
+}

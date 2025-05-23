@@ -55,9 +55,9 @@ export function SearchSection() {
       <div className="absolute bottom-1/4 left-[25%] w-56 h-56 rounded-full bg-blue-400/10 blur-3xl animate-float-left"></div>
       <div className="absolute top-2/3 left-[40%] w-40 h-40 rounded-full bg-indigo-500/10 blur-3xl animate-float-right"></div>
 
-      <div className="relative w-full flex flex-col items-center justify-center min-h-[70vh] py-8">
+      <div className="relative w-full flex flex-col items-center justify-center min-h-[70vh] py-8 pt-12 px-4 sm:px-6 lg:px-8">
         <motion.div
-          className="max-w-3xl mx-auto text-center"
+          className="w-full max-w-3xl mx-auto text-center"
           variants={containerVariants}
           initial="hidden"
           animate="visible"

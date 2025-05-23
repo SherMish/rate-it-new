@@ -204,8 +204,8 @@ export default async function Home() {
 
         {/* Content */}
         <div className="relative">
-          {/* Search Section - Added px-4 for mobile padding */}
-          <div className="pt-12 px-4 sm:px-6 lg:px-8">
+          {/* Search Section */}
+          <div className="w-full">
             <SearchSection />
           </div>
 
