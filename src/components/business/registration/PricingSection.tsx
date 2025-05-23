@@ -72,9 +72,6 @@ export function PricingSection({ websiteUrl }: { websiteUrl: string }) {
       const userId = session?.user?.id;
       if (!userId) throw new Error("המשתמש אינו מחובר");
 
-      // Generate metadata only if needed
-      let metadata = null;
-
       let websiteId = existingWebsite?._id; // Use existing website ID if available
       // if (!websiteId || metadata) {
       const websiteUpdateRes = await fetch("/api/website/update", {

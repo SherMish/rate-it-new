@@ -19,6 +19,7 @@ import {
   TrendingUp,
   X,
   Lightbulb,
+  Lock,
 } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import Link from "next/link";
@@ -30,6 +31,7 @@ import {
 } from "@/components/ui/tooltip";
 
 import { Button } from "@/components/ui/button";
+import { isPlus, PricingModel } from "@/lib/types/website";
 
 import { useBusinessGuard } from "@/hooks/use-business-guard";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
@@ -38,6 +40,7 @@ import trustStatuses from "@/lib/data/trustStatuses.json";
 import FirstTimeDialog from "@/app/components/FirstTimeDialog";
 import { useSearchParams, useRouter } from "next/navigation";
 import { DailyTipCard } from "@/app/components/DailyTipCard";
+import { UpgradeButton } from "@/components/ui/upgrade-button";
 
 type Feature = {
   id: string;
@@ -270,9 +273,31 @@ export default function DashboardPage() {
                 <p className="text-sm font-medium text-muted-foreground">
                   סה״כ צפיות
                 </p>
-                <h3 className="text-2xl font-bold mt-2">{totalViews}</h3>
+                {website?.pricingModel &&
+                isPlus(website.pricingModel as PricingModel) ? (
+                  <h3 className="text-2xl font-bold mt-2">{totalViews}</h3>
+                ) : (
+                  <div className="mt-2">
+                    <div className="relative">
+                      <h3 className="text-2xl font-bold text-muted-foreground/50 blur-sm select-none">
+                        1,247
+                      </h3>
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-1 mb-3">
+                      זמין ללקוחות פלוס בלבד
+                    </p>
+                    <UpgradeButton />
+                  </div>
+                )}
               </div>
-              <Eye className="w-8 h-8 text-primary opacity-75" />
+              <Eye
+                className={`w-8 h-8 opacity-75 ${
+                  website?.pricingModel &&
+                  isPlus(website.pricingModel as PricingModel)
+                    ? "text-primary"
+                    : "text-muted-foreground"
+                }`}
+              />
             </div>
           </Card>
 
@@ -282,15 +307,37 @@ export default function DashboardPage() {
                 <p className="text-sm font-medium text-muted-foreground">
                   קליקים לאתר
                 </p>
-                <h3 className="text-2xl font-bold mt-2">{totalClicks}</h3>
+                {website?.pricingModel &&
+                isPlus(website.pricingModel as PricingModel) ? (
+                  <h3 className="text-2xl font-bold mt-2">{totalClicks}</h3>
+                ) : (
+                  <div className="mt-2">
+                    <div className="relative">
+                      <h3 className="text-2xl font-bold text-muted-foreground/50 blur-sm select-none">
+                        89
+                      </h3>
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-1 mb-3">
+                      זמין ללקוחות פלוס בלבד
+                    </p>
+                    <UpgradeButton />
+                  </div>
+                )}
               </div>
-              <MousePointer className="w-8 h-8 text-primary opacity-75" />
+              <MousePointer
+                className={`w-8 h-8 opacity-75 ${
+                  website?.pricingModel &&
+                  isPlus(website.pricingModel as PricingModel)
+                    ? "text-primary"
+                    : "text-muted-foreground"
+                }`}
+              />
             </div>
           </Card>
         </div>
 
         {/* Second Row of Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 items-stretch">
           {/* Conversion Rate Card */}
           <Card className="p-6 hover:shadow-lg transition-all">
             <div className="flex justify-between items-start">
@@ -298,12 +345,38 @@ export default function DashboardPage() {
                 <p className="text-sm font-medium text-muted-foreground">
                   אחוז המרה
                 </p>
-                <h3 className="text-2xl font-bold mt-2">{conversionRate}%</h3>
-                <p className="text-xs text-muted-foreground mt-1">
-                  אחוז המבקרים שלחצו על הקישור לאתר שלכם
-                </p>
+                {website?.pricingModel &&
+                isPlus(website.pricingModel as PricingModel) ? (
+                  <>
+                    <h3 className="text-2xl font-bold mt-2">
+                      {conversionRate}%
+                    </h3>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      אחוז המבקרים שלחצו על הקישור לאתר שלכם
+                    </p>
+                  </>
+                ) : (
+                  <div className="mt-2">
+                    <div className="relative">
+                      <h3 className="text-2xl font-bold text-muted-foreground/50 blur-sm select-none">
+                        7.1%
+                      </h3>
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-1 mb-3">
+                      זמין ללקוחות פלוס בלבד
+                    </p>
+                    <UpgradeButton />
+                  </div>
+                )}
               </div>
-              <Percent className="w-8 h-8 text-primary opacity-75" />
+              <Percent
+                className={`w-8 h-8 opacity-75 ${
+                  website?.pricingModel &&
+                  isPlus(website.pricingModel as PricingModel)
+                    ? "text-primary"
+                    : "text-muted-foreground"
+                }`}
+              />
             </div>
           </Card>
 

@@ -63,6 +63,10 @@ const config: Config = {
         },
       },
       keyframes: {
+        shimmer: {
+          "0%": { transform: "translateX(-100%)" },
+          "100%": { transform: "translateX(200%)" },
+        },
         "accordion-down": {
           from: {
             height: "0",
@@ -81,6 +85,7 @@ const config: Config = {
         },
       },
       animation: {
+        shimmer: "shimmer 2s infinite",
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
@@ -89,6 +94,6 @@ const config: Config = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
 };
 export default config;

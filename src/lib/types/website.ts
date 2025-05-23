@@ -1,10 +1,26 @@
 export enum PricingModel {
   FREE = "free",
-  FREEMIUM = "freemium",
-  SUBSCRIPTION = "subscription",
-  PAY_PER_USE = "pay_per_use",
-  ENTERPRISE = "enterprise",
+  PLUS = "plus",
+  PRO = "pro",
 }
+
+export const isPlusOrPro = (pricingModel: PricingModel) => {
+  return (
+    pricingModel === PricingModel.PLUS || pricingModel === PricingModel.PRO
+  );
+};
+
+export const isFree = (pricingModel: PricingModel) => {
+  return pricingModel === PricingModel.FREE;
+};
+
+export const isPro = (pricingModel: PricingModel) => {
+  return pricingModel === PricingModel.PRO;
+};
+
+export const isPlus = (pricingModel: PricingModel) => {
+  return pricingModel === PricingModel.PLUS;
+};
 
 export interface WebsiteType {
   _id: string;
