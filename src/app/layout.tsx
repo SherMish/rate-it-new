@@ -1,6 +1,6 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Heebo } from "next/font/google";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { LoginModal } from "@/components/auth/login-modal";
@@ -17,7 +17,7 @@ import { useErrorTracking } from "@/hooks/useErrorTracking";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { ErrorTrackingWrapper } from "./components/ErrorTrackingWrapper";
 
-const inter = Inter({ subsets: ["latin"] });
+const heebo = Heebo({ subsets: ["latin", "hebrew"] });
 
 export const metadata: Metadata = {
   title: {
@@ -75,7 +75,7 @@ export default async function RootLayout({
           </>
         )}
       </head>
-      <body className={inter.className}>
+      <body className={heebo.className}>
         {/* <ErrorTrackingWrapper /> */}
         <Providers>
           <AnalyticsProvider />
