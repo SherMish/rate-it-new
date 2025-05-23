@@ -41,6 +41,7 @@ import FirstTimeDialog from "@/app/components/FirstTimeDialog";
 import { useSearchParams, useRouter } from "next/navigation";
 import { DailyTipCard } from "@/app/components/DailyTipCard";
 import { UpgradeButton } from "@/components/ui/upgrade-button";
+import { CopyLinksCard } from "@/app/components/CopyLinksCard";
 
 type Feature = {
   id: string;
@@ -269,15 +270,17 @@ export default function DashboardPage() {
 
           <Card className="p-6 hover:shadow-lg transition-all">
             <div className="flex justify-between items-start">
-              <div>
+              <div className="w-full">
                 <p className="text-sm font-medium text-muted-foreground">
                   סה״כ צפיות
                 </p>
                 {website?.pricingModel &&
                 isPlus(website.pricingModel as PricingModel) ? (
-                  <h3 className="text-2xl font-bold mt-2">{totalViews}</h3>
+                  <h3 className="text-2xl font-bold mt-2 text-right">
+                    {totalViews}
+                  </h3>
                 ) : (
-                  <div className="mt-2 self-center text-center">
+                  <div className="mt-2 text-right w-full">
                     <div className="relative inline-block">
                       <h3 className="text-2xl font-bold text-muted-foreground/50 blur-sm select-none">
                         1,247
@@ -286,7 +289,9 @@ export default function DashboardPage() {
                     <p className="text-xs text-muted-foreground mt-1 mb-3">
                       זמין ללקוחות פלוס בלבד
                     </p>
-                    <UpgradeButton />
+                    <div className="max-w-max">
+                      <UpgradeButton />
+                    </div>
                   </div>
                 )}
               </div>
@@ -303,15 +308,17 @@ export default function DashboardPage() {
 
           <Card className="p-6 hover:shadow-lg transition-all">
             <div className="flex justify-between items-start">
-              <div>
+              <div className="w-full">
                 <p className="text-sm font-medium text-muted-foreground">
                   קליקים לאתר
                 </p>
                 {website?.pricingModel &&
                 isPlus(website.pricingModel as PricingModel) ? (
-                  <h3 className="text-2xl font-bold mt-2">{totalClicks}</h3>
+                  <h3 className="text-2xl font-bold mt-2 text-right">
+                    {totalClicks}
+                  </h3>
                 ) : (
-                  <div className="mt-2 self-center text-center">
+                  <div className="mt-2 text-right w-full">
                     <div className="relative inline-block">
                       <h3 className="text-2xl font-bold text-muted-foreground/50 blur-sm select-none">
                         89
@@ -320,7 +327,9 @@ export default function DashboardPage() {
                     <p className="text-xs text-muted-foreground mt-1 mb-3">
                       זמין ללקוחות פלוס בלבד
                     </p>
-                    <UpgradeButton />
+                    <div className="max-w-max">
+                      <UpgradeButton />
+                    </div>
                   </div>
                 )}
               </div>
@@ -337,7 +346,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Second Row of Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 items-stretch">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 items-stretch">
           {/* Conversion Rate Card */}
           <Card className="p-6 hover:shadow-lg transition-all flex flex-col h-full">
             <div className="flex justify-between items-start">
@@ -353,17 +362,17 @@ export default function DashboardPage() {
                 }`}
               />
             </div>
-            <div className="flex-grow flex flex-col justify-center">
+            <div className="flex-grow flex flex-col justify-center items-start">
               {website?.pricingModel &&
               isPlus(website.pricingModel as PricingModel) ? (
-                <>
+                <div className="text-right w-full">
                   <h3 className="text-3xl font-bold">{conversionRate}%</h3>
                   <p className="text-xs text-muted-foreground mt-1">
                     אחוז המבקרים שלחצו על הקישור לאתר שלכם
                   </p>
-                </>
+                </div>
               ) : (
-                <div className="mt-2 self-center text-center">
+                <div className="mt-2 text-right w-full">
                   <div className="relative inline-block">
                     <h3 className="text-3xl font-bold text-muted-foreground/50 blur-sm select-none">
                       7.1%
@@ -372,13 +381,19 @@ export default function DashboardPage() {
                   <p className="text-xs text-muted-foreground mt-1 mb-3">
                     זמין ללקוחות פלוס בלבד
                   </p>
-                  <UpgradeButton />
+                  {/* Ensuring UpgradeButton is not stretched excessively by its parent */}
+                  <div className="max-w-max">
+                    <UpgradeButton />
+                  </div>
                 </div>
               )}
             </div>
           </Card>
 
-          {/* Daily Tip Card */}
+          {/* Copy Links Card */}
+          <CopyLinksCard websiteUrl={website?.url} className="md:col-span-1" />
+
+          {/* Daily Tip Card - ensure it also adheres to h-full if needed */}
           <DailyTipCard />
         </div>
 
