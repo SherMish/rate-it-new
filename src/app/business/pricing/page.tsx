@@ -41,6 +41,7 @@ import { freeFeatures } from "@/components/business/registration/PricingSection"
 
 export default function BusinessPricingPage() {
   const [loading, setLoading] = useState(false);
+  const [isAnnual, setIsAnnual] = useState(false);
   const router = useRouter();
   const { data: session, update: updateSession } = useSession();
   const { website, user, isLoading: isGuardLoading } = useBusinessGuard();
@@ -75,6 +76,7 @@ export default function BusinessPricingPage() {
           websiteId: website._id,
           newPricingModel: plan,
           userId: session.user.id,
+          isAnnual,
         }),
       });
 
@@ -106,21 +108,36 @@ export default function BusinessPricingPage() {
     }
   };
 
+  const calculatePrice = (basePrice: number) => {
+    if (isAnnual) {
+      const annualPrice = Math.round(basePrice * 0.73 * 12);
+      return `${annualPrice} ₪`;
+    }
+    return `${basePrice} ₪`;
+  };
+
+  const calculateMonthlyAverage = (basePrice: number) => {
+    if (isAnnual) {
+      return Math.round(basePrice * 0.73);
+    }
+    return basePrice;
+  };
+
   const plansConfig = [
     {
       name: "חינם",
       price: "0 ₪",
-      priceDetails: "לתמיד",
       features: freeFeatures,
       ctaText: "הישאר בחינם",
       onCtaClick: () => router.push("/business/dashboard"),
       isCurrent: currentPlan === PricingModel.FREE,
       isDisabled: currentPlan === PricingModel.FREE,
+      bestFor: "עסקים קטנים שמתחילים את דרכם בפלטפורמה",
     },
     {
       name: "פלוס",
-      price: "39 ₪",
-      priceDetails: "לחודש (בתוספת מע״מ)",
+      price: calculatePrice(39),
+      monthlyPrice: calculateMonthlyAverage(39),
       features: plusFeatures,
       ctaText:
         currentPlan === PricingModel.PLUS ? "המסלול הנוכחי שלך" : "שדרגו לפלוס",
@@ -129,6 +146,7 @@ export default function BusinessPricingPage() {
       isCurrent: currentPlan === PricingModel.PLUS,
       isDisabled: currentPlan === PricingModel.PLUS,
       highlightColor: "primary",
+      bestFor: "עסקים פעילים שמעוניינים בצמיחה ונוכחות דיגיטלית משמעותית",
     },
     // Example for a Pro plan, can be uncommented and configured later
     // {
@@ -159,9 +177,17 @@ export default function BusinessPricingPage() {
           בחרו את המסלול המתאים ביותר לצמיחת העסק שלכם בפלטפורמה.
         </p>
       </div>
-      <PricingPlansUI plans={plansConfig} loading={loading} />
+      <PricingPlansUI
+        plans={plansConfig}
+        loading={loading}
+        isAnnual={isAnnual}
+        onBillingChange={setIsAnnual}
+      />
       <div className="mt-12 text-center text-sm text-muted-foreground">
-        <p>כל התשלומים מאובטחים. ניתן לשנות או לבטל את המסלול בכל עת.</p>
+        <p>
+          כל התשלומים מאובטחים. ניתן לשנות או לבטל את המסלול בכל עת. המחירים
+          לפני מע״מ
+        </p>
       </div>
     </div>
   );

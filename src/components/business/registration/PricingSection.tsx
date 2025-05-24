@@ -52,6 +52,7 @@ const cleanDomain = (raw: string): string => {
 // ─────────────────────────────────────────────────────────────────────────────
 export function PricingSection({ websiteUrl }: { websiteUrl: string }) {
   const [loading, setLoading] = useState(false);
+  const [isAnnual, setIsAnnual] = useState(false);
   const router = useRouter();
   const { update: updateSession, data: session } = useSession();
 
@@ -106,7 +107,7 @@ export function PricingSection({ websiteUrl }: { websiteUrl: string }) {
         return;
       }
 
-      // 6. Prepare payload (merge, don’t clobber)
+      // 6. Prepare payload (merge, don't clobber)
       const websitePayload = {
         ...(existingWebsite ?? {}),
         url: domain,
@@ -191,6 +192,21 @@ export function PricingSection({ websiteUrl }: { websiteUrl: string }) {
     }
   };
 
+  const calculatePrice = (basePrice: number) => {
+    if (isAnnual) {
+      const annualPrice = Math.round(basePrice * 0.73 * 12);
+      return `${annualPrice} ₪`;
+    }
+    return `${basePrice} ₪`;
+  };
+
+  const calculateMonthlyAverage = (basePrice: number) => {
+    if (isAnnual) {
+      return Math.round(basePrice * 0.73);
+    }
+    return basePrice;
+  };
+
   // ───────────────────────────────────────────────────────────────────────────
   // RENDER
   // ───────────────────────────────────────────────────────────────────────────
@@ -198,20 +214,21 @@ export function PricingSection({ websiteUrl }: { websiteUrl: string }) {
     {
       name: "חינם",
       price: "0 ₪",
-      priceDetails: "לתמיד",
       features: freeFeatures,
       ctaText: "התחילו בחינם",
       onCtaClick: handleFreePlanRegistration,
+      bestFor: "עסקים קטנים שמתחילים את דרכם בפלטפורמה",
     },
     {
       name: "פלוס",
-      price: "39 ₪",
-      priceDetails: "לחודש (בתוספת מע״מ)",
+      price: calculatePrice(39),
+      monthlyPrice: calculateMonthlyAverage(39),
       features: plusFeatures,
       ctaText: "שדרגו לפלוס",
       onCtaClick: handlePlusSubscription,
       isRecommended: true,
       highlightColor: "primary",
+      bestFor: "עסקים פעילים שמעוניינים בצמיחה ונוכחות דיגיטלית משמעותית",
     },
   ];
 
@@ -226,7 +243,12 @@ export function PricingSection({ websiteUrl }: { websiteUrl: string }) {
         </AlertDescription>
       </Alert>
 
-      <PricingPlansUI plans={registrationPlans} loading={loading} />
+      <PricingPlansUI
+        plans={registrationPlans}
+        loading={loading}
+        isAnnual={isAnnual}
+        onBillingChange={setIsAnnual}
+      />
 
       <p className="text-center text-sm text-muted-foreground">
         תשלום מאובטח. ניתן לבטל בכל עת.

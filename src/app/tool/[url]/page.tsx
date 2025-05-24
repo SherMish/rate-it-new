@@ -258,18 +258,6 @@ export async function generateStaticParams() {
   }));
 }
 
-// Add this helper function to format the pricing model text
-function formatPricingModel(model: PricingModel): string {
-  const formats: Record<PricingModel, string> = {
-    free: "חינם",
-    freemium: "🎁 פרימיום-חינמי",
-    subscription: "📅 מבוסס מנוי",
-    pay_per_use: "💰 תשלום לפי שימוש",
-    enterprise: "🏢 תאגידי (תמחור מותאם)",
-  };
-  return formats[model];
-}
-
 async function getSuggestedTools(
   currentToolUrl: string,
   category: { id: string },
