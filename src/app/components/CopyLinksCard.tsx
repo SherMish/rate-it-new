@@ -4,7 +4,13 @@ import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
-import { Copy, Check, ExternalLink, MessageSquarePlus } from "lucide-react";
+import {
+  Copy,
+  Check,
+  ExternalLink,
+  MessageSquarePlus,
+  Info,
+} from "lucide-react";
 import Link from "next/link";
 
 interface CopyLinksCardProps {
@@ -16,35 +22,57 @@ export function CopyLinksCard({ websiteUrl, className }: CopyLinksCardProps) {
   const [copiedLink, setCopiedLink] = useState<string | null>(null);
 
   const businessPageUrl = websiteUrl
-    ? `${process.env.NEXT_PUBLIC_APP_URL}/tool/${encodeURIComponent(
-        websiteUrl
-      )}`
+    ? `${window.location.origin}/tool/${encodeURIComponent(websiteUrl)}`
     : "";
   const reviewPageUrl = websiteUrl
-    ? `${process.env.NEXT_PUBLIC_APP_URL}/tool/${encodeURIComponent(
+    ? `${window.location.origin}/tool/${encodeURIComponent(
         websiteUrl
-      )}/review`
-    : ""; // Assuming reviews section has an ID
+      )}#write-review`
+    : "";
 
-  const handleCopy = (textToCopy: string, linkType: string) => {
+  const handleCopy = async (textToCopy: string, linkType: string) => {
     if (!textToCopy) return;
-    navigator.clipboard
-      .writeText(textToCopy)
-      .then(() => {
+
+    try {
+      console.log("Attempting to copy:", textToCopy);
+      await navigator.clipboard.writeText(textToCopy);
+      console.log("Copy successful");
+
+      setCopiedLink(linkType);
+      toast({
+        title: "הועתק!",
+        description: `קישור ל-${linkType} הועתק בהצלחה`,
+      });
+      setTimeout(() => setCopiedLink(null), 2000);
+    } catch (error) {
+      console.error("Clipboard API failed:", error);
+      // Fallback method
+      const textArea = document.createElement("textarea");
+      textArea.value = textToCopy;
+      textArea.style.position = "fixed";
+      textArea.style.left = "-999999px";
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+
+      try {
+        document.execCommand("copy");
         setCopiedLink(linkType);
         toast({
-          description: `הקישור הועתק: ${linkType}`,
+          title: "הועתק!",
+          description: `${linkType} הועתק בהצלחה`,
         });
         setTimeout(() => setCopiedLink(null), 2000);
-      })
-      .catch((err) => {
-        console.error("Failed to copy text: ", err);
+      } catch (err) {
+        console.error("execCommand copy failed:", err);
         toast({
           variant: "destructive",
           title: "שגיאה בהעתקה",
           description: "לא ניתן היה להעתיק את הקישור.",
         });
-      });
+      }
+      document.body.removeChild(textArea);
+    }
   };
 
   if (!websiteUrl) {
@@ -65,13 +93,16 @@ export function CopyLinksCard({ websiteUrl, className }: CopyLinksCardProps) {
           שתפו את העסק שלכם בקלות
         </h3>
         <p className="text-xs text-muted-foreground">
-          העתיקו בקלות קישורים לדף העסק או לכתיבת ביקורת.
+          לחצו על הקישור כדי להעתיק אותו
         </p>
       </div>
 
       <div className="space-y-3 flex-grow flex flex-col justify-around">
         {/* Copy Business Page Link */}
-        <div className="flex items-center justify-between p-3 bg-secondary/50 rounded-lg border border-border/70">
+        <button
+          onClick={() => handleCopy(businessPageUrl, "דף העסק")}
+          className="w-full flex items-center justify-between p-3 bg-secondary/50 rounded-lg border border-border/70 hover:bg-secondary/70 transition-colors cursor-pointer group"
+        >
           <div className="flex items-center gap-2 min-w-0">
             <ExternalLink className="w-4 h-4 text-primary flex-shrink-0" />
             <span
@@ -81,22 +112,20 @@ export function CopyLinksCard({ websiteUrl, className }: CopyLinksCardProps) {
               דף העסק
             </span>
           </div>
-          <Button
-            variant="ghost"
-            size="icon-sm"
-            onClick={() => handleCopy(businessPageUrl, "דף העסק")}
-            className="hover:bg-primary/10 p-1.5 h-auto w-auto"
-          >
+          <div className="p-1.5">
             {copiedLink === "דף העסק" ? (
               <Check className="w-4 h-4 text-green-500" />
             ) : (
-              <Copy className="w-4 h-4 text-muted-foreground" />
+              <Copy className="w-4 h-4 text-muted-foreground group-hover:text-foreground transition-colors" />
             )}
-          </Button>
-        </div>
+          </div>
+        </button>
 
         {/* Copy Review Page Link */}
-        <div className="flex items-center justify-between p-3 bg-secondary/50 rounded-lg border border-border/70">
+        <button
+          onClick={() => handleCopy(reviewPageUrl, "כתיבת ביקורת")}
+          className="w-full flex items-center justify-between p-3 bg-secondary/50 rounded-lg border border-border/70 hover:bg-secondary/70 transition-colors cursor-pointer group"
+        >
           <div className="flex items-center gap-2 min-w-0">
             <MessageSquarePlus className="w-4 h-4 text-primary flex-shrink-0" />
             <span
@@ -106,20 +135,22 @@ export function CopyLinksCard({ websiteUrl, className }: CopyLinksCardProps) {
               כתיבת ביקורת
             </span>
           </div>
-          <Button
-            variant="ghost"
-            size="icon-sm"
-            onClick={() => handleCopy(reviewPageUrl, "כתיבת ביקורת")}
-            className="hover:bg-primary/10 p-1.5 h-auto w-auto"
-          >
+          <div className="p-1.5">
             {copiedLink === "כתיבת ביקורת" ? (
               <Check className="w-4 h-4 text-green-500" />
             ) : (
-              <Copy className="w-4 h-4 text-muted-foreground" />
+              <Copy className="w-4 h-4 text-muted-foreground group-hover:text-foreground transition-colors" />
             )}
-          </Button>
-        </div>
+          </div>
+        </button>
       </div>
+
+      <Link href={businessPageUrl} target="_blank">
+        <Button variant="outline" className="w-full text-xs">
+          <ExternalLink className="w-3 h-3 ml-1.5" />
+          צפו בדף העסק שלכם
+        </Button>
+      </Link>
     </Card>
   );
 }

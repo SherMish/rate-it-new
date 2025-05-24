@@ -16,11 +16,8 @@ export function LoadingModal({ open }: LoadingModalProps) {
     <Dialog open={open}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>הדשבורד בהכנה!</DialogTitle>
-          <DialogDescription>
-            אנחנו מעבדים את פרטי העסק ומכינים עבורכם את הדשבורד. זה עשוי להימשך
-            כמה דקות – נא לא לסגור את החלון.{" "}
-          </DialogDescription>
+          <DialogTitle>טוען נתונים...</DialogTitle>
+          {/* <DialogDescription></DialogDescription> */}
         </DialogHeader>
         <div className="flex justify-center py-6">
           <Loader2 className="h-12 w-12 animate-spin text-primary" />

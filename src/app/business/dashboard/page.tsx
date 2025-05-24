@@ -42,6 +42,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { DailyTipCard } from "@/app/components/DailyTipCard";
 import { UpgradeButton } from "@/components/ui/upgrade-button";
 import { CopyLinksCard } from "@/app/components/CopyLinksCard";
+import { OnboardingGuide } from "@/app/components/OnboardingGuide";
 
 type Feature = {
   id: string;
@@ -87,57 +88,6 @@ const fetchTotalClicks = async (websiteId: string) => {
     return 0;
   }
 };
-
-// Function to get trust status based on score
-function getTrustStatus(score: number) {
-  const status = trustStatuses.find(
-    (status) => score >= status.from && score <= status.to
-  );
-  return (
-    status || {
-      status: "לא מדורג",
-      description: "העסק הזה עדיין לא דורג.",
-    }
-  );
-}
-
-// Function to get the appropriate icon based on trust level
-function getTrustStatusIcon(score: number) {
-  if (score >= 8.6) return Award; // מוביל בתעשייה
-  if (score >= 7.1) return ThumbsUp; // מאושר בשוק
-  if (score >= 5.1) return Sparkles; // שחקן מתפתח
-  return AlertTriangle; // אמון נמוך בשוק
-}
-
-// Function to get styles based on trust level
-function getTrustStatusStyles(score: number) {
-  if (score >= 8.6) {
-    return {
-      badge: "bg-blue-950/40 border-blue-500/30 text-blue-400",
-      icon: "text-blue-400",
-      gradient: "from-blue-600/20 to-blue-400/5",
-    };
-  }
-  if (score >= 7.1) {
-    return {
-      badge: "bg-green-950/40 border-green-500/30 text-green-400",
-      icon: "text-green-400",
-      gradient: "from-green-600/20 to-green-400/5",
-    };
-  }
-  if (score >= 5.1) {
-    return {
-      badge: "bg-yellow-950/40 border-yellow-500/30 text-yellow-400",
-      icon: "text-yellow-400",
-      gradient: "from-yellow-600/20 to-yellow-400/5",
-    };
-  }
-  return {
-    badge: "bg-red-950/40 border-red-500/30 text-red-400",
-    icon: "text-red-400",
-    gradient: "from-red-600/20 to-red-400/5",
-  };
-}
 
 export default function DashboardPage() {
   const { isLoading, website, user } = useBusinessGuard();
@@ -223,177 +173,170 @@ export default function DashboardPage() {
       />
 
       <div className="container mx-auto px-4 py-12 min-h-screen" dir="rtl">
-        <div className="mb-8 flex justify-between items-center">
-          <p className="text-muted-foreground">
-            ברוך/ה הבא, {user?.name?.split(" ")[0]}!
-          </p>
-          <Link
-            href={`/tool/${website?.url}`}
-            target="_blank"
-            className="text-primary hover:underline flex items-center gap-2"
-          >
-            <span>צפייה בדף הציבורי</span>
-          </Link>
-        </div>
-
-        {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <Card className="p-6 hover:shadow-lg transition-all">
-            <div className="flex justify-between items-start">
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">
-                  ביקורות
-                </p>
-                <h3 className="text-2xl font-bold mt-2">
-                  {website?.reviewCount || 0}
-                </h3>
-              </div>
-              <Star className="w-8 h-8 text-primary opacity-75" />
-            </div>
-          </Card>
-
-          <Card className="p-6 hover:shadow-lg transition-all">
-            <div className="flex justify-between items-start">
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">
-                  דירוג ממוצע
-                </p>
-                <h3 className="text-2xl font-bold mt-2">
-                  {website?.averageRating
-                    ? website?.averageRating.toFixed(1)
-                    : "0.0"}
-                </h3>
-              </div>
-              <Star className="w-8 h-8 text-yellow-500 opacity-75" />
-            </div>
-          </Card>
-
-          <Card className="p-6 hover:shadow-lg transition-all">
-            <div className="flex justify-between items-start">
-              <div className="w-full">
-                <p className="text-sm font-medium text-muted-foreground">
-                  סה״כ צפיות
-                </p>
-                {website?.pricingModel &&
-                isPlus(website.pricingModel as PricingModel) ? (
-                  <h3 className="text-2xl font-bold mt-2 text-right">
-                    {totalViews}
-                  </h3>
-                ) : (
-                  <div className="mt-2 text-right w-full">
-                    <div className="relative inline-block">
-                      <h3 className="text-2xl font-bold text-muted-foreground/50 blur-sm select-none">
-                        1,247
-                      </h3>
-                    </div>
-                    <p className="text-xs text-muted-foreground mt-1 mb-3">
-                      זמין ללקוחות פלוס בלבד
-                    </p>
-                    <div className="max-w-max">
-                      <UpgradeButton />
-                    </div>
-                  </div>
-                )}
-              </div>
-              <Eye
-                className={`w-8 h-8 opacity-75 ${
-                  website?.pricingModel &&
-                  isPlus(website.pricingModel as PricingModel)
-                    ? "text-primary"
-                    : "text-muted-foreground"
-                }`}
-              />
-            </div>
-          </Card>
-
-          <Card className="p-6 hover:shadow-lg transition-all">
-            <div className="flex justify-between items-start">
-              <div className="w-full">
-                <p className="text-sm font-medium text-muted-foreground">
-                  קליקים לאתר
-                </p>
-                {website?.pricingModel &&
-                isPlus(website.pricingModel as PricingModel) ? (
-                  <h3 className="text-2xl font-bold mt-2 text-right">
-                    {totalClicks}
-                  </h3>
-                ) : (
-                  <div className="mt-2 text-right w-full">
-                    <div className="relative inline-block">
-                      <h3 className="text-2xl font-bold text-muted-foreground/50 blur-sm select-none">
-                        89
-                      </h3>
-                    </div>
-                    <p className="text-xs text-muted-foreground mt-1 mb-3">
-                      זמין ללקוחות פלוס בלבד
-                    </p>
-                    <div className="max-w-max">
-                      <UpgradeButton />
-                    </div>
-                  </div>
-                )}
-              </div>
-              <MousePointer
-                className={`w-8 h-8 opacity-75 ${
-                  website?.pricingModel &&
-                  isPlus(website.pricingModel as PricingModel)
-                    ? "text-primary"
-                    : "text-muted-foreground"
-                }`}
-              />
-            </div>
-          </Card>
-        </div>
-
-        {/* Second Row of Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 items-stretch">
-          {/* Conversion Rate Card */}
-          <Card className="p-6 hover:shadow-lg transition-all flex flex-col h-full">
-            <div className="flex justify-between items-start">
-              <h2 className="text-sm font-medium text-muted-foreground mb-2">
-                אחוז המרה
-              </h2>
-              <Percent
-                className={`w-8 h-8 opacity-75 ${
-                  website?.pricingModel &&
-                  isPlus(website.pricingModel as PricingModel)
-                    ? "text-primary"
-                    : "text-muted-foreground"
-                }`}
-              />
-            </div>
-            <div className="flex-grow flex flex-col justify-center items-start">
-              {website?.pricingModel &&
-              isPlus(website.pricingModel as PricingModel) ? (
-                <div className="text-right w-full">
-                  <h3 className="text-3xl font-bold">{conversionRate}%</h3>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    אחוז המבקרים שלחצו על הקישור לאתר שלכם
-                  </p>
-                </div>
-              ) : (
-                <div className="mt-2 text-right w-full">
-                  <div className="relative inline-block">
-                    <h3 className="text-3xl font-bold text-muted-foreground/50 blur-sm select-none">
-                      7.1%
-                    </h3>
-                  </div>
-                  <p className="text-xs text-muted-foreground mt-1 mb-3">
-                    זמין ללקוחות פלוס בלבד
-                  </p>
-                  {/* Ensuring UpgradeButton is not stretched excessively by its parent */}
-                  <div className="max-w-max">
-                    <UpgradeButton />
-                  </div>
-                </div>
+        {/* Business Header */}
+        <div className="mb-8">
+          <div className="flex justify-between items-start">
+            <div className="flex items-center gap-4">
+              {website?.logo && (
+                <img
+                  src={website.logo}
+                  alt={website.name}
+                  className="w-16 h-16 rounded-lg object-cover border border-border"
+                />
               )}
+              <div>
+                <h1 className="text-3xl font-bold text-foreground">
+                  {website?.name || "העסק שלך"}
+                </h1>
+                <p className="text-muted-foreground mt-1">
+                  ברוך/ה הבא, {user?.name?.split(" ")[0]}!
+                </p>
+              </div>
             </div>
-          </Card>
+            <Link
+              href={`/tool/${website?.url}`}
+              target="_blank"
+              className="text-primary hover:underline flex items-center gap-2"
+            >
+              <span>צפייה בדף הציבורי</span>
+            </Link>
+          </div>
+        </div>
 
+        {/* Onboarding Guide */}
+        <OnboardingGuide website={website} />
+
+        {/* Basic Stats Grid - Available for all users */}
+        <div className="mb-8">
+          <h2 className="text-xl font-semibold mb-4">סטטיסטיקות בסיסיות</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Card className="p-6 hover:shadow-lg transition-all">
+              <div className="flex justify-between items-start">
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground">
+                    ביקורות
+                  </p>
+                  <h3 className="text-2xl font-bold mt-2">
+                    {website?.reviewCount || 0}
+                  </h3>
+                </div>
+                <Star className="w-8 h-8 text-primary opacity-75" />
+              </div>
+            </Card>
+
+            <Card className="p-6 hover:shadow-lg transition-all">
+              <div className="flex justify-between items-start">
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground">
+                    דירוג ממוצע
+                  </p>
+                  <h3 className="text-2xl font-bold mt-2">
+                    {website?.averageRating
+                      ? website?.averageRating.toFixed(1)
+                      : "0.0"}
+                  </h3>
+                </div>
+                <Star className="w-8 h-8 text-yellow-500 opacity-75" />
+              </div>
+            </Card>
+          </div>
+        </div>
+
+        {/* Plus Analytics Section - Blocked for non-Plus users */}
+        {totalViews >= 5 && (
+          <div className="mb-8">
+            <div className="flex items-center gap-2 mb-4">
+              <h2 className="text-xl font-semibold">אנליטיקות מתקדמות</h2>
+              <span className="px-2 py-1 bg-primary/10 text-primary text-xs font-medium rounded-full">
+                Plus בלבד
+              </span>
+            </div>
+
+            {website?.pricingModel &&
+            isPlus(website.pricingModel as PricingModel) ? (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <Card className="p-6 hover:shadow-lg transition-all">
+                  <div className="flex justify-between items-start">
+                    <div className="w-full">
+                      <p className="text-sm font-medium text-muted-foreground">
+                        סה״כ צפיות
+                      </p>
+                      <h3 className="text-2xl font-bold mt-2 text-right">
+                        {totalViews}
+                      </h3>
+                    </div>
+                    <Eye className="w-8 h-8 text-primary opacity-75" />
+                  </div>
+                </Card>
+
+                <Card className="p-6 hover:shadow-lg transition-all">
+                  <div className="flex justify-between items-start">
+                    <div className="w-full">
+                      <p className="text-sm font-medium text-muted-foreground">
+                        קליקים לאתר
+                      </p>
+                      <h3 className="text-2xl font-bold mt-2 text-right">
+                        {totalClicks}
+                      </h3>
+                    </div>
+                    <MousePointer className="w-8 h-8 text-primary opacity-75" />
+                  </div>
+                </Card>
+
+                <Card className="p-6 hover:shadow-lg transition-all flex flex-col">
+                  <div className="flex justify-between items-start">
+                    <h2 className="text-sm font-medium text-muted-foreground mb-2">
+                      אחוז המרה
+                    </h2>
+                    <Percent className="w-8 h-8 text-primary opacity-75" />
+                  </div>
+                  <div className="flex-grow flex flex-col justify-center items-start">
+                    <div className="text-right w-full">
+                      <h3 className="text-3xl font-bold">{conversionRate}%</h3>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        אחוז המבקרים שלחצו על הקישור לאתר שלכם
+                      </p>
+                    </div>
+                  </div>
+                </Card>
+              </div>
+            ) : (
+              <Card className="p-8 bg-muted/20 border-2 border-dashed border-muted-foreground/30">
+                <div className="text-center max-w-lg mx-auto">
+                  <Lock className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
+                  <h3 className="text-lg font-semibold mb-2">
+                    אנליטיקות מתקדמות זמינות למנויי Plus
+                  </h3>
+                  <p className="text-sm text-muted-foreground mb-6">
+                    קבלו גישה לנתונים מעמיקים על ביצועי העסק שלכם, כולל:
+                  </p>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 text-sm text-muted-foreground">
+                    <div className="flex items-center gap-2">
+                      <Eye className="w-4 h-4" />
+                      <span>מספר הצפיות בדף</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <MousePointer className="w-4 h-4" />
+                      <span>כמות הקליקים לאתר</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Percent className="w-4 h-4" />
+                      <span>אחוזי המרה</span>
+                    </div>
+                  </div>
+                  <UpgradeButton />
+                </div>
+              </Card>
+            )}
+          </div>
+        )}
+
+        {/* Utility Cards Row */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 items-stretch">
           {/* Copy Links Card */}
           <CopyLinksCard websiteUrl={website?.url} className="md:col-span-1" />
 
-          {/* Daily Tip Card - ensure it also adheres to h-full if needed */}
+          {/* Daily Tip Card */}
           <DailyTipCard />
         </div>
 
