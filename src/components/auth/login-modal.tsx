@@ -147,7 +147,6 @@ export function LoginModal() {
       });
 
       loginModal.onClose();
-      toast({ title: "הצלחה", description: "ההרשמה וההתחברות הצליחו" });
     } catch (e) {
       toast({
         variant: "destructive",
@@ -318,7 +317,7 @@ export function LoginModal() {
                           מדיניות הפרטיות
                         </Link>
                       </FormLabel>
-                      {/* <FormMessage /> //TODO: appears in row instead of col */} 
+                      {/* <FormMessage /> //TODO: appears in row instead of col */}
                     </FormItem>
                   )}
                 />

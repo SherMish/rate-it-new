@@ -8,34 +8,36 @@ import { useSession } from "next-auth/react";
 import { ArrowRight, BadgeCheck, CheckCircle2 } from "lucide-react";
 import { useBusinessGuard } from "@/hooks/use-business-guard";
 import { PricingModel } from "@/lib/types/website";
+import { plusFeatures } from "@/components/business/registration/PricingSection";
+import { freeFeatures } from "@/components/business/registration/PricingSection";
 
-const freeFeatures = [
-  { text: "פרופיל עסקי מאומת" },
-  { text: "לוח בקרה בסיסי" },
-  { text: "ניהול ביקורות" },
-  { text: "תג של RateIt בדף העסק" },
-];
+// const freeFeatures = [
+//   { text: "פרופיל עסקי מאומת" },
+//   { text: "לוח בקרה בסיסי" },
+//   { text: "ניהול ביקורות" },
+//   { text: "תג של RateIt בדף העסק" },
+// ];
 
-const plusFeatures = [
-  { text: "כל מה שבחינם, ובנוסף:", isHighlighted: true, icon: ArrowRight },
-  { text: "רישום מומלץ בדף הבית ובקטגוריות", icon: BadgeCheck },
-  { text: "אנליטיקות מתקדמות (צפיות, קליקים, המרות)", icon: BadgeCheck },
-  { text: "תג מאומת (Verified Badge) המגביר אמינות", icon: BadgeCheck },
-  { text: "מיתוג מותאם אישית - הסתרת תג RateIt", icon: BadgeCheck },
-  { text: "יצירת עד 5 קופונים פעילים", icon: BadgeCheck },
-  { text: "יכולת מענה לביקורות", icon: BadgeCheck },
-  { text: "תמיכה מהירה יותר (עד 24 שעות)", icon: BadgeCheck },
-];
+// const plusFeatures = [
+//   { text: "כל מה שבחינם, ובנוסף:", isHighlighted: true, icon: ArrowRight },
+//   { text: "רישום מומלץ בדף הבית ובקטגוריות", icon: BadgeCheck },
+//   { text: "אנליטיקות מתקדמות (צפיות, קליקים, המרות)", icon: BadgeCheck },
+//   { text: "תג מאומת (Verified Badge) המגביר אמינות", icon: BadgeCheck },
+//   { text: "מיתוג מותאם אישית - הסתרת תג RateIt", icon: BadgeCheck },
+//   { text: "יצירת עד 5 קופונים פעילים", icon: BadgeCheck },
+//   { text: "יכולת מענה לביקורות", icon: BadgeCheck },
+//   { text: "תמיכה מהירה יותר (עד 24 שעות)", icon: BadgeCheck },
+// ];
 
 // Placeholder for Pro plan if you add it
-const proFeatures = [
-  { text: "כל מה שבפלוס, ובנוסף:", isHighlighted: true, icon: ArrowRight },
-  { text: "קידום VIP בתוצאות חיפוש", icon: BadgeCheck },
-  { text: "ייעוץ אסטרטגי אישי (פעם ברבעון)", icon: BadgeCheck },
-  { text: "יצירת קופונים ללא הגבלה", icon: BadgeCheck },
-  { text: "API גישה לנתונים (בקרוב)", icon: BadgeCheck },
-  { text: "תמיכה פרימיום ייעודית (עד 4 שעות)", icon: BadgeCheck },
-];
+// const proFeatures = [
+//   { text: "כל מה שבפלוס, ובנוסף:", isHighlighted: true, icon: ArrowRight },
+//   { text: "קידום VIP בתוצאות חיפוש", icon: BadgeCheck },
+//   { text: "ייעוץ אסטרטגי אישי (פעם ברבעון)", icon: BadgeCheck },
+//   { text: "יצירת קופונים ללא הגבלה", icon: BadgeCheck },
+//   { text: "API גישה לנתונים (בקרוב)", icon: BadgeCheck },
+//   { text: "תמיכה פרימיום ייעודית (עד 4 שעות)", icon: BadgeCheck },
+// ];
 
 export default function BusinessPricingPage() {
   const [loading, setLoading] = useState(false);
@@ -129,17 +131,17 @@ export default function BusinessPricingPage() {
       highlightColor: "primary",
     },
     // Example for a Pro plan, can be uncommented and configured later
-    {
-      name: "פרו",
-      price: "99 ₪",
-      priceDetails: "לחודש (בתוספת מע״מ)",
-      features: proFeatures,
-      ctaText: "שדרגו לפרו",
-      onCtaClick: () => handleSubscription(PricingModel.PRO), // Assuming PricingModel.PRO exists
-      isCurrent: currentPlan === PricingModel.PRO,
-      isDisabled: true, // Disabled for now
-      highlightColor: "purple-600",
-    },
+    // {
+    //   name: "פרו",
+    //   price: "99 ₪",
+    //   priceDetails: "לחודש (בתוספת מע״מ)",
+    //   features: proFeatures,
+    //   ctaText: "שדרגו לפרו",
+    //   onCtaClick: () => handleSubscription(PricingModel.PRO), // Assuming PricingModel.PRO exists
+    //   isCurrent: currentPlan === PricingModel.PRO,
+    //   isDisabled: true, // Disabled for now
+    //   highlightColor: "purple-600",
+    // },
   ];
 
   if (isGuardLoading) {

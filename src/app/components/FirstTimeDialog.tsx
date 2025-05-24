@@ -76,7 +76,7 @@ export function FirstTimeDialog({
               </div>
             </div>
             <DialogTitle className="text-2xl font-bold" dir="rtl">
-              ברוכים הבאים, {userName || "משתמש יקר"}! 🎉
+              מזל טוב, {userName || "משתמש יקר"}! 🎉
             </DialogTitle>
           </DialogHeader>
         </animated.div>

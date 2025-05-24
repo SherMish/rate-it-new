@@ -57,10 +57,6 @@ export default function BusinessRegistration() {
           const result = await verifyDomainAction(token);
           if (!result.success) setVerifiedWebsiteUrl(null);
           else setVerifiedWebsiteUrl(result.websiteUrl);
-          toast({
-            title: "Success",
-            description: "Your domain ownership has been verified.",
-          });
         } catch (error) {
           console.error("Verification error:", error);
           toast({
