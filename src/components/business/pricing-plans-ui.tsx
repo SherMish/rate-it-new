@@ -13,6 +13,7 @@ interface Plan {
   name: string;
   price: string;
   monthlyPrice?: number; // Base monthly price for calculations
+  discount?: number; // Discount percentage for annual plans (e.g., 27 for 27% off)
   priceDetails?: string;
   features: PlanFeature[];
   ctaText: string;
@@ -54,7 +55,7 @@ export function PricingPlansUI({
               isAnnual ? "font-semibold" : "text-muted-foreground"
             }`}
           >
-            שנתי <span className="text-green-600">(27% הנחה)</span>
+            שנתי <span className="text-green-600">(שלושה חודשים מתנה)</span>
           </span>
         </div>
       )}
@@ -70,9 +71,9 @@ export function PricingPlansUI({
           >
             {plan.isRecommended && (
               <div
-                className={`absolute top-0 right-0 bg-${
+                className={`absolute top-0 left-0 bg-${
                   plan.highlightColor || "primary"
-                } text-primary-foreground text-sm px-3 py-1 rounded-bl-lg`}
+                } text-primary-foreground text-sm px-3 py-1 rounded-br-lg`}
               >
                 מומלץ
               </div>
@@ -98,12 +99,15 @@ export function PricingPlansUI({
                     : plan.price}
                   <span className="text-base font-normal text-muted-foreground mr-1">
                     {isAnnual ? "לחודש" : "לחודש"}
-                    <span className="text-sm"></span>
                   </span>
                 </div>
-                {isAnnual && plan.monthlyPrice && (
+                {isAnnual && plan.monthlyPrice && plan.discount && (
                   <div className="text-sm text-muted-foreground">
-                    בחיוב שנתי • {plan.price} לשנה
+                    בחיוב שנתי •{" "}
+                    {Math.round(
+                      plan.monthlyPrice * 12 * (1 - plan.discount / 100)
+                    )}{" "}
+                    ₪ לשנה
                   </div>
                 )}
               </div>

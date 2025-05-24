@@ -23,10 +23,10 @@ export const plusFeatures = [
 
   // { text: "רישום מומלץ בדף הבית" },
   { text: "נתוני חשיפה והתנהגות גולשים בזמן אמת", isHighlighted: true },
-  { text: "תמיכה מהירה יותר" },
+  { text: "עדיפות במענה ותמיכה", isHighlighted: true },
 
-  { text: "מיתוג מותאם אישית לדף העסק" },
-  { text: "יצירת עד 5 קופונים" },
+  // { text: "מיתוג מותאם אישית לדף העסק" },
+  // { text: "יצירת עד 5 קופונים" },
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -192,17 +192,17 @@ export function PricingSection({ websiteUrl }: { websiteUrl: string }) {
     }
   };
 
-  const calculatePrice = (basePrice: number) => {
+  const calculatePrice = (basePrice: number, discount: number = 0) => {
     if (isAnnual) {
-      const annualPrice = Math.round(basePrice * 0.73 * 12);
+      const annualPrice = Math.round(basePrice * 12 * (1 - discount / 100));
       return `${annualPrice} ₪`;
     }
     return `${basePrice} ₪`;
   };
 
-  const calculateMonthlyAverage = (basePrice: number) => {
+  const calculateMonthlyAverage = (basePrice: number, discount: number = 0) => {
     if (isAnnual) {
-      return Math.round(basePrice * 0.73);
+      return Math.round(basePrice * (1 - discount / 100));
     }
     return basePrice;
   };
@@ -217,18 +217,19 @@ export function PricingSection({ websiteUrl }: { websiteUrl: string }) {
       features: freeFeatures,
       ctaText: "התחילו בחינם",
       onCtaClick: handleFreePlanRegistration,
-      bestFor: "עסקים קטנים שמתחילים את דרכם בפלטפורמה",
+      bestFor: "דרך קלה להתחיל לבנות אמון עם הלקוחות – בלי עלות.",
     },
     {
       name: "פלוס",
-      price: calculatePrice(39),
-      monthlyPrice: calculateMonthlyAverage(39),
+      price: calculatePrice(39, 27),
+      monthlyPrice: calculateMonthlyAverage(39, 27),
+      discount: 25,
       features: plusFeatures,
       ctaText: "שדרגו לפלוס",
       onCtaClick: handlePlusSubscription,
       isRecommended: true,
       highlightColor: "primary",
-      bestFor: "עסקים פעילים שמעוניינים בצמיחה ונוכחות דיגיטלית משמעותית",
+      bestFor: "מתאים לעסקים שמכוונים לבלוט בשוק תחרותי.",
     },
   ];
 
@@ -251,7 +252,7 @@ export function PricingSection({ websiteUrl }: { websiteUrl: string }) {
       />
 
       <p className="text-center text-sm text-muted-foreground">
-        תשלום מאובטח. ניתן לבטל בכל עת.
+        תשלום מאובטח. ניתן לבטל בכל עת. המחירים לפני מע״מ.
       </p>
     </div>
   );

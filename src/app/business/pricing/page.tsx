@@ -108,17 +108,17 @@ export default function BusinessPricingPage() {
     }
   };
 
-  const calculatePrice = (basePrice: number) => {
+  const calculatePrice = (basePrice: number, discount: number = 0) => {
     if (isAnnual) {
-      const annualPrice = Math.round(basePrice * 0.73 * 12);
+      const annualPrice = Math.round(basePrice * 12 * (1 - discount / 100));
       return `${annualPrice} ₪`;
     }
     return `${basePrice} ₪`;
   };
 
-  const calculateMonthlyAverage = (basePrice: number) => {
+  const calculateMonthlyAverage = (basePrice: number, discount: number = 0) => {
     if (isAnnual) {
-      return Math.round(basePrice * 0.73);
+      return Math.round(basePrice * (1 - discount / 100));
     }
     return basePrice;
   };
@@ -132,12 +132,13 @@ export default function BusinessPricingPage() {
       onCtaClick: () => router.push("/business/dashboard"),
       isCurrent: currentPlan === PricingModel.FREE,
       isDisabled: currentPlan === PricingModel.FREE,
-      bestFor: "עסקים קטנים שמתחילים את דרכם בפלטפורמה",
+      bestFor: "דרך קלה להתחיל לבנות אמון עם הלקוחות – בלי עלות.",
     },
     {
       name: "פלוס",
-      price: calculatePrice(39),
-      monthlyPrice: calculateMonthlyAverage(39),
+      price: calculatePrice(39, 27),
+      monthlyPrice: calculateMonthlyAverage(39, 27),
+      discount: 25,
       features: plusFeatures,
       ctaText:
         currentPlan === PricingModel.PLUS ? "המסלול הנוכחי שלך" : "שדרגו לפלוס",
@@ -146,7 +147,7 @@ export default function BusinessPricingPage() {
       isCurrent: currentPlan === PricingModel.PLUS,
       isDisabled: currentPlan === PricingModel.PLUS,
       highlightColor: "primary",
-      bestFor: "עסקים פעילים שמעוניינים בצמיחה ונוכחות דיגיטלית משמעותית",
+      bestFor: "מתאים לעסקים שמכוונים לבלוט בשוק תחרותי.",
     },
     // Example for a Pro plan, can be uncommented and configured later
     // {
