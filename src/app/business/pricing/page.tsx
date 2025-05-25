@@ -177,7 +177,7 @@ export default function BusinessPricingPage() {
           שדרגו את התוכנית שלכם
         </h1>
         <p className="mt-3 text-xl text-muted-foreground sm:mt-4">
-        הלקוחות בודקים לפני שהם בוחרים. תנו להם סיבה לבחור דווקא בכם.
+          הלקוחות בודקים לפני שהם בוחרים. תנו להם סיבה לבחור דווקא בכם.
         </p>
       </div>
       <PricingPlansUI
