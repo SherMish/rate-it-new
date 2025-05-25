@@ -23,6 +23,10 @@ export interface Review {
     name: string;
     image?: string;
   };
+  relatedWebsite?: {
+    name: string;
+    url: string;
+  };
   businessResponse?: {
     text: string;
     lastUpdated: string;
@@ -69,7 +73,7 @@ export function ReviewsSection({ reviews }: ReviewsSectionProps) {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <h2 className="text-2xl font-semibold">חוות דעת ({reviews.length})</h2>
         {/* <div className="flex items-center gap-3"> */}
-          {/* <Select onValueChange={setFilterBy} defaultValue="all">
+        {/* <Select onValueChange={setFilterBy} defaultValue="all">
             <SelectTrigger className="w-[140px]">
               <Filter className="w-4 h-4 mr-2" />
               <SelectValue placeholder="Filter by" />
