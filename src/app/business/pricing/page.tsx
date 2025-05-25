@@ -133,11 +133,12 @@ export default function BusinessPricingPage() {
       isCurrent: currentPlan === PricingModel.FREE,
       isDisabled: currentPlan === PricingModel.FREE,
       bestFor: "דרך קלה להתחיל לבנות אמון עם הלקוחות – בלי עלות.",
+      planType: "free" as const,
     },
     {
       name: "פלוס",
-      price: calculatePrice(39, 27),
-      monthlyPrice: calculateMonthlyAverage(39, 27),
+      price: calculatePrice(39, 25),
+      monthlyPrice: calculateMonthlyAverage(39, 25),
       discount: 25,
       features: plusFeatures,
       ctaText:
@@ -148,6 +149,7 @@ export default function BusinessPricingPage() {
       isDisabled: currentPlan === PricingModel.PLUS,
       highlightColor: "primary",
       bestFor: "מתאים לעסקים שמכוונים לבלוט בשוק תחרותי.",
+      planType: "plus" as const,
     },
     // Example for a Pro plan, can be uncommented and configured later
     // {
@@ -175,7 +177,7 @@ export default function BusinessPricingPage() {
           שדרגו את התוכנית שלכם
         </h1>
         <p className="mt-3 text-xl text-muted-foreground sm:mt-4">
-          בחרו את המסלול המתאים ביותר לצמיחת העסק שלכם בפלטפורמה.
+        הלקוחות בודקים לפני שהם בוחרים. תנו להם סיבה לבחור דווקא בכם.
         </p>
       </div>
       <PricingPlansUI

@@ -218,11 +218,12 @@ export function PricingSection({ websiteUrl }: { websiteUrl: string }) {
       ctaText: "התחילו בחינם",
       onCtaClick: handleFreePlanRegistration,
       bestFor: "דרך קלה להתחיל לבנות אמון עם הלקוחות – בלי עלות.",
+      planType: "free" as const,
     },
     {
       name: "פלוס",
-      price: calculatePrice(39, 27),
-      monthlyPrice: calculateMonthlyAverage(39, 27),
+      price: calculatePrice(39, 25),
+      monthlyPrice: calculateMonthlyAverage(39, 25),
       discount: 25,
       features: plusFeatures,
       ctaText: "שדרגו לפלוס",
@@ -230,6 +231,7 @@ export function PricingSection({ websiteUrl }: { websiteUrl: string }) {
       isRecommended: true,
       highlightColor: "primary",
       bestFor: "מתאים לעסקים שמכוונים לבלוט בשוק תחרותי.",
+      planType: "plus" as const,
     },
   ];
 

@@ -3,6 +3,10 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { CheckCircle2, ArrowRight, BadgeCheck } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
+import {
+  benefitExplanations,
+  planBenefitMappings,
+} from "@/lib/pricing-benefits";
 
 interface PlanFeature {
   text: string;
@@ -23,6 +27,7 @@ interface Plan {
   isDisabled?: boolean;
   highlightColor?: string; // e.g., 'primary', 'green-500'
   bestFor?: string; // New field for describing who the plan is best for
+  planType?: "free" | "plus"; // Add plan type for mapping benefits
 }
 
 interface PricingPlansUIProps {
@@ -136,6 +141,34 @@ export function PricingPlansUI({
                   </li>
                 ))}
               </ul>
+
+              {/* Benefit Explanations Section */}
+              {plan.planType && planBenefitMappings[plan.planType] && (
+                <div className="space-y-4 pt-4 border-t border-border/50">
+                  <h4 className="font-semibold text-sm text-foreground">
+                    היתרונות לעסק שלך:
+                  </h4>
+                  <div className="space-y-3">
+                    {planBenefitMappings[plan.planType].map((benefitKey) => {
+                      const benefit =
+                        benefitExplanations[
+                          benefitKey as keyof typeof benefitExplanations
+                        ];
+                      return (
+                        <div key={benefitKey} className="space-y-1">
+                          <p className="text-sm font-medium text-foreground">
+                            {benefit.title}
+                          </p>
+                          <p className="text-xs text-muted-foreground leading-relaxed">
+                            {benefit.description}
+                          </p>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
               <Button
                 variant={plan.isRecommended ? "default" : "outline"}
                 className={`w-full mt-auto ${
