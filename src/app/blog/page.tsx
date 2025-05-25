@@ -11,13 +11,13 @@ import { formatDate } from "@/lib/utils";
 import { BlogPost } from "@/lib/types/blog";
 
 export const metadata: Metadata = {
-  title: "AI Tools Blog - Latest News, Guides & Insights | AI-Radar",
+  title: "בלוג Rate It - מדריכים, טיפים ותובנות על ניהול מוניטין דיגיטלי",
   description:
-    "Stay updated with the latest AI tools, industry insights, and practical guides. Expert analysis of emerging AI technologies and their applications.",
+    "התעדכנו בטיפים, מדריכים ותובנות מעשיות שיעזרו לכם לבלוט עם העסק שלכם אונליין. כל מה שצריך לדעת על ביקורות, אמון ומיתוג לעסקים בישראל.",
   openGraph: {
-    title: "AI Tools Blog - Latest News & Insights",
+    title: "בלוג Rate It - תוכן מקצועי לעסקים שרוצים לבלוט",
     description:
-      "Expert analysis of emerging AI technologies and their applications. Stay updated with the latest AI tools and industry insights.",
+      "מאמרים, מדריכים ותובנות מקצועיות על איך לנהל ביקורות, לבנות אמון, ולשפר את הנוכחות הדיגיטלית של העסק שלכם.",
     type: "website",
   },
 };
@@ -61,15 +61,13 @@ export default async function BlogPage() {
 
       <div className="relative container max-w-5xl mx-auto px-4 py-12">
         {/* Header */}
-        <div className="text-center mb-12">
+        <div className="text-center mb-12" dir="rtl">
           <h1 className="text-4xl font-bold mb-4">
-            AI Insights & Trends – The AI-Radar Blog
+            איך לגרום ללקוחות לבחור דווקא בך? הבלוג שיעשה לך סדר{" "}
           </h1>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Stay ahead of the AI revolution with expert insights, comparisons,
-            and the latest trends. Explore in-depth articles on AI tools,
-            automation, and how artificial intelligence is shaping industries,
-            businesses, and careers.
+            מה הופך ביקורת לאפקטיבית? איך מזמינים ביקורות בלי להציק? ואיך ממנפים
+            דירוגים לצמיחה עסקית? כאן תמצאו את כל התשובות.
           </p>
         </div>
 

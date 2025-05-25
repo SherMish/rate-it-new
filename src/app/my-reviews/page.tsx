@@ -8,29 +8,27 @@ import Link from "next/link";
 
 export default async function MyReviewsPage() {
   const session = await getServerSession(authOptions);
-  
+
   if (!session?.user) {
-    redirect('/');
+    redirect("/");
   }
 
   try {
     await connectDB();
 
-    
-    const reviews = await Review.find({ 
-      relatedUser: session.user.id 
+    const reviews = await Review.find({
+      relatedUser: session.user.id,
     })
-    .populate({
-      path: 'relatedWebsite',
-      select: 'name url'
-    })
-    .populate({
-      path: 'relatedUser',
-      select: 'name'
-    })
-    .sort({ createdAt: -1 })
-    .lean();
-
+      .populate({
+        path: "relatedWebsite",
+        select: "name url",
+      })
+      .populate({
+        path: "relatedUser",
+        select: "name",
+      })
+      .sort({ createdAt: -1 })
+      .lean();
 
     const formattedReviews = reviews.map((review: any) => ({
       _id: review._id.toString(),
@@ -39,57 +37,81 @@ export default async function MyReviewsPage() {
       rating: review.rating,
       createdAt: review.createdAt,
       helpfulCount: review.helpfulCount || 0,
-      relatedUser: review.relatedUser ? {
-        name: review.relatedUser.name
-      } : undefined,
+      relatedUser: review.relatedUser
+        ? {
+            name: review.relatedUser.name,
+          }
+        : undefined,
       relatedWebsite: {
-        name: review.relatedWebsite?.name || 'Unknown Tool',
-        url: review.relatedWebsite?.url || '#'
-      }
+        name: review.relatedWebsite?.name || "כלי לא ידוע",
+        url: review.relatedWebsite?.url || "#",
+      },
     }));
 
     return (
-      <div className="relative min-h-screen bg-background">
-        {/* Background effects */}
-        <div className="fixed inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:44px_44px] pointer-events-none" />
-        <div className="fixed inset-0 bg-gradient-to-tr from-blue-500/5 via-purple-500/5 to-pink-500/5 pointer-events-none" />
-        
-        <div className="relative container max-w-4xl mx-auto px-4 py-8">
-          <h1 className="text-3xl font-bold mb-8 gradient-text">My Reviews</h1>
-          
-          {formattedReviews.length === 0 ? (
-            <div className="text-center py-12">
-              <p className="text-muted-foreground text-lg mb-4">
-                You haven&apos;t written any reviews yet.
-              </p>
-              <p className="text-muted-foreground">
-                Share your experience with AI tools and help others make informed decisions.
-              </p>
-            </div>
-          ) : (
-            <div className="space-y-6">
-              {formattedReviews.map((review) => (
-                <ReviewCard key={review._id} review={review} />
-              ))}
-            </div>
-          )}
+      <div className="container mx-auto px-4 py-12 min-h-screen" dir="rtl">
+        <div className="text-center mb-12">
+          <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
+            הביקורות שלי
+          </h1>
+          <p className="mt-3 text-xl text-muted-foreground sm:mt-4">
+            כל הביקורות שכתבתם על עסקים דיגיטליים שונים
+          </p>
         </div>
+
+        {formattedReviews.length === 0 ? (
+          <div className="text-center py-12">
+            <div className="mx-auto max-w-md">
+              <h3 className="text-lg font-semibold text-foreground mb-4">
+                עדיין לא כתבתם ביקורות
+              </h3>
+              <p className="text-muted-foreground mb-6">
+                שתפו את החוויות שלכם עם עסקים דיגיטליים ועזרו לאחרים לקבל החלטות
+                מושכלות.
+              </p>
+              <Link
+                href="/"
+                className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+              >
+                חזרה לדף הבית
+              </Link>
+            </div>
+          </div>
+        ) : (
+          <div className="space-y-6 max-w-4xl mx-auto">
+            {formattedReviews.map((review) => (
+              <ReviewCard key={review._id} review={review} />
+            ))}
+          </div>
+        )}
       </div>
     );
   } catch (error) {
-    console.error('Error fetching reviews:', error);
+    console.error("Error fetching reviews:", error);
     return (
-      <div className="relative min-h-screen bg-background">
-        {/* Background effects */}
-        <div className="fixed inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:44px_44px] pointer-events-none" />
-        <div className="fixed inset-0 bg-gradient-to-tr from-blue-500/5 via-purple-500/5 to-pink-500/5 pointer-events-none" />
-        
-        <div className="relative container max-w-4xl mx-auto px-4 py-8">
-          <h1 className="text-3xl font-bold mb-8 gradient-text">My Reviews</h1>
-          <div className="text-center py-12">
-            <p className="text-muted-foreground text-lg">
-              Unable to load reviews. Please try again later.
+      <div className="container mx-auto px-4 py-12 min-h-screen" dir="rtl">
+        <div className="text-center mb-12">
+          <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
+            הביקורות שלי
+          </h1>
+          <p className="mt-3 text-xl text-muted-foreground sm:mt-4">
+            כל הביקורות שכתבתם על עסקים שונים
+          </p>
+        </div>
+        <div className="text-center py-12">
+          <div className="mx-auto max-w-md">
+            <h3 className="text-lg font-semibold text-foreground mb-4">
+              שגיאה בטעינת הביקורות
+            </h3>
+            <p className="text-muted-foreground mb-6">
+              לא הצלחנו לטעון את הביקורות שלכם. אנא נסו שוב מאוחר יותר.
             </p>
+            <Link
+              href="/"
+              className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+            >
+              חזרה לדף הבית
+            </Link>
           </div>
         </div>
       </div>
