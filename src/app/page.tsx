@@ -102,54 +102,50 @@ async function getLatestTools(limit = 6) {
 
   return tools;
 }
-
 export const metadata: Metadata = {
-  title: "AI Tools Directory & Reviews | Find the Best AI Tools, AI Radar",
+  title: "Rate It | פלטפורמה לביקורות אמינות על עסקים בישראל",
   description:
-    "Discover and compare the best AI tools with authentic user reviews. Find AI software for content creation, image generation, coding, productivity, and more. Real ratings and user experiences.",
+    "גלה עסקים מומלצים עם ביקורות אמיתיות מלקוחות. השווה בין עסקים, בנה אמון, וקבל החלטות חכמות לפני רכישה.",
   keywords: [
-    "best AI tools",
-    "AI software reviews",
-    "top AI tools",
-    "artificial intelligence tools",
-    "AI tool comparison",
-    "AI software directory",
-    "ChatGPT alternatives",
-    "AI image generators",
-    "AI writing tools",
-    "AI coding tools",
-    "AI productivity tools",
-    "best AI software",
-    "AI tools for business",
-    "AI tool ratings",
-    "AI software recommendations",
-    "user-reviewed AI tools",
-    "AI tool reviews",
-    "AI software comparison",
-    "best AI applications",
-    "top-rated AI software",
+    "ביקורות על עסקים",
+    "ביקורות משתמשים",
+    "פלטפורמה לביקורות",
+    "דירוגים לעסקים",
+    "אמון בעסקים",
+    "עסקים מומלצים בישראל",
+    "לקוחות ממליצים",
+    "ביקורת לעסק",
+    "ביקורות גולשים",
+    "ניהול מוניטין דיגיטלי",
+    "Rate It",
+    "פלטפורמה לעסק קטן",
+    "עסק עם תג אמינות",
+    "פרופיל עסקי עם ביקורות",
+    "חוות דעת אמיתיות",
+    "ביקורת שירות",
+    "מערכת ביקורות ללקוחות",
   ],
   openGraph: {
     type: "website",
-    title: "Find the Best AI Tools - User Reviews & Ratings",
+    title: "Rate It | פלטפורמה לביקורות אמינות על עסקים בישראל",
     description:
-      "Compare top AI tools with authentic user reviews. Discover AI software for content creation, image generation, coding, and more.",
+      "מצא עסקים עם דירוגים חיוביים, קרא ביקורות של לקוחות אמיתיים, ובחר בצורה חכמה את מי שתרצה להזמין ממנו.",
     url: process.env.NEXT_PUBLIC_APP_URL,
-    siteName: "AI Tools Directory",
+    siteName: "Rate It",
     images: [
       {
         url: `${process.env.NEXT_PUBLIC_APP_URL}/og-image.png`,
         width: 1200,
         height: 630,
-        alt: "AI Tools Directory",
+        alt: "Rate It - ביקורות אמינות לעסקים",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Find the Best AI Tools - User Reviews & Ratings",
+    title: "Rate It | פלטפורמה לביקורות ודירוגים אמינים",
     description:
-      "Compare top AI tools with authentic user reviews. Discover the best AI software for your needs.",
+      "השווה בין עסקים לפי ביקורות אמיתיות של לקוחות. קבל החלטות חכמות עם מידע אמין ונגיש.",
     images: [`${process.env.NEXT_PUBLIC_APP_URL}/og-image.png`],
   },
   alternates: {
@@ -161,9 +157,9 @@ export const metadata: Metadata = {
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "WebSite",
-  name: "ספריית כלי בינה מלאכותית",
+  name: "Rate It - ביקורות על עסקים בישראל",
   description:
-    "מצא והשווה את כלי הבינה מלאכותית הטובים ביותר עם ביקורות אמיתיות",
+    "Rate It מאפשרת לך לגלות עסקים לפי חוות דעת אמיתיות מלקוחות, לבנות אמון ולהשוות בין נותני שירות בצורה חכמה.",
   url: process.env.NEXT_PUBLIC_APP_URL,
   potentialAction: {
     "@type": "SearchAction",
@@ -174,10 +170,10 @@ const jsonLd = {
     "query-input": "required name=search_term_string",
   },
   about: {
-    "@type": "Thing",
-    name: "כלי בינה מלאכותית",
+    "@type": "Organization",
+    name: "Rate It",
     description:
-      "ספריית כלים ואפליקציות מבוססי בינה מלאכותית עם ביקורות משתמשים",
+      "פלטפורמה לביקורות אמינות ודירוגים של עסקים בישראל. בנה אמון עם לקוחות ובלוט בזירה הדיגיטלית.",
   },
 };
 
