@@ -5,6 +5,8 @@ import Image from "next/image";
 import { Card } from "@/components/ui/card";
 import { Star, Radar as RadarIcon } from "lucide-react";
 import { Types } from "mongoose";
+import { VerifiedBadge } from "./verified-badge";
+import { PricingModel } from "@/lib/types/website";
 
 interface WebsiteCardProps {
   website: {
@@ -17,6 +19,8 @@ interface WebsiteCardProps {
     averageRating: number;
     reviewCount: number;
     radarTrust?: number;
+    isVerified: boolean;
+    pricingModel: PricingModel;
   };
 }
 
@@ -57,9 +61,16 @@ export function WebsiteCard({ website }: WebsiteCardProps) {
             </div>
             <div className="flex-1 min-w-0 space-y-3">
               <div>
-                <h2 className="text-lg font-semibold text-foreground">
-                  {website.name}
-                </h2>
+                <div className="flex items-center gap-2 mb-2">
+                  <h2 className="text-lg font-semibold text-foreground">
+                    {website.name}
+                  </h2>
+                  <VerifiedBadge
+                    isVerified={website.isVerified}
+                    pricingModel={website.pricingModel}
+                    showUnverified={true}
+                  />
+                </div>
                 <div className="flex items-center gap-3">
                   {website.reviewCount > 0 && (
                     <>

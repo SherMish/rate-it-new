@@ -6,8 +6,6 @@ import Image from "next/image";
 import {
   Star,
   Calendar,
-  ShieldCheck,
-  ShieldAlert,
   ExternalLink,
   CreditCard,
   Code2,
@@ -56,6 +54,7 @@ import { TrackPageVisit } from "@/app/components/TrackPageVisit";
 import trustStatuses from "@/lib/data/trustStatuses.json";
 import { FaTiktok } from "react-icons/fa6";
 import SocialMediaSection from "@/app/components/SocialMediaSection";
+import { VerifiedBadge } from "@/components/verified-badge";
 import "@/lib/models/User"; // Ensure User model is registered before populate calls
 
 interface WebsiteDoc {
@@ -109,7 +108,7 @@ async function getWebsiteData(url: string) {
   // Get website data
   const website = await Website.findOne({ url: url })
     .select(
-      "name url description shortDescription logo category averageRating reviewCount isVerified launchYear socialUrls"
+      "name url description shortDescription logo category averageRating reviewCount isVerified launchYear socialUrls pricingModel"
     )
     .lean();
 
@@ -141,6 +140,7 @@ async function getWebsiteData(url: string) {
 
   return {
     ...website,
+    pricingModel: website.pricingModel as PricingModel,
     _id: website._id.toString(),
     averageRating: Math.round(averageRating * 10) / 10,
     reviewCount,
@@ -419,22 +419,11 @@ export default async function ToolPage({ params }: PageProps) {
                               <h1 className="text-3xl font-bold">
                                 {website.name}
                               </h1>
-                              <TooltipProvider>
-                                <Tooltip>
-                                  <TooltipTrigger>
-                                    {website.isVerified ? (
-                                      <ShieldCheck className="w-5 h-5 text-background fill-blue-500 cursor-default" />
-                                    ) : (
-                                      <ShieldAlert className="w-5 h-5 text-muted-foreground cursor-default" />
-                                    )}
-                                  </TooltipTrigger>
-                                  <TooltipContent>
-                                    {website.isVerified
-                                      ? "עסק זה אומת על ידי הבעלים"
-                                      : "עסק זה טרם אומת על ידי הבעלים"}
-                                  </TooltipContent>
-                                </Tooltip>
-                              </TooltipProvider>
+                              <VerifiedBadge
+                                isVerified={website.isVerified}
+                                pricingModel={website.pricingModel}
+                                showUnverified={true}
+                              />
                             </div>
                             {website.category && (
                               <Link

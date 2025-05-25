@@ -10,7 +10,7 @@ export interface WebsiteType {
   shortDescription?: string;
   logo?: string;
   category?: string;
-  pricingModel?: string;
+  pricingModel?: PricingModel;
   createdBy?: string | null;
   owner?: string | null;
   isVerified?: boolean;
@@ -93,6 +93,11 @@ const WebsiteSchema = new Schema(
     socialUrls: {
       type: Object,
       default: {},
+    },
+    pricingModel: {
+      type: String,
+      enum: Object.values(PricingModel),
+      default: PricingModel.FREE,
     },
     launchYear: {
       type: Number,
