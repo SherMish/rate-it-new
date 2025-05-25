@@ -65,6 +65,7 @@ interface WebsiteDoc {
   relatedCategory: { name: string };
   owner: { name: string };
   radarTrust?: number;
+  pricingModel?: PricingModel;
 }
 
 interface ReviewDoc extends Document {
@@ -140,7 +141,7 @@ async function getWebsiteData(url: string) {
 
   return {
     ...website,
-    pricingModel: website.pricingModel as PricingModel,
+    pricingModel: (website.pricingModel as PricingModel) || PricingModel.FREE,
     _id: website._id.toString(),
     averageRating: Math.round(averageRating * 10) / 10,
     reviewCount,
