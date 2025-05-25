@@ -32,7 +32,7 @@ export function VerifiedBadge({
               <span>מאומת</span>
             </div>
           ) : (
-            showUnverified && (
+            showUnverified && !isVerified && (
               <div
                 className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-gray-50 border border-gray-200 text-gray-600 text-xs font-medium cursor-default ${className}`}
               >
