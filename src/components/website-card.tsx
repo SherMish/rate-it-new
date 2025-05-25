@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Card } from "@/components/ui/card";
-import { Star, Radar as RadarIcon } from "lucide-react";
+import { Star, ExternalLink } from "lucide-react";
 import { Types } from "mongoose";
 import { VerifiedBadge } from "./verified-badge";
 import { PricingModel } from "@/lib/types/website";
@@ -40,89 +40,101 @@ export function WebsiteCard({ website }: WebsiteCardProps) {
   return (
     <div className="relative" dir="rtl">
       <Link href={`/tool/${encodeURIComponent(website.url)}`}>
-        <Card className="p-6 bg-white hover:bg-gray-50 transition-colors border-border">
-          <div className="flex flex-col sm:flex-row items-start gap-4">
-            <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-secondary border border-border flex items-center justify-center overflow-hidden">
-              {website.logo ? (
-                <Image
-                  src={website.logo}
-                  alt={website.name}
-                  width={48}
-                  height={48}
-                  className="rounded-xl object-cover"
-                />
-              ) : (
-                <div className="w-6 h-6 bg-primary/10 rounded-full flex items-center justify-center">
-                  <span className="text-xs text-primary">
-                    {website.name.charAt(0)}
-                  </span>
-                </div>
-              )}
-            </div>
-            <div className="flex-1 min-w-0 space-y-3">
-              <div>
-                <div className="flex items-center gap-2 mb-2">
-                  <h2 className="text-lg font-semibold text-foreground">
-                    {website.name}
-                  </h2>
-                  <VerifiedBadge
-                    isVerified={website.isVerified}
-                    pricingModel={website.pricingModel}
-                    showUnverified={true}
+        <Card className="group p-0 bg-white hover:shadow-lg transition-all duration-200 border border-gray-200 hover:border-gray-300 rounded-xl overflow-hidden">
+          <div className="p-6">
+            {/* Header Section */}
+            <div className="flex items-start gap-4 mb-4">
+              <div className="flex-shrink-0 w-16 h-16 rounded-2xl bg-gradient-to-br from-gray-50 to-gray-100 border border-gray-200 flex items-center justify-center overflow-hidden shadow-sm">
+                {website.logo ? (
+                  <Image
+                    src={website.logo}
+                    alt={website.name}
+                    width={64}
+                    height={64}
+                    className="rounded-2xl object-cover"
                   />
-                </div>
-                <div className="flex items-center gap-3">
-                  {website.reviewCount > 0 && (
-                    <>
-                      <div className="flex items-center">
-                        {[...Array(5)].map((_, i) => (
-                          <Star
-                            key={i}
-                            className={`w-4 h-4 ${
-                              i < (website.averageRating || 0)
-                                ? "text-yellow-400 fill-yellow-400"
-                                : "text-zinc-300"
-                            }`}
-                          />
-                        ))}
-                      </div>
-                      <span className="text-sm text-muted-foreground">
-                        {website.averageRating.toFixed(1)}
-                      </span>
-                    </>
-                  )}
-                  {website.radarTrust && (
-                    <>
-                      {website.reviewCount > 0 && (
-                        <div className="w-px h-4 bg-border" />
-                      )}
-                      <div className="flex items-center gap-1 text-primary">
-                        <RadarIcon className="w-4 h-4" />
-                        <span className="text-sm font-medium">
-                          {website.radarTrust.toFixed(1)}
-                          <span className="mr-1">ציון אמון</span>
-                        </span>
-                      </div>
-                    </>
-                  )}
-                </div>
+                ) : (
+                  <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
+                    <span className="text-white font-semibold text-lg">
+                      {website.name.charAt(0)}
+                    </span>
+                  </div>
+                )}
               </div>
 
-              {website.shortDescription && (
-                <p className="text-sm text-muted-foreground line-clamp-2">
-                  {website.shortDescription}
-                </p>
-              )}
+              <div className="flex-1 min-w-0">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1">
+                      <h3 className="text-xl font-bold text-gray-900 truncate">
+                        {website.name}
+                      </h3>
+                      <VerifiedBadge
+                        isVerified={website.isVerified}
+                        pricingModel={website.pricingModel}
+                      />
+                    </div>
 
-              <div className="flex items-center">
-                <div className="sm:mr-auto">
+                    {/* Rating Section */}
+                    {website.reviewCount > 0 && (
+                      <div className="flex items-center gap-2 mb-2">
+                        <div className="flex items-center gap-1">
+                          <div className="flex items-center">
+                            {[...Array(5)].map((_, i) => (
+                              <Star
+                                key={i}
+                                className={`w-4 h-4 ${
+                                  i < Math.floor(website.averageRating || 0)
+                                    ? "text-yellow-500 fill-yellow-500"
+                                    : "text-gray-300 fill-gray-300"
+                                }`}
+                              />
+                            ))}
+                          </div>
+                          <span className="text-sm font-medium text-gray-900">
+                            {website.averageRating.toFixed(1)}
+                          </span>
+                        </div>
+                        <span className="text-sm text-gray-500">
+                          ({website.reviewCount} ביקורות)
+                        </span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Visit Button */}
                   <button
                     onClick={handleVisitWebsite}
-                    className="inline-flex items-center justify-center px-4 py-2 bg-primary/10 hover:bg-primary/20 text-primary rounded-md transition-colors text-sm"
+                    className="flex-shrink-0 inline-flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors text-sm font-medium shadow-sm hover:shadow-md"
                   >
-                    בקר באתר
+                    <span>בקר באתר</span>
+                    <ExternalLink className="w-4 h-4" />
                   </button>
                 </div>
+              </div>
+            </div>
+
+            {/* Description */}
+            {website.shortDescription && (
+              <div className="mb-4">
+                <p className="text-gray-600 text-sm leading-relaxed line-clamp-2">
+                  {website.shortDescription}
+                </p>
+              </div>
+            )}
+
+            {/* Footer Stats */}
+            <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+              <div className="flex items-center gap-4 text-sm text-gray-500">
+                {website.reviewCount > 0 && (
+                  <span>{website.reviewCount} ביקורות</span>
+                )}
+                {website.radarTrust && (
+                  <span>ציון אמון: {website.radarTrust.toFixed(1)}</span>
+                )}
+              </div>
+              <div className="text-xs text-gray-400 group-hover:text-gray-500 transition-colors">
+                לחץ לפרטים נוספים ←
               </div>
             </div>
           </div>
