@@ -21,18 +21,23 @@ import { ExternalLink } from "lucide-react";
 import Link from "next/link";
 import { WebsiteType } from "@/lib/models/Website";
 import { useSession } from "next-auth/react";
+import {
+  sanitizeUrl,
+  isValidUrl,
+  getUrlErrorMessage,
+} from "@/lib/utils/url-validation";
 
 const formSchema = z.object({
   websiteUrl: z
     .string()
     .min(1, "כתובת האתר נדרשת")
-    .transform((val) => {
-      if (!val.startsWith("http://") && !val.startsWith("https://")) {
-        return `https://${val}`;
-      }
-      return val;
-    })
-    .pipe(z.string().url("אנא הזינו כתובת אתר תקינה")),
+    .refine(
+      (val) => isValidUrl(val),
+      (val) => ({
+        message: getUrlErrorMessage(val),
+      })
+    )
+    .transform((val) => sanitizeUrl(val)),
   businessName: z.string().min(2, "שם העסק חייב להכיל לפחות 2 תווים"),
   fullName: z.string().min(2, "השם המלא חייב להכיל לפחות 2 תווים"),
   phoneNumber: z.string().min(10, "אנא הזינו מספר טלפון תקין"),
@@ -78,11 +83,13 @@ export function WebsiteRegistrationForm({
   useEffect(() => {
     const checkWebsite = async () => {
       const url = form.getValues("websiteUrl");
-      if (!url) return;
+      if (!url || !isValidUrl(url)) return;
+
+      const sanitizedUrl = sanitizeUrl(url);
 
       setLoading(true);
       try {
-        const website = await checkWebsiteExists(url);
+        const website = await checkWebsiteExists(sanitizedUrl);
         setExistingWebsite(website);
         if (website?.name) {
           form.setValue("businessName", website.name);
@@ -98,11 +105,26 @@ export function WebsiteRegistrationForm({
 
   const handleUrlBlur = async () => {
     const url = form.getValues("websiteUrl");
-    if (!url || form.formState.errors.websiteUrl) return;
+    if (!url) return;
+
+    // Validate the URL first
+    if (!isValidUrl(url)) {
+      form.setError("websiteUrl", {
+        message: getUrlErrorMessage(url),
+      });
+      return;
+    }
+
+    // Sanitize the URL and update the field
+    const sanitizedUrl = sanitizeUrl(url);
+    form.setValue("websiteUrl", sanitizedUrl);
+
+    // Check if there are any validation errors
+    if (form.formState.errors.websiteUrl) return;
 
     setLoading(true);
     try {
-      const website = await checkWebsiteExists(url);
+      const website = await checkWebsiteExists(sanitizedUrl);
       setExistingWebsite(website);
       if (website?.name) {
         form.setValue("businessName", website.name);
@@ -114,7 +136,10 @@ export function WebsiteRegistrationForm({
   };
 
   const onSubmit = async (data: FormData) => {
-    const existingWebsite = await checkWebsiteExists(data.websiteUrl);
+    // The websiteUrl should already be sanitized by the schema transform
+    const sanitizedUrl = data.websiteUrl;
+
+    const existingWebsite = await checkWebsiteExists(sanitizedUrl);
 
     if (existingWebsite?.isVerified) {
       form.setError("websiteUrl", {
@@ -123,11 +148,12 @@ export function WebsiteRegistrationForm({
       return;
     }
 
-    // Save form data to localStorage
+    // Save form data to localStorage with sanitized URL
     const formData = {
       ...data,
+      websiteUrl: sanitizedUrl,
       step: 3,
-      email: data.email, // Use email directly from form data
+      email: data.email,
     };
     localStorage.setItem("businessRegistration", JSON.stringify(formData));
 
@@ -138,10 +164,9 @@ export function WebsiteRegistrationForm({
         name: data.fullName,
         phone: data.phoneNumber,
         workRole: data.role,
-        // workEmail: data.email,
       }),
     });
-    setFormData(data);
+    setFormData({ ...data, websiteUrl: sanitizedUrl });
     onComplete();
   };
 
@@ -171,7 +196,7 @@ export function WebsiteRegistrationForm({
                 <FormControl>
                   <Input
                     {...field}
-                    placeholder="https://example.com"
+                    placeholder="example.com"
                     onBlur={() => {
                       field.onBlur();
                       handleUrlBlur();
