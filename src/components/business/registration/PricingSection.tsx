@@ -99,13 +99,13 @@ export function PricingSection({ websiteUrl }: { websiteUrl: string }) {
         throw new Error("האתר כבר משויך למשתמש אחר");
       }
       // 5. Already mine & already on FREE → just go to dashboard
-      if (
-        existingWebsite?.owner === userId &&
-        existingWebsite?.pricingModel === "free"
-      ) {
-        router.push("/business/dashboard");
-        return;
-      }
+      // if (
+      //   existingWebsite?.owner === userId &&
+      //   existingWebsite?.pricingModel === "free"
+      // ) {
+      //   router.push("/business/dashboard");
+      //   return;
+      // }
 
       // 6. Prepare payload (merge, don't clobber)
       const websitePayload = {
