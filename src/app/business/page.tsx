@@ -1140,7 +1140,7 @@ export default function BusinessPage() {
       </section>
 
       {/* FAQ Section */}
-      <section className="relative py-20 bg-secondary/30">
+      <section className="relative py-20 bg-gradient-to-br from-slate-50 to-gray-100/80 border-y border-border/40">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             <motion.div
