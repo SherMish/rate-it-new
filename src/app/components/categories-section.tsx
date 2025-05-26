@@ -53,6 +53,7 @@ import {
   Stethoscope,
   GraduationCap,
   Mic,
+  FlaskRound,
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import Link from "next/link";
@@ -111,6 +112,7 @@ const Icons: Record<string, LucideIcon> = {
   Stethoscope,
   GraduationCap,
   Mic,
+  FlaskRound,
 };
 
 export function CategoriesSection() {

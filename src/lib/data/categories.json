@@ -43,10 +43,10 @@
       "icon": "Gift"
     },
     {
-      "id": "printing",
-      "name": "הדפסה ומיתוג",
-      "description": "שירותי דפוס, שילוט, מיתוג לעסקים ומוצרים בהתאמה אישית",
-      "icon": "Printer"
+      "id": "electronics",
+      "name": "אלקטרוניקה וגאדג'טים",
+      "description": "חנויות אינטרנט למחשבים, טלפונים ומוצרי חשמל",
+      "icon": "TabletSmartphone"
     },
     {
       "id": "photography-design",
@@ -97,16 +97,16 @@
       "icon": "BookOpen"
     },
     {
-      "id": "subscriptions",
-      "name": "מנויים ושירותים חודשיים",
-      "description": "שירותים מבוססי מנוי – תוכן, מוצרים, ומנויים דיגיטליים",
-      "icon": "Repeat"
+      "id": "pharma-cosmetics",
+      "name": "פארם וקוסמטיקה",
+      "description": "חנויות אונליין למוצרי טיפוח, בריאות, קוסמטיקה ופארם",
+      "icon": "FlaskRound"
     },
     {
-      "id": "electronics",
-      "name": "אלקטרוניקה וגאדג'טים",
-      "description": "חנויות אינטרנט למחשבים, טלפונים ומוצרי חשמל",
-      "icon": "TabletSmartphone"
+      "id": "printing",
+      "name": "הדפסה ומיתוג",
+      "description": "שירותי דפוס, שילוט, מיתוג לעסקים ומוצרים בהתאמה אישית",
+      "icon": "Printer"
     },
     {
       "id": "cleaning",
