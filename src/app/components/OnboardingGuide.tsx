@@ -5,14 +5,12 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
 import {
-  AlertCircle,
   FileText,
   Image,
   Tag,
   MessageSquare,
   ChevronRight,
-  CheckCircle,
-  X,
+  Star,
 } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
@@ -39,7 +37,6 @@ export function OnboardingGuide({ website, className }: OnboardingGuideProps) {
   const [hiddenTips, setHiddenTips] = useState<string[]>([]);
   const [currentTipIndex, setCurrentTipIndex] = useState(0);
 
-  // Load hidden tips from localStorage
   useEffect(() => {
     const saved = localStorage.getItem("hiddenOnboardingTips");
     if (saved) {
@@ -53,87 +50,78 @@ export function OnboardingGuide({ website, className }: OnboardingGuideProps) {
     localStorage.setItem("hiddenOnboardingTips", JSON.stringify(newHiddenTips));
   };
 
-  // Generate tips based on website state
   const tips: GuideTip[] = [];
 
-  // Check for missing description
   if (!website?.shortDescription || website.shortDescription.length < 20) {
     tips.push({
       id: "description",
-      title: "הוסיפו תיאור לעסק שלכם",
+      title: "כתבו ללקוחות מה אתם באמת עושים",
       description:
-        "תיאור טוב עוזר ללקוחות פוטנציאליים להבין במה אתם עוסקים ומגביר את הסיכוי שיבחרו בכם",
+        "תיאור ברור וקליט יבדל אתכם מהמתחרים ויגרום ללקוחות להבין מיד למה לבחור דווקא בכם.",
       icon: FileText,
       action: {
-        label: "ערכו את פרטי העסק",
+        label: "עריכת פרטי העסק",
         href: "/business/dashboard/tool",
       },
       priority: 1,
     });
   }
 
-  // Check for missing logo
   if (!website?.logo) {
     tips.push({
       id: "logo",
-      title: "הוסיפו לוגו לעסק",
+      title: "הוסיפו לוגו שישדר מקצועיות ואמון",
       description:
-        "לוגו מקצועי מגביר את האמינות של העסק ועוזר ללקוחות לזהות אתכם בקלות",
+        "לקוחות בוחרים לפי מראה ראשוני. לוגו מזוהה יוצר רושם ראשוני אמין ומבדיל אתכם מכל השאר.",
       icon: Image,
       action: {
-        label: "העלו לוגו",
+        label: "העלאת לוגו",
         href: "/business/dashboard/tool",
       },
       priority: 2,
     });
   }
 
-  // Check for default category
   if (!website?.category || website.category === "other") {
     tips.push({
       id: "category",
-      title: "בחרו קטגוריה מתאימה",
+      title: "בחרו קטגוריה שהלקוחות מחפשים בה",
       description:
-        "קטגוריה נכונה עוזרת ללקוחות למצוא אתכם בקלות בחיפושים ובקטגוריות",
+        "כשתבחרו קטגוריה מדויקת – לקוחות יוכלו למצוא אתכם דרך חיפושים ועמודי תחום.",
       icon: Tag,
       action: {
-        label: "בחרו קטגוריה",
+        label: "בחירת קטגוריה",
         href: "/business/dashboard/tool",
       },
       priority: 3,
     });
   }
 
-  // Check for no reviews
   if (!website?.reviewCount || website.reviewCount === 0) {
     tips.push({
       id: "reviews",
-      title: "קבלו את הביקורת הראשונה שלכם",
+      title: "הצעד הכי חשוב – קבלו ביקורת ראשונה",
       description:
-        "ביקורות חיוביות בונות אמון ומגדילות את הסיכוי שלקוחות חדשים יבחרו בכם",
+        "לקוחות בודקים ביקורות לפני החלטה. שתפו את הקישור ובקשו המלצה מלקוח מרוצה שכבר סומך עליכם.",
       icon: MessageSquare,
       action: {
-        label: "שתפו קישור לכתיבת ביקורות",
+        label: "העתקת קישור לכתיבת ביקורת",
         onClick: async () => {
           try {
-            // Use window.location.origin for client-side URL construction
             const reviewUrl = `${
               window.location.origin
             }/tool/${encodeURIComponent(website.url)}/review`;
-
             await navigator.clipboard.writeText(reviewUrl);
-
             toast({
               title: "הקישור הועתק!",
-              description: "הקישור לדף הביקורות הועתק בהצלחה",
+              description: "שלחו אותו ללקוחות מרוצים כדי להתחיל לאסוף ביקורות",
             });
           } catch (error) {
-            console.error("Failed to copy:", error);
-            // Fallback method for copying
-            const textArea = document.createElement("textarea");
-            textArea.value = `${
+            const fallbackUrl = `${
               window.location.origin
             }/tool/${encodeURIComponent(website.url)}`;
+            const textArea = document.createElement("textarea");
+            textArea.value = fallbackUrl;
             textArea.style.position = "fixed";
             textArea.style.left = "-999999px";
             document.body.appendChild(textArea);
@@ -143,9 +131,10 @@ export function OnboardingGuide({ website, className }: OnboardingGuideProps) {
               document.execCommand("copy");
               toast({
                 title: "הקישור הועתק!",
-                description: "הקישור לדף הביקורות הועתק בהצלחה",
+                description:
+                  "שלחו אותו ללקוחות מרוצים כדי להתחיל לאסוף ביקורות",
               });
-            } catch (err) {
+            } catch {
               toast({
                 variant: "destructive",
                 title: "שגיאה",
@@ -160,20 +149,74 @@ export function OnboardingGuide({ website, className }: OnboardingGuideProps) {
     });
   }
 
-  // Filter out hidden tips and sort by priority
+  if (website?.reviewCount > 0 && website.reviewCount < 5) {
+    tips.push({
+      id: "fiveReviews",
+      title: "כמעט שם 🎯 – עוד קצת ואתם בולטים באמת",
+      description: `יש לכם כבר ${
+        website.reviewCount === 1
+          ? "ביקורת אחת"
+          : `${website.reviewCount} ביקורות`
+      } – נהדר! עוד ${
+        5 - website.reviewCount
+      } ביקורות ותזכו לאמון גבוה מצד לקוחות חדשים.`,
+      icon: Star,
+      action: {
+        label: "הזמינו עוד לקוחות לכתוב ביקורת",
+        onClick: async () => {
+          try {
+            const reviewUrl = `${
+              window.location.origin
+            }/tool/${encodeURIComponent(website.url)}/review`;
+            await navigator.clipboard.writeText(reviewUrl);
+            toast({
+              title: "הקישור הועתק! 🌟",
+              description:
+                "שתפו אותו שוב עם לקוחות נוספים כדי להגיע ל-5 ביקורות",
+            });
+          } catch (error) {
+            const fallbackUrl = `${
+              window.location.origin
+            }/tool/${encodeURIComponent(website.url)}`;
+            const textArea = document.createElement("textarea");
+            textArea.value = fallbackUrl;
+            textArea.style.position = "fixed";
+            textArea.style.left = "-999999px";
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            try {
+              document.execCommand("copy");
+              toast({
+                title: "הקישור הועתק! 🌟",
+                description:
+                  "שתפו אותו שוב עם לקוחות נוספים כדי להגיע ל-5 ביקורות",
+              });
+            } catch {
+              toast({
+                variant: "destructive",
+                title: "שגיאה",
+                description: "לא ניתן להעתיק את הקישור",
+              });
+            }
+            document.body.removeChild(textArea);
+          }
+        },
+      },
+      priority: 5,
+    });
+  }
+
   const activeTips = tips
     .filter((tip) => !hiddenTips.includes(tip.id))
     .sort((a, b) => a.priority - b.priority);
 
-  if (activeTips.length === 0) {
-    return null;
-  }
+  if (activeTips.length === 0) return null;
 
   const currentTip = activeTips[currentTipIndex % activeTips.length];
   const Icon = currentTip.icon;
-
-  const completedSteps = 4 - activeTips.length;
-  const totalSteps = 4;
+  const completedSteps = 5 - activeTips.length;
+  const totalSteps = 5;
   const progressPercentage = (completedSteps / totalSteps) * 100;
 
   return (
@@ -202,12 +245,11 @@ export function OnboardingGuide({ website, className }: OnboardingGuideProps) {
             </div>
           </div>
 
-          {/* Progress bar */}
           <div className="mb-4">
             <div className="flex items-center justify-between text-xs text-muted-foreground mb-1">
-              <span>התקדמות בהגדרת העסק</span>
+              <span>שלבים להבליט את העסק שלכם</span>
               <span>
-                {completedSteps} מתוך {totalSteps} שלבים הושלמו
+                {completedSteps} מתוך {totalSteps} צעדים בוצעו
               </span>
             </div>
             <div className="h-2 bg-muted rounded-full overflow-hidden">
@@ -248,26 +290,8 @@ export function OnboardingGuide({ website, className }: OnboardingGuideProps) {
                 הטיפ הבא
               </Button>
             )}
-
-            <Button
-              size="sm"
-              variant="ghost"
-              onClick={() => hideTip(currentTip.id)}
-              className="text-muted-foreground hover:text-foreground"
-            >
-              הסתר טיפ זה
-            </Button>
           </div>
         </div>
-
-        <Button
-          size="icon"
-          variant="ghost"
-          onClick={() => hideTip(currentTip.id)}
-          className="h-8 w-8 -mr-2 -mt-2"
-        >
-          <X className="h-4 w-4" />
-        </Button>
       </div>
     </Card>
   );

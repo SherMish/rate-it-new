@@ -25,7 +25,7 @@ export function UserNav({ user, onSignOut }: UserNavProps) {
   const router = useRouter();
 
   return (
-    <DropdownMenu>
+    <DropdownMenu dir="rtl">
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-8 w-8 rounded-full">
           <Avatar className="h-8 w-8">
@@ -38,7 +38,7 @@ export function UserNav({ user, onSignOut }: UserNavProps) {
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
-          <div className="flex flex-col space-y-1">
+          <div className="flex flex-col space-y-1 text-right">
             <p className="text-sm font-medium leading-none">{user.name}</p>
             <p className="text-xs leading-none text-muted-foreground">
               {user.email}
@@ -47,21 +47,27 @@ export function UserNav({ user, onSignOut }: UserNavProps) {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem onClick={() => router.push('/my-reviews')}>
-            <UserIcon className="mr-2 h-4 w-4" />
-            <span>My Reviews</span>
+          <DropdownMenuItem
+            onClick={() => router.push("/my-reviews")}
+            className="text-right"
+          >
+            <UserIcon className="ml-2 h-4 w-4" />
+
+            <span>הביקורות שלי</span>
           </DropdownMenuItem>
-          <DropdownMenuItem>
-            <Settings className="mr-2 h-4 w-4" />
-            <span>Settings</span>
+          <DropdownMenuItem className="text-right">
+            <Settings className="ml-2 h-4 w-4" />
+
+            <span>הגדרות</span>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={onSignOut}>
-          <LogOut className="mr-2 h-4 w-4" />
-          <span>Log out</span>
+        <DropdownMenuItem onClick={onSignOut} className="text-right">
+          <LogOut className="ml-2 h-4 w-4" />
+
+          <span>התנתק</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
-} 
+}

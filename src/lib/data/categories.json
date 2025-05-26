@@ -1,28 +1,16 @@
 {
   "categories": [
     {
+      "id": "marketing",
+      "name": "שיווק ודיגיטל",
+      "description": "סוכנויות פרסום, בניית אתרים, קידום בגוגל וברשתות",
+      "icon": "Megaphone"
+    },
+    {
       "id": "fashion",
       "name": "אופנה והלבשה",
       "description": "ביגוד, נעליים, אקססוריז וחנויות אונליין בתחום האופנה",
       "icon": "Shirt"
-    },
-    {
-      "id": "electronics",
-      "name": "אלקטרוניקה וגאדג'טים",
-      "description": "חנויות אינטרנט למחשבים, טלפונים ומוצרי חשמל",
-      "icon": "TabletSmartphone"
-    },
-    {
-      "id": "beauty",
-      "name": "טיפוח ויופי",
-      "description": "קוסמטיקה, איפור, מוצרי טיפוח ובריאות",
-      "icon": "Sparkles"
-    },
-    {
-      "id": "home-garden",
-      "name": "בית וגן",
-      "description": "ריהוט, עיצוב הבית, מוצרים לגינה ולמטבח",
-      "icon": "Home"
     },
     {
       "id": "food-delivery",
@@ -31,34 +19,76 @@
       "icon": "Pizza"
     },
     {
-      "id": "sports",
-      "name": "ספורט ובריאות",
-      "description": "ציוד ספורט, מאמני כושר וחברות ייעוץ תזונה",
+      "id": "jewelry",
+      "name": "תכשיטים ואקססוריז",
+      "description": "חנויות אונליין לתכשיטים, שעונים ואביזרי אופנה",
+      "icon": "Gem"
+    },
+    {
+      "id": "home-garden",
+      "name": "בית וגן",
+      "description": "ריהוט, עיצוב הבית, מוצרים לגינה ולמטבח",
+      "icon": "Home"
+    },
+    {
+      "id": "coaching",
+      "name": "אימון וייעוץ אישי",
+      "description": "מאמנים אישיים, מנטורים, יועצים עסקיים והתפתחות אישית",
+      "icon": "Users"
+    },
+    {
+      "id": "gifts",
+      "name": "מתנות וזרים",
+      "description": "חנויות למתנות, זרי פרחים, מארזים לאירועים וחגיגות",
+      "icon": "Gift"
+    },
+    {
+      "id": "printing",
+      "name": "הדפסה ומיתוג",
+      "description": "שירותי דפוס, שילוט, מיתוג לעסקים ומוצרים בהתאמה אישית",
+      "icon": "Printer"
+    },
+    {
+      "id": "photography-design",
+      "name": "צילום וגרפיקה",
+      "description": "צלמים, מעצבים גרפיים, עריכת וידאו והפקות תוכן",
+      "icon": "Camera"
+    },
+    {
+      "id": "events",
+      "name": "שירותי אירועים",
+      "description": "תקליטנים, צלמים, עיצוב אירועים ואולמות",
+      "icon": "CalendarHeart"
+    },
+    {
+      "id": "tech",
+      "name": "טכנולוגיה ושירותי מחשוב",
+      "description": "חברות תוכנה, שירותי IT, תמיכה טכנית ואחסון אתרים",
+      "icon": "Cpu"
+    },
+    {
+      "id": "telecom",
+      "name": "אינטרנט ותקשורת",
+      "description": "חברות אינטרנט, סלולר, טלוויזיה ושירותי תקשורת בישראל",
+      "icon": "Wifi"
+    },
+    {
+      "id": "fitness-personal",
+      "name": "אימון אישי ותזונה",
+      "description": "מאמני כושר אישיים, יועצי תזונה וליווי אישי",
       "icon": "Dumbbell"
     },
     {
-      "id": "babies",
-      "name": "תינוקות וילדים",
-      "description": "חנויות אונליין לצעצועים, בגדי ילדים, ומוצרי תינוקות",
-      "icon": "Baby"
+      "id": "gyms",
+      "name": "חדרי כושר וסטודיוים",
+      "description": "חדרי כושר, סטודיוים לחוגים, פילאטיס, יוגה ואימונים קבוצתיים",
+      "icon": "Activity"
     },
     {
-      "id": "health",
-      "name": "בריאות ותוספים",
-      "description": "תוספי תזונה, מוצרים רפואיים, רפואה משלימה",
-      "icon": "HeartPulse"
-    },
-    {
-      "id": "automotive",
-      "name": "רכב ואביזרים",
-      "description": "חנויות לציוד ואביזרים לרכב, שירותים לרכב אונליין",
-      "icon": "Car"
-    },
-    {
-      "id": "pets",
-      "name": "חיות מחמד",
-      "description": "מזון, ציוד וטיפולים לחיות מחמד",
-      "icon": "PawPrint"
+      "id": "professional-services",
+      "name": "שירותים מקצועיים",
+      "description": "רואי חשבון, אדריכלים, יועצים ונותני שירות מתקדמים",
+      "icon": "Briefcase"
     },
     {
       "id": "education",
@@ -67,10 +97,22 @@
       "icon": "BookOpen"
     },
     {
-      "id": "travel",
-      "name": "תיירות ונופש",
-      "description": "הזמנת טיסות, מלונות, טיולים וחבילות נופש",
-      "icon": "Plane"
+      "id": "subscriptions",
+      "name": "מנויים ושירותים חודשיים",
+      "description": "שירותים מבוססי מנוי – תוכן, מוצרים, ומנויים דיגיטליים",
+      "icon": "Repeat"
+    },
+    {
+      "id": "electronics",
+      "name": "אלקטרוניקה וגאדג'טים",
+      "description": "חנויות אינטרנט למחשבים, טלפונים ומוצרי חשמל",
+      "icon": "TabletSmartphone"
+    },
+    {
+      "id": "cleaning",
+      "name": "ניקיון ושירותי בית",
+      "description": "חברות ניקיון, הדברה, תחזוקה ואחזקה",
+      "icon": "Sparkles"
     },
     {
       "id": "finance",
@@ -79,16 +121,16 @@
       "icon": "CreditCard"
     },
     {
-      "id": "marketing",
-      "name": "שיווק ודיגיטל",
-      "description": "סוכנויות פרסום, בניית אתרים, קידום בגוגל וברשתות",
-      "icon": "Megaphone"
+      "id": "medical",
+      "name": "רפואה ובריאות פרטית",
+      "description": "קליניקות פרטיות, רופאים, טיפולים אלטרנטיביים ופסיכולוגים",
+      "icon": "Stethoscope"
     },
     {
-      "id": "cleaning",
-      "name": "ניקיון ושירותי בית",
-      "description": "חברות ניקיון, הדברה, תחזוקה ואחזקה",
-      "icon": "Sparkles"
+      "id": "health",
+      "name": "בריאות ותוספים",
+      "description": "תוספי תזונה, מוצרים רפואיים, רפואה משלימה",
+      "icon": "HeartPulse"
     },
     {
       "id": "real-estate",
@@ -103,46 +145,28 @@
       "icon": "Scale"
     },
     {
-      "id": "tech",
-      "name": "טכנולוגיה ושירותי מחשוב",
-      "description": "חברות תוכנה, שירותי IT, תמיכה טכנית ואחסון אתרים",
-      "icon": "Cpu"
+      "id": "automotive",
+      "name": "רכב ואביזרים",
+      "description": "חנויות לציוד ואביזרים לרכב, שירותים לרכב אונליין",
+      "icon": "Car"
     },
     {
-      "id": "gifts",
-      "name": "מתנות ואירועים",
-      "description": "חנויות למתנות, מארזים, וציוד לאירועים וחגיגות",
-      "icon": "Gift"
+      "id": "driving-education",
+      "name": "בתי ספר והדרכת נהיגה",
+      "description": "בתי ספר לנהיגה, הכשרות עיוניות, פסיכומטרי ופסיכוטכני",
+      "icon": "GraduationCap"
     },
     {
-      "id": "printing",
-      "name": "הדפסה ומיתוג",
-      "description": "שירותי דפוס, שילוט, מיתוג לעסקים ומוצרים בהתאמה אישית",
-      "icon": "Printer"
-    },
-    {
-      "id": "jewelry",
-      "name": "תכשיטים ואקססוריז",
-      "description": "חנויות אונליין לתכשיטים, שעונים ואביזרי אופנה",
-      "icon": "Gem"
-    },
-    {
-      "id": "events",
-      "name": "שירותי אירועים",
-      "description": "תקליטנים, צלמים, עיצוב אירועים ואולמות",
-      "icon": "CalendarHeart"
-    },
-    {
-      "id": "subscriptions",
-      "name": "מנויים ושירותים חודשיים",
-      "description": "שירותים מבוססי מנוי – תוכן, מוצרים, ומנויים דיגיטליים",
-      "icon": "Repeat"
+      "id": "workshops",
+      "name": "סדנאות וחוגים",
+      "description": "חוגים, סדנאות ופעילויות להעשרה אישית ועסקית",
+      "icon": "Mic"
     },
     {
       "id": "other",
       "name": "אחר",
-      "description": "אחר",
+      "description": "קטגוריה כללית לעסקים שלא מתאימים לקטגוריות אחרות",
       "icon": "Store"
     }
   ]
-} 
+}

@@ -27,7 +27,7 @@ export function CopyLinksCard({ websiteUrl, className }: CopyLinksCardProps) {
   const reviewPageUrl = websiteUrl
     ? `${window.location.origin}/tool/${encodeURIComponent(
         websiteUrl
-      )}#write-review`
+      )}/review`
     : "";
 
   const handleCopy = async (textToCopy: string, linkType: string) => {
@@ -90,10 +90,10 @@ export function CopyLinksCard({ websiteUrl, className }: CopyLinksCardProps) {
     <Card className={`p-6 flex flex-col space-y-4 ${className} h-full`}>
       <div>
         <h3 className="text-md font-semibold text-foreground mb-1">
-          שתפו את העסק שלכם בקלות
+          תנו ללקוחות לפרגן לכם – בקליק
         </h3>
         <p className="text-xs text-muted-foreground">
-          לחצו על הקישור כדי להעתיק אותו
+          שתפו את הקישור בסיום השירות – ותנו לביקורות לעבוד בשבילכם.{" "}
         </p>
       </div>
 

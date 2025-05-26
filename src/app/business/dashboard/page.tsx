@@ -242,6 +242,14 @@ export default function DashboardPage() {
           </div>
         </div>
 
+        {/* Utility Cards Row */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 items-stretch">
+          {/* Copy Links Card */}
+          <CopyLinksCard websiteUrl={website?.url} className="md:col-span-1" />
+
+          {/* Daily Tip Card */}
+          <DailyTipCard />
+        </div>
         {/* Plus Analytics Section - Blocked for non-Plus users */}
         {totalViews >= 5 && (
           <div className="mb-8">
@@ -330,15 +338,6 @@ export default function DashboardPage() {
             )}
           </div>
         )}
-
-        {/* Utility Cards Row */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 items-stretch">
-          {/* Copy Links Card */}
-          <CopyLinksCard websiteUrl={website?.url} className="md:col-span-1" />
-
-          {/* Daily Tip Card */}
-          <DailyTipCard />
-        </div>
 
         {/* Reviews Section */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">

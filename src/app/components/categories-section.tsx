@@ -47,6 +47,12 @@ import {
   Repeat,
   Store,
   Book,
+  Camera,
+  Wifi,
+  Activity,
+  Stethoscope,
+  GraduationCap,
+  Mic,
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import Link from "next/link";
@@ -99,6 +105,12 @@ const Icons: Record<string, LucideIcon> = {
   Repeat,
   Store,
   Book,
+  Camera,
+  Wifi,
+  Activity,
+  Stethoscope,
+  GraduationCap,
+  Mic,
 };
 
 export function CategoriesSection() {

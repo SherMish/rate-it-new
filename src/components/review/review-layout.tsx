@@ -21,7 +21,14 @@ export default function ReviewLayout({ children, title }: ReviewLayoutProps) {
           <Button
             variant="ghost"
             className="mb-6"
-            onClick={() => router.back()}
+            onClick={() => {
+              if (window.history.length > 2) {
+                router.back();
+              } else {
+                router.push('/');
+              }
+            }}
+
           >
             <ArrowLeft className="w-4 h-4 ml-2" />
             חזרה
