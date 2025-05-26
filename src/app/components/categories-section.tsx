@@ -129,8 +129,8 @@ export function CategoriesSection() {
   }
 
   return (
-    <div className="py-16 pb-8 relative">
-      <div className="container max-w-7xl mx-auto">
+    <div className="py-16 pb-8 relative bg-gradient-to-b from-slate-50/80 to-white border-y border-border/30 w-full">
+      <div className="px-4 sm:px-6 lg:px-8">
         {/* Categories header */}
         <div className="text-center mb-6">
           <h2 className="text-2xl font-bold text-foreground">
@@ -138,7 +138,7 @@ export function CategoriesSection() {
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 max-w-7xl mx-auto">
           {visibleCategories.map((category) => {
             const Icon = Icons[category.icon as keyof typeof Icons] || Sparkles; // Fallback to Sparkles if icon not found
             return (
@@ -147,9 +147,9 @@ export function CategoriesSection() {
                 href={`/category/${category.id}`}
                 className="block h-full"
               >
-                <Card className="p-4 bg-white hover:bg-blue-50 transition-colors group h-full flex flex-col border border-border shadow-sm hover:shadow-md">
+                <Card className="p-4 bg-white hover:bg-blue-50 transition-colors group h-full flex flex-col border border-border shadow-md hover:shadow-lg">
                   <div className="flex items-start gap-3 h-full">
-                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex-shrink-0 flex items-center justify-center group-hover:bg-primary/20 transition-colors rtl:ml-0 rtl:mr-0">
+                    <div className="w-10 h-10 rounded-lg bg-primary/15 flex-shrink-0 flex items-center justify-center group-hover:bg-primary/25 transition-colors rtl:ml-0 rtl:mr-0">
                       <Icon className="w-5 h-5 text-primary" />
                     </div>
                     <div className="flex-1 min-h-0 text-right">
@@ -174,7 +174,7 @@ export function CategoriesSection() {
               variant="outline"
               size="lg"
               onClick={() => setShowAll(!showAll)}
-              className="group bg-white border border-border hover:bg-blue-50 shadow-sm"
+              className="group bg-white border border-border hover:bg-blue-50 shadow-md"
             >
               {showAll ? (
                 <>

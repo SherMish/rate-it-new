@@ -13,6 +13,9 @@ import {
   Star,
   ChevronLeft,
   ArrowUp,
+  ChevronDown,
+  Plus,
+  Minus,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -249,6 +252,51 @@ const fadeInLeftVariants = {
     },
   },
 };
+
+// FAQ Item Component
+function FAQItem({ question, answer }: { question: string; answer: string }) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <motion.div
+      className="bg-white/80 backdrop-blur-sm rounded-xl border border-border/50 overflow-hidden"
+      variants={cardVariants}
+    >
+      <button
+        className="w-full px-6 py-4 text-right flex items-center justify-between hover:bg-primary/5 transition-colors"
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <div className="flex items-center">
+          {isOpen ? (
+            <Minus className="w-5 h-5 text-primary" />
+          ) : (
+            <Plus className="w-5 h-5 text-primary" />
+          )}
+        </div>
+        <h3 className="text-lg font-semibold text-foreground text-right flex-1 mr-4">
+          {question}
+        </h3>
+      </button>
+
+      <motion.div
+        initial={false}
+        animate={{
+          height: isOpen ? "auto" : 0,
+          opacity: isOpen ? 1 : 0,
+        }}
+        transition={{
+          duration: 0.3,
+          ease: "easeInOut",
+        }}
+        className="overflow-hidden"
+      >
+        <div className="px-6 pb-4 text-right">
+          <p className="text-muted-foreground leading-relaxed">{answer}</p>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
 
 export default function BusinessPage() {
   const router = useRouter();
@@ -1021,8 +1069,7 @@ export default function BusinessPage() {
                   שיפור ביחס ההמרה
                 </p>
                 <p className="text-muted-foreground font-medium">
-                  בקרב לקוחות שהטמיעו את הוויידג&apos;ט של רייט-איט בדף הנחיתה
-                  שלהם
+                  בקרב לקוחות שהטמיעו את הוויידג'ט של רייט-איט בדף הנחיתה שלהם
                 </p>
               </motion.div>
 
@@ -1087,6 +1134,78 @@ export default function BusinessPage() {
                   לעסקים שעברו את האימות של רייט-איט
                 </p>
               </motion.div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="relative py-20 bg-secondary/30">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <motion.div
+              className="text-center mb-12"
+              variants={fadeInUpVariants}
+              initial="hidden"
+              animate="visible"
+            >
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">
+                שאלות נפוצות
+              </h2>
+              <p className="text-xl text-muted-foreground">
+                כל מה שרציתם לדעת על הצטרפות לרייט-איט
+              </p>
+            </motion.div>
+
+            <motion.div
+              className="space-y-4"
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+            >
+              {[
+                {
+                  question: "האם השירות באמת חינמי?",
+                  answer:
+                    "כן! פתיחת פרופיל עסקי וקבלת ביקורות מלקוחות הן חינמיות לחלוטין. עסקים יכולים לנהל את הפרופיל, להזמין ביקורות ולהגיב – ללא עלות. קיימות גם תוכניות מתקדמות עם פיצ'רים נוספים לעסקים שרוצים למקסם את הנוכחות הדיגיטלית שלהם.",
+                },
+                {
+                  question: "מי יכול להירשם לפלטפורמה?",
+                  answer:
+                    "כל עסק עם אתר אינטרנט פעיל ודומיין משלו יכול להירשם. אנחנו מאמתים בעלות על הדומיין כדי להבטיח אמינות – לכן עסקים שפועלים רק באינסטגרם, פייסבוק או ללא אתר – לא יכולים להירשם בשלב זה.",
+                },
+                {
+                  question: "כמה זמן לוקח לאמת את העסק?",
+                  answer:
+                    "תהליך האימות בדרך כלל מהיר – עד 48 שעות. אנו בודקים שהדומיין שייך לעסק, ושהאתר פעיל ורלוונטי. לאחר האימות תקבלו תג 'מאומת' שמחזק את האמינות של הפרופיל שלכם.",
+                },
+                {
+                  question: "איך אני מזמין לקוחות לכתוב ביקורות?",
+                  answer:
+                    "לאחר פתיחת הפרופיל תקבלו קישור ייעודי, שאותו תוכלו לשלוח ללקוחות מרוצים – במייל, וואטסאפ או כל ערוץ אחר. אנחנו גם מציעים ווידג'ט להטמעה באתר שלכם, כדי לאסוף ביקורות ישירות מהמבקרים.",
+                },
+                {
+                  question: "מה אם אני מקבל ביקורת שלילית?",
+                  answer:
+                    "גם ביקורת שלילית יכולה לשרת אתכם. ניתן להגיב לכל ביקורת ולהראות כיצד טיפלתם במקרה. שקיפות ותגובה מקצועית מחזקות את האמון בכם בעיני לקוחות פוטנציאליים.",
+                },
+                {
+                  question: "אפשר לערוך את פרטי העסק בפרופיל?",
+                  answer:
+                    "בוודאי. אתם יכולים לעדכן תיאור, קטגוריה, שעות פעילות, לוגו, תמונות, פרטי קשר ועוד. פרופיל מלא ומדויק מעלה את רמת האמון ומגביר את שיעור ההמרה.",
+                },
+                {
+                  question: "איך רייט-איט עוזרת לי להגיע ללקוחות חדשים?",
+                  answer:
+                    "עסקים עם פרופיל מאומת וביקורות חיוביות בולטים יותר בתוצאות החיפוש בפלטפורמה. בנוסף, אתם יכולים לשתף את דף הביקורות שלכם ברשתות החברתיות, באתר העסק, או בקמפיינים שיווקיים כדי לחזק אמון ולשפר המרות.",
+                },
+              ].map((faq, index) => (
+                <FAQItem
+                  key={index}
+                  question={faq.question}
+                  answer={faq.answer}
+                />
+              ))}
             </motion.div>
           </div>
         </div>
