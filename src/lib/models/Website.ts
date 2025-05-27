@@ -1,9 +1,9 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { ObjectId, Schema } from "mongoose";
 import { PricingModel } from "../types/website";
 
 // Export the type for client-side use
 export interface WebsiteType {
-  _id: string;
+  _id: ObjectId;
   name: string;
   url: string;
   description?: string;
@@ -11,8 +11,8 @@ export interface WebsiteType {
   logo?: string;
   category?: string;
   pricingModel?: PricingModel;
-  createdBy?: string | null;
-  owner?: string | null;
+  createdBy?: ObjectId;
+  owner?: ObjectId;
   isVerified?: boolean;
   reviewCount?: number;
   averageRating?: number;

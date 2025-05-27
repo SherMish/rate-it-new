@@ -59,30 +59,3 @@ export const isPlusOrPro = (
     isLicenseValid(licenseValidDate)
   );
 };
-export interface WebsiteType {
-  _id: string;
-  name: string;
-  url: string;
-  description?: string;
-  shortDescription?: string;
-  category: string;
-  logo?: string;
-  launchYear?: number;
-  createdBy?: string;
-  owner?: string;
-  reviewCount?: number;
-  averageRating?: number;
-  isVerified?: boolean;
-  isVerifiedByRateIt?: boolean;
-  pricingModel?: PricingModel;
-  licenseValidDate?: Date;
-  isActive?: boolean;
-  socialUrls: {
-    facebook?: string;
-    instagram?: string;
-    twitter?: string;
-    tiktok?: string;
-  };
-  createdAt?: Date;
-  updatedAt?: Date;
-}

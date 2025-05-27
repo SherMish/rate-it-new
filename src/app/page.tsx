@@ -30,7 +30,7 @@ import { Types, Document } from "mongoose";
 
 import { LatestToolCard } from "@/app/components/latest-tool-card";
 import { LatestToolsContent } from "@/app/components/latest-tools-content";
-import { WebsiteType } from "@/lib/types/website";
+import { WebsiteType } from "@/lib/models/Website";
 
 const categories = [
   { name: "יצירת טקסט", icon: MessageSquare, count: 156 },

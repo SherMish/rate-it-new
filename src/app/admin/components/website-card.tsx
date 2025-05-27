@@ -1,13 +1,13 @@
 "use client";
 
-import { useState } from 'react';
-import Image from 'next/image';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Edit2, Wand2, Loader2 } from 'lucide-react';
-import { EditToolDialog } from './edit-tool-dialog';
-import { WebsiteType } from '@/lib/types/website';
-import { toast } from 'react-hot-toast';
+import { useState } from "react";
+import Image from "next/image";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Edit2, Wand2, Loader2 } from "lucide-react";
+import { EditToolDialog } from "./edit-tool-dialog";
+import { WebsiteType } from "@/lib/models/Website";
+import { toast } from "react-hot-toast";
 
 interface WebsiteCardProps {
   website: WebsiteType;
@@ -17,23 +17,26 @@ interface WebsiteCardProps {
 export function WebsiteCard({ website, onUpdate }: WebsiteCardProps) {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
-  const [generatedData, setGeneratedData] = useState<Partial<WebsiteType> | null>(null);
+  const [generatedData, setGeneratedData] =
+    useState<Partial<WebsiteType> | null>(null);
 
   const handleGenerateMetadata = async () => {
     setIsGenerating(true);
     try {
-      const response = await fetch('/api/admin/generate-metadata', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url: website.url })
+      const response = await fetch("/api/admin/generate-metadata", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url: website.url }),
       });
       const data = await response.json();
       setGeneratedData(data);
       setIsEditOpen(true);
-      toast.success('Data generated successfully! Click Save Changes to update.');
+      toast.success(
+        "Data generated successfully! Click Save Changes to update."
+      );
     } catch (error) {
-      console.error('Error generating metadata:', error);
-      toast.error('Failed to generate data');
+      console.error("Error generating metadata:", error);
+      toast.error("Failed to generate data");
     } finally {
       setIsGenerating(false);
     }
@@ -44,15 +47,17 @@ export function WebsiteCard({ website, onUpdate }: WebsiteCardProps) {
       <div className="flex items-start gap-4">
         <div className="w-12 h-12 rounded-lg bg-zinc-800/50 border border-zinc-700/50 flex items-center justify-center overflow-hidden">
           {website.logo ? (
-            <Image 
-              src={website.logo} 
-              alt={website.name} 
-              width={48} 
-              height={48} 
+            <Image
+              src={website.logo}
+              alt={website.name}
+              width={48}
+              height={48}
               className="rounded-lg object-cover"
             />
           ) : (
-            <span className="text-xl text-zinc-400">{website.name.charAt(0)}</span>
+            <span className="text-xl text-zinc-400">
+              {website.name.charAt(0)}
+            </span>
           )}
         </div>
 
@@ -60,9 +65,9 @@ export function WebsiteCard({ website, onUpdate }: WebsiteCardProps) {
           <div className="flex items-start justify-between">
             <div>
               <h3 className="font-semibold">{website.name}</h3>
-              <a 
-                href={`https://${website.url}`} 
-                target="_blank" 
+              <a
+                href={`https://${website.url}`}
+                target="_blank"
                 rel="noopener noreferrer"
                 className="text-sm text-muted-foreground hover:text-primary transition-colors"
               >
@@ -101,7 +106,7 @@ export function WebsiteCard({ website, onUpdate }: WebsiteCardProps) {
         </div>
       </div>
 
-      <EditToolDialog 
+      <EditToolDialog
         website={website}
         open={isEditOpen}
         onOpenChange={setIsEditOpen}
@@ -110,4 +115,4 @@ export function WebsiteCard({ website, onUpdate }: WebsiteCardProps) {
       />
     </Card>
   );
-} 
+}

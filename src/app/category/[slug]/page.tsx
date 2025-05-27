@@ -8,6 +8,7 @@ import * as Icons from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { WebsiteCard } from "@/components/website-card";
 import { Metadata } from "next";
+import { WebsiteType } from "@/lib/models/Website";
 
 interface PageProps {
   params: {
@@ -56,9 +57,7 @@ export async function generateMetadata({
 async function getCategoryTools(categoryId: string) {
   await connectDB();
 
-  const tools = await Website.find({ category: categoryId })
-    .sort({ radarTrust: -1 }) // Keep the sorting by radarTrust
-    .lean();
+  const tools = await Website.find({ category: categoryId }).lean();
 
   return tools;
 }
@@ -125,7 +124,7 @@ export default async function CategoryPage({ params }: PageProps) {
                   {tools.map((website) => (
                     <WebsiteCard
                       key={website._id.toString()}
-                      website={website}
+                      website={website as unknown as WebsiteType}
                     />
                   ))}
                 </div>

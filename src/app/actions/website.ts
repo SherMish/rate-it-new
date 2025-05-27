@@ -1,19 +1,17 @@
 "use server";
 
 import { Website } from "@/lib/models";
-import connectDB from '@/lib/mongodb';
-import { WebsiteType } from '@/lib/models/Website';
+import connectDB from "@/lib/mongodb";
+import { WebsiteType } from "@/lib/models/Website";
 
 export async function fetchLatestWebsites(limit: number = 2) {
-
   await connectDB();
-  
+
   try {
     const websites = await Website.find()
-    .sort({ createdAt: -1 })
-    .limit(limit)
-    .lean();
-
+      .sort({ createdAt: -1 })
+      .limit(limit)
+      .lean();
 
     return websites;
   } catch (error) {
@@ -22,7 +20,9 @@ export async function fetchLatestWebsites(limit: number = 2) {
   }
 }
 
-export async function checkWebsiteExists(url: string): Promise<WebsiteType | null> {
+export async function checkWebsiteExists(
+  url: string
+): Promise<WebsiteType | null> {
   try {
     await connectDB();
 
@@ -44,9 +44,9 @@ export async function checkWebsiteExists(url: string): Promise<WebsiteType | nul
       _id: website._id.toString(),
       createdBy: website.createdBy?.toString() || null, // Make optional
       owner: website.owner?.toString() || null, // Make optional
-    } as WebsiteType;
+    } as unknown as WebsiteType;
   } catch (error) {
-    console.error('Error checking website:', error);
+    console.error("Error checking website:", error);
     throw error;
   }
-} 
+}

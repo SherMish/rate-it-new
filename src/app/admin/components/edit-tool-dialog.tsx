@@ -19,7 +19,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import categoriesData from "@/lib/data/categories.json";
-import { WebsiteType } from "@/lib/types/website";
+import { WebsiteType } from "@/lib/models/Website";
 import { ImageUpload } from "@/components/image-upload";
 import { toast } from "react-hot-toast";
 
@@ -53,7 +53,7 @@ export function EditToolDialog({
     url: website.url,
     description: website.description || "",
     shortDescription: website.shortDescription || "",
-    category: website.category,
+    category: website.category || "",
     logo: website.logo || "",
     launchYear: website.launchYear || null,
   });

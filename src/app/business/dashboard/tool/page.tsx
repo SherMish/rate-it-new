@@ -16,19 +16,6 @@ import {
 import { toast } from "react-hot-toast";
 import categoriesData from "@/lib/data/categories.json";
 import { ImageUpload } from "@/components/image-upload";
-import { Switch } from "@/components/ui/switch";
-import { WebsiteType, PricingModel } from "@/lib/types/website";
-import { Wand2 } from "lucide-react";
-import {
-  AlertDialog,
-  AlertDialogContent,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogCancel,
-  AlertDialogAction,
-} from "@/components/ui/alert-dialog";
 
 const CHAR_LIMITS = {
   name: 50,

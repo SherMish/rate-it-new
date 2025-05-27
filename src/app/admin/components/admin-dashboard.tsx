@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Plus, ChevronLeft, ChevronRight } from "lucide-react";
-import { WebsiteType } from "@/lib/types/website";
+import { WebsiteType } from "@/lib/models/Website";
 import { WebsiteCard } from "./website-card";
 import { AddToolDialog } from "./add-tool-dialog";
 import { AddBlogPostDialog } from "./add-blog-post-dialog";
@@ -21,7 +21,7 @@ export function AdminDashboard() {
   const [searchQuery, setSearchQuery] = useState("");
   const [isAddToolOpen, setIsAddToolOpen] = useState(false);
   const [isAddBlogPostOpen, setIsAddBlogPostOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState<'tools' | 'blogs'>('tools');
+  const [activeTab, setActiveTab] = useState<"tools" | "blogs">("tools");
   const [toolsPage, setToolsPage] = useState(1);
   const [blogsPage, setBlogsPage] = useState(1);
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
@@ -32,9 +32,11 @@ export function AdminDashboard() {
   const [allWebsites, setAllWebsites] = useState<WebsiteType[]>([]);
 
   useEffect(() => {
-    if (process.env.NEXT_PUBLIC_IS_PRODUCTION !== "true" && 
-        window.location.hostname.includes("localhost")) {
-      if (activeTab === 'tools') {
+    if (
+      process.env.NEXT_PUBLIC_IS_PRODUCTION !== "true" &&
+      window.location.hostname.includes("localhost")
+    ) {
+      if (activeTab === "tools") {
         fetchWebsites();
       } else {
         fetchBlogPosts();
@@ -47,7 +49,9 @@ export function AdminDashboard() {
   const fetchWebsites = async () => {
     setIsLoadingTools(true);
     try {
-      const response = await fetch(`/api/admin/websites?page=${toolsPage}&limit=${ITEMS_PER_PAGE}`);
+      const response = await fetch(
+        `/api/admin/websites?page=${toolsPage}&limit=${ITEMS_PER_PAGE}`
+      );
       const data = await response.json();
       setWebsites(data.websites);
       setTotalTools(data.total);
@@ -61,7 +65,9 @@ export function AdminDashboard() {
   const fetchBlogPosts = async () => {
     setIsLoadingBlogs(true);
     try {
-      const response = await fetch(`/api/admin/blog-posts?page=${blogsPage}&limit=${ITEMS_PER_PAGE}`);
+      const response = await fetch(
+        `/api/admin/blog-posts?page=${blogsPage}&limit=${ITEMS_PER_PAGE}`
+      );
       const data = await response.json();
       setBlogPosts(data.posts);
       setTotalBlogs(data.total);
@@ -93,41 +99,49 @@ export function AdminDashboard() {
   const maxToolsPages = Math.ceil(totalTools / ITEMS_PER_PAGE);
   const maxBlogsPages = Math.ceil(totalBlogs / ITEMS_PER_PAGE);
 
-  const displayedWebsites = searchQuery ? allWebsites.filter((website) => {
-    const searchLower = searchQuery.toLowerCase();
-    return (
-      website.name.toLowerCase().includes(searchLower) ||
-      website.url.toLowerCase().includes(searchLower) ||
-      website.description?.toLowerCase().includes(searchLower) ||
-      website.shortDescription?.toLowerCase().includes(searchLower)
-    );
-  }) : websites;
+  const displayedWebsites = searchQuery
+    ? allWebsites.filter((website) => {
+        const searchLower = searchQuery.toLowerCase();
+        return (
+          website.name.toLowerCase().includes(searchLower) ||
+          website.url.toLowerCase().includes(searchLower) ||
+          website.description?.toLowerCase().includes(searchLower) ||
+          website.shortDescription?.toLowerCase().includes(searchLower)
+        );
+      })
+    : websites;
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between gap-4">
         <div className="flex gap-4">
-          <Button 
-            variant={activeTab === 'tools' ? "default" : "outline"}
-            onClick={() => setActiveTab('tools')}
+          <Button
+            variant={activeTab === "tools" ? "default" : "outline"}
+            onClick={() => setActiveTab("tools")}
           >
             Tools
           </Button>
-          <Button 
-            variant={activeTab === 'blogs' ? "default" : "outline"}
-            onClick={() => setActiveTab('blogs')}
+          <Button
+            variant={activeTab === "blogs" ? "default" : "outline"}
+            onClick={() => setActiveTab("blogs")}
           >
             Blog Posts
           </Button>
         </div>
         <div className="flex gap-2">
-          {activeTab === 'blogs' ? (
-            <Button onClick={() => setIsAddBlogPostOpen(true)} variant="outline">
+          {activeTab === "blogs" ? (
+            <Button
+              onClick={() => setIsAddBlogPostOpen(true)}
+              variant="outline"
+            >
               <Plus className="w-4 h-4 mr-2" />
               New Blog Post
             </Button>
           ) : (
-            <Button onClick={() => setIsAddToolOpen(true)} className="gradient-button">
+            <Button
+              onClick={() => setIsAddToolOpen(true)}
+              className="gradient-button"
+            >
               <Plus className="w-4 h-4 mr-2" />
               Add New Tool
             </Button>
@@ -144,7 +158,7 @@ export function AdminDashboard() {
         />
       </div>
 
-      {activeTab === 'tools' ? (
+      {activeTab === "tools" ? (
         <>
           {isLoadingTools ? (
             <div className="text-center py-12">
@@ -159,7 +173,7 @@ export function AdminDashboard() {
               <div className="grid gap-4">
                 {displayedWebsites.map((website) => (
                   <WebsiteCard
-                    key={website._id}
+                    key={website._id.toString()}
                     website={website}
                     onUpdate={fetchWebsites}
                   />
@@ -170,7 +184,7 @@ export function AdminDashboard() {
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => setToolsPage(p => Math.max(1, p - 1))}
+                    onClick={() => setToolsPage((p) => Math.max(1, p - 1))}
                     disabled={toolsPage === 1}
                   >
                     <ChevronLeft className="w-4 h-4" />
@@ -181,7 +195,9 @@ export function AdminDashboard() {
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => setToolsPage(p => Math.min(maxToolsPages, p + 1))}
+                    onClick={() =>
+                      setToolsPage((p) => Math.min(maxToolsPages, p + 1))
+                    }
                     disabled={toolsPage === maxToolsPages}
                   >
                     <ChevronRight className="w-4 h-4" />
@@ -216,7 +232,7 @@ export function AdminDashboard() {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => setBlogsPage(p => Math.max(1, p - 1))}
+                  onClick={() => setBlogsPage((p) => Math.max(1, p - 1))}
                   disabled={blogsPage === 1}
                 >
                   <ChevronLeft className="w-4 h-4" />
@@ -227,7 +243,9 @@ export function AdminDashboard() {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => setBlogsPage(p => Math.min(maxBlogsPages, p + 1))}
+                  onClick={() =>
+                    setBlogsPage((p) => Math.min(maxBlogsPages, p + 1))
+                  }
                   disabled={blogsPage === maxBlogsPages}
                 >
                   <ChevronRight className="w-4 h-4" />

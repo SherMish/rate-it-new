@@ -4,9 +4,9 @@ import Link from "next/link";
 import Image from "next/image";
 import { Card } from "@/components/ui/card";
 import { Star, ExternalLink } from "lucide-react";
-import { Types } from "mongoose";
 import { VerifiedBadge } from "./verified-badge";
-import { PricingModel, WebsiteType } from "@/lib/types/website";
+import { PricingModel } from "@/lib/types/website";
+import { WebsiteType } from "@/lib/models/Website";
 
 interface WebsiteCardProps {
   website: WebsiteType;
