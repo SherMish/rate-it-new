@@ -25,6 +25,8 @@ export interface WebsiteType {
     twitter?: string;
     tiktok?: string;
   };
+  isVerifiedByRateIt?: boolean;
+  licenseValidDate?: Date;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -98,6 +100,14 @@ const WebsiteSchema = new Schema(
       type: String,
       enum: Object.values(PricingModel),
       default: PricingModel.FREE,
+    },
+    isVerifiedByRateIt: {
+      type: Boolean,
+      default: false,
+    },
+    licenseValidDate: {
+      type: Date,
+      default: null,
     },
     launchYear: {
       type: Number,

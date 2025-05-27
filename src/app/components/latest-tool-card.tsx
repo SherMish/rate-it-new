@@ -8,26 +8,13 @@ import { Types } from "mongoose";
 import { motion } from "framer-motion";
 import { useRef } from "react";
 import { useInView } from "framer-motion";
-import { PricingModel } from "@/lib/types/website";
+import { PricingModel, WebsiteType } from "@/lib/types/website";
 import { VerifiedBadge } from "@/components/verified-badge";
 import categoriesData from "@/lib/data/categories.json";
 import * as Icons from "lucide-react";
 
 interface LatestToolCardProps {
-  website: {
-    _id: Types.ObjectId;
-    name: string;
-    url: string;
-    description?: string;
-    shortDescription?: string;
-    logo?: string;
-    averageRating: number;
-    reviewCount: number;
-    radarTrust?: number;
-    isVerified: boolean;
-    pricingModel: PricingModel;
-    category: string;
-  };
+  website: WebsiteType;
   index: number;
 }
 
@@ -88,13 +75,15 @@ export function LatestToolCard({ website, index }: LatestToolCardProps) {
                     {website.name}
                   </h3>
                   <VerifiedBadge
-                    isVerified={website.isVerified}
-                    pricingModel={website.pricingModel}
+                    isVerified={website.isVerified ?? false}
+                    pricingModel={website.pricingModel ?? PricingModel.FREE}
+                    licenseValidDate={website.licenseValidDate}
+                    isVerifiedByRateIt={website.isVerifiedByRateIt}
                   />
                 </div>
 
                 {/* Rating Section */}
-                {website.reviewCount > 0 && (
+                {website.reviewCount && website.reviewCount > 0 && (
                   <div className="flex items-center gap-2 mb-3">
                     <div className="flex items-center gap-1">
                       <div className="flex items-center">
@@ -110,7 +99,7 @@ export function LatestToolCard({ website, index }: LatestToolCardProps) {
                         ))}
                       </div>
                       <span className="text-sm font-medium text-gray-900">
-                        {website.averageRating.toFixed(1)}
+                        {website.averageRating?.toFixed(1) ?? "0.0"}
                       </span>
                     </div>
                     <span className="text-sm text-gray-500">

@@ -40,8 +40,6 @@ interface ReviewsSectionProps {
 export function ReviewsSection({ reviews }: ReviewsSectionProps) {
   const [sortBy, setSortBy] = useState("newest");
   const [filterBy, setFilterBy] = useState("all");
-  console.log("in reviews section");
-  console.log(reviews);
 
   const sortedAndFilteredReviews = reviews
     .filter((review) => {

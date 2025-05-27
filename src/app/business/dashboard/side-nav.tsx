@@ -17,6 +17,7 @@ import {
 import { useSession, signOut } from "next-auth/react";
 import { UserNav } from "@/components/user-nav";
 import BusinessTabHighlight from "@/app/components/BusinessTabHighlight";
+import { isPlus } from "@/lib/types/website";
 
 const menuItems = [
   {
@@ -117,26 +118,32 @@ export function SideNav() {
       </div>
 
       {/* Upgrade to Plus CTA - Placed before User Profile */}
-      <div className="px-4 pt-4 pb-2 mt-auto border-t border-border">
-        <div className="p-4 rounded-lg bg-gradient-to-br from-primary/10 via-purple-600/10 to-pink-500/10 border border-primary/20 shadow-md">
-          <div className="flex items-center gap-2 mb-2">
-            <BadgeCheck className="w-5 h-5 text-primary" />
-            <h3 className="font-semibold text-sm text-foreground">
-              שדרגו לפלוס
-            </h3>
+      {isPlus(
+        session?.user?.pricingModel ?? PricingModel.FREE,
+        session?.user?.licenseValidDate ?? null
+      ) && (
+        <div className="px-4 pt-4 pb-2 mt-auto border-t border-border">
+          <div className="p-4 rounded-lg bg-gradient-to-br from-primary/10 via-purple-600/10 to-pink-500/10 border border-primary/20 shadow-md">
+            <div className="flex items-center gap-2 mb-2">
+              <BadgeCheck className="w-5 h-5 text-primary" />
+              <h3 className="font-semibold text-sm text-foreground">
+                שדרגו לפלוס
+              </h3>
+            </div>
+            <p className="text-xs text-muted-foreground mb-3">
+              קבלו תג מאומת, אנליטיקות מתקדמות ועוד כלים שיעזרו לכם להגדיל
+              המרות.
+            </p>
+            <Link
+              href="/business/pricing"
+              className="flex items-center justify-center gap-2 w-full bg-gradient-to-r from-primary via-purple-600 to-pink-600 text-white rounded-md px-3 py-2 text-xs font-medium hover:opacity-90 transition-opacity shadow-sm hover:shadow-lg"
+            >
+              צפו במסלולים
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
           </div>
-          <p className="text-xs text-muted-foreground mb-3">
-            קבלו תג מאומת, אנליטיקות מתקדמות ועוד כלים שיעזרו לכם להגדיל המרות.
-          </p>
-          <Link
-            href="/business/pricing"
-            className="flex items-center justify-center gap-2 w-full bg-gradient-to-r from-primary via-purple-600 to-pink-600 text-white rounded-md px-3 py-2 text-xs font-medium hover:opacity-90 transition-opacity shadow-sm hover:shadow-lg"
-          >
-            צפו במסלולים
-            <ArrowRight className="w-3.5 h-3.5" />
-          </Link>
         </div>
-      </div>
+      )}
 
       {/* User Profile at Bottom */}
       {session?.user && (

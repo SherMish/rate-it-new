@@ -4,24 +4,61 @@ export enum PricingModel {
   PRO = "pro",
 }
 
-export const isPlusOrPro = (pricingModel: PricingModel) => {
+export const isLicenseValid = (
+  licenseValidDate: Date | string | null
+): boolean => {
+  if (!licenseValidDate) return false;
+
+  const parsedDate =
+    licenseValidDate instanceof Date
+      ? licenseValidDate
+      : new Date(licenseValidDate);
+
+  return !isNaN(parsedDate.getTime()) && parsedDate > new Date();
+};
+
+/**
+ * Checks if the pricing model is 'plus' and the license is valid.
+ */
+export const isPlus = (
+  pricingModel: PricingModel,
+  licenseValidDate: Date | string | null
+): boolean => {
+  return pricingModel === PricingModel.PLUS && isLicenseValid(licenseValidDate);
+};
+
+/**
+ * Checks if the pricing model is 'pro' and the license is valid.
+ */
+export const isPro = (
+  pricingModel: PricingModel,
+  licenseValidDate: Date | string | null
+): boolean => {
+  return pricingModel === PricingModel.PRO && isLicenseValid(licenseValidDate);
+};
+
+/**
+ * Checks if the pricing model is 'free' and the license is valid.
+ */
+export const isFree = (
+  pricingModel: PricingModel,
+  licenseValidDate: Date | string | null
+): boolean => {
+  return pricingModel === PricingModel.FREE && isLicenseValid(licenseValidDate);
+};
+
+/**
+ * Checks if the pricing model is either 'plus' or 'pro' and the license is valid.
+ */
+export const isPlusOrPro = (
+  pricingModel: PricingModel,
+  licenseValidDate: Date | string | null
+): boolean => {
   return (
-    pricingModel === PricingModel.PLUS || pricingModel === PricingModel.PRO
+    (pricingModel === PricingModel.PLUS || pricingModel === PricingModel.PRO) &&
+    isLicenseValid(licenseValidDate)
   );
 };
-
-export const isFree = (pricingModel: PricingModel) => {
-  return pricingModel === PricingModel.FREE;
-};
-
-export const isPro = (pricingModel: PricingModel) => {
-  return pricingModel === PricingModel.PRO;
-};
-
-export const isPlus = (pricingModel: PricingModel) => {
-  return pricingModel === PricingModel.PLUS;
-};
-
 export interface WebsiteType {
   _id: string;
   name: string;
@@ -36,6 +73,9 @@ export interface WebsiteType {
   reviewCount?: number;
   averageRating?: number;
   isVerified?: boolean;
+  isVerifiedByRateIt?: boolean;
+  pricingModel?: PricingModel;
+  licenseValidDate?: Date;
   isActive?: boolean;
   socialUrls: {
     facebook?: string;

@@ -30,6 +30,7 @@ import { Types, Document } from "mongoose";
 
 import { LatestToolCard } from "@/app/components/latest-tool-card";
 import { LatestToolsContent } from "@/app/components/latest-tools-content";
+import { WebsiteType } from "@/lib/types/website";
 
 const categories = [
   { name: "יצירת טקסט", icon: MessageSquare, count: 156 },
@@ -98,7 +99,7 @@ async function getLatestTools(limit = 6) {
   const tools = await Website.find()
     .sort({ createdAt: -1 })
     .limit(limit)
-    .lean();
+    .lean<WebsiteType[]>();
 
   return tools;
 }

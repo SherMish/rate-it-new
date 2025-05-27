@@ -107,11 +107,7 @@ async function getWebsiteData(url: string) {
   await connectDB();
 
   // Get website data
-  const website = await Website.findOne({ url: url })
-    .select(
-      "name url description shortDescription logo category averageRating reviewCount isVerified launchYear socialUrls pricingModel"
-    )
-    .lean();
+  const website = await Website.findOne({ url: url }).lean();
 
   if (!website) {
     notFound();
@@ -162,8 +158,6 @@ const getReviews = async (websiteId: string) => {
     .populate("relatedUser", "name")
     .lean<ReviewDoc[]>();
 
-  console.log("in get reviews");
-  console.log(reviews);
   return reviews.map((review) => ({
     _id: review._id.toString(),
     title: review.title,
@@ -334,8 +328,6 @@ export default async function ToolPage({ params }: PageProps) {
   const decodedUrl = decodeURIComponent(params.url);
   const website = await getWebsiteData(decodedUrl);
   const reviews = await getReviews(website._id.toString());
-  console.log("in ToolPage  ");
-  console.log(reviews);
 
   const ratingStatus = getRatingStatus(website.averageRating || 0);
 
@@ -421,8 +413,14 @@ export default async function ToolPage({ params }: PageProps) {
                                 {website.name}
                               </h1>
                               <VerifiedBadge
-                                isVerified={website.isVerified}
-                                pricingModel={website.pricingModel}
+                                isVerified={website.isVerified ?? false}
+                                pricingModel={
+                                  website.pricingModel ?? PricingModel.FREE
+                                }
+                                licenseValidDate={website.licenseValidDate}
+                                isVerifiedByRateIt={
+                                  website.isVerifiedByRateIt ?? false
+                                }
                                 showUnverified={true}
                               />
                             </div>

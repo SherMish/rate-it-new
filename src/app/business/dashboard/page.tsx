@@ -261,7 +261,10 @@ export default function DashboardPage() {
             </div>
 
             {website?.pricingModel &&
-            isPlus(website.pricingModel as PricingModel) ? (
+            isPlus(
+              website.pricingModel as PricingModel,
+              website.licenseValidDate ?? null
+            ) ? (
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <Card className="p-6 hover:shadow-lg transition-all">
                   <div className="flex justify-between items-start">

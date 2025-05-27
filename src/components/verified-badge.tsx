@@ -12,19 +12,25 @@ interface VerifiedBadgeProps {
   pricingModel: PricingModel;
   className?: string;
   showUnverified?: boolean;
+  licenseValidDate?: Date;
+  isVerifiedByRateIt?: boolean;
 }
 
 export function VerifiedBadge({
   isVerified,
   pricingModel,
   showUnverified = false,
+  licenseValidDate,
+  isVerifiedByRateIt,
   className = "",
 }: VerifiedBadgeProps) {
   return (
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger>
-          {isVerified && isPlusOrPro(pricingModel) ? (
+          {isVerified &&
+          isPlusOrPro(pricingModel, licenseValidDate ?? null) &&
+          isVerifiedByRateIt ? (
             <div
               className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs font-medium cursor-default ${className}`}
             >
@@ -32,7 +38,8 @@ export function VerifiedBadge({
               <span>מאומת</span>
             </div>
           ) : (
-            showUnverified && !isVerified && (
+            showUnverified &&
+            !isVerified && (
               <div
                 className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-gray-50 border border-gray-200 text-gray-600 text-xs font-medium cursor-default ${className}`}
               >
@@ -44,8 +51,8 @@ export function VerifiedBadge({
         </TooltipTrigger>
         <TooltipContent>
           {isVerified
-            ? "עסק זה אומת על ידי הבעלים"
-            : "עסק זה טרם אומת על ידי הבעלים"}
+            ? "העסק אומת על ידי צוות Rate-It לאחר בדיקת האתר ופרטי הבעלות"
+            : "עסק זה טרם אומת"}
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>

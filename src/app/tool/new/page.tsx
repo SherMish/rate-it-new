@@ -145,8 +145,6 @@ export default function NewTool() {
           title: "הצלחה",
           description: "האתר נוסף בהצלחה",
         });
-
-        console.log("before delete local storage");
         // Clear saved data after successful submission
         localStorage.removeItem(STORAGE_KEY);
         router.push(`/tool/${encodeURIComponent(data.url)}`);

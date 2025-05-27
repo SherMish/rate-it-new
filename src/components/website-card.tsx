@@ -6,22 +6,10 @@ import { Card } from "@/components/ui/card";
 import { Star, ExternalLink } from "lucide-react";
 import { Types } from "mongoose";
 import { VerifiedBadge } from "./verified-badge";
-import { PricingModel } from "@/lib/types/website";
+import { PricingModel, WebsiteType } from "@/lib/types/website";
 
 interface WebsiteCardProps {
-  website: {
-    _id: Types.ObjectId;
-    name: string;
-    url: string;
-    description?: string;
-    shortDescription?: string;
-    logo?: string;
-    averageRating: number;
-    reviewCount: number;
-    radarTrust?: number;
-    isVerified: boolean;
-    pricingModel: PricingModel;
-  };
+  website: WebsiteType;
 }
 
 export function WebsiteCard({ website }: WebsiteCardProps) {
@@ -70,13 +58,15 @@ export function WebsiteCard({ website }: WebsiteCardProps) {
                         {website.name}
                       </h3>
                       <VerifiedBadge
-                        isVerified={website.isVerified}
-                        pricingModel={website.pricingModel}
+                        isVerified={website.isVerified ?? false}
+                        pricingModel={website.pricingModel ?? PricingModel.FREE}
+                        licenseValidDate={website.licenseValidDate}
+                        isVerifiedByRateIt={website.isVerifiedByRateIt}
                       />
                     </div>
 
                     {/* Rating Section */}
-                    {website.reviewCount > 0 && (
+                    {website.reviewCount && website.reviewCount > 0 && (
                       <div className="flex items-center gap-2 mb-2">
                         <div className="flex items-center gap-1">
                           <div className="flex items-center">
@@ -92,7 +82,7 @@ export function WebsiteCard({ website }: WebsiteCardProps) {
                             ))}
                           </div>
                           <span className="text-sm font-medium text-gray-900">
-                            {website.averageRating.toFixed(1)}
+                            {website.averageRating?.toFixed(1) ?? "0.0"}
                           </span>
                         </div>
                         <span className="text-sm text-gray-500">
@@ -126,11 +116,8 @@ export function WebsiteCard({ website }: WebsiteCardProps) {
             {/* Footer Stats */}
             <div className="flex items-center justify-between pt-4 border-t border-gray-100">
               <div className="flex items-center gap-4 text-sm text-gray-500">
-                {website.reviewCount > 0 && (
+                {website.reviewCount && website.reviewCount > 0 && (
                   <span>{website.reviewCount} ביקורות</span>
-                )}
-                {website.radarTrust && (
-                  <span>ציון אמון: {website.radarTrust.toFixed(1)}</span>
                 )}
               </div>
               <div className="text-xs text-gray-400 group-hover:text-gray-500 transition-colors">
