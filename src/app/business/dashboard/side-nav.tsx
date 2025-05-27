@@ -17,7 +17,8 @@ import {
 import { useSession, signOut } from "next-auth/react";
 import { UserNav } from "@/components/user-nav";
 import BusinessTabHighlight from "@/app/components/BusinessTabHighlight";
-import { isPlus } from "@/lib/types/website";
+import { isPlus, PricingModel } from "@/lib/types/website";
+import { useBusinessGuard } from "@/hooks/use-business-guard";
 
 const menuItems = [
   {
@@ -52,6 +53,7 @@ export function SideNav() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { data: session } = useSession();
+  const { isLoading, website, user } = useBusinessGuard();
 
   // Check if we should highlight the business tab
   const isFirstTime = searchParams?.get("firstTime") === "true";
@@ -118,9 +120,9 @@ export function SideNav() {
       </div>
 
       {/* Upgrade to Plus CTA - Placed before User Profile */}
-      {isPlus(
-        session?.user?.pricingModel ?? PricingModel.FREE,
-        session?.user?.licenseValidDate ?? null
+      {!isPlus(
+        website?.pricingModel ?? PricingModel.FREE,
+        website?.licenseValidDate ?? null
       ) && (
         <div className="px-4 pt-4 pb-2 mt-auto border-t border-border">
           <div className="p-4 rounded-lg bg-gradient-to-br from-primary/10 via-purple-600/10 to-pink-500/10 border border-primary/20 shadow-md">

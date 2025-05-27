@@ -51,7 +51,7 @@ export function VerifiedBadge({
         </TooltipTrigger>
         <TooltipContent>
           {isVerified
-            ? "העסק אומת על ידי צוות Rate-It לאחר בדיקת האתר ופרטי הבעלות"
+            ? "העסק אומת על ידי צוות Rate-It במסגרת מסלול Plus, לאחר אימות האתר ובעלות רשמית מצד בעל העסק."
             : "עסק זה טרם אומת"}
         </TooltipContent>
       </Tooltip>
