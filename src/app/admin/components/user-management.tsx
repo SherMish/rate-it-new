@@ -4,7 +4,15 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
-import { ChevronLeft, ChevronRight, Mail, User, Calendar } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  Mail,
+  User,
+  Calendar,
+  Settings,
+} from "lucide-react";
+import { EditUserDialog } from "./edit-user-dialog";
 
 interface UserType {
   _id: string;
@@ -16,6 +24,9 @@ interface UserType {
   reviewCount: number;
   relatedWebsite: string | null;
   createdAt: string;
+  workRole: string | null;
+  workEmail: string | null;
+  isAgreeMarketing: boolean;
 }
 
 const ITEMS_PER_PAGE = 10;
@@ -26,6 +37,8 @@ export function UserManagement() {
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalUsers, setTotalUsers] = useState(0);
+  const [selectedUser, setSelectedUser] = useState<UserType | null>(null);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
 
   useEffect(() => {
     fetchUsers();
@@ -63,6 +76,11 @@ export function UserManagement() {
     }
   };
 
+  const handleEditUser = (user: UserType) => {
+    setSelectedUser(user);
+    setIsEditDialogOpen(true);
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -85,19 +103,34 @@ export function UserManagement() {
           <div className="grid gap-4">
             {users.map((user) => (
               <Card key={user._id} className="p-4" dir="rtl">
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                    <User className="w-6 h-6 text-primary" />
-                  </div>
-                  <div className="flex-1 text-right">
-                    <h3 className="font-semibold">{user.name}</h3>
-                    <p className="text-sm text-muted-foreground">
-                      {user.email}
-                    </p>
-                    <p className="text-sm">
-                      תפקיד: {getRoleDisplay(user.role)}
-                    </p>
-                    <p className="text-sm">ביקורות: {user.reviewCount}</p>
+                <div className="flex items-start justify-between gap-4">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => handleEditUser(user)}
+                    className="shrink-0"
+                  >
+                    <Settings className="w-4 h-4" />
+                  </Button>
+                  <div className="flex items-start gap-4 flex-1">
+                    <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                      <User className="w-6 h-6 text-primary" />
+                    </div>
+                    <div className="flex-1 text-right">
+                      <h3 className="font-semibold">{user.name}</h3>
+                      <p className="text-sm text-muted-foreground">
+                        {user.email}
+                      </p>
+                      <p className="text-sm">
+                        תפקיד: {getRoleDisplay(user.role)}
+                      </p>
+                      <p className="text-sm">ביקורות: {user.reviewCount}</p>
+                      {user.relatedWebsite && (
+                        <p className="text-sm">
+                          עסק משויך: {user.relatedWebsite}
+                        </p>
+                      )}
+                    </div>
                   </div>
                 </div>
               </Card>
@@ -127,6 +160,13 @@ export function UserManagement() {
           </div>
         </>
       )}
+
+      <EditUserDialog
+        open={isEditDialogOpen}
+        onOpenChange={setIsEditDialogOpen}
+        onUserUpdated={fetchUsers}
+        user={selectedUser}
+      />
     </div>
   );
 }
