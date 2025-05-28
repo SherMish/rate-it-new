@@ -1,9 +1,10 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import Website from "@/lib/models/Website";
+import { PricingModel } from "@/lib/types/website";
 
 export async function PATCH(
-  request: Request,
+  request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   if (process.env.IS_PRODUCTION === "true") {
@@ -11,38 +12,61 @@ export async function PATCH(
   }
 
   try {
-    const body = await request.json();
     await connectDB();
+    const body = await request.json();
 
-    const website = await Website.findByIdAndUpdate(
-      params.id,
-      {
-        $set: {
-          name: body.name,
-          url: body.url,
-          description: body.description,
-          shortDescription: body.shortDescription,
-          category: body.category,
-          logo: body.logo,
-          launchYear: body.launchYear,
-          socialUrls: {
-            facebook: body.socialUrls.facebook,
-            instagram: body.socialUrls.instagram,
-            twitter: body.socialUrls.twitter,
-            tiktok: body.socialUrls.tiktok,
-          },
-        },
-      },
-      { new: true }
-    );
+    const {
+      name,
+      url,
+      description,
+      shortDescription,
+      category,
+      logo,
+      launchYear,
+      socialUrls,
+      // License management fields
+      pricingModel,
+      isVerified,
+      isVerifiedByRateIt,
+      licenseValidDate,
+      isActive,
+    } = body;
+
+    const updateData: any = {};
+
+    if (name !== undefined) updateData.name = name;
+    if (url !== undefined) updateData.url = url;
+    if (description !== undefined) updateData.description = description;
+    if (shortDescription !== undefined)
+      updateData.shortDescription = shortDescription;
+    if (category !== undefined) updateData.category = category;
+    if (logo !== undefined) updateData.logo = logo;
+    if (launchYear !== undefined) updateData.launchYear = launchYear;
+    if (socialUrls !== undefined) updateData.socialUrls = socialUrls;
+
+    // License management fields
+    if (pricingModel !== undefined) updateData.pricingModel = pricingModel;
+    if (isVerified !== undefined) updateData.isVerified = isVerified;
+    if (isVerifiedByRateIt !== undefined)
+      updateData.isVerifiedByRateIt = isVerifiedByRateIt;
+    if (licenseValidDate !== undefined) {
+      updateData.licenseValidDate = licenseValidDate
+        ? new Date(licenseValidDate)
+        : null;
+    }
+    if (isActive !== undefined) updateData.isActive = isActive;
+
+    const website = await Website.findByIdAndUpdate(params.id, updateData, {
+      new: true,
+    });
 
     if (!website) {
-      return new NextResponse("Website not found", { status: 404 });
+      return NextResponse.json({ error: "Website not found" }, { status: 404 });
     }
 
     return NextResponse.json(website);
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error updating website:", error);
-    return new NextResponse("Internal Server Error", { status: 500 });
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

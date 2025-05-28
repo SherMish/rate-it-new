@@ -11,6 +11,7 @@ import { AddToolDialog } from "./add-tool-dialog";
 import { AddBlogPostDialog } from "./add-blog-post-dialog";
 import { BlogPost } from "@/lib/types/blog";
 import { BlogPostCard } from "./blog-post-card";
+import { UserManagement } from "./user-management";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -21,7 +22,9 @@ export function AdminDashboard() {
   const [searchQuery, setSearchQuery] = useState("");
   const [isAddToolOpen, setIsAddToolOpen] = useState(false);
   const [isAddBlogPostOpen, setIsAddBlogPostOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState<"tools" | "blogs">("tools");
+  const [activeTab, setActiveTab] = useState<"tools" | "blogs" | "users">(
+    "tools"
+  );
   const [toolsPage, setToolsPage] = useState(1);
   const [blogsPage, setBlogsPage] = useState(1);
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
@@ -38,7 +41,7 @@ export function AdminDashboard() {
     ) {
       if (activeTab === "tools") {
         fetchWebsites();
-      } else {
+      } else if (activeTab === "blogs") {
         fetchBlogPosts();
       }
     } else {
@@ -127,6 +130,12 @@ export function AdminDashboard() {
           >
             פוסטים בבלוג
           </Button>
+          <Button
+            variant={activeTab === "users" ? "default" : "outline"}
+            onClick={() => setActiveTab("users")}
+          >
+            משתמשים
+          </Button>
         </div>
         <div className="flex gap-2">
           {activeTab === "blogs" ? (
@@ -137,7 +146,7 @@ export function AdminDashboard() {
               <Plus className="w-4 h-4 ml-2" />
               פוסט חדש
             </Button>
-          ) : (
+          ) : activeTab === "tools" ? (
             <Button
               onClick={() => setIsAddToolOpen(true)}
               className="gradient-button"
@@ -145,22 +154,24 @@ export function AdminDashboard() {
               <Plus className="w-4 h-4 ml-2" />
               הוסף עסק חדש
             </Button>
-          )}
+          ) : null}
         </div>
       </div>
 
-      <div className="flex items-center justify-between">
-        <Input
-          placeholder="חפש עסקים..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="max-w-sm text-right"
-          dir="rtl"
-        />
-      </div>
-
-      {activeTab === "tools" ? (
+      {activeTab === "users" ? (
+        <UserManagement />
+      ) : activeTab === "tools" ? (
         <>
+          <div className="flex items-center justify-between">
+            <Input
+              placeholder="חפש עסקים..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="max-w-sm text-right"
+              dir="rtl"
+            />
+          </div>
+
           {isLoadingTools ? (
             <div className="text-center py-12">
               <p className="text-muted-foreground">טוען עסקים...</p>

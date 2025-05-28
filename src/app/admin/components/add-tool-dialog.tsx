@@ -606,6 +606,99 @@ export function AddToolDialog({
               </div>
             </div>
           </div>
+          {/* License Management Section */}
+          <div className="border-t-4 border-red-500 pt-6 mt-6">
+            <h3 className="text-lg font-bold text-red-600 text-right mb-4">
+              ניהול רשיון
+            </h3>
+
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label className="text-right block">מודל תמחור</Label>
+                  <Select
+                    dir="rtl"
+                    value={formData.pricingModel}
+                    onValueChange={(value) =>
+                      setFormData((prev) => ({ ...prev, pricingModel: value }))
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="בחר מודל תמחור" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="FREE">חינם</SelectItem>
+                      <SelectItem value="PRO">מקצועי</SelectItem>
+                      <SelectItem value="PLUS">פלוס</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label className="text-right block">תאריך תוקף רשיון</Label>
+                  <Input
+                    type="date"
+                    value={formData.licenseValidDate}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        licenseValidDate: e.target.value,
+                      }))
+                    }
+                    className="text-right"
+                    dir="rtl"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="flex items-center justify-between p-3 border rounded-lg">
+                  <input
+                    type="checkbox"
+                    checked={formData.isVerified}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        isVerified: e.target.checked,
+                      }))
+                    }
+                    className="w-4 h-4"
+                  />
+                  <Label className="text-right">מאומת</Label>
+                </div>
+
+                <div className="flex items-center justify-between p-3 border rounded-lg">
+                  <input
+                    type="checkbox"
+                    checked={formData.isVerifiedByRateIt}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        isVerifiedByRateIt: e.target.checked,
+                      }))
+                    }
+                    className="w-4 h-4"
+                  />
+                  <Label className="text-right">מאומת על ידי רייט-איט</Label>
+                </div>
+
+                <div className="flex items-center justify-between p-3 border rounded-lg">
+                  <input
+                    type="checkbox"
+                    checked={formData.isActive}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        isActive: e.target.checked,
+                      }))
+                    }
+                    className="w-4 h-4"
+                  />
+                  <Label className="text-right">פעיל</Label>
+                </div>
+              </div>
+            </div>
+          </div>
 
           <div className="flex justify-end gap-2">
             <Button variant="outline" onClick={() => handleDialogChange(false)}>
