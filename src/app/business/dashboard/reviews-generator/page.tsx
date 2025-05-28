@@ -238,7 +238,7 @@ https://rate-it.co.il`;
                     <!-- Logo Header -->
                     <tr>
                         <td align="center" style="padding:0 0 30px 0;">
-                            <img src="https://rate-it.co.il/logo_new.svg" alt="Rate-It" width="150" height="28" style="display:block;border:0;outline:none;text-decoration:none;">
+                            <img src="https://rate-it.co.il/logo_new.png" alt="Rate-It" width="150" height="28" style="display:block;border:0;outline:none;text-decoration:none;">
                         </td>
                     </tr>
                     
