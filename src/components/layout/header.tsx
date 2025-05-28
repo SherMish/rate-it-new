@@ -128,12 +128,20 @@ export function Header() {
 
                 {isBusinessHome && (
                   <>
-                    <Link
-                      href="/business/dashboard"
+                    <Button
+                      onClick={() => {
+                        if (!session?.user) {
+                          loginModal.onOpen();
+                        } else if (!session.user.isWebsiteOwner) {
+                          window.open("/business/register", "_blank");
+                        } else {
+                          window.open("/business/dashboard", "_blank");
+                        }
+                      }}
                       className="inline-flex items-center gap-1 px-4 py-2 text-sm font-semibold text-primary bg-white border border-primary rounded-full hover:bg-primary/5 transition-colors shadow-sm hover:shadow-md mr-4"
                     >
                       כניסה לרשומים
-                    </Link>
+                    </Button>
                     <Link
                       href="/business/register"
                       className="inline-flex items-center gap-1 px-4 py-2 text-sm font-semibold text-white bg-primary rounded-full hover:bg-primary/90 transition-colors shadow-sm hover:shadow-md mr-4"
@@ -237,13 +245,30 @@ export function Header() {
                 )}
 
                 {isBusinessHome && (
-                  <Link
-                    href="/business/register"
-                    className="block rounded-md px-3 py-4 text-base font-medium text-primary hover:bg-blue-50 hover:text-primary/80 transition-colors"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    צור חשבון חינם
-                  </Link>
+                  <>
+                    <Button
+                      onClick={() => {
+                        setIsOpen(false);
+                        if (!session?.user) {
+                          loginModal.onOpen();
+                        } else if (!session.user.isWebsiteOwner) {
+                          window.open("/business/register", "_blank");
+                        } else {
+                          window.open("/business/dashboard", "_blank");
+                        }
+                      }}
+                      className="block rounded-md px-3 py-4 text-base font-medium text-primary hover:bg-blue-50 hover:text-primary/80 transition-colors"
+                    >
+                      כניסה לרשומים
+                    </Button>
+                    <Link
+                      href="/business/register"
+                      className="block rounded-md px-3 py-4 text-base font-medium text-primary hover:bg-blue-50 hover:text-primary/80 transition-colors"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      צור חשבון חינם
+                    </Link>
+                  </>
                 )}
 
                 {session?.user && (
