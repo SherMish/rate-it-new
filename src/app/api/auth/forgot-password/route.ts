@@ -3,11 +3,7 @@ import { Resend } from "resend";
 import { randomBytes } from "crypto";
 import User from "@/lib/models/User";
 import mongoose from "mongoose";
-import { sendEmail } from "@/lib/email";
-import {
-  createSimpleEmailTemplate,
-  getPlainTextFooter,
-} from "@/lib/email-templates";
+import { sendUnifiedEmail } from "@/lib/email";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -46,31 +42,16 @@ export async function POST(req: Request) {
 
     const resetUrl = `${process.env.NEXT_PUBLIC_APP_URL}/reset-password?token=${resetToken}`;
 
-    const htmlContent = createSimpleEmailTemplate(
-      "איפוס סיסמה",
-      `<p style="margin:0 0 24px 0;font-size:16px;line-height:1.6;color:#4b5563;">
-        קיבלנו בקשה לאיפוס הסיסמה שלך. לחץ על הכפתור למטה כדי להגדיר סיסמה חדשה.
-      </p>
-      <p style="margin:0 0 24px 0;font-size:14px;line-height:1.5;color:#6b7280;">
-        הקישור יהיה תקף למשך 60 דקות. אם לא ביקשת איפוס סיסמה, אנא התעלם מהודעה זו.
-      </p>`,
-      "איפוס סיסמה",
-      resetUrl
-    );
-
-    const textContent = `איפוס סיסמה
-
-קיבלנו בקשה לאיפוס הסיסמה שלך. לחץ על הקישור למטה כדי להגדיר סיסמה חדשה:
-${resetUrl}
-
-הקישור יהיה תקף למשך 60 דקות. אם לא ביקשת איפוס סיסמה, אנא התעלם מהודעה זו.${getPlainTextFooter()}`;
-
-    // Add timeout to email sending
-    await sendEmail({
+    // Send unified email
+    await sendUnifiedEmail({
       to: email,
       subject: "איפוס סיסמה - Rate-It",
-      html: htmlContent,
-      text: textContent,
+      title: "איפוס סיסמה",
+      body: `קיבלנו בקשה לאיפוס הסיסמה שלך. לחץ על הכפתור למטה כדי להגדיר סיסמה חדשה.<br><br>
+             <small style="color:#6b7280;">הקישור יהיה תקף למשך 60 דקות. אם לא ביקשת איפוס סיסמה, אנא התעלם מהודעה זו.</small>`,
+      ctaText: "איפוס סיסמה",
+      ctaUrl: resetUrl,
+      preheader: "איפוס סיסמה עבור חשבון Rate-It שלך",
     });
 
     return NextResponse.json({ success: true });

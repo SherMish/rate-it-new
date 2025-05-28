@@ -1,6 +1,6 @@
 import { Resend } from "resend";
 import {
-  createSimpleEmailTemplate,
+  createUnifiedEmailTemplate,
   getPlainTextFooter,
 } from "./email-templates";
 
@@ -33,6 +33,45 @@ export async function sendEmail({
   ]);
 }
 
+interface UnifiedEmailData {
+  to: string;
+  subject: string;
+  title: string;
+  body: string;
+  ctaText?: string;
+  ctaUrl?: string;
+  preheader?: string;
+  additionalContent?: string;
+}
+
+export async function sendUnifiedEmail({
+  to,
+  subject,
+  title,
+  body,
+  ctaText,
+  ctaUrl,
+  preheader,
+  additionalContent,
+}: UnifiedEmailData) {
+  const { html, text } = createUnifiedEmailTemplate({
+    subject,
+    title,
+    body,
+    ctaText,
+    ctaUrl,
+    preheader,
+    additionalContent,
+  });
+
+  return sendEmail({
+    to,
+    subject,
+    html,
+    text,
+  });
+}
+
 export async function sendVerificationEmail(
   to: string,
   token: string,
@@ -40,29 +79,14 @@ export async function sendVerificationEmail(
 ) {
   const verificationUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/verify-ownership?token=${token}`;
 
-  const htmlContent = createSimpleEmailTemplate(
-    "אימות בעלות על אתר",
-    `<p style="margin:0 0 24px 0;font-size:16px;line-height:1.6;color:#4b5563;">
-      אנא לחצו על הקישור למטה כדי לאמת את הבעלות שלכם על <strong style="color:#111827;">${websiteName}</strong>:
-    </p>
-    <p style="margin:0 0 24px 0;font-size:14px;line-height:1.5;color:#6b7280;">
-      קישור זה יפוג תוך 24 שעות.
-    </p>`,
-    "אמת בעלות",
-    verificationUrl
-  );
-
-  const textContent = `אימות בעלות על אתר
-
-אנא לחצו על הקישור הבא כדי לאמת את הבעלות שלכם על ${websiteName}:
-${verificationUrl}
-
-קישור זה יפוג תוך 24 שעות.${getPlainTextFooter()}`;
-
-  return sendEmail({
+  return sendUnifiedEmail({
     to,
     subject: `אימות בעלות על ${websiteName}`,
-    html: htmlContent,
-    text: textContent,
+    title: "אימות בעלות על אתר",
+    body: `אנא לחצו על הכפתור למטה כדי לאמת את הבעלות שלכם על <strong>${websiteName}</strong>.<br><br>
+           <small style="color:#6b7280;">קישור זה יפוג תוך 24 שעות.</small>`,
+    ctaText: "אמת בעלות",
+    ctaUrl: verificationUrl,
+    preheader: `אמת את הבעלות שלך על ${websiteName}`,
   });
 }

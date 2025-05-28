@@ -29,11 +29,6 @@ import {
 import { useToast } from "@/components/ui/use-toast";
 import { useBusinessGuard } from "@/hooks/use-business-guard";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
-import {
-  wrapEmailContent,
-  getPlainTextFooter,
-  emailStyles,
-} from "@/lib/email-templates";
 
 interface EmailRecipient {
   name: string;
@@ -46,11 +41,6 @@ export default function ReviewsGeneratorPage() {
   const [emailRecipients, setEmailRecipients] = useState<EmailRecipient[]>([]);
   const [newRecipientName, setNewRecipientName] = useState("");
   const [newRecipientEmail, setNewRecipientEmail] = useState("");
-  const [emailBodyText, setEmailBodyText] = useState(
-    `נשמח לשמוע מה דעתכם על {{toolName}}!
-
-התובנות שלכם עוזרות לאחרים לחקור עסקים אמינים — ולתמוך בקהילה בקבלת החלטות חכמות ומהירות יותר.`
-  );
   const [isSending, setIsSending] = useState(false);
   const [sentStatus, setSentStatus] = useState<{
     total: number;
@@ -195,73 +185,6 @@ export default function ReviewsGeneratorPage() {
     }
   };
 
-  const getMessageTemplate = () => {
-    return `שלום {{userName}},
-
-נשמח לשמוע מה דעתך על {{toolName}}!
-
-התובנות שלך עוזרות לאחרים לגלות עסקים אמינים ולקבל החלטות חכמות יותר.
-
-לשיתוף החוויה שלך:
-{{reviewLink}}
-
-תודה שאתה חלק מהקהילה שלנו!${getPlainTextFooter()}`;
-  };
-
-  const getFullEmailTemplate = (bodyText: string) => {
-    const content = `
-    <!-- Logo Header -->
-    <tr>
-        <td align="center" style="padding:0 0 30px 0;">
-            <img src="https://rate-it.co.il/logo_new.png" alt="Rate-It" width="300" height="150" style="${emailStyles.logo}">
-        </td>
-    </tr>
-    
-    <!-- Main Content Card -->
-    <tr>
-        <td style="${emailStyles.card}">
-            <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
-                <!-- Content -->
-                <tr>
-                    <td style="padding:40px 40px 30px 40px;direction:rtl;text-align:right;">
-                        <h1 style="${emailStyles.heading}">
-                            שלום {{userName}},
-                        </h1>
-                        
-                        <p style="${emailStyles.paragraph}">
-                            נשמח לשמוע מה דעתך על <strong style="color:#111827;">{{toolName}}</strong>!
-                        </p>
-                        
-                        <p style="margin:0 0 32px 0;font-size:16px;line-height:1.6;color:#4b5563;">
-                            התובנות שלך עוזרות לאחרים לגלות עסקים אמינים ולקבל החלטות חכמות יותר.
-                        </p>
-                        
-                        <!-- CTA Button -->
-                        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
-                            <tr>
-                                <td align="center" style="padding:0 0 24px 0;">
-                                    <a href="{{reviewLink}}" target="_blank" style="${emailStyles.button}">
-                                        שתף את החוויה שלך
-                                    </a>
-                                </td>
-                            </tr>
-                        </table>
-                        
-                        <p style="margin:0;font-size:14px;line-height:1.5;color:#6b7280;text-align:center;">
-                            תודה שאתה חלק מהקהילה שלנו!
-                        </p>
-                    </td>
-                </tr>
-            </table>
-        </td>
-    </tr>`;
-
-    return wrapEmailContent(
-      content,
-      "נשמח לשמוע את דעתך על {{toolName}} - שתף את החוויה שלך"
-    );
-  };
-
   const handleSendInvitations = async () => {
     if (emailRecipients.length === 0) {
       toast({
@@ -278,21 +201,6 @@ export default function ReviewsGeneratorPage() {
     try {
       const results = await Promise.all(
         emailRecipients.map(async (recipient) => {
-          // Generate both HTML and plain text versions
-          const fullHtmlTemplate = getFullEmailTemplate(emailBodyText);
-          const plainTextTemplate = getMessageTemplate();
-
-          // Replace template variables in both versions
-          const personalizedHtmlMessage = fullHtmlTemplate
-            .replace(/{{userName}}/g, recipient.name)
-            .replace(/{{toolName}}/g, website?.name || "העסק שלנו")
-            .replace(/{{reviewLink}}/g, reviewLink);
-
-          const personalizedTextMessage = plainTextTemplate
-            .replace(/{{userName}}/g, recipient.name)
-            .replace(/{{toolName}}/g, website?.name || "העסק שלנו")
-            .replace(/{{reviewLink}}/g, reviewLink);
-
           try {
             const response = await fetch("/api/send-review-invitation", {
               method: "POST",
@@ -303,8 +211,8 @@ export default function ReviewsGeneratorPage() {
                 to: recipient.email,
                 name: recipient.name,
                 websiteId: website?._id,
-                html: personalizedHtmlMessage,
-                message: personalizedTextMessage,
+                websiteName: website?.name || "העסק שלנו",
+                reviewLink: reviewLink,
               }),
             });
 
@@ -500,29 +408,6 @@ export default function ReviewsGeneratorPage() {
                 </div>
               </div>
             )}
-
-            <div className="opacity-70 pointer-events-none">
-              <div className="flex items-center mb-2">
-                <Label htmlFor="emailTemplate" className="ml-2">
-                  עריכת תוכן האימייל
-                </Label>
-                <span className="text-xs bg-yellow-50 text-yellow-600 px-2 py-0.5 rounded border border-yellow-200">
-                  בקרוב
-                </span>
-              </div>
-              <p className="mt-1 text-xs text-muted-foreground mb-2">
-                התאם אישית את ההודעה שלך. משתנים זמינים: {"{{userName}}"},{" "}
-                {"{{toolName}}"}, {"{{reviewLink}}"}
-              </p>
-              <Textarea
-                id="emailTemplate"
-                value={emailBodyText}
-                disabled
-                readOnly
-                className="min-h-[150px] bg-muted/30 cursor-not-allowed border-muted"
-                placeholder="הזן את ההודעה שלך כאן..."
-              />
-            </div>
 
             <div>
               <Button
