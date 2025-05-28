@@ -6,7 +6,10 @@ import { useSession } from "next-auth/react";
 import { LoginModal } from "@/components/auth/login-modal";
 import { WebsiteRegistrationForm } from "@/components/business/registration/WebsiteForm";
 import { DomainVerificationForm } from "@/components/business/registration/DomainVerificationForm";
-import { PricingSection } from "@/components/business/registration/PricingSection";
+import {
+  cleanDomain,
+  PricingSection,
+} from "@/components/business/registration/PricingSection";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { useLoginModal } from "@/hooks/use-login-modal";
 import { Card, CardContent } from "@/components/ui/card";
@@ -17,7 +20,7 @@ import { verifyDomain as verifyDomainAction } from "@/app/actions/verification";
 
 export default function BusinessRegistration() {
   const router = useRouter();
-  const { data: session, status } = useSession();
+  const { update: updateSession, data: session, status } = useSession();
   const searchParams = useSearchParams();
   const [step, setStep] = useState(() => {
     // Initialize step based on URL params
@@ -41,9 +44,11 @@ export default function BusinessRegistration() {
     null
   );
 
+  const [isLoading, setLoading] = useState(false);
+
   // Redirect to dashboard if user is already linked to a business
   useEffect(() => {
-    if (session?.user?.businessId) {
+    if (session?.user?.businessId && step === 1) {
       //can use isWebsiteOwner
       window.location.href = "/business/dashboard";
     }
@@ -56,7 +61,110 @@ export default function BusinessRegistration() {
         try {
           const result = await verifyDomainAction(token);
           if (!result.success) setVerifiedWebsiteUrl(null);
-          else setVerifiedWebsiteUrl(result.websiteUrl);
+          else {
+            setVerifiedWebsiteUrl(result.websiteUrl);
+            const websiteUrl = result.websiteUrl;
+            if (!websiteUrl) {
+              toast({
+                variant: "destructive",
+                title: "שגיאה",
+                description: "כתובת האתר חסרה. אנא נסו שוב.",
+              });
+              return;
+            }
+
+            setLoading(true);
+            try {
+              // 1. Clean domain
+              const domain = cleanDomain(websiteUrl);
+
+              // 2. Get current user
+              const sessionRes = await fetch("/api/auth/session");
+              const session = await sessionRes.json();
+              const userId = session?.user?.id;
+              if (!userId) throw new Error("המשתמש אינו מחובר");
+
+              // 3. Check if website already exists
+              const websiteCheckRes = await fetch(
+                `/api/website/check?url=${encodeURIComponent(domain)}`
+              );
+
+              if (!websiteCheckRes.ok && websiteCheckRes.status !== 404) {
+                throw new Error("שגיאה בבדיקת אתר קיים");
+              }
+              const existingWebsite = websiteCheckRes.ok
+                ? await websiteCheckRes.json()
+                : null;
+              // 4. Ownership collision guard
+              if (
+                existingWebsite?.owner &&
+                existingWebsite.owner !== userId /* someone else */
+              ) {
+                throw new Error("האתר כבר משויך למשתמש אחר");
+              }
+              // 5. Already mine & already on FREE → just go to dashboard
+              // if (
+              //   existingWebsite?.owner === userId &&
+              //   existingWebsite?.pricingModel === "free"
+              // ) {
+              //   router.push("/business/dashboard");
+              //   return;
+              // }
+
+              // 6. Prepare payload (merge, don't clobber)
+              const websitePayload = {
+                ...(existingWebsite ?? {}),
+                url: domain,
+                owner: userId,
+                isVerified: true,
+                pricingModel: "free",
+                // keep category/name if present, else fallback
+                category: existingWebsite?.category ?? "other",
+                name: existingWebsite?.name,
+              };
+
+              // 7. Create or update website
+              const websiteUpdateRes = await fetch("/api/website/update", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(websitePayload),
+              });
+              if (!websiteUpdateRes.ok)
+                throw new Error("נכשל בעדכון/יצירת האתר");
+              const { _id: websiteId } = await websiteUpdateRes.json();
+
+              // 8. Update user (API should merge arrays server-side)
+              const userUpdateRes = await fetch("/api/user/update", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  role: "business_owner",
+                  isWebsiteOwner: true,
+                  isVerifiedWebsiteOwner: true,
+                  relatedWebsite: domain,
+                  websites: [websiteId],
+                  currentPricingModel: "free",
+                }),
+              });
+              if (!userUpdateRes.ok) throw new Error("נכשל בעדכון פרטי המשתמש");
+
+              // 9. Refresh session → redirect
+              await updateSession();
+              router.push("/business/dashboard?firstTime=true");
+            } catch (error) {
+              console.error("Error in handleFreePlanRegistration:", error);
+              toast({
+                variant: "destructive",
+                title: "שגיאה ברישום",
+                description:
+                  error instanceof Error
+                    ? error.message
+                    : "משהו השתבש. אנא נסו שוב.",
+              });
+            } finally {
+              setLoading(false);
+            }
+          }
         } catch (error) {
           console.error("Verification error:", error);
           toast({
@@ -205,6 +313,7 @@ export default function BusinessRegistration() {
             {session && step === 4 && verifiedWebsiteUrl && (
               <PricingSection
                 websiteUrl={verifiedWebsiteUrl || formData.websiteUrl}
+                loadingParent={isLoading}
               />
             )}
 

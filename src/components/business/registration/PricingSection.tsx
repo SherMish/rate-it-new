@@ -33,7 +33,7 @@ export const plusFeatures = [
 // HELPERS
 // ─────────────────────────────────────────────────────────────────────────────
 /** Normalises any URL → host part (“example.com”). */
-const cleanDomain = (raw: string): string => {
+export const cleanDomain = (raw: string): string => {
   try {
     const urlObj = new URL(/^https?:\/\//i.test(raw) ? raw : `https://${raw}`);
     return urlObj.host.toLowerCase().replace(/^www\./, "");
@@ -50,7 +50,13 @@ const cleanDomain = (raw: string): string => {
 // ─────────────────────────────────────────────────────────────────────────────
 // MAIN COMPONENT
 // ─────────────────────────────────────────────────────────────────────────────
-export function PricingSection({ websiteUrl }: { websiteUrl: string }) {
+export function PricingSection({
+  websiteUrl,
+  loadingParent,
+}: {
+  websiteUrl: string;
+  loadingParent: boolean;
+}) {
   const [loading, setLoading] = useState(false);
   const [isAnnual, setIsAnnual] = useState(false);
   const router = useRouter();
@@ -60,103 +66,11 @@ export function PricingSection({ websiteUrl }: { websiteUrl: string }) {
   // FREE PLAN REGISTRATION / DOWNGRADE
   // ───────────────────────────────────────────────────────────────────────────
   const handleFreePlanRegistration = async () => {
-    if (!websiteUrl) {
-      toast({
-        variant: "destructive",
-        title: "שגיאה",
-        description: "כתובת האתר חסרה. אנא נסו שוב.",
-      });
-      return;
-    }
+    console.log("Redirecting to dashboard...");
+    await updateSession();
 
-    setLoading(true);
-    try {
-      // 1. Clean domain
-      const domain = cleanDomain(websiteUrl);
-
-      // 2. Get current user
-      const sessionRes = await fetch("/api/auth/session");
-      const session = await sessionRes.json();
-      const userId = session?.user?.id;
-      if (!userId) throw new Error("המשתמש אינו מחובר");
-
-      // 3. Check if website already exists
-      const websiteCheckRes = await fetch(
-        `/api/website/check?url=${encodeURIComponent(domain)}`
-      );
-
-      if (!websiteCheckRes.ok && websiteCheckRes.status !== 404) {
-        throw new Error("שגיאה בבדיקת אתר קיים");
-      }
-      const existingWebsite = websiteCheckRes.ok
-        ? await websiteCheckRes.json()
-        : null;
-      // 4. Ownership collision guard
-      if (
-        existingWebsite?.owner &&
-        existingWebsite.owner !== userId /* someone else */
-      ) {
-        throw new Error("האתר כבר משויך למשתמש אחר");
-      }
-      // 5. Already mine & already on FREE → just go to dashboard
-      // if (
-      //   existingWebsite?.owner === userId &&
-      //   existingWebsite?.pricingModel === "free"
-      // ) {
-      //   router.push("/business/dashboard");
-      //   return;
-      // }
-
-      // 6. Prepare payload (merge, don't clobber)
-      const websitePayload = {
-        ...(existingWebsite ?? {}),
-        url: domain,
-        owner: userId,
-        isVerified: true,
-        pricingModel: "free",
-        // keep category/name if present, else fallback
-        category: existingWebsite?.category ?? "other",
-        name: existingWebsite?.name,
-      };
-
-      // 7. Create or update website
-      const websiteUpdateRes = await fetch("/api/website/update", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(websitePayload),
-      });
-      if (!websiteUpdateRes.ok) throw new Error("נכשל בעדכון/יצירת האתר");
-      const { _id: websiteId } = await websiteUpdateRes.json();
-
-      // 8. Update user (API should merge arrays server-side)
-      const userUpdateRes = await fetch("/api/user/update", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          role: "business_owner",
-          isWebsiteOwner: true,
-          isVerifiedWebsiteOwner: true,
-          relatedWebsite: domain,
-          websites: [websiteId],
-          currentPricingModel: "free",
-        }),
-      });
-      if (!userUpdateRes.ok) throw new Error("נכשל בעדכון פרטי המשתמש");
-
-      // 9. Refresh session → redirect
-      await updateSession();
-      router.push("/business/dashboard?firstTime=true");
-    } catch (error) {
-      console.error("Error in handleFreePlanRegistration:", error);
-      toast({
-        variant: "destructive",
-        title: "שגיאה ברישום",
-        description:
-          error instanceof Error ? error.message : "משהו השתבש. אנא נסו שוב.",
-      });
-    } finally {
-      setLoading(false);
-    }
+    window.location.href = "/business/dashboard?firstTime=true";
+    // router.refresh();
   };
 
   // ───────────────────────────────────────────────────────────────────────────
@@ -238,7 +152,7 @@ export function PricingSection({ websiteUrl }: { websiteUrl: string }) {
 
   return (
     <div className="space-y-8" dir="rtl">
-      <LoadingModal open={loading} />
+      <LoadingModal open={loading || loadingParent} />
 
       <Alert className="bg-green-100 border-green-200 text-green-700">
         <CheckCircle2 className="h-4 w-4" />

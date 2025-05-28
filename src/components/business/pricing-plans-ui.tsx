@@ -186,7 +186,7 @@ export function PricingPlansUI({
                       }/90`
                     : ""
                 } ${plan.isComingSoon ? "opacity-60" : ""}`}
-                onClick={plan.onCtaClick}
+                onClick={() => plan.onCtaClick()}
                 disabled={
                   loading ||
                   plan.isDisabled ||
