@@ -12,7 +12,7 @@ export function useBusinessGuard() {
     if (status === 'loading') return;
 
     if (!session) {
-      router.push('/business');
+      router.push('/business/register');
       return;
     }
 
