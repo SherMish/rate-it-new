@@ -4,6 +4,10 @@ import { randomBytes } from "crypto";
 import User from "@/lib/models/User";
 import mongoose from "mongoose";
 import { sendEmail } from "@/lib/email";
+import {
+  createSimpleEmailTemplate,
+  getPlainTextFooter,
+} from "@/lib/email-templates";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -39,21 +43,34 @@ export async function POST(req: Request) {
       }
     ).maxTimeMS(8000);
     console.log("Reset token:", resetToken);
+
+    const resetUrl = `${process.env.NEXT_PUBLIC_APP_URL}/reset-password?token=${resetToken}`;
+
+    const htmlContent = createSimpleEmailTemplate(
+      "איפוס סיסמה",
+      `<p style="margin:0 0 24px 0;font-size:16px;line-height:1.6;color:#4b5563;">
+        קיבלנו בקשה לאיפוס הסיסמה שלך. לחץ על הכפתור למטה כדי להגדיר סיסמה חדשה.
+      </p>
+      <p style="margin:0 0 24px 0;font-size:14px;line-height:1.5;color:#6b7280;">
+        הקישור יהיה תקף למשך 60 דקות. אם לא ביקשת איפוס סיסמה, אנא התעלם מהודעה זו.
+      </p>`,
+      "איפוס סיסמה",
+      resetUrl
+    );
+
+    const textContent = `איפוס סיסמה
+
+קיבלנו בקשה לאיפוס הסיסמה שלך. לחץ על הקישור למטה כדי להגדיר סיסמה חדשה:
+${resetUrl}
+
+הקישור יהיה תקף למשך 60 דקות. אם לא ביקשת איפוס סיסמה, אנא התעלם מהודעה זו.${getPlainTextFooter()}`;
+
     // Add timeout to email sending
     await sendEmail({
       to: email,
-      subject: "איפוס סיסמא",
-      html: `
-        <h2>אפסו את סיסמתכם</h2>
-        <p>לחץ/י כאן על מנת לאפס את סיסמתך. תוקף הקישור - 60 דקות.</p>
-        <a href="${process.env.NEXT_PUBLIC_APP_URL}/reset-password?token=${resetToken}">איפוס סיסמא</a>
-      `,
-      text: `
-        איפוס סיסמא
-        
-        לחץ/י כאן על מנת לאפס את סיסמתך. תוקף הקישור - 60 דקות.
-        ${process.env.NEXT_PUBLIC_APP_URL}/reset-password?token=${resetToken}
-      `,
+      subject: "איפוס סיסמה - Rate-It",
+      html: htmlContent,
+      text: textContent,
     });
 
     return NextResponse.json({ success: true });

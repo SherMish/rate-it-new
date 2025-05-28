@@ -1,4 +1,8 @@
 import { Resend } from "resend";
+import {
+  createSimpleEmailTemplate,
+  getPlainTextFooter,
+} from "./email-templates";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -36,22 +40,29 @@ export async function sendVerificationEmail(
 ) {
   const verificationUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/verify-ownership?token=${token}`;
 
+  const htmlContent = createSimpleEmailTemplate(
+    "אימות בעלות על אתר",
+    `<p style="margin:0 0 24px 0;font-size:16px;line-height:1.6;color:#4b5563;">
+      אנא לחצו על הקישור למטה כדי לאמת את הבעלות שלכם על <strong style="color:#111827;">${websiteName}</strong>:
+    </p>
+    <p style="margin:0 0 24px 0;font-size:14px;line-height:1.5;color:#6b7280;">
+      קישור זה יפוג תוך 24 שעות.
+    </p>`,
+    "אמת בעלות",
+    verificationUrl
+  );
+
+  const textContent = `אימות בעלות על אתר
+
+אנא לחצו על הקישור הבא כדי לאמת את הבעלות שלכם על ${websiteName}:
+${verificationUrl}
+
+קישור זה יפוג תוך 24 שעות.${getPlainTextFooter()}`;
+
   return sendEmail({
     to,
     subject: `אימות בעלות על ${websiteName}`,
-    html: `
-      <h1>אימות בעלות על אתר</h1>
-      <p>אנא לחצו על הקישור למטה כדי לאמת את הבעלות שלכם על ${websiteName}:</p>
-      <a href="${verificationUrl}">${verificationUrl}</a>
-      <p>קישור זה יפוג תוך 24 שעות.</p>
-    `,
-    text: `
-  אימות בעלות על אתר
-  
-  אנא לחצו על הקישור הבא כדי לאמת את הבעלות שלכם על ${websiteName}:
-  ${verificationUrl}
-  
-  קישור זה יפוג תוך 24 שעות.
-    `,
+    html: htmlContent,
+    text: textContent,
   });
 }
