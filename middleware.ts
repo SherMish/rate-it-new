@@ -22,6 +22,7 @@ export async function middleware(request: NextRequest) {
     request.nextUrl.pathname === "/business" ||
     request.nextUrl.pathname === "/business/register"
   ) {
+    console.log("in middleware", token, token?.role, token?.websites);
     // Check both role and websites to ensure complete setup
     if (token?.role === "business_owner" && token?.websites) {
       return NextResponse.redirect(new URL("/business/dashboard", request.url));
