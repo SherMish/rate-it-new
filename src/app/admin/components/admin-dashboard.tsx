@@ -113,19 +113,19 @@ export function AdminDashboard() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between gap-4">
+      <div className="flex items-center justify-between gap-4 flex-row-reverse">
         <div className="flex gap-4">
           <Button
             variant={activeTab === "tools" ? "default" : "outline"}
             onClick={() => setActiveTab("tools")}
           >
-            Tools
+            עסקים
           </Button>
           <Button
             variant={activeTab === "blogs" ? "default" : "outline"}
             onClick={() => setActiveTab("blogs")}
           >
-            Blog Posts
+            פוסטים בבלוג
           </Button>
         </div>
         <div className="flex gap-2">
@@ -134,16 +134,16 @@ export function AdminDashboard() {
               onClick={() => setIsAddBlogPostOpen(true)}
               variant="outline"
             >
-              <Plus className="w-4 h-4 mr-2" />
-              New Blog Post
+              <Plus className="w-4 h-4 ml-2" />
+              פוסט חדש
             </Button>
           ) : (
             <Button
               onClick={() => setIsAddToolOpen(true)}
               className="gradient-button"
             >
-              <Plus className="w-4 h-4 mr-2" />
-              Add New Tool
+              <Plus className="w-4 h-4 ml-2" />
+              הוסף עסק חדש
             </Button>
           )}
         </div>
@@ -151,10 +151,11 @@ export function AdminDashboard() {
 
       <div className="flex items-center justify-between">
         <Input
-          placeholder="Search tools..."
+          placeholder="חפש עסקים..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="max-w-sm"
+          className="max-w-sm text-right"
+          dir="rtl"
         />
       </div>
 
@@ -162,11 +163,11 @@ export function AdminDashboard() {
         <>
           {isLoadingTools ? (
             <div className="text-center py-12">
-              <p className="text-muted-foreground">Loading tools...</p>
+              <p className="text-muted-foreground">טוען עסקים...</p>
             </div>
           ) : !websites || websites.length === 0 ? (
             <div className="text-center py-12">
-              <p className="text-muted-foreground">No tools found</p>
+              <p className="text-muted-foreground">לא נמצאו עסקים</p>
             </div>
           ) : (
             <>
@@ -187,10 +188,10 @@ export function AdminDashboard() {
                     onClick={() => setToolsPage((p) => Math.max(1, p - 1))}
                     disabled={toolsPage === 1}
                   >
-                    <ChevronLeft className="w-4 h-4" />
+                    <ChevronRight className="w-4 h-4" />
                   </Button>
                   <span className="py-2 px-3 text-sm">
-                    Page {toolsPage} of {maxToolsPages}
+                    עמוד {toolsPage} מתוך {maxToolsPages}
                   </span>
                   <Button
                     variant="outline"
@@ -200,7 +201,7 @@ export function AdminDashboard() {
                     }
                     disabled={toolsPage === maxToolsPages}
                   >
-                    <ChevronRight className="w-4 h-4" />
+                    <ChevronLeft className="w-4 h-4" />
                   </Button>
                 </div>
               )}
@@ -211,11 +212,11 @@ export function AdminDashboard() {
         <>
           {isLoadingBlogs ? (
             <div className="text-center py-12">
-              <p className="text-muted-foreground">Loading blog posts...</p>
+              <p className="text-muted-foreground">טוען פוסטים...</p>
             </div>
           ) : !blogPosts || blogPosts.length === 0 ? (
             <div className="text-center py-12">
-              <p className="text-muted-foreground">No blog posts found</p>
+              <p className="text-muted-foreground">לא נמצאו פוסטים</p>
             </div>
           ) : (
             <>
@@ -235,10 +236,10 @@ export function AdminDashboard() {
                   onClick={() => setBlogsPage((p) => Math.max(1, p - 1))}
                   disabled={blogsPage === 1}
                 >
-                  <ChevronLeft className="w-4 h-4" />
+                  <ChevronRight className="w-4 h-4" />
                 </Button>
                 <span className="py-2 px-3 text-sm">
-                  Page {blogsPage} of {maxBlogsPages}
+                  עמוד {blogsPage} מתוך {maxBlogsPages}
                 </span>
                 <Button
                   variant="outline"
@@ -248,7 +249,7 @@ export function AdminDashboard() {
                   }
                   disabled={blogsPage === maxBlogsPages}
                 >
-                  <ChevronRight className="w-4 h-4" />
+                  <ChevronLeft className="w-4 h-4" />
                 </Button>
               </div>
             </>
