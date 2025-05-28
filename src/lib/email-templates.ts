@@ -144,7 +144,7 @@ export function createUnifiedEmailTemplate({
                         </tr>
                     </table>
                     
-                    <!-- Footerr -->
+                    <!-- Footer -->
                     ${getEmailFooter()}`;
 
   const text = `${title}

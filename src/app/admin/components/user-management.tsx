@@ -13,6 +13,7 @@ import {
   Settings,
 } from "lucide-react";
 import { EditUserDialog } from "./edit-user-dialog";
+import { SendEmailDialog } from "./send-email-dialog";
 
 interface UserType {
   _id: string;
@@ -39,6 +40,8 @@ export function UserManagement() {
   const [totalUsers, setTotalUsers] = useState(0);
   const [selectedUser, setSelectedUser] = useState<UserType | null>(null);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isEmailDialogOpen, setIsEmailDialogOpen] = useState(false);
+  const [emailUser, setEmailUser] = useState<UserType | null>(null);
 
   useEffect(() => {
     fetchUsers();
@@ -81,6 +84,11 @@ export function UserManagement() {
     setIsEditDialogOpen(true);
   };
 
+  const handleSendEmail = (user: UserType) => {
+    setEmailUser(user);
+    setIsEmailDialogOpen(true);
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -104,14 +112,26 @@ export function UserManagement() {
             {users.map((user) => (
               <Card key={user._id} className="p-4" dir="rtl">
                 <div className="flex items-start justify-between gap-4">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => handleEditUser(user)}
-                    className="shrink-0"
-                  >
-                    <Settings className="w-4 h-4" />
-                  </Button>
+                  <div className="flex gap-2 shrink-0">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => handleSendEmail(user)}
+                      className="shrink-0"
+                      title="שלח אימייל"
+                    >
+                      <Mail className="w-4 h-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => handleEditUser(user)}
+                      className="shrink-0"
+                      title="ערוך משתמש"
+                    >
+                      <Settings className="w-4 h-4" />
+                    </Button>
+                  </div>
                   <div className="flex items-start gap-4 flex-1">
                     <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
                       <User className="w-6 h-6 text-primary" />
@@ -166,6 +186,12 @@ export function UserManagement() {
         onOpenChange={setIsEditDialogOpen}
         onUserUpdated={fetchUsers}
         user={selectedUser}
+      />
+
+      <SendEmailDialog
+        open={isEmailDialogOpen}
+        onOpenChange={setIsEmailDialogOpen}
+        user={emailUser}
       />
     </div>
   );

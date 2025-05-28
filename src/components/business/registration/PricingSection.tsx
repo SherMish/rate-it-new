@@ -226,12 +226,13 @@ export function PricingSection({ websiteUrl }: { websiteUrl: string }) {
       monthlyPrice: calculateMonthlyAverage(79, 25),
       discount: 25,
       features: plusFeatures,
-      ctaText: "שדרגו לפלוס",
+      ctaText: "בקרוב",
       onCtaClick: handlePlusSubscription,
-      isRecommended: true,
-      highlightColor: "primary",
+      // isRecommended: true,
+      // highlightColor: "primary",
       bestFor: "מתאים לעסקים שמכוונים לבלוט בשוק תחרותי.",
       planType: "plus" as const,
+      isComingSoon: true,
     },
   ];
 

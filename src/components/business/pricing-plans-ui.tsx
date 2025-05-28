@@ -25,6 +25,7 @@ interface Plan {
   isRecommended?: boolean;
   isCurrent?: boolean; // To show if this is the user's current plan
   isDisabled?: boolean;
+  isComingSoon?: boolean; // New property for coming soon plans
   highlightColor?: string; // e.g., 'primary', 'green-500'
   bestFor?: string; // New field for describing who the plan is best for
   planType?: "free" | "plus"; // Add plan type for mapping benefits
@@ -72,15 +73,22 @@ export function PricingPlansUI({
               plan.isRecommended
                 ? `border-${plan.highlightColor || "primary"}`
                 : "border-border/50"
-            } ${plan.isCurrent ? "bg-primary/5" : ""}`}
+            } ${plan.isCurrent ? "bg-primary/5" : ""} ${
+              plan.isComingSoon ? "opacity-75" : ""
+            }`}
           >
-            {plan.isRecommended && (
+            {plan.isRecommended && !plan.isComingSoon && (
               <div
                 className={`absolute top-0 left-0 bg-${
                   plan.highlightColor || "primary"
                 } text-primary-foreground text-sm px-3 py-1 rounded-br-lg`}
               >
                 מומלץ
+              </div>
+            )}
+            {plan.isComingSoon && (
+              <div className="absolute top-0 left-0 bg-orange-500 text-white text-sm px-3 py-1 rounded-br-lg">
+                בקרוב
               </div>
             )}
             <div className="space-y-5 flex flex-col flex-grow">
@@ -177,11 +185,20 @@ export function PricingPlansUI({
                         plan.highlightColor || "primary"
                       }/90`
                     : ""
-                }`}
+                } ${plan.isComingSoon ? "opacity-60" : ""}`}
                 onClick={plan.onCtaClick}
-                disabled={loading || plan.isDisabled || plan.isCurrent}
+                disabled={
+                  loading ||
+                  plan.isDisabled ||
+                  plan.isCurrent ||
+                  plan.isComingSoon
+                }
               >
-                {plan.isCurrent ? "המסלול הנוכחי שלך" : plan.ctaText}
+                {plan.isCurrent
+                  ? "המסלול הנוכחי שלך"
+                  : plan.isComingSoon
+                  ? "בקרוב"
+                  : plan.ctaText}
               </Button>
             </div>
           </Card>
