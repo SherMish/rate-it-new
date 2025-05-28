@@ -43,16 +43,18 @@ export function getEmailHeader(): string {
 
 export function getEmailFooter(): string {
   return `
-                </table>
-                
-                <!-- Footer -->
-                <div style="${emailStyles.footer}">
-                    <p style="${emailStyles.footerText}">
-                        נשלח באמצעות <a href="https://rate-it.co.il" style="${emailStyles.footerLink}">Rate-It</a>
-                    </p>
-                    <p style="margin:0;font-size:12px;line-height:1.5;color:#9ca3af;">
-                        © 2024 Rate-It. כל הזכויות שמורות.
-                    </p>
+                        </tr>
+                    </table>
+                    
+                    <!-- Footer -->
+                    <div style="${emailStyles.footer}">
+                        <p style="${emailStyles.footerText}">
+                            נשלח באמצעות <a href="https://rate-it.co.il" style="${emailStyles.footerLink}">Rate-It</a>
+                        </p>
+                        <p style="margin:0;font-size:12px;line-height:1.5;color:#9ca3af;">
+                            © 2024 Rate-It. כל הזכויות שמורות.
+                        </p>
+                    </div>
                 </div>
             </td>
         </tr>
@@ -141,7 +143,24 @@ export function createUnifiedEmailTemplate({
                             </td>
                         </tr>
                     </table>
-                    ${getEmailFooter()}`;
+                    
+                    <!-- Footer -->
+                    <div style="${emailStyles.footer}">
+                        <p style="${emailStyles.footerText}">
+                            נשלח באמצעות <a href="https://rate-it.co.il" style="${
+                              emailStyles.footerLink
+                            }">Rate-It</a>
+                        </p>
+                        <p style="margin:0;font-size:12px;line-height:1.5;color:#9ca3af;">
+                            © 2024 Rate-It. כל הזכויות שמורות.
+                        </p>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>`;
 
   const text = `${title}
 
