@@ -63,7 +63,7 @@ export async function POST(request: Request) {
       <!-- Logo Header -->
       <tr>
           <td align="center" style="padding:0 0 30px 0;">
-              <img src="https://rate-it.co.il/logo_new.png" alt="Rate-It" width="150" height="28" style="${
+              <img src="https://rate-it.co.il/logo_new.png" alt="Rate-It" width="300" height="150" style="${
                 emailStyles.logo
               }">
           </td>
