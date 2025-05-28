@@ -195,80 +195,109 @@ export default function ReviewsGeneratorPage() {
 
 נשמח לשמוע מה דעתך על {{toolName}}!
 
-התובנות שלך עוזרות לאחרים לחקור עסקים אמינים — ולתמוך בקהילה בקבלת החלטות חכמות ומהירות יותר.
+התובנות שלך עוזרות לאחרים לגלות עסקים אמינים ולקבל החלטות חכמות יותר.
 
-לשיתוף החוויה שלך: {{reviewLink}}
+לשיתוף החוויה שלך:
+{{reviewLink}}
 
-תודה שאתם חלק מהמסע.
+תודה שאתה חלק מהקהילה שלנו!
 
-נשלח דרך רייט-איט`;
+--
+נשלח באמצעות Rate-It
+© 2024 Rate-It. כל הזכויות שמורות.
+https://rate-it.co.il`;
   };
 
   const getFullEmailTemplate = (bodyText: string) => {
-    return `
-  <!DOCTYPE html>
-  <html lang="he" dir="rtl">
-    <head>
-      <meta charset="UTF-8" />
-      <title>הזמנה לביקורת</title>
-    </head>
-    <body style="margin:0;padding:0;background-color:#f9f9fb;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,Cantarell,'Open Sans','Helvetica Neue',sans-serif;color:#333;direction:rtl;text-align:right;">
-      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="padding: 24px 0;">
+    return `<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>הזמנה לכתיבת ביקורת</title>
+    <!--[if mso]>
+    <noscript>
+        <xml>
+            <o:OfficeDocumentSettings>
+                <o:PixelsPerInch>96</o:PixelsPerInch>
+            </o:OfficeDocumentSettings>
+        </xml>
+    </noscript>
+    <![endif]-->
+</head>
+<body style="margin:0;padding:0;background-color:#f3f4f6;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;">
+    <div style="display:none;font-size:1px;color:#f3f4f6;line-height:1px;max-height:0px;max-width:0px;opacity:0;overflow:hidden;">
+        נשמח לשמוע את דעתך על {{toolName}} - שתף את החוויה שלך
+    </div>
+    
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:0;padding:0;">
         <tr>
-          <td align="center">
-            <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="background-color:#ffffff;border-radius:8px;padding:24px 24px 20px 24px;">
-              <tr>
-                <td align="center" style="padding-bottom:16px;">
-                  <img src="https://res.cloudinary.com/dwqdhp70e/image/upload/v1748201347/wbmzzduj9ewu6nxabfrv.png" alt="רייט-איט לוגו" width="180" style="display:block;" />
-                </td>
-              </tr>
-              <tr>
-                <td style="font-size:17px;font-weight:600;padding-bottom:10px;">
-                  שלום {{userName}},
-                </td>
-              </tr>
-              <tr>
-                <td style="font-size:15px;line-height:1.6;color:#555;padding-bottom:20px;">
-                  נשמח לשמוע מה דעתך על {{toolName}}!
-                  <br />
-                  <br />
-                  התובנות שלך עוזרות לאחרים לחקור עסקים אמינים — ולתמוך בקהילה בקבלת החלטות חכמות ומהירות יותר.
-                </td>
-              </tr>
-              <tr>
-                <td align="center" style="padding-bottom:20px;">
-                  <a href="{{reviewLink}}" style="
-                    background: linear-gradient(to right, #6366f1, #8b5cf6);
-                    color: white;
-                    padding: 10px 22px;
-                    text-decoration: none;
-                    border-radius: 6px;
-                    font-weight: 600;
-                    font-size: 14px;
-                    display: inline-block;
-                    box-shadow: 0 2px 5px rgba(0,0,0,0.08);
-                  ">
-                    שתף/י את החוויה שלך
-                  </a>
-                </td>
-              </tr>
-              <tr>
-                <td style="text-align:center;font-size:13px;color:#777;padding-bottom:16px;">
-                  תודה שאתם חלק מהמסע.
-                </td>
-              </tr>
-              <tr>
-                <td style="text-align:center;font-size:12px;color:#aaa;">
-                  נשלח דרך <strong style="color:#888;">רייט-איט</strong>
-                </td>
-              </tr>
-            </table>
-          </td>
+            <td align="center" style="padding:40px 20px;">
+                <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="max-width:600px;margin:0 auto;">
+                    <!-- Logo Header -->
+                    <tr>
+                        <td align="center" style="padding:0 0 30px 0;">
+                            <img src="https://rate-it.co.il/logo_new.svg" alt="Rate-It" width="150" height="28" style="display:block;border:0;outline:none;text-decoration:none;">
+                        </td>
+                    </tr>
+                    
+                    <!-- Main Content Card -->
+                    <tr>
+                        <td style="background-color:#ffffff;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,0.1);overflow:hidden;">
+                            <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                                <!-- Content -->
+                                <tr>
+                                    <td style="padding:40px 40px 30px 40px;direction:rtl;text-align:right;">
+                                        <h1 style="margin:0 0 20px 0;font-size:24px;font-weight:700;color:#111827;line-height:1.4;">
+                                            שלום {{userName}},
+                                        </h1>
+                                        
+                                        <p style="margin:0 0 24px 0;font-size:16px;line-height:1.6;color:#4b5563;">
+                                            נשמח לשמוע מה דעתך על <strong style="color:#111827;">{{toolName}}</strong>!
+                                        </p>
+                                        
+                                        <p style="margin:0 0 32px 0;font-size:16px;line-height:1.6;color:#4b5563;">
+                                            התובנות שלך עוזרות לאחרים לגלות עסקים אמינים ולקבל החלטות חכמות יותר.
+                                        </p>
+                                        
+                                        <!-- CTA Button -->
+                                        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                                            <tr>
+                                                <td align="center" style="padding:0 0 24px 0;">
+                                                    <a href="{{reviewLink}}" target="_blank" style="display:inline-block;padding:14px 32px;background-color:#6366f1;color:#ffffff;font-size:16px;font-weight:600;text-decoration:none;border-radius:8px;text-align:center;">
+                                                        שתף את החוויה שלך
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        
+                                        <p style="margin:0;font-size:14px;line-height:1.5;color:#6b7280;text-align:center;">
+                                            תודה שאתה חלק מהקהילה שלנו!
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    
+                    <!-- Footer -->
+                    <tr>
+                        <td style="padding:30px 40px;text-align:center;">
+                            <p style="margin:0 0 8px 0;font-size:12px;line-height:1.5;color:#9ca3af;">
+                                נשלח באמצעות <a href="https://rate-it.co.il" style="color:#6366f1;text-decoration:none;">Rate-It</a>
+                            </p>
+                            <p style="margin:0;font-size:12px;line-height:1.5;color:#9ca3af;">
+                                © 2024 Rate-It. כל הזכויות שמורות.
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
         </tr>
-      </table>
-    </body>
-  </html>
-  `;
+    </table>
+</body>
+</html>`;
   };
   const handleSendInvitations = async () => {
     if (emailRecipients.length === 0) {
