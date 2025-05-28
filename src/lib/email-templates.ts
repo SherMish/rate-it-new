@@ -5,7 +5,7 @@ export const emailStyles = {
   content: `max-width:600px;margin:0 auto;`,
   logoSection: `background-color:#6366f1;padding:30px 20px;text-align:center;border-radius:12px 12px 0 0;`,
   card: `background-color:#ffffff;border-radius:0 0 12px 12px;box-shadow:0 4px 6px rgba(0,0,0,0.1);overflow:hidden;`,
-  logo: `display:block;border:0;outline:none;text-decoration:none;`,
+  logo: `display:block;border:0;outline:none;text-decoration:none;border-radius:12px;margin-left:auto;margin-right:auto`,
   heading: `margin:0 0 20px 0;font-size:28px;font-weight:700;color:#111827;line-height:1.3;`,
   subheading: `margin:0 0 16px 0;font-size:20px;font-weight:600;color:#374151;line-height:1.4;`,
   paragraph: `margin:0 0 20px 0;font-size:16px;line-height:1.6;color:#4b5563;`,
