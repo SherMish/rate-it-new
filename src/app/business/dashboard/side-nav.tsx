@@ -42,11 +42,11 @@ const menuItems = [
     icon: FileText,
     highlight: true,
   },
-  {
-    title: "הגדרות",
-    href: "/business/dashboard/settings",
-    icon: Settings,
-  },
+  // {
+  //   title: "הגדרות",
+  //   href: "/business/dashboard/settings",
+  //   icon: Settings,
+  // },
 ];
 
 export function SideNav() {

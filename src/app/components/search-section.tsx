@@ -108,9 +108,11 @@ export function SearchSection() {
           {/* Trust stats */}
           <motion.div
             variants={itemVariants}
-            className="grid grid-cols-3 gap-8 max-w-xl mx-auto mt-8 mb-4"
+            className="gap-8 max-w-xl mx-auto mt-8 mb-4"
           >
-            <div className="text-center">
+            Rate-It מחויבת לאותנטיות – ביקורות אינן נמחקות או מוסתרות, למען
+            שקיפות מלאה.
+            {/* <div className="text-center">
               <div className="text-3xl font-bold text-primary">5K+</div>
               <div className="text-sm text-foreground/60">משתמשים רשומים</div>
             </div>
@@ -121,7 +123,7 @@ export function SearchSection() {
             <div className="text-center">
               <div className="text-3xl font-bold text-primary">3K+</div>
               <div className="text-sm text-foreground/60">עסקים מדורגים</div>
-            </div>
+            </div> */}
           </motion.div>
 
           {/* Add business link */}
