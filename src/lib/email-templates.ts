@@ -3,7 +3,7 @@ export const emailStyles = {
   container: `margin:0;padding:0;`,
   wrapper: `padding:20px;`,
   content: `max-width:600px;margin:0 auto;`,
-  logoSection: `background-color:#6366f1;padding:30px 20px;text-align:center;border-radius:12px 12px 0 0;`,
+  logoSection: `background-color:#6366f1;padding:30px 20px;text-align:center;border-radius:12px;margin-left:auto;margin-right:auto;`,
   card: `background-color:#ffffff;border-radius:0 0 12px 12px;box-shadow:0 4px 6px rgba(0,0,0,0.1);overflow:hidden;`,
   logo: `display:block;border:0;outline:none;text-decoration:none;`,
   heading: `margin:0 0 20px 0;font-size:28px;font-weight:700;color:#111827;line-height:1.3;`,
@@ -117,7 +117,7 @@ export function createUnifiedEmailTemplate({
                 <div style="${emailStyles.content}">
                     <!-- Logo Section -->
                     <div style="${emailStyles.logoSection}">
-                        <img src="https://rate-it.co.il/logo_new.png" alt="Rate-It" width="200" height="40" style="${
+                        <img src="https://rate-it.co.il/logo_new.png" alt="Rate-It" width="240" height="120" style="${
                           emailStyles.logo
                         }">
                     </div>
