@@ -190,6 +190,20 @@ export default function ReviewsGeneratorPage() {
     }
   };
 
+  const getMessageTemplate = () => {
+    return `שלום {{userName}},
+
+נשמח לשמוע מה דעתך על {{toolName}}!
+
+התובנות שלך עוזרות לאחרים לחקור עסקים אמינים — ולתמוך בקהילה בקבלת החלטות חכמות ומהירות יותר.
+
+לשיתוף החוויה שלך: {{reviewLink}}
+
+תודה שאתם חלק מהמסע.
+
+נשלח דרך רייט-איט`;
+  };
+
   const getFullEmailTemplate = (bodyText: string) => {
     return `
   <!DOCTYPE html>
@@ -205,7 +219,7 @@ export default function ReviewsGeneratorPage() {
             <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="background-color:#ffffff;border-radius:8px;padding:24px 24px 20px 24px;">
               <tr>
                 <td align="center" style="padding-bottom:16px;">
-                  <img src="https://res.cloudinary.com/dwqdhp70e/image/upload/v1742649740/h3eegg5ibuwwufzevlax.png" alt="רייט-איט לוגו" width="180" style="display:block;" />
+                  <img src="https://res.cloudinary.com/dwqdhp70e/image/upload/v1748201347/wbmzzduj9ewu6nxabfrv.png" alt="רייט-איט לוגו" width="180" style="display:block;" />
                 </td>
               </tr>
               <tr>
@@ -272,11 +286,17 @@ export default function ReviewsGeneratorPage() {
     try {
       const results = await Promise.all(
         emailRecipients.map(async (recipient) => {
-          // Generate the full HTML template with the user's body text
-          const fullTemplate = getFullEmailTemplate(emailBodyText);
+          // Generate both HTML and plain text versions
+          const fullHtmlTemplate = getFullEmailTemplate(emailBodyText);
+          const plainTextTemplate = getMessageTemplate();
 
-          // Replace template variables
-          const personalizedMessage = fullTemplate
+          // Replace template variables in both versions
+          const personalizedHtmlMessage = fullHtmlTemplate
+            .replace(/{{userName}}/g, recipient.name)
+            .replace(/{{toolName}}/g, website?.name || "העסק שלנו")
+            .replace(/{{reviewLink}}/g, reviewLink);
+
+          const personalizedTextMessage = plainTextTemplate
             .replace(/{{userName}}/g, recipient.name)
             .replace(/{{toolName}}/g, website?.name || "העסק שלנו")
             .replace(/{{reviewLink}}/g, reviewLink);
@@ -291,7 +311,8 @@ export default function ReviewsGeneratorPage() {
                 to: recipient.email,
                 name: recipient.name,
                 websiteId: website?._id,
-                message: personalizedMessage,
+                html: personalizedHtmlMessage,
+                message: personalizedTextMessage,
               }),
             });
 
@@ -615,7 +636,8 @@ export default function ReviewsGeneratorPage() {
                 onClick={() =>
                   copyToClipboard(
                     `${
-                      process.env.NEXT_PUBLIC_BASE_URL || "https://rate-it.co.il"
+                      process.env.NEXT_PUBLIC_BASE_URL ||
+                      "https://rate-it.co.il"
                     }/api/invite-review`,
                     setCopyApiSuccess
                   )

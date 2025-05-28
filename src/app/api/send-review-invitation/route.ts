@@ -17,9 +17,9 @@ export async function POST(req: NextRequest) {
     }
     // Parse request body
     const body = await req.json();
-    const { to, name, websiteId, message } = body;
+    const { to, name, websiteId, html, message } = body;
 
-    if (!to || !name || !websiteId || !message) {
+    if (!to || !name || !websiteId || !message || !html) {
       return NextResponse.json(
         { error: "Missing required fields" },
         { status: 400 }
@@ -50,11 +50,11 @@ export async function POST(req: NextRequest) {
       );
     }
     // Send email
-    const subject = `We’d love your thoughts on ${website.name} 📝`;
+    const subject = `נשמח לשמוע את דעתכם על ${website.name} 📝`;
     await sendEmail({
       to,
       subject,
-      html: message,
+      html,
       text: message,
     });
     return NextResponse.json({

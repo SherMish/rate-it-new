@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Menu, X, Search } from "lucide-react";
@@ -25,6 +25,29 @@ export function Header() {
   const loginModal = useLoginModal();
   const router = useRouter();
   const pathname = usePathname();
+
+  // Handle post-login redirects
+  useEffect(() => {
+    if (session?.user && loginModal.postLoginAction === "checkBusinessAccess") {
+      if (session.user.isWebsiteOwner) {
+        window.open("/business/dashboard", "_blank");
+      } else {
+        window.open("/business/register", "_blank");
+      }
+      loginModal.setPostLoginAction(null);
+    }
+  }, [session, loginModal.postLoginAction]);
+
+  const handleBusinessAccess = () => {
+    if (!session?.user) {
+      loginModal.setPostLoginAction("checkBusinessAccess");
+      loginModal.onOpen();
+    } else if (!session.user.isWebsiteOwner) {
+      window.open("/business/register", "_blank");
+    } else {
+      window.open("/business/dashboard", "_blank");
+    }
+  };
 
   const handleSearch = (query: string) => {
     router.push(`/search?q=${encodeURIComponent(query)}`);
@@ -129,15 +152,7 @@ export function Header() {
                 {isBusinessHome && (
                   <>
                     <Button
-                      onClick={() => {
-                        if (!session?.user) {
-                          loginModal.onOpen();
-                        } else if (!session.user.isWebsiteOwner) {
-                          window.open("/business/register", "_blank");
-                        } else {
-                          window.open("/business/dashboard", "_blank");
-                        }
-                      }}
+                      onClick={handleBusinessAccess}
                       className="inline-flex items-center gap-1 px-4 py-2 text-sm font-semibold text-primary bg-white border border-primary rounded-full hover:bg-primary/5 transition-colors shadow-sm hover:shadow-md mr-4"
                     >
                       כניסה לרשומים
@@ -249,13 +264,7 @@ export function Header() {
                     <Button
                       onClick={() => {
                         setIsOpen(false);
-                        if (!session?.user) {
-                          loginModal.onOpen();
-                        } else if (!session.user.isWebsiteOwner) {
-                          window.open("/business/register", "_blank");
-                        } else {
-                          window.open("/business/dashboard", "_blank");
-                        }
+                        handleBusinessAccess();
                       }}
                       className="block rounded-md px-3 py-4 text-base font-medium text-primary hover:bg-blue-50 hover:text-primary/80 transition-colors"
                     >
