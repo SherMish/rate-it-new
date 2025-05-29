@@ -24,6 +24,13 @@ export interface WebsiteType {
     instagram?: string;
     twitter?: string;
     tiktok?: string;
+    linkedin?: string;
+    youtube?: string;
+  };
+  contact: {
+    email?: string;
+    phone?: string;
+    whatsapp?: string;
   };
   isVerifiedByRateIt?: boolean;
   licenseValidDate?: Date;
@@ -93,6 +100,10 @@ const WebsiteSchema = new Schema(
       default: true,
     },
     socialUrls: {
+      type: Object,
+      default: {},
+    },
+    contact: {
       type: Object,
       default: {},
     },
