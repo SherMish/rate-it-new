@@ -627,9 +627,9 @@ export function AddToolDialog({
                       <SelectValue placeholder="בחר מודל תמחור" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="FREE">חינם</SelectItem>
-                      <SelectItem value="PRO">מקצועי</SelectItem>
-                      <SelectItem value="PLUS">פלוס</SelectItem>
+                      <SelectItem value="free">חינם</SelectItem>
+                      <SelectItem value="pro">מקצועי</SelectItem>
+                      <SelectItem value="plus">פלוס</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
