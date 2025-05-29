@@ -579,24 +579,29 @@ export default async function ToolPage({ params }: PageProps) {
                 </div>
 
                 {/* Similar Tools Column */}
-                {suggestedTools.length > 0 && (
-                  <div>
-                    {website.socialUrls && (
+                <div>
+                  {website.socialUrls && (
+                    <div className="mb-6">
                       <SocialMediaSection socialUrls={website.socialUrls} />
-                    )}
-                    <h2 className="text-2xl font-semibold mb-4 mt-3">
-                      עסקים דומים
-                    </h2>
-                    <div className="flex flex-col gap-3">
-                      {suggestedTools.map((tool) => (
-                        <SuggestedToolCard
-                          key={tool._id.toString()}
-                          website={tool}
-                        />
-                      ))}
                     </div>
-                  </div>
-                )}
+                  )}
+
+                  {suggestedTools.length > 0 && (
+                    <div>
+                      <h2 className="text-2xl font-semibold mb-4">
+                        עסקים דומים
+                      </h2>
+                      <div className="flex flex-col gap-3">
+                        {suggestedTools.map((tool) => (
+                          <SuggestedToolCard
+                            key={tool._id.toString()}
+                            website={tool}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>
