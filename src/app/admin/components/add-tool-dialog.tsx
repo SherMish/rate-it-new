@@ -53,7 +53,7 @@ export function AddToolDialog({
     description: "",
     shortDescription: "",
     logo: "",
-    pricingModel: "FREE",
+    pricingModel: "free",
     launchYear: new Date().getFullYear(),
     socialUrls: {
       facebook: "",
@@ -85,7 +85,7 @@ export function AddToolDialog({
         description: website.description || "",
         shortDescription: website.shortDescription || "",
         logo: website.logo || "",
-        pricingModel: website.pricingModel || "FREE",
+        pricingModel: website.pricingModel || "free",
         launchYear: website.launchYear || new Date().getFullYear(),
         socialUrls: {
           facebook: website.socialUrls?.facebook || "",
@@ -109,7 +109,7 @@ export function AddToolDialog({
         description: "",
         shortDescription: "",
         logo: "",
-        pricingModel: "FREE",
+        pricingModel: "free",
         launchYear: new Date().getFullYear(),
         socialUrls: {
           facebook: "",
@@ -147,7 +147,7 @@ export function AddToolDialog({
         description: "",
         shortDescription: "",
         logo: "",
-        pricingModel: "FREE",
+        pricingModel: "free",
         launchYear: new Date().getFullYear(),
         socialUrls: {
           facebook: "",
@@ -245,6 +245,7 @@ export function AddToolDialog({
   };
 
   const handleSubmit = async () => {
+    console.log("Starting form submission...");
     if (!validateForm()) {
       setFormError("אנא מלאו את כל השדות הנדרשים בצורה תקינה");
       return;
@@ -254,7 +255,10 @@ export function AddToolDialog({
     setFormError(null);
 
     try {
+      console.log("Form data being sent:", formData);
+
       if (isEditMode && website) {
+        console.log("Updating existing website...");
         // Edit existing website
         const response = await fetch(`/api/admin/websites/${website._id}`, {
           method: "PATCH",
@@ -263,7 +267,14 @@ export function AddToolDialog({
         });
 
         const data = await response.json();
+        console.log("Update response:", {
+          ok: response.ok,
+          status: response.status,
+          data,
+        });
+
         if (!response.ok) {
+          console.error("Update failed:", data);
           setFormError(data.error || "עדכון העסק נכשל");
           return;
         }
@@ -272,6 +283,7 @@ export function AddToolDialog({
         onToolAdded();
         handleDialogChange(false);
       } else {
+        console.log("Creating new website...");
         // Create new website
         const response = await fetch("/api/admin/websites", {
           method: "POST",
@@ -280,15 +292,23 @@ export function AddToolDialog({
         });
 
         const data = await response.json();
+        console.log("Create response:", {
+          ok: response.ok,
+          status: response.status,
+          data,
+        });
+
         if (!response.ok) {
+          console.error("Creation failed:", data);
           if (data.error === "Website already exists") {
             setFormError("עסק זה כבר קיים במאגר");
           } else {
             setFormError(data.error || "יצירת העסק נכשלה");
           }
-          return;
+          return; // Don't close the modal on error
         }
 
+        console.log("Website created successfully:", data);
         toast.success("העסק נוצר בהצלחה");
         onToolAdded();
         handleDialogChange(false);
@@ -300,6 +320,7 @@ export function AddToolDialog({
           ? "עדכון העסק נכשל. אנא נסו שוב."
           : "הוספת העסק נכשלה. אנא נסו שוב."
       );
+      // Don't close the modal on error
     } finally {
       setIsLoading(false);
     }
@@ -318,9 +339,11 @@ export function AddToolDialog({
         </DialogHeader>
         <div className="space-y-4 py-4">
           {formError && (
-            <p className="text-sm text-red-500 mb-4 text-right">
-              ❌ {formError}
-            </p>
+            <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
+              <p className="text-sm text-red-700 text-right font-medium">
+                ❌ {formError}
+              </p>
+            </div>
           )}
 
           {generatedDataState && (
