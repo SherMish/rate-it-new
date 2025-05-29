@@ -66,7 +66,7 @@ export function WebsiteCard({ website }: WebsiteCardProps) {
                     </div>
 
                     {/* Rating Section */}
-                    {website.reviewCount && website.reviewCount > 0 && (
+                    {(website.reviewCount ?? 0) > 0 && (
                       <div className="flex items-center gap-2 mb-2">
                         <div className="flex items-center gap-1">
                           <div className="flex items-center">
@@ -116,7 +116,7 @@ export function WebsiteCard({ website }: WebsiteCardProps) {
             {/* Footer Stats */}
             <div className="flex items-center justify-between pt-4 border-t border-gray-100">
               <div className="flex items-center gap-4 text-sm text-gray-500">
-                {website.reviewCount && website.reviewCount > 0 && (
+                {(website.reviewCount ?? 0) > 0 && (
                   <span>{website.reviewCount} ביקורות</span>
                 )}
               </div>
