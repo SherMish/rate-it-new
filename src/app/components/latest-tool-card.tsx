@@ -82,8 +82,8 @@ export function LatestToolCard({ website, index }: LatestToolCardProps) {
                   />
                 </div>
 
-                {/* Rating Section */}
-                {website.reviewCount && website.reviewCount > 0 && (
+                {/* Rating Section - Only show if there are actual reviews */}
+                {(website.reviewCount ?? 0) > 0 && (
                   <div className="flex items-center gap-2 mb-3">
                     <div className="flex items-center gap-1">
                       <div className="flex items-center">
@@ -98,13 +98,15 @@ export function LatestToolCard({ website, index }: LatestToolCardProps) {
                           />
                         ))}
                       </div>
-                      <span className="text-sm font-medium text-gray-900">
-                        {website.averageRating?.toFixed(1) ?? "0.0"}
+                      {(website.averageRating ?? 0) > 0 && (
+                        <span className="text-sm font-medium text-gray-900">
+                          {website.averageRating?.toFixed(1)}
+                        </span>
+                      )}
+                      <span className="text-sm text-gray-500">
+                        ({website.reviewCount})
                       </span>
                     </div>
-                    <span className="text-sm text-gray-500">
-                      ({website.reviewCount})
-                    </span>
                   </div>
                 )}
               </div>
