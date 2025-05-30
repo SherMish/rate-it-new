@@ -1,11 +1,13 @@
-import { Facebook, Instagram, Twitter } from "lucide-react";
+import { Facebook, Instagram, Twitter, Linkedin, Youtube } from "lucide-react";
 import { FaTiktok } from "react-icons/fa6";
 
 const socialIconColors = {
   facebook: "text-indigo-600 hover:text-indigo-700",
   instagram: "text-pink-600 hover:text-pink-700",
   twitter: "text-blue-500 hover:text-blue-600",
-  tiktok: "text-black hover:text-black", //change to black
+  tiktok: "text-black hover:text-black",
+  linkedin: "text-blue-700 hover:text-blue-800",
+  youtube: "text-red-600 hover:text-red-700",
 };
 
 // Helper function to ensure URL has protocol
@@ -22,6 +24,8 @@ export const SocialMediaSection = ({
     instagram?: string;
     twitter?: string;
     tiktok?: string;
+    linkedin?: string;
+    youtube?: string;
   };
 }) => {
   return (
@@ -73,6 +77,28 @@ export const SocialMediaSection = ({
               aria-label="TikTok"
             >
               <FaTiktok className={`w-4 h-4 ${socialIconColors.tiktok}`} />
+            </a>
+          )}
+          {socialUrls.linkedin && (
+            <a
+              href={ensureFullUrl(socialUrls.linkedin)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-8 h-8 rounded-full bg-white border border-border flex items-center justify-center hover:bg-background/80 transition-colors"
+              aria-label="LinkedIn"
+            >
+              <Linkedin className={`w-4 h-4 ${socialIconColors.linkedin}`} />
+            </a>
+          )}
+          {socialUrls.youtube && (
+            <a
+              href={ensureFullUrl(socialUrls.youtube)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-8 h-8 rounded-full bg-white border border-border flex items-center justify-center hover:bg-background/80 transition-colors"
+              aria-label="YouTube"
+            >
+              <Youtube className={`w-4 h-4 ${socialIconColors.youtube}`} />
             </a>
           )}
         </div>

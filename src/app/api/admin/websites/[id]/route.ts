@@ -23,6 +23,8 @@ export async function PATCH(
       category,
       logo,
       launchYear,
+      address,
+      contact,
       socialUrls,
       // License management fields
       pricingModel,
@@ -42,6 +44,8 @@ export async function PATCH(
     if (category !== undefined) updateData.category = category;
     if (logo !== undefined) updateData.logo = logo;
     if (launchYear !== undefined) updateData.launchYear = launchYear;
+    if (address !== undefined) updateData.address = address;
+    if (contact !== undefined) updateData.contact = contact;
     if (socialUrls !== undefined) updateData.socialUrls = socialUrls;
 
     // License management fields

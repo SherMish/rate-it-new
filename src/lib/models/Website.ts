@@ -32,6 +32,7 @@ export interface WebsiteType {
     phone?: string;
     whatsapp?: string;
   };
+  address?: string;
   isVerifiedByRateIt?: boolean;
   licenseValidDate?: Date;
   createdAt?: Date;
@@ -123,6 +124,10 @@ const WebsiteSchema = new Schema(
     launchYear: {
       type: Number,
       default: null,
+    },
+    address: {
+      type: String,
+      default: "",
     },
   },
   {

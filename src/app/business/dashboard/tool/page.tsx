@@ -32,11 +32,19 @@ interface FormData {
   logo: string | undefined;
   pricingModel: string;
   launchYear: number | null;
+  address: string;
+  contact: {
+    email: string;
+    phone: string;
+    whatsapp: string;
+  };
   socialUrls: {
     facebook?: string;
     instagram?: string;
     twitter?: string;
     tiktok?: string;
+    linkedin?: string;
+    youtube?: string;
   };
 }
 
@@ -44,11 +52,19 @@ interface FormErrors {
   name?: string;
   shortDescription?: string;
   description?: string;
+  address?: string;
+  contact?: {
+    email?: string;
+    phone?: string;
+    whatsapp?: string;
+  };
   socialUrls?: {
     facebook?: string;
     instagram?: string;
     twitter?: string;
     tiktok?: string;
+    linkedin?: string;
+    youtube?: string;
   };
 }
 
@@ -64,6 +80,12 @@ export default function ToolPage() {
     logo: undefined,
     pricingModel: "",
     launchYear: null,
+    address: "",
+    contact: {
+      email: "",
+      phone: "",
+      whatsapp: "",
+    },
     socialUrls: {},
   });
   const [formErrors, setFormErrors] = useState<FormErrors>({});
@@ -75,17 +97,26 @@ export default function ToolPage() {
 
   // URL validation helper function
   const isValidUrl = (url: string) => {
-    if (!url) return true; // Empty URLs are valid (not required)
-
-    // If URL doesn't have protocol, add https://
+    if (!url) return true;
     const urlWithProtocol = url.match(/^https?:\/\//) ? url : `https://${url}`;
-
     try {
       new URL(urlWithProtocol);
       return true;
     } catch (e) {
       return false;
     }
+  };
+
+  // Email validation helper function
+  const isValidEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  // Phone validation helper function
+  const isValidPhone = (phone: string) => {
+    const phoneRegex = /^[\+]?[0-9\s\-\(\)]{7,15}$/;
+    return phoneRegex.test(phone);
   };
 
   useEffect(() => {
@@ -99,6 +130,12 @@ export default function ToolPage() {
         logo: website.logo || undefined,
         pricingModel: website.pricingModel || "",
         launchYear: website.launchYear || null,
+        address: website.address || "",
+        contact: {
+          email: website.contact?.email || "",
+          phone: website.contact?.phone || "",
+          whatsapp: website.contact?.whatsapp || "",
+        },
         socialUrls: website.socialUrls || {},
       });
       setHasAppliedCurrentData(true);
@@ -147,9 +184,41 @@ export default function ToolPage() {
       ) {
         socialErrors.tiktok = "נא להזין כתובת URL תקינה";
       }
+      if (
+        formData.socialUrls.linkedin &&
+        !isValidUrl(formData.socialUrls.linkedin)
+      ) {
+        socialErrors.linkedin = "נא להזין כתובת URL תקינה";
+      }
+      if (
+        formData.socialUrls.youtube &&
+        !isValidUrl(formData.socialUrls.youtube)
+      ) {
+        socialErrors.youtube = "נא להזין כתובת URL תקינה";
+      }
 
       if (Object.keys(socialErrors).length > 0) {
         newErrors.socialUrls = socialErrors as any;
+      }
+
+      // Validate contact fields if provided
+      const contactErrors: { [key: string]: string } = {};
+
+      if (formData.contact.email && !isValidEmail(formData.contact.email)) {
+        contactErrors.email = "נא להזין כתובת אימייל תקינה";
+      }
+      if (formData.contact.phone && !isValidPhone(formData.contact.phone)) {
+        contactErrors.phone = "נא להזין מספר טלפון תקין";
+      }
+      if (
+        formData.contact.whatsapp &&
+        !isValidPhone(formData.contact.whatsapp)
+      ) {
+        contactErrors.whatsapp = "נא להזין מספר וואטסאפ תקין";
+      }
+
+      if (Object.keys(contactErrors).length > 0) {
+        newErrors.contact = contactErrors as any;
       }
 
       setFormErrors(newErrors);
@@ -326,14 +395,115 @@ export default function ToolPage() {
                   }
                   min={2000}
                   max={new Date().getFullYear()}
+                  placeholder="שנת השקה (אופציונלי)"
                 />
+              </div>
+
+              <div className="grid gap-2">
+                <label className="text-sm font-medium">כתובת</label>
+                <Input
+                  value={formData.address}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      address: e.target.value,
+                    }))
+                  }
+                  placeholder="כתובת העסק (אופציונלי)"
+                  className={formErrors.address ? "border-red-500" : ""}
+                />
+                {formErrors.address && (
+                  <p className="text-sm text-red-500">{formErrors.address}</p>
+                )}
+              </div>
+            </div>
+
+            {/* Contact Information */}
+            <div className="border-t border-border pt-4 mt-2">
+              <h3 className="text-lg font-medium mb-4">פרטי יצירת קשר</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="grid gap-2">
+                  <label className="text-sm font-medium">אימייל</label>
+                  <Input
+                    type="email"
+                    value={formData.contact.email}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        contact: {
+                          ...prev.contact,
+                          email: e.target.value,
+                        },
+                      }))
+                    }
+                    placeholder="example@domain.com"
+                    className={
+                      formErrors.contact?.email ? "border-red-500" : ""
+                    }
+                  />
+                  {formErrors.contact?.email && (
+                    <p className="text-sm text-red-500">
+                      {formErrors.contact.email}
+                    </p>
+                  )}
+                </div>
+
+                <div className="grid gap-2">
+                  <label className="text-sm font-medium">טלפון</label>
+                  <Input
+                    value={formData.contact.phone}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        contact: {
+                          ...prev.contact,
+                          phone: e.target.value,
+                        },
+                      }))
+                    }
+                    placeholder="050-1234567"
+                    className={
+                      formErrors.contact?.phone ? "border-red-500" : ""
+                    }
+                  />
+                  {formErrors.contact?.phone && (
+                    <p className="text-sm text-red-500">
+                      {formErrors.contact.phone}
+                    </p>
+                  )}
+                </div>
+
+                <div className="grid gap-2">
+                  <label className="text-sm font-medium">וואטסאפ</label>
+                  <Input
+                    value={formData.contact.whatsapp}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        contact: {
+                          ...prev.contact,
+                          whatsapp: e.target.value,
+                        },
+                      }))
+                    }
+                    placeholder="972501234567"
+                    className={
+                      formErrors.contact?.whatsapp ? "border-red-500" : ""
+                    }
+                  />
+                  {formErrors.contact?.whatsapp && (
+                    <p className="text-sm text-red-500">
+                      {formErrors.contact.whatsapp}
+                    </p>
+                  )}
+                </div>
               </div>
             </div>
 
             {/* Social Media Links */}
             <div className="border-t border-border pt-4 mt-2">
               <h3 className="text-lg font-medium mb-4">רשתות חברתיות</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div className="grid gap-2">
                   <label className="text-sm font-medium">פייסבוק</label>
                   <Input
@@ -430,6 +600,56 @@ export default function ToolPage() {
                   {formErrors.socialUrls?.tiktok && (
                     <p className="text-sm text-red-500">
                       {formErrors.socialUrls.tiktok}
+                    </p>
+                  )}
+                </div>
+
+                <div className="grid gap-2">
+                  <label className="text-sm font-medium">לינקדאין</label>
+                  <Input
+                    value={formData.socialUrls?.linkedin || ""}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        socialUrls: {
+                          ...prev.socialUrls,
+                          linkedin: e.target.value,
+                        },
+                      }))
+                    }
+                    placeholder="https://linkedin.com/company/yourcompany"
+                    className={
+                      formErrors.socialUrls?.linkedin ? "border-red-500" : ""
+                    }
+                  />
+                  {formErrors.socialUrls?.linkedin && (
+                    <p className="text-sm text-red-500">
+                      {formErrors.socialUrls.linkedin}
+                    </p>
+                  )}
+                </div>
+
+                <div className="grid gap-2">
+                  <label className="text-sm font-medium">יוטיוב</label>
+                  <Input
+                    value={formData.socialUrls?.youtube || ""}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        socialUrls: {
+                          ...prev.socialUrls,
+                          youtube: e.target.value,
+                        },
+                      }))
+                    }
+                    placeholder="https://youtube.com/channel/yourchannel"
+                    className={
+                      formErrors.socialUrls?.youtube ? "border-red-500" : ""
+                    }
+                  />
+                  {formErrors.socialUrls?.youtube && (
+                    <p className="text-sm text-red-500">
+                      {formErrors.socialUrls.youtube}
                     </p>
                   )}
                 </div>

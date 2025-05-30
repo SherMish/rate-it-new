@@ -55,11 +55,19 @@ export function AddToolDialog({
     logo: "",
     pricingModel: "free",
     launchYear: new Date().getFullYear(),
+    address: "",
+    contact: {
+      email: "",
+      phone: "",
+      whatsapp: "",
+    },
     socialUrls: {
       facebook: "",
       instagram: "",
       twitter: "",
       tiktok: "",
+      linkedin: "",
+      youtube: "",
     },
     // License management fields
     isVerified: false,
@@ -87,11 +95,19 @@ export function AddToolDialog({
         logo: website.logo || "",
         pricingModel: website.pricingModel || "free",
         launchYear: website.launchYear || new Date().getFullYear(),
+        address: website.address || "",
+        contact: {
+          email: website.contact?.email || "",
+          phone: website.contact?.phone || "",
+          whatsapp: website.contact?.whatsapp || "",
+        },
         socialUrls: {
           facebook: website.socialUrls?.facebook || "",
           instagram: website.socialUrls?.instagram || "",
           twitter: website.socialUrls?.twitter || "",
           tiktok: website.socialUrls?.tiktok || "",
+          linkedin: website.socialUrls?.linkedin || "",
+          youtube: website.socialUrls?.youtube || "",
         },
         isVerified: website.isVerified || false,
         isVerifiedByRateIt: website.isVerifiedByRateIt || false,
@@ -111,11 +127,19 @@ export function AddToolDialog({
         logo: "",
         pricingModel: "free",
         launchYear: new Date().getFullYear(),
+        address: "",
+        contact: {
+          email: "",
+          phone: "",
+          whatsapp: "",
+        },
         socialUrls: {
           facebook: "",
           instagram: "",
           twitter: "",
           tiktok: "",
+          linkedin: "",
+          youtube: "",
         },
         isVerified: false,
         isVerifiedByRateIt: false,
@@ -149,11 +173,19 @@ export function AddToolDialog({
         logo: "",
         pricingModel: "free",
         launchYear: new Date().getFullYear(),
+        address: "",
+        contact: {
+          email: "",
+          phone: "",
+          whatsapp: "",
+        },
         socialUrls: {
           facebook: "",
           instagram: "",
           twitter: "",
           tiktok: "",
+          linkedin: "",
+          youtube: "",
         },
         isVerified: false,
         isVerifiedByRateIt: false,
@@ -175,6 +207,18 @@ export function AddToolDialog({
     } catch (e) {
       return false;
     }
+  };
+
+  // Email validation helper function
+  const isValidEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  // Phone validation helper function
+  const isValidPhone = (phone: string) => {
+    const phoneRegex = /^[\+]?[0-9\s\-\(\)]{7,15}$/;
+    return phoneRegex.test(phone);
   };
 
   const validateForm = () => {
@@ -217,6 +261,29 @@ export function AddToolDialog({
     }
     if (formData.socialUrls.tiktok && !isValidUrl(formData.socialUrls.tiktok)) {
       errors.tiktok = "כתובת טיקטוק לא תקינה";
+    }
+    if (
+      formData.socialUrls.linkedin &&
+      !isValidUrl(formData.socialUrls.linkedin)
+    ) {
+      errors.linkedin = "כתובת לינקדאין לא תקינה";
+    }
+    if (
+      formData.socialUrls.youtube &&
+      !isValidUrl(formData.socialUrls.youtube)
+    ) {
+      errors.youtube = "כתובת יוטיוב לא תקינה";
+    }
+
+    // Validate contact fields if provided
+    if (formData.contact.email && !isValidEmail(formData.contact.email)) {
+      errors.email = "כתובת אימייל לא תקינה";
+    }
+    if (formData.contact.phone && !isValidPhone(formData.contact.phone)) {
+      errors.phone = "מספר טלפון לא תקין";
+    }
+    if (formData.contact.whatsapp && !isValidPhone(formData.contact.whatsapp)) {
+      errors.whatsapp = "מספר וואטסאפ לא תקין";
     }
 
     setFormErrors(errors);
@@ -514,7 +581,115 @@ export function AddToolDialog({
                 max={new Date().getFullYear()}
                 className="text-right"
                 dir="rtl"
+                placeholder="שנת השקה (אופציונלי)"
               />
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label className="text-right block">כתובת</Label>
+            <Input
+              placeholder="כתובת העסק"
+              value={formData.address}
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, address: e.target.value }))
+              }
+              className={`text-right ${
+                formErrors.address ? "border-red-500" : ""
+              }`}
+              dir="rtl"
+            />
+            {formErrors.address && (
+              <p className="text-sm text-red-500 text-right">
+                {formErrors.address}
+              </p>
+            )}
+          </div>
+
+          {/* Contact Information */}
+          <div className="border-t border-border pt-4">
+            <Label className="text-right block mb-3 font-medium">
+              פרטי יצירת קשר (אופציונלי)
+            </Label>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="space-y-2">
+                <Label className="text-right block text-sm">אימייל</Label>
+                <Input
+                  type="email"
+                  placeholder="example@domain.com"
+                  value={formData.contact.email}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      contact: {
+                        ...prev.contact,
+                        email: e.target.value,
+                      },
+                    }))
+                  }
+                  className={`text-right ${
+                    formErrors.email ? "border-red-500" : ""
+                  }`}
+                  dir="rtl"
+                />
+                {formErrors.email && (
+                  <p className="text-sm text-red-500 text-right">
+                    {formErrors.email}
+                  </p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label className="text-right block text-sm">טלפון</Label>
+                <Input
+                  placeholder="050-1234567"
+                  value={formData.contact.phone}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      contact: {
+                        ...prev.contact,
+                        phone: e.target.value,
+                      },
+                    }))
+                  }
+                  className={`text-right ${
+                    formErrors.phone ? "border-red-500" : ""
+                  }`}
+                  dir="rtl"
+                />
+                {formErrors.phone && (
+                  <p className="text-sm text-red-500 text-right">
+                    {formErrors.phone}
+                  </p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label className="text-right block text-sm">וואטסאפ</Label>
+                <Input
+                  placeholder="972501234567"
+                  value={formData.contact.whatsapp}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      contact: {
+                        ...prev.contact,
+                        whatsapp: e.target.value,
+                      },
+                    }))
+                  }
+                  className={`text-right ${
+                    formErrors.whatsapp ? "border-red-500" : ""
+                  }`}
+                  dir="rtl"
+                />
+                {formErrors.whatsapp && (
+                  <p className="text-sm text-red-500 text-right">
+                    {formErrors.whatsapp}
+                  </p>
+                )}
+              </div>
             </div>
           </div>
 
@@ -523,7 +698,7 @@ export function AddToolDialog({
             <Label className="text-right block mb-3 font-medium">
               רשתות חברתיות (אופציונלי)
             </Label>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               <div className="space-y-2">
                 <Label className="text-right block text-sm">פייסבוק</Label>
                 <Input
@@ -624,6 +799,58 @@ export function AddToolDialog({
                 {formErrors.tiktok && (
                   <p className="text-sm text-red-500 text-right">
                     {formErrors.tiktok}
+                  </p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label className="text-right block text-sm">לינקדאין</Label>
+                <Input
+                  placeholder="https://linkedin.com/company/yourcompany"
+                  value={formData.socialUrls.linkedin}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      socialUrls: {
+                        ...prev.socialUrls,
+                        linkedin: e.target.value,
+                      },
+                    }))
+                  }
+                  className={`text-right ${
+                    formErrors.linkedin ? "border-red-500" : ""
+                  }`}
+                  dir="rtl"
+                />
+                {formErrors.linkedin && (
+                  <p className="text-sm text-red-500 text-right">
+                    {formErrors.linkedin}
+                  </p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label className="text-right block text-sm">יוטיוב</Label>
+                <Input
+                  placeholder="https://youtube.com/channel/yourchannel"
+                  value={formData.socialUrls.youtube}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      socialUrls: {
+                        ...prev.socialUrls,
+                        youtube: e.target.value,
+                      },
+                    }))
+                  }
+                  className={`text-right ${
+                    formErrors.youtube ? "border-red-500" : ""
+                  }`}
+                  dir="rtl"
+                />
+                {formErrors.youtube && (
+                  <p className="text-sm text-red-500 text-right">
+                    {formErrors.youtube}
                   </p>
                 )}
               </div>
