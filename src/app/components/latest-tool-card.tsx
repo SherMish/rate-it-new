@@ -50,7 +50,8 @@ export function LatestToolCard({ website, index }: LatestToolCardProps) {
         <Card className="group p-0 bg-white hover:shadow-lg transition-all duration-200 border border-gray-200 hover:border-gray-300 rounded-xl overflow-hidden h-[200px]">
           <div className="p-6 h-full flex flex-col">
             {/* Header Section */}
-            <div className="flex items-start gap-4 mb-4">
+            <div className="flex items-center gap-4 mb-4">
+              {/* Logo - On the right side */}
               <div className="flex-shrink-0 w-16 h-16 rounded-2xl bg-gradient-to-br from-gray-50 to-gray-100 border border-gray-200 flex items-center justify-center overflow-hidden shadow-sm">
                 {website.logo ? (
                   <Image
@@ -58,7 +59,7 @@ export function LatestToolCard({ website, index }: LatestToolCardProps) {
                     alt={website.name}
                     width={64}
                     height={64}
-                    className="rounded-2xl object-cover"
+                    className="object-cover"
                   />
                 ) : (
                   <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
@@ -70,45 +71,54 @@ export function LatestToolCard({ website, index }: LatestToolCardProps) {
               </div>
 
               <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-3">
-                  <h3 className="text-xl font-bold text-gray-900 truncate">
-                    {website.name}
-                  </h3>
-                  <VerifiedBadge
-                    isVerified={website.isVerified ?? false}
-                    pricingModel={website.pricingModel ?? PricingModel.FREE}
-                    licenseValidDate={website.licenseValidDate}
-                    isVerifiedByRateIt={website.isVerifiedByRateIt}
-                  />
-                </div>
-
-                {/* Rating Section - Only show if there are actual reviews */}
-                {(website.reviewCount ?? 0) > 0 && (
-                  <div className="flex items-center gap-2 mb-3">
-                    <div className="flex items-center gap-1">
-                      <div className="flex items-center">
-                        {[...Array(5)].map((_, i) => (
-                          <Star
-                            key={i}
-                            className={`w-4 h-4 ${
-                              i < Math.floor(website.averageRating || 0)
-                                ? "text-yellow-500 fill-yellow-500"
-                                : "text-gray-300 fill-gray-300"
-                            }`}
-                          />
-                        ))}
-                      </div>
-                      {(website.averageRating ?? 0) > 0 && (
-                        <span className="text-sm font-medium text-gray-900">
-                          {website.averageRating?.toFixed(1)}
-                        </span>
-                      )}
-                      <span className="text-sm text-gray-500">
-                        ({website.reviewCount})
-                      </span>
-                    </div>
+                {/* Tight spacing for core elements */}
+                <div className="space-y-1">
+                  {/* Business Name */}
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-xl font-bold text-gray-900 truncate">
+                      {website.name}
+                    </h3>
+                    <VerifiedBadge
+                      isVerified={website.isVerified ?? false}
+                      pricingModel={website.pricingModel ?? PricingModel.FREE}
+                      licenseValidDate={website.licenseValidDate}
+                      isVerifiedByRateIt={website.isVerifiedByRateIt}
+                    />
                   </div>
-                )}
+
+                  {/* Website URL */}
+                  <div>
+                    <span className="text-sm text-gray-500">{website.url}</span>
+                  </div>
+
+                  {/* Rating Section - Only show if there are actual reviews */}
+                  {(website.reviewCount ?? 0) > 0 && (
+                    <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-1">
+                        <div className="flex items-center">
+                          {[...Array(5)].map((_, i) => (
+                            <Star
+                              key={i}
+                              className={`w-4 h-4 ${
+                                i < Math.floor(website.averageRating || 0)
+                                  ? "text-yellow-500 fill-yellow-500"
+                                  : "text-gray-300 fill-gray-300"
+                              }`}
+                            />
+                          ))}
+                        </div>
+                        {(website.averageRating ?? 0) > 0 && (
+                          <span className="text-sm font-medium text-gray-900">
+                            {website.averageRating?.toFixed(1)}
+                          </span>
+                        )}
+                        <span className="text-sm text-gray-500">
+                          ({website.reviewCount})
+                        </span>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
 
