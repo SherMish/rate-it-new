@@ -409,7 +409,10 @@ export default async function ToolPage({ params }: PageProps) {
                         <div className="flex items-start justify-between flex-col lg:flex-row gap-4">
                           <div>
                             <div className="flex items-center gap-2 mb-1">
-                              <h1 className="text-3xl font-bold">
+                              <h1
+                                className="text-3xl font-bold"
+                                style={{ fontFamily: "inherit" }}
+                              >
                                 {website.name}
                               </h1>
                               <VerifiedBadge
@@ -428,6 +431,7 @@ export default async function ToolPage({ params }: PageProps) {
                               <Link
                                 href={`/category/${website.category.id}`}
                                 className="inline-flex items-center gap-2 text-muted-foreground text-sm hover:text-foreground transition-colors"
+                                style={{ fontFamily: "inherit" }}
                               >
                                 {website.category.Icon && (
                                   <website.category.Icon className="w-4 h-4" />
@@ -500,15 +504,22 @@ export default async function ToolPage({ params }: PageProps) {
 
                     {/* Description Column */}
                     <div className="flex-1 space-y-1">
-                      <h3 className="text-lg font-semibold">
+                      <h3
+                        className="text-lg font-semibold"
+                        style={{ fontFamily: "inherit" }}
+                      >
                         אודות {website.name}
                       </h3>
                       <div className="space-y-4 text-muted-foreground">
                         {website.description ? (
-                          <p>{website.description}</p>
+                          <p style={{ fontFamily: "inherit" }}>
+                            {website.description}
+                          </p>
                         ) : (
                           <>
-                            <p>תיאור לא זמין</p>
+                            <p style={{ fontFamily: "inherit" }}>
+                              תיאור לא זמין
+                            </p>
                           </>
                         )}
                       </div>
@@ -535,7 +546,12 @@ export default async function ToolPage({ params }: PageProps) {
                         (website.contact.email ||
                           website.contact.phone ||
                           website.contact.whatsapp))) && (
-                      <h2 className="text-2xl font-semibold mb-4">פרטים</h2>
+                      <h2
+                        className="text-2xl font-semibold mb-4"
+                        style={{ fontFamily: "inherit" }}
+                      >
+                        פרטים
+                      </h2>
                     )}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       {website.launchYear && (
@@ -581,16 +597,19 @@ export default async function ToolPage({ params }: PageProps) {
                         website.contact.phone ||
                         website.contact.whatsapp) && (
                         <div className="mt-6">
-                          <h3 className="text-lg font-medium mb-3">
+                          <h3
+                            className="text-lg font-semibold mb-4"
+                            style={{ fontFamily: "inherit" }}
+                          >
                             יצירת קשר
                           </h3>
                           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                             {website.contact.email && (
                               <div className="p-4 bg-background/50 rounded-lg border border-border">
                                 <div className="flex items-start gap-3">
-                                  <div className="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center">
+                                  <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center">
                                     <svg
-                                      className="w-4 h-4 text-blue-600"
+                                      className="w-4 h-4 text-gray-600"
                                       fill="currentColor"
                                       viewBox="0 0 20 20"
                                     >
@@ -599,12 +618,16 @@ export default async function ToolPage({ params }: PageProps) {
                                     </svg>
                                   </div>
                                   <div>
-                                    <h4 className="text-sm font-medium text-muted-foreground">
+                                    <h4
+                                      className="text-sm font-medium text-muted-foreground mb-1"
+                                      style={{ fontFamily: "inherit" }}
+                                    >
                                       אימייל
                                     </h4>
                                     <a
                                       href={`mailto:${website.contact.email}`}
-                                      className="text-base mt-1 text-blue-600 hover:text-blue-700 transition-colors"
+                                      className="text-sm text-foreground hover:text-primary transition-colors underline-offset-4 underline"
+                                      style={{ fontFamily: "inherit" }}
                                     >
                                       {website.contact.email}
                                     </a>
@@ -616,9 +639,9 @@ export default async function ToolPage({ params }: PageProps) {
                             {website.contact.phone && (
                               <div className="p-4 bg-background/50 rounded-lg border border-border">
                                 <div className="flex items-start gap-3">
-                                  <div className="w-8 h-8 rounded-full bg-green-50 flex items-center justify-center">
+                                  <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center">
                                     <svg
-                                      className="w-4 h-4 text-green-600"
+                                      className="w-4 h-4 text-gray-600"
                                       fill="currentColor"
                                       viewBox="0 0 20 20"
                                     >
@@ -626,12 +649,16 @@ export default async function ToolPage({ params }: PageProps) {
                                     </svg>
                                   </div>
                                   <div>
-                                    <h4 className="text-sm font-medium text-muted-foreground">
+                                    <h4
+                                      className="text-sm font-medium text-muted-foreground mb-1"
+                                      style={{ fontFamily: "inherit" }}
+                                    >
                                       טלפון
                                     </h4>
                                     <a
                                       href={`tel:${website.contact.phone}`}
-                                      className="text-base mt-1 text-green-600 hover:text-green-700 transition-colors"
+                                      className="text-sm text-foreground hover:text-primary transition-colors underline-offset-4 underline"
+                                      style={{ fontFamily: "inherit" }}
                                     >
                                       {website.contact.phone}
                                     </a>
@@ -643,9 +670,9 @@ export default async function ToolPage({ params }: PageProps) {
                             {website.contact.whatsapp && (
                               <div className="p-4 bg-background/50 rounded-lg border border-border">
                                 <div className="flex items-start gap-3">
-                                  <div className="w-8 h-8 rounded-full bg-green-50 flex items-center justify-center">
+                                  <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center">
                                     <svg
-                                      className="w-4 h-4 text-green-600"
+                                      className="w-4 h-4 text-gray-600"
                                       fill="currentColor"
                                       viewBox="0 0 24 24"
                                     >
@@ -653,7 +680,10 @@ export default async function ToolPage({ params }: PageProps) {
                                     </svg>
                                   </div>
                                   <div>
-                                    <h4 className="text-sm font-medium text-muted-foreground">
+                                    <h4
+                                      className="text-sm font-medium text-muted-foreground mb-1"
+                                      style={{ fontFamily: "inherit" }}
+                                    >
                                       וואטסאפ
                                     </h4>
                                     <a
@@ -663,7 +693,8 @@ export default async function ToolPage({ params }: PageProps) {
                                       )}`}
                                       target="_blank"
                                       rel="noopener noreferrer"
-                                      className="text-base mt-1 text-green-600 hover:text-green-700 transition-colors"
+                                      className="text-sm text-foreground hover:text-primary transition-colors underline-offset-4 underline"
+                                      style={{ fontFamily: "inherit" }}
                                     >
                                       {website.contact.whatsapp}
                                     </a>
@@ -704,9 +735,7 @@ export default async function ToolPage({ params }: PageProps) {
                 {/* Similar Tools Column */}
                 <div>
                   {website.socialUrls && (
-                    <div className="mb-6">
-                      <SocialMediaSection socialUrls={website.socialUrls} />
-                    </div>
+                    <SocialMediaSection socialUrls={website.socialUrls} />
                   )}
 
                   {suggestedTools.length > 0 && (

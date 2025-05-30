@@ -30,20 +30,20 @@ export const SocialMediaSection = ({
 }) => {
   return (
     Object.values(socialUrls).some((url) => url) && (
-      <div className="p-3 rounded-lg border border-border bg-background/50">
-        <div className="flex items-center flex-wrap gap-2">
-          <span className="text-sm font-medium text-muted-foreground mr-1">
-            רשתות חברתיות:
-          </span>
+      <div className="p-4 rounded-lg border border-border bg-background/50 mb-6">
+        <h3 className="text-sm font-medium text-muted-foreground mb-3 text-center">
+          רשתות חברתיות
+        </h3>
+        <div className="flex items-center justify-center flex-wrap gap-3">
           {socialUrls.facebook && (
             <a
               href={ensureFullUrl(socialUrls.facebook)}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-8 h-8 rounded-full bg-white border border-border flex items-center justify-center hover:bg-background/80 transition-colors"
+              className="w-10 h-10 rounded-full bg-white border border-border flex items-center justify-center hover:bg-background/80 transition-colors shadow-sm"
               aria-label="Facebook"
             >
-              <Facebook className={`w-4 h-4 ${socialIconColors.facebook}`} />
+              <Facebook className={`w-5 h-5 ${socialIconColors.facebook}`} />
             </a>
           )}
           {socialUrls.instagram && (
@@ -51,10 +51,10 @@ export const SocialMediaSection = ({
               href={ensureFullUrl(socialUrls.instagram)}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-8 h-8 rounded-full bg-white border border-border flex items-center justify-center hover:bg-background/80 transition-colors"
+              className="w-10 h-10 rounded-full bg-white border border-border flex items-center justify-center hover:bg-background/80 transition-colors shadow-sm"
               aria-label="Instagram"
             >
-              <Instagram className={`w-4 h-4 ${socialIconColors.instagram}`} />
+              <Instagram className={`w-5 h-5 ${socialIconColors.instagram}`} />
             </a>
           )}
           {socialUrls.twitter && (
@@ -62,10 +62,10 @@ export const SocialMediaSection = ({
               href={ensureFullUrl(socialUrls.twitter)}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-8 h-8 rounded-full bg-white border border-border flex items-center justify-center hover:bg-background/80 transition-colors"
+              className="w-10 h-10 rounded-full bg-white border border-border flex items-center justify-center hover:bg-background/80 transition-colors shadow-sm"
               aria-label="Twitter"
             >
-              <Twitter className={`w-4 h-4 ${socialIconColors.twitter}`} />
+              <Twitter className={`w-5 h-5 ${socialIconColors.twitter}`} />
             </a>
           )}
           {socialUrls.tiktok && (
@@ -73,10 +73,10 @@ export const SocialMediaSection = ({
               href={ensureFullUrl(socialUrls.tiktok)}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-8 h-8 rounded-full bg-white border border-border flex items-center justify-center hover:bg-background/80 transition-colors"
+              className="w-10 h-10 rounded-full bg-white border border-border flex items-center justify-center hover:bg-background/80 transition-colors shadow-sm"
               aria-label="TikTok"
             >
-              <FaTiktok className={`w-4 h-4 ${socialIconColors.tiktok}`} />
+              <FaTiktok className={`w-5 h-5 ${socialIconColors.tiktok}`} />
             </a>
           )}
           {socialUrls.linkedin && (
@@ -84,10 +84,10 @@ export const SocialMediaSection = ({
               href={ensureFullUrl(socialUrls.linkedin)}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-8 h-8 rounded-full bg-white border border-border flex items-center justify-center hover:bg-background/80 transition-colors"
+              className="w-10 h-10 rounded-full bg-white border border-border flex items-center justify-center hover:bg-background/80 transition-colors shadow-sm"
               aria-label="LinkedIn"
             >
-              <Linkedin className={`w-4 h-4 ${socialIconColors.linkedin}`} />
+              <Linkedin className={`w-5 h-5 ${socialIconColors.linkedin}`} />
             </a>
           )}
           {socialUrls.youtube && (
@@ -95,10 +95,10 @@ export const SocialMediaSection = ({
               href={ensureFullUrl(socialUrls.youtube)}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-8 h-8 rounded-full bg-white border border-border flex items-center justify-center hover:bg-background/80 transition-colors"
+              className="w-10 h-10 rounded-full bg-white border border-border flex items-center justify-center hover:bg-background/80 transition-colors shadow-sm"
               aria-label="YouTube"
             >
-              <Youtube className={`w-4 h-4 ${socialIconColors.youtube}`} />
+              <Youtube className={`w-5 h-5 ${socialIconColors.youtube}`} />
             </a>
           )}
         </div>
