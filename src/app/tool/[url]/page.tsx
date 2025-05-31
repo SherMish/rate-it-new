@@ -696,7 +696,7 @@ export default async function ToolPage({ params }: PageProps) {
                                       className="text-sm text-foreground hover:text-primary transition-colors underline-offset-4 underline"
                                       style={{ fontFamily: "inherit" }}
                                     >
-                                      {website.contact.whatsapp}
+                                      שלח הודעה
                                     </a>
                                   </div>
                                 </div>
