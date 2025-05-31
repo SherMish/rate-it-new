@@ -11,23 +11,21 @@ export function VisitToolButtonMobile({
   url: string;
   buttonText?: string;
 }) {
-  const handleClick = async () => {
-    try {
-      if (process.env.NEXT_PUBLIC_IS_PRODUCTION === "true") {
-        await fetch("/api/analytics/track", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ websiteId, eventType: "click_site_button" }),
-        });
-      }
+  const handleClick = () => {
+    const fullUrl = url.startsWith("http")
+      ? url
+      : `https://${url}?utm_source=rate-it&utm_medium=marketplace&utm_campaign=rate-it`;
 
-      const fullUrl = url.startsWith("http")
-        ? url
-        : `https://${url}?utm_source=rate-it&utm_medium=marketplace&utm_campaign=rate-it`;
+    // Open immediately on user click
+    window.open(fullUrl, "_blank", "noopener,noreferrer");
 
-      window.open(fullUrl, "_blank", "noopener,noreferrer");
-    } catch (error) {
-      console.error("Error tracking button click", error);
+    // Track asynchronously (fire and forget)
+    if (process.env.NEXT_PUBLIC_IS_PRODUCTION === "true") {
+      fetch("/api/analytics/track", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ websiteId, eventType: "click_site_button" }),
+      }).catch((err) => console.error("Tracking failed", err));
     }
   };
 

@@ -560,47 +560,9 @@ export default async function ToolPage({ params }: PageProps) {
             {/* Sidebar */}
             <div className="space-y-6">
               {/* Social Media */}
-              {website.socialUrls && (
+              {Object.values(website.socialUrls).some((url) => url) && (
                 <div className="bg-white rounded-xl border border-border shadow-sm p-6">
                   <SocialMediaSection socialUrls={website.socialUrls} />
-                </div>
-              )}
-
-              {/* Details Card */}
-              {(website.launchYear || website.address) && (
-                <div className="bg-white rounded-xl border border-border shadow-sm p-6">
-                  <h3 className="text-lg font-semibold mb-4">פרטים נוספים</h3>
-                  <div className="space-y-4">
-                    {website.launchYear && (
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                          <Calendar className="w-4 h-4 text-primary" />
-                        </div>
-                        <div>
-                          <div className="text-sm text-muted-foreground">
-                            שנת השקה
-                          </div>
-                          <div className="font-medium">
-                            {website.launchYear}
-                          </div>
-                        </div>
-                      </div>
-                    )}
-
-                    {website.address && (
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                          <Globe className="w-4 h-4 text-primary" />
-                        </div>
-                        <div>
-                          <div className="text-sm text-muted-foreground">
-                            כתובת
-                          </div>
-                          <div>{website.address}</div>
-                        </div>
-                      </div>
-                    )}
-                  </div>
                 </div>
               )}
 
@@ -695,6 +657,44 @@ export default async function ToolPage({ params }: PageProps) {
                     </div>
                   </div>
                 )}
+
+              {/* Details Card */}
+              {(website.launchYear || website.address) && (
+                <div className="bg-white rounded-xl border border-border shadow-sm p-6">
+                  <h3 className="text-lg font-semibold mb-4">פרטים נוספים</h3>
+                  <div className="space-y-4">
+                    {website.launchYear && (
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                          <Calendar className="w-4 h-4 text-primary" />
+                        </div>
+                        <div>
+                          <div className="text-sm text-muted-foreground">
+                            שנת השקה
+                          </div>
+                          <div className="font-medium">
+                            {website.launchYear}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {website.address && (
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                          <Globe className="w-4 h-4 text-primary" />
+                        </div>
+                        <div>
+                          <div className="text-sm text-muted-foreground">
+                            כתובת
+                          </div>
+                          <div>{website.address}</div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
 
               {/* Similar Tools */}
               {suggestedTools.length > 0 && (
