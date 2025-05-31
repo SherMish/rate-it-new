@@ -610,7 +610,7 @@ export default async function ToolPage({ params }: PageProps) {
               {suggestedTools.length > 0 && (
                 <div className="bg-white rounded-xl border border-border shadow-sm p-6">
                   <h3 className="text-lg font-semibold mb-4">עסקים דומים</h3>
-                  <div className="space-y-3">
+                  <div className="mb-3">
                     {suggestedTools.map((tool) => (
                       <SuggestedToolCard
                         key={tool._id.toString()}
