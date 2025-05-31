@@ -561,71 +561,55 @@ export default async function ToolPage({ params }: PageProps) {
             <div className="space-y-6">
               {/* Social Media */}
               {website.socialUrls && (
-                <div className="bg-white rounded-xl border border-border shadow-sm p-6 ">
+                <div className="bg-white rounded-xl border border-border shadow-sm p-6">
                   <SocialMediaSection socialUrls={website.socialUrls} />
                 </div>
               )}
-              {/* Details and Contact Cards with Equal Heights */}
-              <div className="grid grid-cols-1 gap-6">
-                {/* Details Card */}
-                {(website.launchYear || website.address) && (
-                  <div className="bg-white rounded-xl border border-border shadow-sm p-6 h-fit">
-                    <h3 className="text-lg font-semibold mb-4">פרטים נוספים</h3>
-                    <div className="space-y-4">
-                      {website.launchYear && (
-                        <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                            <Calendar className="w-4 h-4 text-primary" />
-                          </div>
-                          <div>
-                            <div className="text-sm text-muted-foreground">
-                              שנת השקה
-                            </div>
-                            <div className="font-medium">
-                              {website.launchYear}
-                            </div>
-                          </div>
-                        </div>
-                      )}
 
-                      {website.address && (
-                        <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                            <Globe className="w-4 h-4 text-primary" />
-                          </div>
-                          <div>
-                            <div className="text-sm text-muted-foreground">
-                              כתובת
-                            </div>
-                            <div>{website.address}</div>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Similar Tools */}
-              {suggestedTools.length > 0 && (
+              {/* Details Card */}
+              {(website.launchYear || website.address) && (
                 <div className="bg-white rounded-xl border border-border shadow-sm p-6">
-                  <h3 className="text-lg font-semibold mb-4">עסקים דומים</h3>
-                  <div className="mb-3">
-                    {suggestedTools.map((tool) => (
-                      <SuggestedToolCard
-                        key={tool._id.toString()}
-                        website={tool}
-                      />
-                    ))}
+                  <h3 className="text-lg font-semibold mb-4">פרטים נוספים</h3>
+                  <div className="space-y-4">
+                    {website.launchYear && (
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                          <Calendar className="w-4 h-4 text-primary" />
+                        </div>
+                        <div>
+                          <div className="text-sm text-muted-foreground">
+                            שנת השקה
+                          </div>
+                          <div className="font-medium">
+                            {website.launchYear}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {website.address && (
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                          <Globe className="w-4 h-4 text-primary" />
+                        </div>
+                        <div>
+                          <div className="text-sm text-muted-foreground">
+                            כתובת
+                          </div>
+                          <div>{website.address}</div>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
+
               {/* Contact Information */}
               {website.contact &&
                 (website.contact.email ||
                   website.contact.phone ||
                   website.contact.whatsapp) && (
-                  <div className="bg-white rounded-xl border border-border shadow-sm p-6 h-fit">
+                  <div className="bg-white rounded-xl border border-border shadow-sm p-6">
                     <h3 className="text-lg font-semibold mb-4">יצירת קשר</h3>
                     <div className="space-y-4">
                       {website.contact.email && (
@@ -712,7 +696,22 @@ export default async function ToolPage({ params }: PageProps) {
                   </div>
                 )}
 
-              {/* Claim ownership section moved from main to sidebar */}
+              {/* Similar Tools */}
+              {suggestedTools.length > 0 && (
+                <div className="bg-white rounded-xl border border-border shadow-sm p-6">
+                  <h3 className="text-lg font-semibold mb-4">עסקים דומים</h3>
+                  <div className="space-y-3">
+                    {suggestedTools.map((tool) => (
+                      <SuggestedToolCard
+                        key={tool._id.toString()}
+                        website={tool}
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Claim ownership section */}
               {!website.isVerified && (
                 <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
                   <div className="flex items-start gap-3">
