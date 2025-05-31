@@ -1,10 +1,16 @@
 "use client";
 
 import mixpanel from "mixpanel-browser";
-import { event as gtagEvent } from "./gtag";
 
 const IS_PRODUCTION = process.env.NEXT_PUBLIC_IS_PRODUCTION === "true";
 const MIXPANEL_TOKEN = process.env.NEXT_PUBLIC_MIXPANEL_TOKEN || "";
+
+// Declare dataLayer as a global
+declare global {
+  interface Window {
+    dataLayer: any[];
+  }
+}
 
 function hasAnalyticsConsent(): boolean {
   try {
@@ -37,7 +43,7 @@ type TrackingEventProperties = {
 };
 
 /**
- * Unified tracking function that sends events to both Mixpanel and Google Analytics
+ * Unified tracking function that sends events to Mixpanel and Google Analytics via GTM
  */
 export function trackEvent(
   eventName: string,
@@ -63,23 +69,24 @@ export function trackEvent(
     console.error("Error tracking event in Mixpanel:", error);
   }
 
-  // Track in Google Analytics
+  // Track in Google Analytics via GTM dataLayer
   try {
-    if (typeof window !== "undefined" && typeof window.gtag === "function") {
-      gtagEvent({
-        action: eventName,
-        category: properties.category || "general",
-        label: properties.label || eventName,
+    if (typeof window !== "undefined" && window.dataLayer) {
+      window.dataLayer.push({
+        event: eventName,
+        event_category: properties.category || "general",
+        event_label: properties.label || eventName,
         value: properties.value,
+        ...properties, // Include all custom properties
       });
     } else {
       console.warn(
-        "Google Analytics is not initialized. Skipping event:",
+        "GTM dataLayer is not available. Skipping event:",
         eventName
       );
     }
   } catch (error) {
-    console.error("Error tracking event in Google Analytics:", error);
+    console.error("Error tracking event in GTM:", error);
   }
 }
 
@@ -105,6 +112,19 @@ export function identifyUser(
   } catch (error) {
     console.error("Error identifying user:", error);
   }
+
+  // Send user data to GTM
+  try {
+    if (typeof window !== "undefined" && window.dataLayer) {
+      window.dataLayer.push({
+        event: "user_identified",
+        user_id: userId,
+        ...userProperties,
+      });
+    }
+  } catch (error) {
+    console.error("Error setting user data in GTM:", error);
+  }
 }
 
 /**
@@ -117,6 +137,18 @@ export function resetAnalytics() {
 
   if (MIXPANEL_TOKEN) {
     mixpanel.reset();
+  }
+
+  // Send logout event to GTM
+  try {
+    if (typeof window !== "undefined" && window.dataLayer) {
+      window.dataLayer.push({
+        event: "user_logout",
+        user_id: undefined,
+      });
+    }
+  } catch (error) {
+    console.error("Error resetting user data in GTM:", error);
   }
 }
 
