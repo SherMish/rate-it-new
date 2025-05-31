@@ -379,382 +379,355 @@ export default async function ToolPage({ params }: PageProps) {
       <div className="min-h-screen bg-background relative" dir="rtl">
         <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,#3b82f615,transparent_70%),radial-gradient(ellipse_at_bottom,#6366f115,transparent_70%)] pointer-events-none" />
 
-        <div className="relative container max-w-6xl mx-auto sm:px-4 py-8">
-          <div className="rounded-lg border border-border bg-white shadow-sm">
-            <div className="p-6 space-y-5">
-              {/* Full width sections */}
+        <div className="relative container max-w-6xl mx-auto px-4 py-6 lg:py-8">
+          {/* Header Section */}
+          <div className="bg-white rounded-xl border border-border shadow-sm mb-6">
+            <div className="p-6 space-y-6">
+              {/* Logo and Basic Info */}
               <div>
-                {/* Header */}
-                <div className="mb-8">
-                  <div className="flex flex-col gap-6 lg:gap-0">
-                    <div className="flex items-start gap-6">
-                      <div className="flex-shrink-0 w-[64px] h-[64px] rounded-xl bg-secondary border border-border flex items-center justify-center overflow-hidden">
-                        {website.logo ? (
-                          <Image
-                            src={website.logo}
-                            alt={website.name}
-                            width={64}
-                            height={64}
-                            className="rounded-xl object-cover"
+                <div className="flex flex-col gap-6 lg:gap-0">
+                  <div className="flex items-start gap-6">
+                    <div className="flex-shrink-0 w-[64px] h-[64px] rounded-xl bg-secondary border border-border flex items-center justify-center overflow-hidden">
+                      {website.logo ? (
+                        <Image
+                          src={website.logo}
+                          alt={website.name}
+                          width={64}
+                          height={64}
+                          className="rounded-xl object-cover"
+                        />
+                      ) : (
+                        <div className="w-6 h-6 bg-secondary rounded-full flex items-center justify-center">
+                          <span className="text-xs text-muted-foreground">
+                            {website.name.charAt(0)}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-start justify-between flex-col lg:flex-row gap-4">
+                        <div>
+                          <div className="flex items-center gap-2 mb-1">
+                            <h1
+                              className="text-3xl font-bold"
+                              style={{ fontFamily: "inherit" }}
+                            >
+                              {website.name}
+                            </h1>
+                            <VerifiedBadge
+                              isVerified={website.isVerified ?? false}
+                              pricingModel={
+                                website.pricingModel ?? PricingModel.FREE
+                              }
+                              licenseValidDate={website.licenseValidDate}
+                              isVerifiedByRateIt={
+                                website.isVerifiedByRateIt ?? false
+                              }
+                              showUnverified={true}
+                            />
+                          </div>
+                          {website.category && (
+                            <Link
+                              href={`/category/${website.category.id}`}
+                              className="inline-flex items-center gap-2 text-muted-foreground text-sm hover:text-foreground transition-colors"
+                              style={{ fontFamily: "inherit" }}
+                            >
+                              {website.category.Icon && (
+                                <website.category.Icon className="w-4 h-4" />
+                              )}
+                              <span>{website.category.name}</span>
+                            </Link>
+                          )}
+                        </div>
+                        <div className="hidden lg:flex flex-row gap-3">
+                          <VisitToolButtonMobile
+                            websiteId={website._id.toString()}
+                            url={website.url}
+                            buttonText="בקר באתר"
                           />
-                        ) : (
-                          <div className="w-6 h-6 bg-secondary rounded-full flex items-center justify-center">
-                            <span className="text-xs text-muted-foreground">
-                              {website.name.charAt(0)}
-                            </span>
-                          </div>
-                        )}
-                      </div>
-                      <div className="flex-1">
-                        <div className="flex items-start justify-between flex-col lg:flex-row gap-4">
-                          <div>
-                            <div className="flex items-center gap-2 mb-1">
-                              <h1
-                                className="text-3xl font-bold"
-                                style={{ fontFamily: "inherit" }}
-                              >
-                                {website.name}
-                              </h1>
-                              <VerifiedBadge
-                                isVerified={website.isVerified ?? false}
-                                pricingModel={
-                                  website.pricingModel ?? PricingModel.FREE
-                                }
-                                licenseValidDate={website.licenseValidDate}
-                                isVerifiedByRateIt={
-                                  website.isVerifiedByRateIt ?? false
-                                }
-                                showUnverified={true}
-                              />
-                            </div>
-                            {website.category && (
-                              <Link
-                                href={`/category/${website.category.id}`}
-                                className="inline-flex items-center gap-2 text-muted-foreground text-sm hover:text-foreground transition-colors"
-                                style={{ fontFamily: "inherit" }}
-                              >
-                                {website.category.Icon && (
-                                  <website.category.Icon className="w-4 h-4" />
-                                )}
-                                <span>{website.category.name}</span>
-                              </Link>
-                            )}
-                          </div>
-                          <div className="hidden lg:flex flex-row gap-3">
-                            <VisitToolButtonMobile
-                              websiteId={website._id.toString()}
-                              url={website.url}
-                              buttonText="בקר באתר"
-                            />
-                            <WriteReviewButton
-                              url={params.url}
-                              buttonText="כתוב ביקורת"
-                            />
-                          </div>
+                          <WriteReviewButton
+                            url={params.url}
+                            buttonText="כתוב ביקורת"
+                          />
                         </div>
                       </div>
-                    </div>
-                    <div className="grid grid-cols-2 gap-3 lg:hidden">
-                      <VisitToolButtonDesktop
-                        websiteId={website._id.toString()}
-                        url={website.url}
-                        buttonText="בקר באתר"
-                      />
-                      <WriteReviewButton
-                        url={params.url}
-                        buttonText="כתוב ביקורת"
-                      />
                     </div>
                   </div>
+                  <div className="grid grid-cols-2 gap-3 lg:hidden">
+                    <VisitToolButtonDesktop
+                      websiteId={website._id.toString()}
+                      url={website.url}
+                      buttonText="בקר באתר"
+                    />
+                    <WriteReviewButton
+                      url={params.url}
+                      buttonText="כתוב ביקורת"
+                    />
+                  </div>
                 </div>
+              </div>
 
-                {/* Rating Overview */}
-                <div className="p-6 rounded-lg border border-border bg-background/50">
-                  <div className="flex flex-col md:flex-row gap-6 md:gap-8">
-                    {/* User Rating Column - Only show if there are reviews */}
-                    {website.reviewCount > 0 && (
-                      <div className="flex flex-col items-center justify-center text-center md:w-48">
-                        <div className="text-5xl font-bold mb-2">
-                          {website.averageRating
-                            ? website.averageRating.toFixed(1)
-                            : "0"}
-                        </div>
-                        <div className="flex items-center gap-1 mb-2">
-                          {[...Array(5)].map((_, i) => (
-                            <Star
-                              key={i}
-                              className={`w-6 h-6 ${
-                                i < (website.averageRating || 0)
-                                  ? "text-yellow-400 fill-yellow-400"
-                                  : "text-zinc-300"
-                              }`}
-                            />
-                          ))}
-                        </div>
-                        <div
-                          className={`text-sm font-medium ${ratingStatus.color} mb-1`}
-                        >
-                          {ratingStatus.label}
-                        </div>
-                        <div className="text-sm text-muted-foreground">
-                          על בסיס {website.reviewCount} ביקורות
-                        </div>
+              {/* Rating Overview */}
+              <div className="p-6 rounded-lg border border-border bg-background/50">
+                <div className="flex flex-col md:flex-row gap-6 md:gap-8">
+                  {/* User Rating Column - Only show if there are reviews */}
+                  {website.reviewCount > 0 && (
+                    <div className="flex flex-col items-center justify-center text-center md:w-48">
+                      <div className="text-5xl font-bold mb-2">
+                        {website.averageRating
+                          ? website.averageRating.toFixed(1)
+                          : "0"}
                       </div>
-                    )}
-
-                    {/* Description Column */}
-                    <div className="flex-1 space-y-1">
-                      <h3
-                        className="text-lg font-semibold"
-                        style={{ fontFamily: "inherit" }}
+                      <div className="flex items-center gap-1 mb-2">
+                        {[...Array(5)].map((_, i) => (
+                          <Star
+                            key={i}
+                            className={`w-6 h-6 ${
+                              i < (website.averageRating || 0)
+                                ? "text-yellow-400 fill-yellow-400"
+                                : "text-zinc-300"
+                            }`}
+                          />
+                        ))}
+                      </div>
+                      <div
+                        className={`text-sm font-medium ${ratingStatus.color} mb-1`}
                       >
-                        אודות {website.name}
-                      </h3>
-                      <div className="space-y-4 text-muted-foreground">
-                        {website.description ? (
-                          <p style={{ fontFamily: "inherit" }}>
-                            {website.description}
-                          </p>
-                        ) : (
-                          <>
-                            <p style={{ fontFamily: "inherit" }}>
-                              תיאור לא זמין
-                            </p>
-                          </>
-                        )}
+                        {ratingStatus.label}
                       </div>
+                      <div className="text-sm text-muted-foreground">
+                        על בסיס {website.reviewCount} ביקורות
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Description Column */}
+                  <div className="flex-1 space-y-1">
+                    <h3
+                      className="text-lg font-semibold"
+                      style={{ fontFamily: "inherit" }}
+                    >
+                      אודות {website.name}
+                    </h3>
+                    <div className="space-y-4 text-muted-foreground">
+                      {website.description ? (
+                        <p style={{ fontFamily: "inherit" }}>
+                          {website.description}
+                        </p>
+                      ) : (
+                        <>
+                          <p style={{ fontFamily: "inherit" }}>תיאור לא זמין</p>
+                        </>
+                      )}
                     </div>
                   </div>
                 </div>
               </div>
-              {/* Claim ownership section */}
-              {!website.isVerified && (
-                <div className="flex items-center text-muted-foreground text-sm">
-                  <p className="ml-1">האם אתם הבעלים של עסק זה?</p>
-                  <ClaimToolButton websiteUrl={website.url} />
-                </div>
-              )}
+            </div>
+          </div>
 
-              {/* Two column layout for remaining content */}
-              <div className="grid grid-cols-1 lg:grid-cols-[1fr,300px] gap-6">
-                <div>
-                  {/* Details Section */}
-                  <div className="mb-8">
-                    {(website.launchYear ||
-                      website.address ||
-                      (website.contact &&
-                        (website.contact.email ||
-                          website.contact.phone ||
-                          website.contact.whatsapp))) && (
-                      <h2
-                        className="text-2xl font-semibold mb-4"
-                        style={{ fontFamily: "inherit" }}
-                      >
-                        פרטים
-                      </h2>
-                    )}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Main Content */}
+            <div className="lg:col-span-2 space-y-6">
+              {/* Reviews Section */}
+              <div className="bg-white rounded-xl border border-border shadow-sm p-6">
+                {reviews.length > 0 ? (
+                  <ReviewsSection reviews={reviews} />
+                ) : (
+                  <div className="text-center py-12">
+                    <div className="w-16 h-16 bg-secondary rounded-full flex items-center justify-center mx-auto mb-4">
+                      <Star className="w-8 h-8 text-muted-foreground" />
+                    </div>
+                    <h3 className="text-xl font-semibold mb-3">
+                      אין ביקורות עדיין
+                    </h3>
+                    <p className="text-muted-foreground mb-6 max-w-md mx-auto">
+                      היה הראשון לשתף את החוויה שלך עם {website.name} ועזור
+                      לאחרים לקבל החלטות מושכלות.
+                    </p>
+                    <Link
+                      href={`/tool/${params.url}/review`}
+                      className="inline-flex items-center gap-2 bg-primary text-primary-foreground hover:bg-primary/90 px-6 py-3 rounded-lg font-medium transition-colors"
+                    >
+                      <ArrowRight className="w-4 h-4 mr-1 order-last" />
+                      כתוב את הביקורת הראשונה
+                    </Link>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Sidebar */}
+            <div className="space-y-6">
+              {/* Details and Contact Cards with Equal Heights */}
+              <div className="grid grid-cols-1 gap-6">
+                {/* Details Card */}
+                {(website.launchYear || website.address) && (
+                  <div className="bg-white rounded-xl border border-border shadow-sm p-6 h-fit">
+                    <h3 className="text-lg font-semibold mb-4">פרטים נוספים</h3>
+                    <div className="space-y-4">
                       {website.launchYear && (
-                        <div className="p-4 bg-background/50 rounded-lg border border-border">
-                          <div className="flex items-start gap-3">
-                            <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                              <Calendar className="w-4 h-4 text-primary" />
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                            <Calendar className="w-4 h-4 text-primary" />
+                          </div>
+                          <div>
+                            <div className="text-sm text-muted-foreground">
+                              שנת השקה
                             </div>
-                            <div>
-                              <h3 className="text-sm font-medium text-muted-foreground">
-                                שנת השקה
-                              </h3>
-                              <p className="text-base mt-1">
-                                {website.launchYear}
-                              </p>
+                            <div className="font-medium">
+                              {website.launchYear}
                             </div>
                           </div>
                         </div>
                       )}
 
                       {website.address && (
-                        <div className="p-4 bg-background/50 rounded-lg border border-border">
-                          <div className="flex items-start gap-3">
-                            <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                              <Globe className="w-4 h-4 text-primary" />
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                            <Globe className="w-4 h-4 text-primary" />
+                          </div>
+                          <div>
+                            <div className="text-sm text-muted-foreground">
+                              כתובת
+                            </div>
+                            <div>{website.address}</div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Contact Information */}
+                {website.contact &&
+                  (website.contact.email ||
+                    website.contact.phone ||
+                    website.contact.whatsapp) && (
+                    <div className="bg-white rounded-xl border border-border shadow-sm p-6 h-fit">
+                      <h3 className="text-lg font-semibold mb-4">יצירת קשר</h3>
+                      <div className="space-y-4">
+                        {website.contact.email && (
+                          <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center">
+                              <svg
+                                className="w-4 h-4 text-blue-600"
+                                fill="currentColor"
+                                viewBox="0 0 20 20"
+                              >
+                                <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
+                                <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
+                              </svg>
                             </div>
                             <div>
-                              <h3 className="text-sm font-medium text-muted-foreground">
-                                כתובת
-                              </h3>
-                              <p className="text-base mt-1">
-                                {website.address}
-                              </p>
+                              <div className="text-sm text-muted-foreground">
+                                אימייל
+                              </div>
+                              <a
+                                href={`mailto:${website.contact.email}`}
+                                className="text-sm text-foreground hover:text-primary transition-colors underline"
+                              >
+                                {website.contact.email}
+                              </a>
                             </div>
                           </div>
-                        </div>
-                      )}
-                    </div>
+                        )}
 
-                    {/* Contact Information */}
-                    {website.contact &&
-                      (website.contact.email ||
-                        website.contact.phone ||
-                        website.contact.whatsapp) && (
-                        <div className="mt-6">
-                          <h3
-                            className="text-lg font-semibold mb-4"
-                            style={{ fontFamily: "inherit" }}
-                          >
-                            יצירת קשר
-                          </h3>
-                          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                            {website.contact.email && (
-                              <div className="p-4 bg-background/50 rounded-lg border border-border">
-                                <div className="flex items-start gap-3">
-                                  <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center">
-                                    <svg
-                                      className="w-4 h-4 text-gray-600"
-                                      fill="currentColor"
-                                      viewBox="0 0 20 20"
-                                    >
-                                      <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
-                                      <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
-                                    </svg>
-                                  </div>
-                                  <div>
-                                    <h4
-                                      className="text-sm font-medium text-muted-foreground mb-1"
-                                      style={{ fontFamily: "inherit" }}
-                                    >
-                                      אימייל
-                                    </h4>
-                                    <a
-                                      href={`mailto:${website.contact.email}`}
-                                      className="text-sm text-foreground hover:text-primary transition-colors underline-offset-4 underline"
-                                      style={{ fontFamily: "inherit" }}
-                                    >
-                                      {website.contact.email}
-                                    </a>
-                                  </div>
-                                </div>
+                        {website.contact.phone && (
+                          <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 rounded-full bg-green-50 flex items-center justify-center">
+                              <svg
+                                className="w-4 h-4 text-green-600"
+                                fill="currentColor"
+                                viewBox="0 0 20 20"
+                              >
+                                <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+                              </svg>
+                            </div>
+                            <div>
+                              <div className="text-sm text-muted-foreground">
+                                טלפון
                               </div>
-                            )}
-
-                            {website.contact.phone && (
-                              <div className="p-4 bg-background/50 rounded-lg border border-border">
-                                <div className="flex items-start gap-3">
-                                  <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center">
-                                    <svg
-                                      className="w-4 h-4 text-gray-600"
-                                      fill="currentColor"
-                                      viewBox="0 0 20 20"
-                                    >
-                                      <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
-                                    </svg>
-                                  </div>
-                                  <div>
-                                    <h4
-                                      className="text-sm font-medium text-muted-foreground mb-1"
-                                      style={{ fontFamily: "inherit" }}
-                                    >
-                                      טלפון
-                                    </h4>
-                                    <a
-                                      href={`tel:${website.contact.phone}`}
-                                      className="text-sm text-foreground hover:text-primary transition-colors underline-offset-4 underline"
-                                      style={{ fontFamily: "inherit" }}
-                                    >
-                                      {website.contact.phone}
-                                    </a>
-                                  </div>
-                                </div>
-                              </div>
-                            )}
-
-                            {website.contact.whatsapp && (
-                              <div className="p-4 bg-background/50 rounded-lg border border-border">
-                                <div className="flex items-start gap-3">
-                                  <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center">
-                                    <svg
-                                      className="w-4 h-4 text-gray-600"
-                                      fill="currentColor"
-                                      viewBox="0 0 24 24"
-                                    >
-                                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.890-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.513" />
-                                    </svg>
-                                  </div>
-                                  <div>
-                                    <h4
-                                      className="text-sm font-medium text-muted-foreground mb-1"
-                                      style={{ fontFamily: "inherit" }}
-                                    >
-                                      וואטסאפ
-                                    </h4>
-                                    <a
-                                      href={`https://wa.me/${website.contact.whatsapp.replace(
-                                        /[^\d]/g,
-                                        ""
-                                      )}`}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      className="text-sm text-foreground hover:text-primary transition-colors underline-offset-4 underline"
-                                      style={{ fontFamily: "inherit" }}
-                                    >
-                                      שלח הודעה
-                                    </a>
-                                  </div>
-                                </div>
-                              </div>
-                            )}
+                              <a
+                                href={`tel:${website.contact.phone}`}
+                                className="text-sm text-foreground hover:text-primary transition-colors underline"
+                              >
+                                {website.contact.phone}
+                              </a>
+                            </div>
                           </div>
-                        </div>
-                      )}
-                  </div>
+                        )}
 
-                  {/* Reviews Section */}
-                  <div className="border-t border-border pt-6">
-                    {reviews.length > 0 ? (
-                      <ReviewsSection reviews={reviews} />
-                    ) : (
-                      <div className="text-center py-12">
-                        <h3 className="text-2xl font-semibold mb-3">
-                          אין ביקורות עדיין
-                        </h3>
-                        <p className="text-muted-foreground mb-6 max-w-md mx-auto">
-                          היה הראשון לשתף את החוויה שלך עם {website.name} ועזור
-                          לאחרים לקבל החלטות מושכלות.
-                        </p>
-                        <Link
-                          href={`/tool/${params.url}/review`}
-                          className="inline-flex items-center gap-2 bg-primary/10 hover:bg-primary/20 text-primary px-6 py-3 rounded-lg font-medium transition-colors"
-                        >
-                          <ArrowRight className="w-4 h-4 mr-1 order-last" />
-                          כתוב את הביקורת הראשונה
-                        </Link>
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                {/* Similar Tools Column */}
-                <div>
-                  {website.socialUrls && (
-                    <SocialMediaSection socialUrls={website.socialUrls} />
-                  )}
-
-                  {suggestedTools.length > 0 && (
-                    <div>
-                      <h2 className="text-2xl font-semibold mb-4">
-                        עסקים דומים
-                      </h2>
-                      <div className="flex flex-col gap-3">
-                        {suggestedTools.map((tool) => (
-                          <SuggestedToolCard
-                            key={tool._id.toString()}
-                            website={tool}
-                          />
-                        ))}
+                        {website.contact.whatsapp && (
+                          <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 rounded-full bg-green-50 flex items-center justify-center">
+                              <svg
+                                className="w-4 h-4 text-green-600"
+                                fill="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.890-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.513" />
+                              </svg>
+                            </div>
+                            <div>
+                              <div className="text-sm text-muted-foreground">
+                                וואטסאפ
+                              </div>
+                              <a
+                                href={`https://wa.me/${website.contact.whatsapp.replace(
+                                  /[^\d]/g,
+                                  ""
+                                )}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-sm text-foreground hover:text-primary transition-colors underline"
+                              >
+                                שלח הודעה
+                              </a>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
                   )}
-                </div>
               </div>
+
+              {/* Social Media */}
+              {website.socialUrls && (
+                <div className="bg-white rounded-xl border border-border shadow-sm p-6">
+                  <SocialMediaSection socialUrls={website.socialUrls} />
+                </div>
+              )}
+
+              {/* Similar Tools */}
+              {suggestedTools.length > 0 && (
+                <div className="bg-white rounded-xl border border-border shadow-sm p-6">
+                  <h3 className="text-lg font-semibold mb-4">עסקים דומים</h3>
+                  <div className="space-y-3">
+                    {suggestedTools.map((tool) => (
+                      <SuggestedToolCard
+                        key={tool._id.toString()}
+                        website={tool}
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Claim ownership section moved from main to sidebar */}
+              {!website.isVerified && (
+                <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
+                  <div className="flex items-start gap-3">
+                    <Info className="w-5 h-5 text-amber-600 mt-0.5" />
+                    <div>
+                      <p className="text-sm text-amber-800 mb-2">
+                        האם אתם הבעלים של עסק זה?
+                      </p>
+                      <ClaimToolButton websiteUrl={website.url} />
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>

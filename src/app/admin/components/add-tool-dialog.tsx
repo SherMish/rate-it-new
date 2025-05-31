@@ -54,7 +54,7 @@ export function AddToolDialog({
     shortDescription: "",
     logo: "",
     pricingModel: "free",
-    launchYear: new Date().getFullYear(),
+    launchYear: "",
     address: "",
     contact: {
       email: "",
@@ -94,7 +94,7 @@ export function AddToolDialog({
         shortDescription: website.shortDescription || "",
         logo: website.logo || "",
         pricingModel: website.pricingModel || "free",
-        launchYear: website.launchYear || new Date().getFullYear(),
+        launchYear: website.launchYear ? website.launchYear.toString() : "",
         address: website.address || "",
         contact: {
           email: website.contact?.email || "",
@@ -126,7 +126,7 @@ export function AddToolDialog({
         shortDescription: "",
         logo: "",
         pricingModel: "free",
-        launchYear: new Date().getFullYear(),
+        launchYear: "",
         address: "",
         contact: {
           email: "",
@@ -172,7 +172,7 @@ export function AddToolDialog({
         shortDescription: "",
         logo: "",
         pricingModel: "free",
-        launchYear: new Date().getFullYear(),
+        launchYear: "",
         address: "",
         contact: {
           email: "",
@@ -304,7 +304,9 @@ export function AddToolDialog({
         shortDescription: updatedData.shortDescription || prev.shortDescription,
         category: updatedData.category || prev.category,
         logo: updatedData.logo || prev.logo,
-        launchYear: updatedData.launchYear || prev.launchYear,
+        launchYear: updatedData.launchYear
+          ? updatedData.launchYear.toString()
+          : prev.launchYear,
       }));
       toast.success("נתונים שנוצרו אוטומטית הוחלו בהצלחה");
       setGeneratedDataState(null);
@@ -566,18 +568,17 @@ export function AddToolDialog({
             </div>
 
             <div className="space-y-2">
-              <Label className="text-right block">שנת השקה</Label>
+              <Label className="text-right block">שנת השקה (אופציונלי)</Label>
               <Input
                 type="number"
-                value={formData.launchYear.toString()}
+                value={formData.launchYear}
                 onChange={(e) =>
                   setFormData((prev) => ({
                     ...prev,
-                    launchYear:
-                      parseInt(e.target.value) || new Date().getFullYear(),
+                    launchYear: e.target.value,
                   }))
                 }
-                min={2000}
+                min={1900}
                 max={new Date().getFullYear()}
                 className="text-right"
                 dir="rtl"
