@@ -30,7 +30,7 @@ export const SocialMediaSection = ({
 }) => {
   return (
     Object.values(socialUrls).some((url) => url) && (
-      <div className="p-4 rounded-lg border border-border bg-background/50 mb-6">
+      <div className="p-4 rounded-lg border border-border bg-background/50">
         <h3 className="text-sm font-medium text-muted-foreground mb-3 text-center">
           רשתות חברתיות
         </h3>

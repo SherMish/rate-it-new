@@ -37,7 +37,7 @@ export function VisitToolButtonMobile({
       className="inline-flex items-center justify-center gap-2 px-4 py-3 bg-background text-foreground rounded-md border border-border hover:bg-background/80 transition-colors h-[40px]"
     >
       <ExternalLink className="w-5 h-5" />
-      <span className="font-medium">{buttonText}</span>
+      <span>{buttonText}</span>
     </button>
   );
 }
