@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
@@ -18,6 +18,8 @@ const ITEMS_PER_PAGE = 10;
 
 export function AdminDashboard() {
   const router = useRouter();
+  const hasRunGuard = useRef(false);
+
   const { data: session, status } = useSession();
   const [websites, setWebsites] = useState<WebsiteType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -37,20 +39,25 @@ export function AdminDashboard() {
   const [allWebsites, setAllWebsites] = useState<WebsiteType[]>([]);
 
   useEffect(() => {
-    if (status === "loading") return;
+    if (status !== "authenticated") return;
+    if (hasRunGuard.current) return;
+
+    hasRunGuard.current = true;
+
     const adminEmails = ["sharon.mishayev@gmail.com", "liamrose1220@gmail.com"];
     const userEmail = session?.user?.email;
 
-    if (userEmail && adminEmails.includes(userEmail)) {
-      if (activeTab === "tools") {
-        fetchWebsites();
-      } else if (activeTab === "blogs") {
-        fetchBlogPosts();
-      }
-    } else {
+    if (!userEmail || !adminEmails.includes(userEmail)) {
       router.push("/");
+      return;
     }
-  }, [toolsPage, blogsPage, activeTab, session, status]);
+
+    if (activeTab === "tools") {
+      fetchWebsites();
+    } else if (activeTab === "blogs") {
+      fetchBlogPosts();
+    }
+  }, [status, session, activeTab]);
 
   const fetchWebsites = async () => {
     setIsLoadingTools(true);
