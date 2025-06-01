@@ -2,11 +2,6 @@ import { redirect } from "next/navigation";
 import { AdminDashboard } from "./components/admin-dashboard";
 
 export default async function AdminPage() {
-  // Protect the page in production
-  if (process.env.IS_PRODUCTION === "true") {
-    redirect("/");
-  }
-
   return (
     <div className="min-h-screen bg-background relative" dir="rtl">
       {/* Background effects - match main page */}

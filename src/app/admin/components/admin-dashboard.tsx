@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Plus, ChevronLeft, ChevronRight } from "lucide-react";
@@ -17,6 +18,7 @@ const ITEMS_PER_PAGE = 10;
 
 export function AdminDashboard() {
   const router = useRouter();
+  const { data: session, status } = useSession();
   const [websites, setWebsites] = useState<WebsiteType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
@@ -35,10 +37,11 @@ export function AdminDashboard() {
   const [allWebsites, setAllWebsites] = useState<WebsiteType[]>([]);
 
   useEffect(() => {
-    if (
-      process.env.NEXT_PUBLIC_IS_PRODUCTION !== "true" &&
-      window.location.hostname.includes("localhost")
-    ) {
+    if (status === "loading") return;
+    const adminEmails = ["sharon.mishayev@gmail.com", "liamrose1220@gmail.com"];
+    const userEmail = session?.user?.email;
+
+    if (userEmail && adminEmails.includes(userEmail)) {
       if (activeTab === "tools") {
         fetchWebsites();
       } else if (activeTab === "blogs") {
@@ -47,7 +50,7 @@ export function AdminDashboard() {
     } else {
       router.push("/");
     }
-  }, [toolsPage, blogsPage, activeTab]);
+  }, [toolsPage, blogsPage, activeTab, session, status]);
 
   const fetchWebsites = async () => {
     setIsLoadingTools(true);
