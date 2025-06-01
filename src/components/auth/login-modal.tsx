@@ -334,7 +334,7 @@ export function LoginModal() {
                         />
                       </FormControl>
                       <FormLabel className="leading-snug">
-                        אני מסכים/ה לקבל עדכונים על עסקים חדשים מדי פעם
+                        אני מאשר/ת קבלת תוכן שיווקי, עדכונים ומבצעים מעת לעת{" "}
                       </FormLabel>
                     </FormItem>
                   )}
