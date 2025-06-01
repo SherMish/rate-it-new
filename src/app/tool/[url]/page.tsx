@@ -560,7 +560,7 @@ export default async function ToolPage({ params }: PageProps) {
             {/* Sidebar */}
             <div className="space-y-6">
               {/* Social Media */}
-              {Object.values(website.socialUrls).some((url) => url) && (
+              {website.socialUrls && Object.values(website.socialUrls).some((url) => url) && (
                 <div className="bg-white rounded-xl border border-border shadow-sm p-6">
                   <SocialMediaSection socialUrls={website.socialUrls} />
                 </div>
