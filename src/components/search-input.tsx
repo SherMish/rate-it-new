@@ -194,7 +194,7 @@ export function SearchInput({
                   onClick={clearSearch}
                 >
                   <div className="font-medium text-right w-full">
-                    לא מצאת את הכלי? הוסף אותו עכשיו בשניות!
+                    לא מצאת את העסק? הוסף אותו עכשיו בשניות!
                   </div>
                 </Link>
               </div>

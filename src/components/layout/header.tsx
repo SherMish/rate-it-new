@@ -14,7 +14,7 @@ import { useRouter, usePathname } from "next/navigation";
 
 const navigation = [
   // { name: "For Businesses", href: "/business" },
-  { name: "בלוג", href: "/blog" },
+  // { name: "בלוג", href: "/blog" },
   { name: "אודות", href: "/about" },
 ];
 
