@@ -1,17 +1,17 @@
-import { NextResponse } from 'next/server';
-import connectDB from '@/lib/mongodb';
-import BlogPost from '@/lib/models/BlogPost';
-import { BlogPost as BlogPostType } from '@/lib/types/blog';
+import { NextResponse } from "next/server";
+import connectDB from "@/lib/mongodb";
+import BlogPost from "@/lib/models/BlogPost";
+import { BlogPost as BlogPostType } from "@/lib/types/blog";
+import { checkAdminAuth } from "@/lib/admin-auth";
 
 export async function GET(request: Request) {
-  if (process.env.IS_PRODUCTION === 'true') {
-    return new NextResponse('Not authorized', { status: 401 });
-  }
+  const authError = await checkAdminAuth();
+  if (authError) return authError;
 
   try {
     const { searchParams } = new URL(request.url);
-    const page = parseInt(searchParams.get('page') || '1');
-    const limit = parseInt(searchParams.get('limit') || '10');
+    const page = parseInt(searchParams.get("page") || "1");
+    const limit = parseInt(searchParams.get("limit") || "10");
     const skip = (page - 1) * limit;
 
     await connectDB();
@@ -22,32 +22,31 @@ export async function GET(request: Request) {
         .skip(skip)
         .limit(limit)
         .lean() as unknown as (BlogPostType & { _id: any })[],
-      BlogPost.countDocuments()
+      BlogPost.countDocuments(),
     ]);
 
     return NextResponse.json({
-      posts: posts.map(post => ({
+      posts: posts.map((post) => ({
         ...post,
         _id: post._id.toString(),
         createdAt: post.createdAt,
         updatedAt: post.updatedAt,
         publishedAt: post.publishedAt,
       })),
-      total
+      total,
     });
   } catch (error) {
-    console.error('Error fetching blog posts:', error);
+    console.error("Error fetching blog posts:", error);
     return new NextResponse(
-      JSON.stringify({ error: 'Failed to fetch blog posts' }), 
+      JSON.stringify({ error: "Failed to fetch blog posts" }),
       { status: 500 }
     );
   }
 }
 
 export async function POST(request: Request) {
-  if (process.env.IS_PRODUCTION === 'true') {
-    return new NextResponse('Not authorized', { status: 401 });
-  }
+  const authError = await checkAdminAuth();
+  if (authError) return authError;
 
   try {
     await connectDB();
@@ -58,10 +57,10 @@ export async function POST(request: Request) {
 
     return NextResponse.json(blogPost);
   } catch (error) {
-    console.error('Error creating blog post:', error);
+    console.error("Error creating blog post:", error);
     return new NextResponse(
-      JSON.stringify({ error: 'Failed to create blog post' }), 
+      JSON.stringify({ error: "Failed to create blog post" }),
       { status: 500 }
     );
   }
-} 
+}

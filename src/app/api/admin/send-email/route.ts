@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createUnifiedEmailTemplate } from "@/lib/email-templates";
 import { sendEmail } from "@/lib/email";
+import { checkAdminAuth } from "@/lib/admin-auth";
 
 export async function POST(request: NextRequest) {
-  if (process.env.IS_PRODUCTION === "true") {
-    return new NextResponse("Not authorized", { status: 401 });
-  }
+  const authError = await checkAdminAuth();
+  if (authError) return authError;
 
   try {
     const body = await request.json();

@@ -1,8 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import User from "@/lib/models/User";
+import { checkAdminAuth } from "@/lib/admin-auth";
 
 export async function GET(request: NextRequest) {
+  const authError = await checkAdminAuth();
+  if (authError) return authError;
+
   try {
     await connectDB();
 

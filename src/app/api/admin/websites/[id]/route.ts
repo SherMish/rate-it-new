@@ -2,14 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import Website from "@/lib/models/Website";
 import { PricingModel } from "@/lib/types/website";
+import { checkAdminAuth } from "@/lib/admin-auth";
 
 export async function PATCH(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  if (process.env.IS_PRODUCTION === "true") {
-    return new NextResponse("Not authorized", { status: 401 });
-  }
+  const authError = await checkAdminAuth();
+  if (authError) return authError;
 
   try {
     await connectDB();

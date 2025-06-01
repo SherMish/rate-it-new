@@ -3,12 +3,12 @@ import connectDB from "@/lib/mongodb";
 import Website from "@/lib/models/Website";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { checkAdminAuth } from "@/lib/admin-auth";
 import categoriesData from "@/lib/data/categories.json";
 
 export async function GET(request: Request) {
-  if (process.env.IS_PRODUCTION === "true") {
-    return new NextResponse("Not authorized", { status: 401 });
-  }
+  const authError = await checkAdminAuth();
+  if (authError) return authError;
 
   try {
     const { searchParams } = new URL(request.url);
@@ -42,9 +42,8 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
-  if (process.env.IS_PRODUCTION === "true") {
-    return new NextResponse("Not authorized", { status: 401 });
-  }
+  const authError = await checkAdminAuth();
+  if (authError) return authError;
 
   try {
     await connectDB();
