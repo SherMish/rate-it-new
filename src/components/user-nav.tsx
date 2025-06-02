@@ -15,6 +15,7 @@ import { User } from "next-auth";
 import { LogOut, Settings, User as UserIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useLoading } from "@/contexts/loading-context";
 
 interface UserNavProps {
   user: User;
@@ -23,6 +24,21 @@ interface UserNavProps {
 
 export function UserNav({ user, onSignOut }: UserNavProps) {
   const router = useRouter();
+  const { startLoading, stopLoading } = useLoading();
+
+  const handleMyReviewsClick = async () => {
+    startLoading();
+
+    // Add a small delay to show the progress bar
+    await new Promise((resolve) => setTimeout(resolve, 100));
+
+    router.push("/my-reviews");
+
+    // Stop loading after a delay (the page will change anyway)
+    setTimeout(() => {
+      stopLoading();
+    }, 1500);
+  };
 
   return (
     <DropdownMenu dir="rtl">
@@ -48,7 +64,7 @@ export function UserNav({ user, onSignOut }: UserNavProps) {
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem
-            onClick={() => router.push("/my-reviews")}
+            onClick={handleMyReviewsClick}
             className="text-right"
           >
             <UserIcon className="ml-2 h-4 w-4" />

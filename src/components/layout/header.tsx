@@ -11,6 +11,7 @@ import { useSession, signOut } from "next-auth/react";
 import { UserNav } from "@/components/user-nav";
 import { SearchInput } from "@/components/search-input";
 import { useRouter, usePathname } from "next/navigation";
+import { useLoading } from "@/contexts/loading-context";
 
 const navigation = [
   // { name: "For Businesses", href: "/business" },
@@ -25,6 +26,7 @@ export function Header() {
   const loginModal = useLoginModal();
   const router = useRouter();
   const pathname = usePathname();
+  const { startLoading, stopLoading } = useLoading();
 
   // Handle post-login redirects
   useEffect(() => {
@@ -49,9 +51,57 @@ export function Header() {
     }
   };
 
-  const handleSearch = (query: string) => {
+  const handleBusinessNavigation = async () => {
+    startLoading();
+
+    // Add a small delay to show the progress bar
+    await new Promise((resolve) => setTimeout(resolve, 100));
+
+    router.push("/business");
+
+    // Stop loading after a delay (the page will change anyway)
+    setTimeout(() => {
+      stopLoading();
+    }, 1500);
+  };
+
+  const handleConsumerNavigation = async () => {
+    startLoading();
+
+    // Add a small delay to show the progress bar
+    await new Promise((resolve) => setTimeout(resolve, 100));
+
+    router.push("/");
+
+    // Stop loading after a delay (the page will change anyway)
+    setTimeout(() => {
+      stopLoading();
+    }, 1500);
+  };
+
+  const handleBusinessNavigationMobile = async () => {
+    setIsOpen(false);
+    await handleBusinessNavigation();
+  };
+
+  const handleConsumerNavigationMobile = async () => {
+    setIsOpen(false);
+    await handleConsumerNavigation();
+  };
+
+  const handleSearch = async (query: string) => {
+    startLoading();
+
+    // Add a small delay to show the progress bar
+    await new Promise((resolve) => setTimeout(resolve, 100));
+
     router.push(`/search?q=${encodeURIComponent(query)}`);
     setShowMobileSearch(false);
+
+    // Stop loading after a delay (the page will change anyway)
+    setTimeout(() => {
+      stopLoading();
+    }, 1500);
   };
 
   const isBusinessHome = pathname === "/business";
@@ -134,19 +184,19 @@ export function Header() {
                   ))}
 
                 {isRegularSite ? (
-                  <Link
-                    href="/business"
+                  <button
+                    onClick={handleBusinessNavigation}
                     className="inline-flex items-center gap-1 px-4 py-2 text-sm font-semibold text-white bg-primary rounded-full hover:bg-primary/90 transition-colors shadow-sm hover:shadow-md"
                   >
                     כניסה לעסקים
-                  </Link>
+                  </button>
                 ) : (
-                  <Link
-                    href="/"
+                  <button
+                    onClick={handleConsumerNavigation}
                     className="text-base font-medium text-muted-foreground transition-colors hover:text-foreground"
                   >
                     אתר צרכנים
-                  </Link>
+                  </button>
                 )}
 
                 {isBusinessHome && (
@@ -242,21 +292,19 @@ export function Header() {
                   ))}
 
                 {isRegularSite ? (
-                  <Link
-                    href="/business"
+                  <button
+                    onClick={handleBusinessNavigationMobile}
                     className="block rounded-md px-3 py-4 text-base font-medium text-primary hover:bg-blue-50 hover:text-primary/80 transition-colors"
-                    onClick={() => setIsOpen(false)}
                   >
                     כניסה לעסקים
-                  </Link>
+                  </button>
                 ) : (
-                  <Link
-                    href="/"
+                  <button
+                    onClick={handleConsumerNavigationMobile}
                     className="block rounded-md px-3 py-4 text-base font-medium text-muted-foreground hover:bg-blue-50 hover:text-foreground transition-colors"
-                    onClick={() => setIsOpen(false)}
                   >
                     אתר צרכנים
-                  </Link>
+                  </button>
                 )}
 
                 {isBusinessHome && (

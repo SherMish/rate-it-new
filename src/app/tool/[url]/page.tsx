@@ -56,6 +56,7 @@ import { FaTiktok } from "react-icons/fa6";
 import SocialMediaSection from "@/app/components/SocialMediaSection";
 import { VerifiedBadge } from "@/components/verified-badge";
 import "@/lib/models/User"; // Ensure User model is registered before populate calls
+import { WriteFirstReviewButton } from "./components/WriteFirstReviewButton";
 
 interface WebsiteDoc {
   _id: Types.ObjectId;
@@ -545,13 +546,7 @@ export default async function ToolPage({ params }: PageProps) {
                       היה הראשון לשתף את החוויה שלך עם {website.name} ועזור
                       לאחרים לקבל החלטות מושכלות.
                     </p>
-                    <Link
-                      href={`/tool/${params.url}/review`}
-                      className="inline-flex items-center gap-2 bg-primary text-primary-foreground hover:bg-primary/90 px-6 py-3 rounded-lg font-medium transition-colors"
-                    >
-                      <ArrowRight className="w-4 h-4 mr-1 order-last" />
-                      כתוב את הביקורת הראשונה
-                    </Link>
+                    <WriteFirstReviewButton toolUrl={params.url} />
                   </div>
                 )}
               </div>
@@ -560,11 +555,12 @@ export default async function ToolPage({ params }: PageProps) {
             {/* Sidebar */}
             <div className="space-y-6">
               {/* Social Media */}
-              {website.socialUrls && Object.values(website.socialUrls).some((url) => url) && (
-                <div className="bg-white rounded-xl border border-border shadow-sm p-6">
-                  <SocialMediaSection socialUrls={website.socialUrls} />
-                </div>
-              )}
+              {website.socialUrls &&
+                Object.values(website.socialUrls).some((url) => url) && (
+                  <div className="bg-white rounded-xl border border-border shadow-sm p-6">
+                    <SocialMediaSection socialUrls={website.socialUrls} />
+                  </div>
+                )}
 
               {/* Contact Information */}
               {website.contact &&

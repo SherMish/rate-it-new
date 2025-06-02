@@ -1,9 +1,8 @@
 "use client";
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useLoading } from "@/contexts/loading-context";
 
 interface WriteReviewButtonProps {
   url: string;
@@ -15,12 +14,21 @@ export default function WriteReviewButton({
   buttonText = "כתוב ביקורת",
 }: WriteReviewButtonProps) {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
+  const { startLoading, stopLoading, isLoading } = useLoading();
 
   const handleClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    setIsLoading(true);
-    await router.push(`/tool/${encodeURIComponent(url)}/review`);
+    startLoading();
+
+    // Add a small delay to show the progress bar
+    await new Promise((resolve) => setTimeout(resolve, 100));
+
+    router.push(`/tool/${encodeURIComponent(url)}/review`);
+
+    // Stop loading after a delay (the page will change anyway)
+    setTimeout(() => {
+      stopLoading();
+    }, 1500);
   };
 
   return (
@@ -29,7 +37,7 @@ export default function WriteReviewButton({
       disabled={isLoading}
       onClick={handleClick}
     >
-      {isLoading ? <Loader2 className="animate-spin" size={16} /> : buttonText}
+      {buttonText}
     </Button>
   );
 }

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { Star } from "lucide-react";
+import { useLoading } from "@/contexts/loading-context";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -39,9 +40,34 @@ const shimmerVariants = {
 
 export function SearchSection() {
   const router = useRouter();
+  const { startLoading, stopLoading } = useLoading();
 
-  const handleSearch = (query: string) => {
+  const handleSearch = async (query: string) => {
+    startLoading();
+
+    // Add a small delay to show the progress bar
+    await new Promise((resolve) => setTimeout(resolve, 100));
+
     router.push(`/search?q=${encodeURIComponent(query)}`);
+
+    // Stop loading after a delay (the page will change anyway)
+    setTimeout(() => {
+      stopLoading();
+    }, 1500);
+  };
+
+  const handleAddBusiness = async () => {
+    startLoading();
+
+    // Add a small delay to show the progress bar
+    await new Promise((resolve) => setTimeout(resolve, 100));
+
+    router.push("/tool/new");
+
+    // Stop loading after a delay (the page will change anyway)
+    setTimeout(() => {
+      stopLoading();
+    }, 1500);
   };
 
   return (
@@ -128,14 +154,14 @@ export function SearchSection() {
 
           {/* Add business link */}
           <motion.div variants={itemVariants} className="mt-4">
-            <Link
-              href="/tool/new"
+            <button
+              onClick={handleAddBusiness}
               className="inline-block px-4 py-2 text-sm font-medium text-foreground/80 hover:text-primary transition-colors rounded-md hover:bg-primary/5 active:bg-primary/10"
             >
               <span className="border-b border-dotted border-foreground/30 hover:border-primary">
                 העסק שחיפשתם לא מופיע? הוסיפו אותו בקלות
               </span>
-            </Link>
+            </button>
           </motion.div>
         </motion.div>
       </div>
