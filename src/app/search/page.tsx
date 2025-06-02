@@ -6,6 +6,8 @@ import Link from "next/link";
 import { Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Metadata } from "next";
+import { WebsiteCard } from "@/components/website-card";
+import { WebsiteType } from "@/lib/models/Website";
 
 interface SearchPageProps {
   searchParams: {
@@ -161,9 +163,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
         { url: { $regex: query, $options: "i" } },
         { category: { $regex: query, $options: "i" } },
       ],
-    })
-      .select("name url category averageRating reviewCount")
-      .lean();
+    }).lean();
 
     const jsonLd = generateSearchJsonLd(query, websites.length);
 
@@ -211,49 +211,12 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
                 </div>
               </div>
             ) : (
-              <div className="p-6 space-y-4">
-                {websites.map((website, index) => (
-                  <Link
+              <div className="p-6 space-y-6">
+                {websites.map((website) => (
+                  <WebsiteCard
                     key={website._id.toString()}
-                    href={`/tool/${encodeURIComponent(website.url)}`}
-                    className="block"
-                  >
-                    <Card className="p-6 hover:shadow-md transition-all duration-200 border-border/50 bg-background/80 hover:bg-background/90">
-                      <div className="flex items-start justify-between gap-4">
-                        <div className="flex-1 min-w-0">
-                          <h2 className="text-xl font-semibold mb-2 text-foreground">
-                            {website.name}
-                          </h2>
-                          <p className="text-sm text-muted-foreground mb-3 break-all">
-                            {website.url}
-                          </p>
-                          <div className="flex items-center gap-4">
-                            <div className="flex items-center">
-                              {[...Array(5)].map((_, i) => (
-                                <Star
-                                  key={i}
-                                  className={`w-4 h-4 ${
-                                    i < Math.floor(website.averageRating || 0)
-                                      ? "text-yellow-400 fill-yellow-400"
-                                      : "text-muted-foreground/30"
-                                  }`}
-                                />
-                              ))}
-                              <span className="mr-2 text-sm text-muted-foreground">
-                                ({website.averageRating?.toFixed(1) || "0.0"})
-                              </span>
-                            </div>
-                            <span className="text-sm text-muted-foreground">
-                              {website.reviewCount || 0} ביקורות
-                            </span>
-                          </div>
-                        </div>
-                        <span className="px-3 py-1 bg-secondary text-secondary-foreground text-sm rounded-full whitespace-nowrap">
-                          {website.category}
-                        </span>
-                      </div>
-                    </Card>
-                  </Link>
+                    website={website as unknown as WebsiteType}
+                  />
                 ))}
               </div>
             )}
