@@ -2,7 +2,7 @@ import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import { authOptions } from "@/lib/auth";
 
-const ADMIN_EMAILS = ["sharon.mishayev@gmail.com", "liamrose1220@gmail.com"];
+const ADMIN_EMAILS = ["sharon.mishayev@gmail.com", "liamrose1220@gmail.com", "ed123@gmail.com"];
 
 export async function checkAdminAuth(): Promise<NextResponse | null> {
   try {

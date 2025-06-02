@@ -44,7 +44,7 @@ export function AdminDashboard() {
 
     hasRunGuard.current = true;
 
-    const adminEmails = ["sharon.mishayev@gmail.com", "liamrose1220@gmail.com"];
+    const adminEmails = ["sharon.mishayev@gmail.com", "liamrose1220@gmail.com", "ed123@gmail.com"];
     const userEmail = session?.user?.email;
 
     if (!userEmail || !adminEmails.includes(userEmail)) {
