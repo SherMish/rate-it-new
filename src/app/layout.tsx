@@ -15,6 +15,8 @@ import { CookieBanner } from "@/components/cookie-banner";
 import { useErrorTracking } from "@/hooks/useErrorTracking";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { ErrorTrackingWrapper } from "./components/ErrorTrackingWrapper";
+import { LoadingProvider } from "@/contexts/loading-context";
+import { TopProgressBar } from "@/components/ui/top-progress-bar";
 
 const heebo = Heebo({ subsets: ["latin", "hebrew"] });
 
@@ -90,17 +92,20 @@ export default async function RootLayout({
         )}
         {/* <ErrorTrackingWrapper /> */}
         <Providers>
-          <AnalyticsProvider />
-          {/* <ErrorBoundary> */}
-          <div className="flex min-h-screen flex-col">
-            <Header />
-            <main className="flex-1">{children}</main>
-            <Footer />
-          </div>
-          <LoginModal />
-          <Toaster />
-          <CookieBanner />
-          {/* </ErrorBoundary> */}
+          <LoadingProvider>
+            <AnalyticsProvider />
+            <TopProgressBar />
+            {/* <ErrorBoundary> */}
+            <div className="flex min-h-screen flex-col">
+              <Header />
+              <main className="flex-1">{children}</main>
+              <Footer />
+            </div>
+            <LoginModal />
+            <Toaster />
+            <CookieBanner />
+            {/* </ErrorBoundary> */}
+          </LoadingProvider>
         </Providers>
       </body>
     </html>

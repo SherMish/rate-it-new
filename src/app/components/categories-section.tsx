@@ -60,6 +60,8 @@ import { Card } from "@/components/ui/card";
 import Link from "next/link";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
+import { useLoading } from "@/contexts/loading-context";
 import categoriesData from "@/lib/data/categories.json";
 
 // Create an icons map
@@ -119,6 +121,9 @@ const Icons: Record<string, LucideIcon> = {
 
 export function CategoriesSection() {
   const [showAll, setShowAll] = useState(false);
+  const router = useRouter();
+  const { startLoading, stopLoading } = useLoading();
+
   const visibleCategories = showAll
     ? categoriesData.categories
     : categoriesData.categories.slice(0, 8);
@@ -131,6 +136,21 @@ export function CategoriesSection() {
   if (missingIcons.length > 0) {
     console.warn("Missing icons:", missingIcons);
   }
+
+  const handleCategoryClick = async (categoryId: string) => {
+    startLoading();
+
+    // Add a small delay to show the progress bar
+    await new Promise((resolve) => setTimeout(resolve, 100));
+
+    // Navigate to the category page
+    router.push(`/category/${categoryId}`);
+
+    // Stop loading after a delay (the page will change anyway)
+    setTimeout(() => {
+      stopLoading();
+    }, 1500);
+  };
 
   return (
     <div className="py-16 pb-8 relative bg-gradient-to-b from-slate-50/80 to-white border-y border-border/30 w-full">
@@ -146,27 +166,25 @@ export function CategoriesSection() {
           {visibleCategories.map((category) => {
             const Icon = Icons[category.icon as keyof typeof Icons] || Sparkles; // Fallback to Sparkles if icon not found
             return (
-              <Link
+              <Card
                 key={category.id}
-                href={`/category/${category.id}`}
-                className="block h-full"
+                className="p-4 bg-white hover:bg-blue-50 transition-colors group h-full flex flex-col border border-border shadow-md hover:shadow-lg cursor-pointer"
+                onClick={() => handleCategoryClick(category.id)}
               >
-                <Card className="p-4 bg-white hover:bg-blue-50 transition-colors group h-full flex flex-col border border-border shadow-md hover:shadow-lg">
-                  <div className="flex items-start gap-3 h-full">
-                    <div className="w-10 h-10 rounded-lg bg-primary/15 flex-shrink-0 flex items-center justify-center group-hover:bg-primary/25 transition-colors rtl:ml-0 rtl:mr-0">
-                      <Icon className="w-5 h-5 text-primary" />
-                    </div>
-                    <div className="flex-1 min-h-0 text-right">
-                      <div className="font-medium mb-1 text-foreground">
-                        {category.name}
-                      </div>
-                      <p className="text-sm text-muted-foreground line-clamp-2">
-                        {category.description}
-                      </p>
-                    </div>
+                <div className="flex items-start gap-3 h-full">
+                  <div className="w-10 h-10 rounded-lg bg-primary/15 flex-shrink-0 flex items-center justify-center group-hover:bg-primary/25 transition-colors rtl:ml-0 rtl:mr-0">
+                    <Icon className="w-5 h-5 text-primary" />
                   </div>
-                </Card>
-              </Link>
+                  <div className="flex-1 min-h-0 text-right">
+                    <div className="font-medium mb-1 text-foreground">
+                      {category.name}
+                    </div>
+                    <p className="text-sm text-muted-foreground line-clamp-2">
+                      {category.description}
+                    </p>
+                  </div>
+                </div>
+              </Card>
             );
           })}
         </div>
