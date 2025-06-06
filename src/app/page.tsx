@@ -226,7 +226,7 @@ export default async function Home() {
             <div className="container max-w-6xl mx-auto px-4">
               <div className="grid lg:grid-cols-[1fr,400px] gap-12">
                 {/* Right Column - Content (was Left) */}
-                <div className="grid gap-6 md:grid-cols-2 order-2 lg:order-1">
+                <div className="grid gap-6 grid-cols-1 md:grid-cols-2 order-2 lg:order-1 w-full max-w-full overflow-hidden">
                   {latestTools.map((tool, index) => (
                     <LatestToolCard
                       key={tool._id.toString()}
