@@ -9,32 +9,51 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { HelpCircle, MessageCircle, Mail, Phone } from "lucide-react";
+import { HelpCircle, MessageCircle, Mail, Crown } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { isPlus, PricingModel } from "@/lib/types/website";
 
-export function HelpDialog() {
+interface DashboardHelpDialogProps {
+  website?: {
+    pricingModel?: string;
+    licenseValidDate?: Date | null;
+  };
+}
+
+export function DashboardHelpDialog({ website }: DashboardHelpDialogProps) {
   const [open, setOpen] = useState(false);
 
-  const commonIssues = [
+  const isPlusUser =
+    website?.pricingModel &&
+    isPlus(
+      website.pricingModel as PricingModel,
+      website.licenseValidDate ?? null
+    );
+
+  // Response times based on plan
+  const responseTime = isPlusUser ? "עד 8 שעות" : "עד 24 שעות";
+  const plusResponseTime = "עד 8 שעות";
+
+  const dashboardIssues = [
     {
-      question: "מה אם העסק שלי כבר מופיע באתר?",
+      question: "איך אני מגיב לביקורות שקיבלתי?",
       answer:
-        "אין בעיה – פשוט צריך לאמת בעלות על הדומיין. לאחר מכן תקבלו שליטה מלאה על הפרופיל, תוכלו לעדכן פרטים, להגיב לביקורות ולעקוב אחר הביצועים.",
+        "בלוח הבקרה, עברו לקטע 'ביקורות', בחרו ביקורת ולחצו על 'הגב'. תגובה מקצועית ומהירה משפרת את התדמית שלכם ומעודדת ביקורות נוספות.",
     },
     {
-      question: "אין לי דומיין – אפשר בכל זאת להצטרף?",
+      question: "מה המשמעות של הנתונים באנליטיקות?",
       answer:
-        "כרגע אנחנו תומכים רק בעסקים עם אתר פעיל. אם אין לכם דומיין – כתבו לנו במייל ואולי נוכל להציע פתרון חלופי.",
+        "צפיות = כמה אנשים ביקרו בדף שלכם. קליקים = כמה לחצו על הקישור לאתר שלכם. אחוז המרה = כמה מהמבקרים הפכו ללקוחות פוטנציאליים.",
     },
     {
-      question: "לחצתי על קישור האימות במייל והתהליך נתקע. מה עושים?",
+      question: "איך אני מעודד לקוחות לכתוב ביקורות?",
       answer:
-        "ודאו שפתחתם את הקישור באותו מכשיר ובאותו דפדפן שבו התחלתם את תהליך הרישום. עדיין לא עובד? דברו איתנו ונשמח לעזור.",
+        "שלחו קישור ישיר לכתיבת ביקורת (זמין בלוח הבקרה), בקשו בזמן אמת לאחר שירות, הציעו תמריץ קטן, והזכירו ללקוחות מרוצים את החשיבות של ביקורות.",
     },
     {
-      question: "השלב הבא לא ברור לי או משהו לא עובד – מה עושים?",
+      question: "מה ההבדל בין החבילות ואיך אני משדרג?",
       answer:
-        "אנחנו כאן בשבילכם! מוזמנים לפנות אלינו דרך הצ׳אט, המייל או הטופס באתר ונחזור אליכם בהקדם.",
+        "חבילת החינם כוללת ניהול בסיסי. חבילת Plus מוסיפה אנליטיקות מתקדמות, עיצוב מותאם ותמיכה מועדפת. לשדרוג, לחצו על 'שדרג לPlus' בלוח הבקרה.",
     },
   ];
 
@@ -52,11 +71,6 @@ export function HelpDialog() {
           100% {
             opacity: 1;
           }
-        }
-        .slow-pulse {
-          animation: slowPulse 1s ease-in-out;
-          animation-iteration-count: 1;
-          animation-delay: 0s;
         }
         .slow-pulse-container {
           animation: slowPulse 1s ease-in-out infinite;
@@ -98,11 +112,13 @@ export function HelpDialog() {
           </DialogHeader>
 
           <div className="space-y-6">
-            {/* Common Issues */}
+            {/* Dashboard-specific Issues */}
             <div>
-              <h3 className="text-lg font-semibold mb-4">שאלות נפוצות</h3>
+              <h3 className="text-lg font-semibold mb-4">
+                שאלות נפוצות - ניהול העסק
+              </h3>
               <div className="space-y-3">
-                {commonIssues.map((issue, index) => (
+                {dashboardIssues.map((issue, index) => (
                   <Card key={index} className="border-border/50">
                     <CardContent className="p-4">
                       <h4 className="font-medium text-foreground mb-2">
@@ -128,12 +144,17 @@ export function HelpDialog() {
                       <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
                         <MessageCircle className="w-5 h-5 text-green-600" />
                       </div>
-                      <div>
-                        <h4 className="font-medium text-green-800">WhatsApp</h4>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2">
+                          <h4 className="font-medium text-green-800">
+                            WhatsApp
+                          </h4>
+                        </div>
                       </div>
                     </div>
+
                     <a
-                      href="https://wa.me/972542226491?text=שלום%2C%20אני%20צריך%20עזרה%20עם%20רישום%20העסק%20ברייט-איט"
+                      href="https://wa.me/972542226491?text=שלום%2C%20אני%20צריך%20עזרה%20עם%20ניהול%20העסק%20שלי%20ברייט-איט"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="w-full"
@@ -155,8 +176,10 @@ export function HelpDialog() {
                       <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
                         <Mail className="w-5 h-5 text-blue-600" />
                       </div>
-                      <div>
-                        <h4 className="font-medium text-blue-800">Email</h4>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2">
+                          <h4 className="font-medium text-blue-800">Email</h4>
+                        </div>
                       </div>
                     </div>
 
@@ -171,7 +194,7 @@ export function HelpDialog() {
                     </div>
 
                     <a
-                      href="mailto:hello@rate-it.co.il?subject=עזרה%20ברישום%20עסק&body=שלום%2C%0A%0Aאני%20צריך%20עזרה%20עם%20רישום%20העסק%20שלי%20ברייט-איט.%0A%0Aתודה%2C"
+                      href="mailto:hello@rate-it.co.il?subject=עזרה%20בניהול%20עסק&body=שלום%2C%0A%0Aאני%20צריך%20עזרה%20עם%20ניהול%20העסק%20שלי%20ברייט-איט.%0A%0Aתודה%2C"
                       className="w-full"
                     >
                       {/* <Button
@@ -185,12 +208,24 @@ export function HelpDialog() {
                   </CardContent>
                 </Card>
               </div>
+
+              {/* Plus advantage message */}
+              {!isPlusUser && (
+                <div className="text-center p-3 bg-gradient-to-r from-primary/5 to-yellow-500/5 rounded-lg border border-primary/20 mt-4">
+                  <p className="text-sm text-muted-foreground flex items-center justify-center gap-2">
+                    <Crown className="w-4 h-4 text-primary" />
+                    <span>
+                      לעסקים במסלול פלוס יש קדימות וזמן ההמתנה הממוצע נמוך ב-80%
+                    </span>
+                  </p>
+                </div>
+              )}
             </div>
 
             {/* Additional Note */}
             <div className="text-center p-4 bg-muted/50 rounded-lg">
               <p className="text-sm text-muted-foreground">
-                אנחנו כאן לעזור לכם בכל שלב של התהליך. אל תהססו לפנות אלינו!
+                אנחנו כאן לעזור לכם להצליח! אל תהססו לפנות אלינו בכל שאלה.
               </p>
             </div>
           </div>

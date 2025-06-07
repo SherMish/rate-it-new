@@ -159,7 +159,7 @@ export function OnboardingGuide({ website, className }: OnboardingGuideProps) {
           : `${website.reviewCount} ביקורות`
       } – נהדר! עוד ${
         5 - website.reviewCount
-      } ביקורות ותזכו לאמון גבוה מצד לקוחות חדשים.`,
+      } ביקורות ותהיו זכאים למסלול פלוס לחודשיים בחינם!`,
       icon: Star,
       action: {
         label: "הזמינו עוד לקוחות לכתוב ביקורת",

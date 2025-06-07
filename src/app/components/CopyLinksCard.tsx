@@ -109,7 +109,7 @@ export function CopyLinksCard({ websiteUrl, className }: CopyLinksCardProps) {
               className="text-sm text-foreground truncate"
               title={businessPageUrl}
             >
-              דף העסק
+              קישור לדף העסק
             </span>
           </div>
           <div className="p-1.5">
@@ -132,7 +132,7 @@ export function CopyLinksCard({ websiteUrl, className }: CopyLinksCardProps) {
               className="text-sm text-foreground truncate"
               title={reviewPageUrl}
             >
-              כתיבת ביקורת
+            קישור לכתיבת ביקורת
             </span>
           </div>
           <div className="p-1.5">

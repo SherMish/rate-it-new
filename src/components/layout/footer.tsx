@@ -1,6 +1,13 @@
 import Link from "next/link";
 import Image from "next/image";
-import { FaGithub, FaXTwitter, FaLinkedin } from "react-icons/fa6";
+import {
+  FaGithub,
+  FaXTwitter,
+  FaLinkedin,
+  FaInstagram,
+  FaFacebook,
+  FaTiktok,
+} from "react-icons/fa6";
 
 const navigation = {
   main: [
@@ -11,14 +18,19 @@ const navigation = {
   ],
   social: [
     {
-      name: "X",
-      href: "https://x.com/_AIRadar",
-      icon: FaXTwitter,
+      name: "Instagram",
+      href: "https://www.instagram.com/rate_it_il?igsh=MWowMmx0bm9sNzVyOA%3D%3D&utm_source=qr",
+      icon: FaInstagram,
     },
     {
-      name: "LinkedIn",
-      href: "https://www.linkedin.com/company/airadaris",
-      icon: FaLinkedin,
+      name: "Facebook",
+      href: "https://www.facebook.com/share/19aaBgpYmr/?mibextid=wwXIfr",
+      icon: FaFacebook,
+    },
+    {
+      name: "TikTok",
+      href: "https://www.tiktok.com/@rate_it_il?_t=ZS-8x0LixEwE6i&_r=1",
+      icon: FaTiktok,
     },
   ],
 };

@@ -43,6 +43,7 @@ import { DailyTipCard } from "@/app/components/DailyTipCard";
 import { UpgradeButton } from "@/components/ui/upgrade-button";
 import { CopyLinksCard } from "@/app/components/CopyLinksCard";
 import { OnboardingGuide } from "@/app/components/OnboardingGuide";
+import { DashboardHelpDialog } from "@/components/business/dashboard/DashboardHelpDialog";
 
 type Feature = {
   id: string;
@@ -403,6 +404,9 @@ export default function DashboardPage() {
           </Card>
         </div>
       </div>
+
+      {/* Dashboard Help Dialog */}
+      <DashboardHelpDialog website={website || undefined} />
     </>
   );
 }
