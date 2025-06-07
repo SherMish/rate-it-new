@@ -295,34 +295,29 @@ function getTrustStatusIcon(score: number) {
   return AlertTriangle; // אמון שוק נמוך
 }
 
-// Function to get styles based on trust level
-function getTrustStatusStyles(score: number) {
-  if (score >= 8.6) {
-    return {
-      badge: "bg-blue-50 border-blue-200 text-blue-700",
-      icon: "text-blue-600",
-      gradient: "from-blue-100 to-blue-50",
-    };
+function formatWhatsAppLink(whatsapp: string): string {
+  if (!whatsapp) return "";
+
+  // If it's already a full URL (including WhatsApp API links), return as is
+  if (
+    whatsapp.startsWith("https://wa.me/") ||
+    whatsapp.startsWith("http://wa.me/") ||
+    whatsapp.startsWith("https://api.whatsapp.com/send/") ||
+    whatsapp.startsWith("http://api.whatsapp.com/send/")
+  ) {
+    return whatsapp;
   }
-  if (score >= 7.1) {
-    return {
-      badge: "bg-green-50 border-green-200 text-green-700",
-      icon: "text-green-600",
-      gradient: "from-green-100 to-green-50",
-    };
+
+  // Remove all non-digit characters
+  const numbersOnly = whatsapp.replace(/[^\d]/g, "");
+
+  // If it starts with 0, replace with 972 (Israel country code)
+  if (numbersOnly.startsWith("0")) {
+    return `https://wa.me/972${numbersOnly.slice(1)}`;
   }
-  if (score >= 5.1) {
-    return {
-      badge: "bg-yellow-50 border-yellow-200 text-yellow-700",
-      icon: "text-yellow-600",
-      gradient: "from-yellow-100 to-yellow-50",
-    };
-  }
-  return {
-    badge: "bg-red-50 border-red-200 text-red-700",
-    icon: "text-red-600",
-    gradient: "from-red-100 to-red-50",
-  };
+
+  // If it already starts with 972 or any other country code, keep as is
+  return `https://wa.me/${numbersOnly}`;
 }
 
 export default async function ToolPage({ params }: PageProps) {
@@ -637,10 +632,9 @@ export default async function ToolPage({ params }: PageProps) {
                               וואטסאפ
                             </div>
                             <a
-                              href={`https://wa.me/${website.contact.whatsapp.replace(
-                                /[^\d]/g,
-                                ""
-                              )}`}
+                              href={formatWhatsAppLink(
+                                website.contact.whatsapp
+                              )}
                               target="_blank"
                               rel="noopener noreferrer"
                               className="text-sm text-foreground hover:text-primary transition-colors underline"

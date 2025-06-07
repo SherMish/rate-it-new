@@ -115,8 +115,31 @@ export default function ToolPage() {
 
   // Phone validation helper function
   const isValidPhone = (phone: string) => {
-    const phoneRegex = /^[\+]?[0-9\s\-\(\)]{7,15}$/;
+    const phoneRegex = /^[\+\*]?[0-9\s\-\(\)]{3,20}$/;
     return phoneRegex.test(phone);
+  };
+
+  // WhatsApp validation helper function - allows both phone numbers and wa.me links
+  const isValidWhatsApp = (whatsapp: string) => {
+    if (!whatsapp) return true;
+
+    // Trim whitespace
+    const trimmedWhatsapp = whatsapp.trim();
+
+    // Check if it's a wa.me link or WhatsApp API link
+    if (
+      trimmedWhatsapp.startsWith("https://wa.me/") ||
+      trimmedWhatsapp.startsWith("http://wa.me/") ||
+      trimmedWhatsapp.startsWith("wa.me/") ||
+      trimmedWhatsapp.startsWith("https://api.whatsapp.com/send/") ||
+      trimmedWhatsapp.startsWith("http://api.whatsapp.com/send/")
+    ) {
+      return true;
+    }
+
+    // Check if it's a valid phone number (more flexible regex)
+    const phoneRegex = /^[\+\*]?[0-9\s\-\(\)\.]{3,20}$/;
+    return phoneRegex.test(trimmedWhatsapp);
   };
 
   useEffect(() => {
@@ -212,9 +235,9 @@ export default function ToolPage() {
       }
       if (
         formData.contact.whatsapp &&
-        !isValidPhone(formData.contact.whatsapp)
+        !isValidWhatsApp(formData.contact.whatsapp)
       ) {
-        contactErrors.whatsapp = "נא להזין מספר וואטסאפ תקין";
+        contactErrors.whatsapp = "נא להזין מספר וואטסאפ תקין או קישור";
       }
 
       if (Object.keys(contactErrors).length > 0) {
@@ -486,7 +509,7 @@ export default function ToolPage() {
                         },
                       }))
                     }
-                    placeholder="972501234567"
+                    placeholder="972501234567 או https://wa.me/972501234567"
                     className={
                       formErrors.contact?.whatsapp ? "border-red-500" : ""
                     }

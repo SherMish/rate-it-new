@@ -217,8 +217,31 @@ export function AddToolDialog({
 
   // Phone validation helper function
   const isValidPhone = (phone: string) => {
-    const phoneRegex = /^[\+]?[0-9\s\-\(\)]{7,15}$/;
+    const phoneRegex = /^[\+\*]?[0-9\s\-\(\)]{3,20}$/;
     return phoneRegex.test(phone);
+  };
+
+  // WhatsApp validation helper function - allows both phone numbers and wa.me links
+  const isValidWhatsApp = (whatsapp: string) => {
+    if (!whatsapp) return true;
+
+    // Trim whitespace
+    const trimmedWhatsapp = whatsapp.trim();
+
+    // Check if it's a wa.me link or WhatsApp API link
+    if (
+      trimmedWhatsapp.startsWith("https://wa.me/") ||
+      trimmedWhatsapp.startsWith("http://wa.me/") ||
+      trimmedWhatsapp.startsWith("wa.me/") ||
+      trimmedWhatsapp.startsWith("https://api.whatsapp.com/send/") ||
+      trimmedWhatsapp.startsWith("http://api.whatsapp.com/send/")
+    ) {
+      return true;
+    }
+
+    // Check if it's a valid phone number (more flexible regex)
+    const phoneRegex = /^[\+\*]?[0-9\s\-\(\)\.]{3,20}$/;
+    return phoneRegex.test(trimmedWhatsapp);
   };
 
   const validateForm = () => {
@@ -282,8 +305,11 @@ export function AddToolDialog({
     if (formData.contact.phone && !isValidPhone(formData.contact.phone)) {
       errors.phone = "מספר טלפון לא תקין";
     }
-    if (formData.contact.whatsapp && !isValidPhone(formData.contact.whatsapp)) {
-      errors.whatsapp = "מספר וואטסאפ לא תקין";
+    if (
+      formData.contact.whatsapp &&
+      !isValidWhatsApp(formData.contact.whatsapp)
+    ) {
+      errors.whatsapp = "מספר וואטסאפ או קישור לא תקין";
     }
 
     setFormErrors(errors);
@@ -669,7 +695,7 @@ export function AddToolDialog({
               <div className="space-y-2">
                 <Label className="text-right block text-sm">וואטסאפ</Label>
                 <Input
-                  placeholder="972501234567"
+                  placeholder="972501234567 או https://wa.me/972501234567"
                   value={formData.contact.whatsapp}
                   onChange={(e) =>
                     setFormData((prev) => ({
