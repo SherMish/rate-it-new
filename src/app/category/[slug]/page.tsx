@@ -80,7 +80,7 @@ export default async function CategoryPage({ params }: PageProps) {
       {/* Background effects - match main page */}
       <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,#3b82f620,transparent_70%),radial-gradient(ellipse_at_bottom,#6366f115,transparent_70%)] pointer-events-none" />
 
-      <div className="relative container max-w-4xl mx-auto sm:px-4 py-8">
+      <div className="relative container max-w-4xl mx-auto px-4 py-8">
         <div className="mb-4">
           <Link
             href="/"
@@ -91,20 +91,22 @@ export default async function CategoryPage({ params }: PageProps) {
           </Link>
         </div>
 
-        <div className="rounded-lg border border-border bg-white shadow-sm">
-          <div className="p-6 border-b border-border">
+        <div className="rounded-lg border border-border bg-white shadow-sm overflow-hidden">
+          <div className="p-4 sm:p-6 border-b border-border">
             <div className="flex items-center gap-3 mb-2">
-              <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
                 <IconComponent className="w-5 h-5 text-primary" />
               </div>
-              <h1 className="text-3xl font-bold text-foreground">
+              <h1 className="text-2xl sm:text-3xl font-bold text-foreground truncate min-w-0">
                 <span>{category.name}</span>
               </h1>
             </div>
-            <p className="text-muted-foreground">{category.description}</p>
+            <p className="text-muted-foreground text-sm sm:text-base">
+              {category.description}
+            </p>
           </div>
 
-          <div className="p-4">
+          <div className="p-4 max-w-full overflow-hidden">
             {tools.length === 0 ? (
               <div className="text-center py-12">
                 <p className="text-muted-foreground text-lg mb-4">
@@ -120,7 +122,7 @@ export default async function CategoryPage({ params }: PageProps) {
               </div>
             ) : (
               <>
-                <div className="grid gap-6">
+                <div className="grid gap-4 sm:gap-6 w-full max-w-full">
                   {tools.map((website) => (
                     <WebsiteCard
                       key={website._id.toString()}
@@ -130,12 +132,12 @@ export default async function CategoryPage({ params }: PageProps) {
                 </div>
 
                 <div className="mt-8 text-center">
-                  <p className="text-muted-foreground mb-4">
+                  <p className="text-muted-foreground mb-4 text-sm sm:text-base">
                     לא מצאת את העסק שאתה מחפש?
                   </p>
                   <Link
                     href="/tool/new"
-                    className="text-primary hover:text-primary/90 transition-colors"
+                    className="text-primary hover:text-primary/90 transition-colors text-sm sm:text-base"
                   >
                     הוסף אותו עכשיו בשניות ←
                   </Link>
