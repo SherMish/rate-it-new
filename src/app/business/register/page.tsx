@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import { CheckCircle2 } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
 import { verifyDomain as verifyDomainAction } from "@/app/actions/verification";
+import { HelpDialog } from "@/components/business/registration/HelpDialog";
 
 export default function BusinessRegistration() {
   const router = useRouter();
@@ -396,6 +397,9 @@ export default function BusinessRegistration() {
           </div>
         </div>
       </div>
+
+      {/* Help Dialog - Always visible during registration */}
+      <HelpDialog />
     </div>
   );
 }

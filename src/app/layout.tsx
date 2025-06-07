@@ -17,6 +17,7 @@ import { ErrorBoundary } from "./components/ErrorBoundary";
 import { ErrorTrackingWrapper } from "./components/ErrorTrackingWrapper";
 import { LoadingProvider } from "@/contexts/loading-context";
 import { TopProgressBar } from "@/components/ui/top-progress-bar";
+import { ConditionalFooter } from "@/components/layout/conditional-footer";
 
 const heebo = Heebo({ subsets: ["latin", "hebrew"] });
 
@@ -99,7 +100,7 @@ export default async function RootLayout({
             <div className="flex min-h-screen flex-col">
               <Header />
               <main className="flex-1">{children}</main>
-              <Footer />
+              <ConditionalFooter />
             </div>
             <LoginModal />
             <Toaster />
