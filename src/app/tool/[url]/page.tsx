@@ -383,7 +383,48 @@ export default async function ToolPage({ params }: PageProps) {
               {/* Logo and Basic Info */}
               <div>
                 <div className="flex flex-col gap-6 lg:gap-0">
-                  <div className="flex items-start gap-6">
+                  {/* Mobile Layout */}
+                  <div className="lg:hidden">
+                    <div className="flex items-start gap-4 mb-4">
+                      <WebsiteLogo
+                        logo={website.logo}
+                        name={website.name}
+                        size="lg"
+                      />
+                      <div className="flex-1 min-w-0">
+                        <h1
+                          className="text-2xl font-bold mb-2 leading-tight"
+                          style={{ fontFamily: "inherit" }}
+                        >
+                          {website.name}
+                        </h1>
+                        {website.category && (
+                          <Link
+                            href={`/category/${website.category.id}`}
+                            className="inline-flex items-center gap-2 text-muted-foreground text-sm hover:text-foreground transition-colors"
+                            style={{ fontFamily: "inherit" }}
+                          >
+                            {website.category.Icon && (
+                              <website.category.Icon className="w-4 h-4" />
+                            )}
+                            <span>{website.category.name}</span>
+                          </Link>
+                        )}
+                      </div>
+                    </div>
+                    <div className="flex justify-start mb-4">
+                      <VerifiedBadge
+                        isVerified={website.isVerified ?? false}
+                        pricingModel={website.pricingModel ?? PricingModel.FREE}
+                        licenseValidDate={website.licenseValidDate}
+                        isVerifiedByRateIt={website.isVerifiedByRateIt ?? false}
+                        showUnverified={true}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Desktop Layout */}
+                  <div className="hidden lg:flex items-start gap-6">
                     <WebsiteLogo
                       logo={website.logo}
                       name={website.name}
@@ -438,6 +479,7 @@ export default async function ToolPage({ params }: PageProps) {
                       </div>
                     </div>
                   </div>
+
                   <div className="grid grid-cols-2 gap-3 lg:hidden">
                     <VisitToolButtonDesktop
                       websiteId={website._id.toString()}
@@ -446,7 +488,7 @@ export default async function ToolPage({ params }: PageProps) {
                     />
                     <WriteReviewButton
                       url={params.url}
-                      buttonText="כתוב ביקורת"
+                      buttonText="כתוب ביקורת"
                     />
                   </div>
                 </div>
