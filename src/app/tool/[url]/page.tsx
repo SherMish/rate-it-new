@@ -57,6 +57,7 @@ import SocialMediaSection from "@/app/components/SocialMediaSection";
 import { VerifiedBadge } from "@/components/verified-badge";
 import "@/lib/models/User"; // Ensure User model is registered before populate calls
 import { WriteFirstReviewButton } from "./components/WriteFirstReviewButton";
+import { WebsiteLogo } from "@/components/website-logo";
 
 interface WebsiteDoc {
   _id: Types.ObjectId;
@@ -383,23 +384,11 @@ export default async function ToolPage({ params }: PageProps) {
               <div>
                 <div className="flex flex-col gap-6 lg:gap-0">
                   <div className="flex items-start gap-6">
-                    <div className="flex-shrink-0 w-[64px] h-[64px] rounded-xl bg-secondary border border-border flex items-center justify-center overflow-hidden">
-                      {website.logo ? (
-                        <Image
-                          src={website.logo}
-                          alt={website.name}
-                          width={64}
-                          height={64}
-                          className="rounded-xl object-cover"
-                        />
-                      ) : (
-                        <div className="w-6 h-6 bg-secondary rounded-full flex items-center justify-center">
-                          <span className="text-xs text-muted-foreground">
-                            {website.name.charAt(0)}
-                          </span>
-                        </div>
-                      )}
-                    </div>
+                    <WebsiteLogo
+                      logo={website.logo}
+                      name={website.name}
+                      size="lg"
+                    />
                     <div className="flex-1">
                       <div className="flex items-start justify-between flex-col lg:flex-row gap-4">
                         <div>

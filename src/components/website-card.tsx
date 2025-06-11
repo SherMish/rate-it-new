@@ -1,10 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { Card } from "@/components/ui/card";
 import { Star, ExternalLink } from "lucide-react";
 import { VerifiedBadge } from "./verified-badge";
+import { WebsiteLogo } from "./website-logo";
 import { PricingModel } from "@/lib/types/website";
 import { WebsiteType } from "@/lib/models/Website";
 import { useRouter } from "next/navigation";
@@ -55,23 +55,7 @@ export function WebsiteCard({ website }: WebsiteCardProps) {
           {/* Header Section with Logo */}
           <div className="flex items-center gap-3 sm:gap-4 mb-3 sm:mb-4 min-w-0 max-w-full">
             {/* Logo - On the right side */}
-            <div className="flex-shrink-0 w-12 h-12 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl bg-gradient-to-br from-gray-50 to-gray-100 border border-gray-200 flex items-center justify-center overflow-hidden shadow-sm">
-              {website.logo ? (
-                <Image
-                  src={website.logo}
-                  alt={website.name}
-                  width={64}
-                  height={64}
-                  className="object-cover w-full h-full"
-                />
-              ) : (
-                <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg sm:rounded-xl flex items-center justify-center">
-                  <span className="text-white font-semibold text-sm sm:text-lg">
-                    {website.name.charAt(0)}
-                  </span>
-                </div>
-              )}
-            </div>
+            <WebsiteLogo logo={website.logo} name={website.name} size="md" />
 
             <div className="flex-1 min-w-0 max-w-full overflow-hidden">
               {/* Tight spacing for core elements */}
