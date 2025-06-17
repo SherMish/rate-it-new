@@ -57,7 +57,7 @@ export async function generateMetadata({
 async function getCategoryTools(categoryId: string) {
   await connectDB();
 
-  const tools = await Website.find({ category: categoryId }).lean();
+  const tools = await Website.find({ categories: categoryId }).lean();
 
   return tools;
 }

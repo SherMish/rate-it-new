@@ -26,7 +26,7 @@ const CHAR_LIMITS = {
 interface FormData {
   name: string;
   url: string;
-  category: string;
+  categories: string[];
   description: string;
   shortDescription: string;
   logo: string | undefined;
@@ -74,7 +74,7 @@ export default function ToolPage() {
   const [formData, setFormData] = useState<FormData>({
     name: "",
     url: "",
-    category: "",
+    categories: [],
     description: "",
     shortDescription: "",
     logo: undefined,
@@ -147,7 +147,7 @@ export default function ToolPage() {
       setFormData({
         name: website.name,
         url: website.url,
-        category: website.category || "",
+        categories: website.categories || [],
         description: website.description || "",
         shortDescription: website.shortDescription || "",
         logo: website.logo || undefined,
@@ -252,10 +252,18 @@ export default function ToolPage() {
       }
 
       setIsSaving(true);
+
+      // Filter out empty categories before sending
+      const cleanedCategories = formData.categories.filter((cat) => cat.trim());
+      const dataToSend = {
+        ...formData,
+        categories: cleanedCategories,
+      };
+
       const response = await fetch(`/api/admin/websites/${website?._id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(dataToSend),
       });
 
       const data = await response.json();
@@ -359,25 +367,88 @@ export default function ToolPage() {
               </div>
 
               <div className="grid gap-2">
-                <label className="text-sm font-medium">קטגוריה</label>
-                <Select
-                  dir="rtl"
-                  value={formData.category}
-                  onValueChange={(value) =>
-                    setFormData({ ...formData, category: value })
-                  }
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="בחר קטגוריה" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {categoriesData.categories.map((category) => (
-                      <SelectItem key={category.id} value={category.id}>
-                        {category.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <div className="flex items-center justify-between">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      if (formData.categories.length < 3) {
+                        setFormData((prev) => ({
+                          ...prev,
+                          categories: [...prev.categories, ""],
+                        }));
+                      }
+                    }}
+                    disabled={formData.categories.length >= 3}
+                    className="text-sm"
+                  >
+                    + הוסף קטגוריה נוספת
+                  </Button>
+                  <label className="text-sm font-medium">קטגוריות (עד 3)</label>
+                </div>
+
+                {formData.categories.length === 0 && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => {
+                      setFormData((prev) => ({
+                        ...prev,
+                        categories: [""],
+                      }));
+                    }}
+                    className="justify-start text-muted-foreground"
+                  >
+                    + הוסף קטגוריה ראשונה
+                  </Button>
+                )}
+
+                {formData.categories.map((category, index) => (
+                  <div key={index} className="flex gap-2">
+                    <Select
+                      dir="rtl"
+                      value={category}
+                      onValueChange={(value) => {
+                        const newCategories = [...formData.categories];
+                        newCategories[index] = value;
+                        setFormData((prev) => ({
+                          ...prev,
+                          categories: newCategories,
+                        }));
+                      }}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="בחר קטגוריה" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {categoriesData.categories.map((cat) => (
+                          <SelectItem key={cat.id} value={cat.id}>
+                            {cat.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        const newCategories = formData.categories.filter(
+                          (_, i) => i !== index
+                        );
+                        setFormData((prev) => ({
+                          ...prev,
+                          categories: newCategories,
+                        }));
+                      }}
+                      className="px-2"
+                    >
+                      ×
+                    </Button>
+                  </div>
+                ))}
               </div>
             </div>
 

@@ -52,7 +52,7 @@ export async function POST(request: Request) {
     const {
       url,
       name,
-      category,
+      categories,
       description,
       shortDescription,
       logo,
@@ -84,7 +84,7 @@ export async function POST(request: Request) {
     const websiteData = {
       url,
       name,
-      category: category || "other", // Default to 'other' if not provided
+      categories: categories || ["other"], // Default to ['other'] if not provided
       description: description || "",
       shortDescription: shortDescription || "",
       logo: logo || "",

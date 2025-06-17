@@ -116,7 +116,7 @@ export default function NewTool() {
           body: JSON.stringify({
             url: formData.url.trim(),
             name: formData.name.trim(),
-            category: formData.category,
+            categories: formData.category ? [formData.category] : [],
             description: formData.description.trim(),
             shortDescription: formData.shortDescription.trim(),
             logo: formData.logo,
@@ -204,7 +204,7 @@ export default function NewTool() {
     }
 
     // Category validation
-    if (!formData.category) {
+    if (!formData.category || !formData.category.trim()) {
       newErrors.category = "אנא בחר קטגוריה";
     }
 
@@ -321,9 +321,12 @@ export default function NewTool() {
                   <Select
                     dir="rtl"
                     value={formData.category}
-                    onValueChange={(value) =>
-                      handleFieldChange("category", value)
-                    }
+                    onValueChange={(value) => {
+                      handleFieldChange("category", value);
+                      if (errors.category) {
+                        setErrors({ ...errors, category: undefined });
+                      }
+                    }}
                   >
                     <SelectTrigger
                       className={`w-full text-right ${
@@ -333,13 +336,13 @@ export default function NewTool() {
                       <SelectValue placeholder="בחרו קטגוריה" />
                     </SelectTrigger>
                     <SelectContent className="text-right" dir="rtl">
-                      {categories.map((category) => (
+                      {categories.map((cat) => (
                         <SelectItem
-                          key={category.id}
-                          value={category.id}
+                          key={cat.id}
+                          value={cat.id}
                           className="text-right"
                         >
-                          {category.name}
+                          {cat.name}
                         </SelectItem>
                       ))}
                     </SelectContent>

@@ -49,7 +49,7 @@ export function AddToolDialog({
   const [formData, setFormData] = useState({
     url: "",
     name: "",
-    category: "",
+    categories: [""] as string[],
     description: "",
     shortDescription: "",
     logo: "",
@@ -89,7 +89,7 @@ export function AddToolDialog({
       setFormData({
         url: website.url || "",
         name: website.name || "",
-        category: website.category || "",
+        categories: website.categories || [""],
         description: website.description || "",
         shortDescription: website.shortDescription || "",
         logo: website.logo || "",
@@ -121,7 +121,7 @@ export function AddToolDialog({
       setFormData({
         url: "",
         name: "",
-        category: "",
+        categories: [""],
         description: "",
         shortDescription: "",
         logo: "",
@@ -167,7 +167,7 @@ export function AddToolDialog({
       setFormData({
         url: "",
         name: "",
-        category: "",
+        categories: [""],
         description: "",
         shortDescription: "",
         logo: "",
@@ -259,8 +259,16 @@ export function AddToolDialog({
     if (!formData.description.trim()) {
       errors.description = "נדרש תיאור";
     }
-    if (!formData.category) {
-      errors.category = "נדרשת קטגוריה";
+    if (
+      formData.categories.length === 0 ||
+      formData.categories.every((cat) => !cat.trim())
+    ) {
+      errors.categories = "נדרשת לפחות קטגוריה אחת";
+    }
+    // Check for duplicate categories
+    const validCategories = formData.categories.filter((cat) => cat.trim());
+    if (validCategories.length !== new Set(validCategories).size) {
+      errors.categories = "לא ניתן לבחור קטגוריה יותר מפעם אחת";
     }
 
     // Validate social media URLs
@@ -320,7 +328,7 @@ export function AddToolDialog({
     if (generatedDataState) {
       const updatedData = {
         ...generatedDataState,
-        category: generatedDataState.category || formData.category,
+        categories: generatedDataState.categories || formData.categories,
       };
 
       setFormData((prev) => ({
@@ -328,7 +336,7 @@ export function AddToolDialog({
         name: updatedData.name || prev.name,
         description: updatedData.description || prev.description,
         shortDescription: updatedData.shortDescription || prev.shortDescription,
-        category: updatedData.category || prev.category,
+        categories: updatedData.categories || prev.categories,
         logo: updatedData.logo || prev.logo,
         launchYear: updatedData.launchYear
           ? updatedData.launchYear.toString()
@@ -350,7 +358,14 @@ export function AddToolDialog({
     setFormError(null);
 
     try {
-      console.log("Form data being sent:", formData);
+      // Filter out empty categories before sending
+      const cleanedCategories = formData.categories.filter((cat) => cat.trim());
+      const dataToSend = {
+        ...formData,
+        categories: cleanedCategories,
+      };
+
+      console.log("Form data being sent:", dataToSend);
 
       if (isEditMode && website) {
         console.log("Updating existing website...");
@@ -358,7 +373,7 @@ export function AddToolDialog({
         const response = await fetch(`/api/admin/websites/${website._id}`, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData),
+          body: JSON.stringify(dataToSend),
         });
 
         const data = await response.json();
@@ -383,7 +398,7 @@ export function AddToolDialog({
         const response = await fetch("/api/admin/websites", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData),
+          body: JSON.stringify(dataToSend),
         });
 
         const data = await response.json();
@@ -565,30 +580,80 @@ export function AddToolDialog({
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label className="text-right block">קטגוריה</Label>
-              <Select
-                dir="rtl"
-                value={formData.category}
-                onValueChange={(value) =>
-                  setFormData((prev) => ({ ...prev, category: value }))
-                }
-              >
-                <SelectTrigger
-                  className={formErrors.category ? "border-red-500" : ""}
+              <div className="flex items-center justify-between">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    if (formData.categories.length < 3) {
+                      setFormData((prev) => ({
+                        ...prev,
+                        categories: [...prev.categories, ""],
+                      }));
+                    }
+                  }}
+                  disabled={formData.categories.length >= 3}
+                  className="text-sm"
                 >
-                  <SelectValue placeholder="בחר קטגוריה" />
-                </SelectTrigger>
-                <SelectContent>
-                  {categoriesData.categories.map((category) => (
-                    <SelectItem key={category.id} value={category.id}>
-                      {category.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              {formErrors.category && (
+                  + הוסף קטגוריה נוספת
+                </Button>
+                <Label className="text-right block">קטגוריות (עד 3)</Label>
+              </div>
+
+              {formData.categories.map((category, index) => (
+                <div key={index} className="flex gap-2">
+                  <Select
+                    dir="rtl"
+                    value={category}
+                    onValueChange={(value) => {
+                      const newCategories = [...formData.categories];
+                      newCategories[index] = value;
+                      setFormData((prev) => ({
+                        ...prev,
+                        categories: newCategories,
+                      }));
+                    }}
+                  >
+                    <SelectTrigger
+                      className={formErrors.categories ? "border-red-500" : ""}
+                    >
+                      <SelectValue placeholder="בחר קטגוריה" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {categoriesData.categories.map((cat) => (
+                        <SelectItem key={cat.id} value={cat.id}>
+                          {cat.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+
+                  {formData.categories.length > 1 && (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        const newCategories = formData.categories.filter(
+                          (_, i) => i !== index
+                        );
+                        setFormData((prev) => ({
+                          ...prev,
+                          categories: newCategories,
+                        }));
+                      }}
+                      className="px-2"
+                    >
+                      ×
+                    </Button>
+                  )}
+                </div>
+              ))}
+
+              {formErrors.categories && (
                 <p className="text-sm text-red-500 text-right">
-                  {formErrors.category}
+                  {formErrors.categories}
                 </p>
               )}
             </div>

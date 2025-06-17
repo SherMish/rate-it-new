@@ -22,10 +22,11 @@ export function LatestToolCard({ website, index }: LatestToolCardProps) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
-  // Find the category data from categories.json
-  const categoryData = categoriesData.categories.find(
-    (cat) => cat.id === website.category
-  );
+  // Find the category data from categories.json using the first category
+  const firstCategoryId = website.categories?.[0];
+  const categoryData = firstCategoryId
+    ? categoriesData.categories.find((cat) => cat.id === firstCategoryId)
+    : null;
   const Icon = categoryData?.icon
     ? (Icons[categoryData.icon as keyof typeof Icons] as LucideIcon)
     : null;

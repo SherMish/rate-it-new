@@ -18,7 +18,7 @@ export async function POST(req: Request) {
     const {
       url,
       name,
-      category,
+      categories,
       description,
       shortDescription,
       logo,
@@ -26,7 +26,7 @@ export async function POST(req: Request) {
     } = body;
 
     // Validate required fields
-    if (!url || !name || !category) {
+    if (!url || !name || !categories || categories.length === 0) {
       return NextResponse.json(
         { error: "Missing required fields" },
         { status: 400 }
@@ -66,7 +66,7 @@ export async function POST(req: Request) {
     const website = await Website.create({
       name,
       url: url.toLowerCase(),
-      category,
+      categories,
       description: description || undefined,
       shortDescription: shortDescription || undefined,
       logo:

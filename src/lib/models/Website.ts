@@ -9,7 +9,7 @@ export interface WebsiteType {
   description?: string;
   shortDescription?: string;
   logo?: string;
-  category?: string;
+  categories?: string[];
   pricingModel?: PricingModel;
   createdBy?: ObjectId;
   owner?: ObjectId;
@@ -66,9 +66,15 @@ const WebsiteSchema = new Schema(
       type: String,
       default: "",
     },
-    category: {
-      type: String,
+    categories: {
+      type: [String],
       required: true,
+      validate: {
+        validator: function (categories: string[]) {
+          return categories.length > 0 && categories.length <= 3;
+        },
+        message: "Categories must have between 1 and 3 items",
+      },
     },
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,

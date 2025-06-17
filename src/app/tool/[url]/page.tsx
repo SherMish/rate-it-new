@@ -129,13 +129,26 @@ async function getWebsiteData(url: string) {
     reviewCount,
   });
 
-  // Find the category data from categories.json
-  const categoryData = categoriesData.categories.find(
-    (cat) => cat.id === website.category
-  );
-  const Icon = categoryData?.icon
-    ? (Icons[categoryData.icon as keyof typeof Icons] as LucideIcon)
-    : null;
+  // Find all category data from categories.json
+  const categoryDataList = website.categories
+    ? website.categories
+        .map((categoryId) => {
+          const categoryData = categoriesData.categories.find(
+            (cat) => cat.id === categoryId
+          );
+          if (categoryData) {
+            const Icon = categoryData.icon
+              ? (Icons[categoryData.icon as keyof typeof Icons] as LucideIcon)
+              : null;
+            return {
+              ...categoryData,
+              Icon: Icon as LucideIcon,
+            };
+          }
+          return null;
+        })
+        .filter(Boolean)
+    : [];
 
   return {
     ...website,
@@ -143,12 +156,9 @@ async function getWebsiteData(url: string) {
     _id: website._id.toString(),
     averageRating: Math.round(averageRating * 10) / 10,
     reviewCount,
-    category: categoryData
-      ? {
-          ...categoryData,
-          Icon: Icon as LucideIcon,
-        }
-      : null,
+    categories: categoryDataList,
+    // Keep first category for backward compatibility
+    category: categoryDataList[0] || null,
   };
 }
 
@@ -263,7 +273,7 @@ async function getSuggestedTools(
   try {
     const tools = await Website.find({
       url: { $ne: currentToolUrl }, // exclude current tool
-      category: category.id, // use just the category ID
+      categories: category.id, // find tools that have this category in their categories array
     })
       .limit(limit)
       .lean();
@@ -398,18 +408,26 @@ export default async function ToolPage({ params }: PageProps) {
                         >
                           {website.name}
                         </h1>
-                        {website.category && (
-                          <Link
-                            href={`/category/${website.category.id}`}
-                            className="inline-flex items-center gap-2 text-muted-foreground text-sm hover:text-foreground transition-colors"
-                            style={{ fontFamily: "inherit" }}
-                          >
-                            {website.category.Icon && (
-                              <website.category.Icon className="w-4 h-4" />
-                            )}
-                            <span>{website.category.name}</span>
-                          </Link>
-                        )}
+                        {website.categories &&
+                          website.categories.length > 0 && (
+                            <div className="flex flex-wrap gap-2">
+                              {website.categories.map((category, index) =>
+                                category ? (
+                                  <Link
+                                    key={category.id}
+                                    href={`/category/${category.id}`}
+                                    className="inline-flex items-center gap-1 text-muted-foreground text-sm hover:text-foreground transition-colors bg-muted/50 px-2 py-1 rounded-md"
+                                    style={{ fontFamily: "inherit" }}
+                                  >
+                                    {category.Icon && (
+                                      <category.Icon className="w-3 h-3" />
+                                    )}
+                                    <span>{category.name}</span>
+                                  </Link>
+                                ) : null
+                              )}
+                            </div>
+                          )}
                       </div>
                     </div>
                     <div className="flex justify-start mb-4">
@@ -452,18 +470,26 @@ export default async function ToolPage({ params }: PageProps) {
                               showUnverified={true}
                             />
                           </div>
-                          {website.category && (
-                            <Link
-                              href={`/category/${website.category.id}`}
-                              className="inline-flex items-center gap-2 text-muted-foreground text-sm hover:text-foreground transition-colors"
-                              style={{ fontFamily: "inherit" }}
-                            >
-                              {website.category.Icon && (
-                                <website.category.Icon className="w-4 h-4" />
-                              )}
-                              <span>{website.category.name}</span>
-                            </Link>
-                          )}
+                          {website.categories &&
+                            website.categories.length > 0 && (
+                              <div className="flex flex-wrap gap-2">
+                                {website.categories.map((category, index) =>
+                                  category ? (
+                                    <Link
+                                      key={category.id}
+                                      href={`/category/${category.id}`}
+                                      className="inline-flex items-center gap-1 text-muted-foreground text-sm hover:text-foreground transition-colors bg-muted/50 px-2 py-1 rounded-md"
+                                      style={{ fontFamily: "inherit" }}
+                                    >
+                                      {category.Icon && (
+                                        <category.Icon className="w-3 h-3" />
+                                      )}
+                                      <span>{category.name}</span>
+                                    </Link>
+                                  ) : null
+                                )}
+                              </div>
+                            )}
                         </div>
                         <div className="hidden lg:flex flex-row gap-3">
                           <VisitToolButtonMobile
@@ -488,7 +514,7 @@ export default async function ToolPage({ params }: PageProps) {
                     />
                     <WriteReviewButton
                       url={params.url}
-                      buttonText="כתוب ביקורת"
+                      buttonText="כתוב ביקורת"
                     />
                   </div>
                 </div>

@@ -161,7 +161,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
       $or: [
         { name: { $regex: query, $options: "i" } },
         { url: { $regex: query, $options: "i" } },
-        { category: { $regex: query, $options: "i" } },
+        { categories: { $regex: query, $options: "i" } },
       ],
     }).lean();
 

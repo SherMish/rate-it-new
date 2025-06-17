@@ -20,7 +20,7 @@ export async function PATCH(
       url,
       description,
       shortDescription,
-      category,
+      categories,
       logo,
       launchYear,
       address,
@@ -41,7 +41,7 @@ export async function PATCH(
     if (description !== undefined) updateData.description = description;
     if (shortDescription !== undefined)
       updateData.shortDescription = shortDescription;
-    if (category !== undefined) updateData.category = category;
+    if (categories !== undefined) updateData.categories = categories;
     if (logo !== undefined) updateData.logo = logo;
     if (launchYear !== undefined) updateData.launchYear = launchYear;
     if (address !== undefined) updateData.address = address;
