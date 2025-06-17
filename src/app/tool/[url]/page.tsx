@@ -395,7 +395,7 @@ export default async function ToolPage({ params }: PageProps) {
                 <div className="flex flex-col gap-6 lg:gap-0">
                   {/* Mobile Layout */}
                   <div className="lg:hidden">
-                    <div className="flex items-start gap-4 mb-4">
+                    <div className="flex items-start gap-4 mb-3">
                       <WebsiteLogo
                         logo={website.logo}
                         name={website.name}
@@ -403,34 +403,38 @@ export default async function ToolPage({ params }: PageProps) {
                       />
                       <div className="flex-1 min-w-0">
                         <h1
-                          className="text-2xl font-bold mb-2 leading-tight"
+                          className="text-2xl font-bold leading-tight"
                           style={{ fontFamily: "inherit" }}
                         >
                           {website.name}
                         </h1>
-                        {website.categories &&
-                          website.categories.length > 0 && (
-                            <div className="flex flex-wrap gap-2">
-                              {website.categories.map((category, index) =>
-                                category ? (
-                                  <Link
-                                    key={category.id}
-                                    href={`/category/${category.id}`}
-                                    className="inline-flex items-center gap-1 text-muted-foreground text-sm hover:text-foreground transition-colors bg-muted/50 px-2 py-1 rounded-md"
-                                    style={{ fontFamily: "inherit" }}
-                                  >
-                                    {category.Icon && (
-                                      <category.Icon className="w-3 h-3" />
-                                    )}
-                                    <span>{category.name}</span>
-                                  </Link>
-                                ) : null
-                              )}
-                            </div>
-                          )}
                       </div>
                     </div>
-                    <div className="flex justify-start mb-4">
+
+                    {/* Categories and Badge Row - Full Width */}
+                    <div className="flex items-center justify-start gap-3 mb-4">
+                      {/* Categories */}
+                      {website.categories && website.categories.length > 0 && (
+                        <div className="flex flex-wrap gap-1.5">
+                          {website.categories.map((category, index) =>
+                            category ? (
+                              <Link
+                                key={category.id}
+                                href={`/category/${category.id}`}
+                                className="inline-flex items-center gap-1 text-muted-foreground text-sm hover:text-foreground transition-colors bg-muted/50 px-2 py-1 rounded-md"
+                                style={{ fontFamily: "inherit" }}
+                              >
+                                {category.Icon && (
+                                  <category.Icon className="w-3 h-3" />
+                                )}
+                                <span>{category.name}</span>
+                              </Link>
+                            ) : null
+                          )}
+                        </div>
+                      )}
+
+                      {/* Verification Badge */}
                       <VerifiedBadge
                         isVerified={website.isVerified ?? false}
                         pricingModel={website.pricingModel ?? PricingModel.FREE}
