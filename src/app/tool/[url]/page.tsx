@@ -411,30 +411,28 @@ export default async function ToolPage({ params }: PageProps) {
                       </div>
                     </div>
 
-                    {/* Categories and Badge Row - Full Width */}
-                    <div className="flex items-center justify-start gap-3 mb-4">
-                      {/* Categories */}
-                      {website.categories && website.categories.length > 0 && (
-                        <div className="flex flex-wrap gap-1.5">
-                          {website.categories.map((category, index) =>
-                            category ? (
-                              <Link
-                                key={category.id}
-                                href={`/category/${category.id}`}
-                                className="inline-flex items-center gap-1 text-muted-foreground text-sm hover:text-foreground transition-colors bg-muted/50 px-2 py-1 rounded-md"
-                                style={{ fontFamily: "inherit" }}
-                              >
-                                {category.Icon && (
-                                  <category.Icon className="w-3 h-3" />
-                                )}
-                                <span>{category.name}</span>
-                              </Link>
-                            ) : null
-                          )}
-                        </div>
-                      )}
+                    {/* Tags Row - Categories and Badge as unified list */}
+                    <div className="flex flex-wrap items-center gap-1.5 mb-4">
+                      {/* Categories as individual tags */}
+                      {website.categories &&
+                        website.categories.length > 0 &&
+                        website.categories.map((category, index) =>
+                          category ? (
+                            <Link
+                              key={category.id}
+                              href={`/category/${category.id}`}
+                              className="inline-flex items-center gap-1 text-muted-foreground text-sm hover:text-foreground transition-colors bg-muted/50 px-2 py-1 rounded-md"
+                              style={{ fontFamily: "inherit" }}
+                            >
+                              {category.Icon && (
+                                <category.Icon className="w-3 h-3" />
+                              )}
+                              <span>{category.name}</span>
+                            </Link>
+                          ) : null
+                        )}
 
-                      {/* Verification Badge */}
+                      {/* Verification Badge as another tag */}
                       <VerifiedBadge
                         isVerified={website.isVerified ?? false}
                         pricingModel={website.pricingModel ?? PricingModel.FREE}
