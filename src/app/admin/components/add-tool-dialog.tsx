@@ -579,77 +579,79 @@ export function AddToolDialog({
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() => {
-                    if (formData.categories.length < 3) {
-                      setFormData((prev) => ({
-                        ...prev,
-                        categories: [...prev.categories, ""],
-                      }));
-                    }
-                  }}
-                  disabled={formData.categories.length >= 3}
-                  className="text-sm"
-                >
-                  + הוסף קטגוריה נוספת
-                </Button>
-                <Label className="text-right block">קטגוריות (עד 3)</Label>
-              </div>
+            <div className="space-y-3">
+              <Label className="text-right block">קטגוריות (עד 3)</Label>
 
-              {formData.categories.map((category, index) => (
-                <div key={index} className="flex gap-2">
-                  <Select
-                    dir="rtl"
-                    value={category}
-                    onValueChange={(value) => {
-                      const newCategories = [...formData.categories];
-                      newCategories[index] = value;
-                      setFormData((prev) => ({
-                        ...prev,
-                        categories: newCategories,
-                      }));
-                    }}
-                  >
-                    <SelectTrigger
-                      className={formErrors.categories ? "border-red-500" : ""}
-                    >
-                      <SelectValue placeholder="בחר קטגוריה" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {categoriesData.categories.map((cat) => (
-                        <SelectItem key={cat.id} value={cat.id}>
-                          {cat.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-
-                  {formData.categories.length > 1 && (
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={() => {
-                        const newCategories = formData.categories.filter(
-                          (_, i) => i !== index
-                        );
+              <div className="space-y-2">
+                {formData.categories.map((category, index) => (
+                  <div key={index} className="flex gap-2">
+                    <Select
+                      dir="rtl"
+                      value={category}
+                      onValueChange={(value) => {
+                        const newCategories = [...formData.categories];
+                        newCategories[index] = value;
                         setFormData((prev) => ({
                           ...prev,
                           categories: newCategories,
                         }));
                       }}
-                      className="px-2"
                     >
-                      ×
-                    </Button>
-                  )}
-                </div>
-              ))}
+                      <SelectTrigger
+                        className={`flex-1 ${
+                          formErrors.categories ? "border-red-500" : ""
+                        }`}
+                      >
+                        <SelectValue placeholder="בחר קטגוריה" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {categoriesData.categories.map((cat) => (
+                          <SelectItem key={cat.id} value={cat.id}>
+                            {cat.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+
+                    {formData.categories.length > 1 && (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          const newCategories = formData.categories.filter(
+                            (_, i) => i !== index
+                          );
+                          setFormData((prev) => ({
+                            ...prev,
+                            categories: newCategories,
+                          }));
+                        }}
+                        className="px-3 h-10"
+                      >
+                        ×
+                      </Button>
+                    )}
+                  </div>
+                ))}
+              </div>
+
+              {formData.categories.length < 3 && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    setFormData((prev) => ({
+                      ...prev,
+                      categories: [...prev.categories, ""],
+                    }));
+                  }}
+                  className="w-full text-sm text-muted-foreground h-10"
+                >
+                  + הוסף קטגוריה נוספת
+                </Button>
+              )}
 
               {formErrors.categories && (
                 <p className="text-sm text-red-500 text-right">
