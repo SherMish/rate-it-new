@@ -55,6 +55,7 @@ import {
   GraduationCap,
   Mic,
   FlaskRound,
+  Wallet,
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import Link from "next/link";
@@ -117,6 +118,7 @@ const Icons: Record<string, LucideIcon> = {
   GraduationCap,
   Mic,
   FlaskRound,
+  Wallet,
 };
 
 export function CategoriesSection() {
