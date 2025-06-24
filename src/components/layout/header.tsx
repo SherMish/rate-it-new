@@ -307,63 +307,52 @@ export function Header() {
                       {item.name}
                     </Link>
                   ))}
-                {!isRegularSite &&
-                  businessNavigation.map((item) => (
+
+                {/* Business Section - Custom Order */}
+                {isBusinessSection && (
+                  <>
                     <Link
-                      key={item.name}
-                      href={item.href}
-                      className="block rounded-md px-3 py-4 text-base font-medium text-muted-foreground hover:bg-blue-50 hover:text-foreground transition-colors"
+                      href="/business/register"
+                      className="block rounded-md px-3 py-4 text-base font-medium text-white bg-primary hover:bg-primary/90 transition-colors"
                       onClick={() => setIsOpen(false)}
                     >
-                      {item.name}
+                      צור חשבון חינם
                     </Link>
-                  ))}
+                    <button
+                      onClick={() => {
+                        setIsOpen(false);
+                        handleBusinessAccess();
+                      }}
+                      className="block rounded-md px-3 py-4 text-base font-medium text-primary hover:bg-blue-50 hover:text-primary/80 transition-colors w-full text-right"
+                    >
+                      כניסה לרשומים
+                    </button>
+                    {businessNavigation.map((item) => (
+                      <Link
+                        key={item.name}
+                        href={item.href}
+                        className="block rounded-md px-3 py-4 text-base font-medium text-muted-foreground hover:bg-blue-50 hover:text-foreground transition-colors"
+                        onClick={() => setIsOpen(false)}
+                      >
+                        {item.name}
+                      </Link>
+                    ))}
+                    <button
+                      onClick={handleConsumerNavigationMobile}
+                      className="block rounded-md px-3 py-4 text-base font-medium text-muted-foreground hover:bg-blue-50 hover:text-foreground transition-colors"
+                    >
+                      אתר צרכנים
+                    </button>
+                  </>
+                )}
 
-                {isRegularSite ? (
+                {isRegularSite && (
                   <button
                     onClick={handleBusinessNavigationMobile}
                     className="block rounded-md px-3 py-4 text-base font-medium text-primary hover:bg-blue-50 hover:text-primary/80 transition-colors"
                   >
                     כניסה לעסקים
                   </button>
-                ) : (
-                  <button
-                    onClick={handleConsumerNavigationMobile}
-                    className="block rounded-md px-3 py-4 text-base font-medium text-muted-foreground hover:bg-blue-50 hover:text-foreground transition-colors"
-                  >
-                    אתר צרכנים
-                  </button>
-                )}
-
-                {isBusinessSection && (
-                  <>
-                    <Button
-                      onClick={() => {
-                        setIsOpen(false);
-                        handleBusinessAccess();
-                      }}
-                      className="block rounded-md px-3 py-4 text-base font-medium text-primary hover:bg-blue-50 hover:text-primary/80 transition-colors"
-                    >
-                      כניסה לרשומים
-                    </Button>
-                    <Link
-                      href="/business/register"
-                      className="block rounded-md px-3 py-4 text-base font-medium text-primary hover:bg-blue-50 hover:text-primary/80 transition-colors"
-                      onClick={() => setIsOpen(false)}
-                    >
-                      צור חשבון חינם
-                    </Link>
-                  </>
-                )}
-
-                {session?.user && (
-                  <Link
-                    href="/my-reviews"
-                    className="block rounded-md px-3 py-4 text-base font-medium text-muted-foreground hover:bg-blue-50 hover:text-foreground transition-colors"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    הביקורות שלי
-                  </Link>
                 )}
 
                 {isRegularSite && (
