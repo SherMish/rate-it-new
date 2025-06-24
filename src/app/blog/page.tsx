@@ -53,19 +53,17 @@ export default async function BlogPage() {
   const posts = await getBlogPosts();
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Background effects - same as home page */}
-      <div className="fixed inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_14px] [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]" />
-      <div className="fixed inset-0 bg-gradient-to-tr from-background to-background [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)] opacity-90" />
-      <div className="fixed inset-0 bg-[radial-gradient(circle_500px_at_50%_200px,#1a1f2e,transparent)]" />
+    <main className="relative min-h-screen" dir="rtl">
+      {/* Main background gradient - matching other pages */}
+      <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,#3b82f620,transparent_70%),radial-gradient(ellipse_at_bottom,#6366f115,transparent_70%)] pointer-events-none" />
 
       <div className="relative container max-w-5xl mx-auto px-4 py-12">
         {/* Header */}
-        <div className="text-center mb-12" dir="rtl">
-          <h1 className="text-4xl font-bold mb-4">
-            איך לגרום ללקוחות לבחור דווקא בך? הבלוג שיעשה לך סדר{" "}
+        <div className="text-center mb-12 space-y-4">
+          <h1 className="text-3xl md:text-4xl font-bold text-foreground">
+            איך לגרום ללקוחות לבחור דווקא בך? הבלוג שיעשה לך סדר
           </h1>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             מה הופך ביקורת לאפקטיבית? איך מזמינים ביקורות בלי להציק? ואיך ממנפים
             דירוגים לצמיחה עסקית? כאן תמצאו את כל התשובות.
           </p>
@@ -75,14 +73,14 @@ export default async function BlogPage() {
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {posts.map((post) => (
             <Link key={post._id.toString()} href={`/blog/${post.slug}`}>
-              <Card className="group h-full overflow-hidden border border-border/50 bg-secondary/50 backdrop-blur-sm hover:bg-secondary/80 transition-colors">
+              <Card className="group h-full overflow-hidden border border-border/50 bg-card/50 backdrop-blur-sm hover:bg-card/80 transition-all duration-300 shadow-lg hover:shadow-xl">
                 {post.coverImage && (
                   <div className="relative h-48 overflow-hidden">
                     <Image
                       src={post.coverImage}
                       alt={post.title}
                       fill
-                      className="object-cover transition-transform group-hover:scale-105"
+                      className="object-cover transition-transform duration-300 group-hover:scale-105"
                     />
                   </div>
                 )}
@@ -90,7 +88,7 @@ export default async function BlogPage() {
                   {/* Category & Reading Time */}
                   <div className="flex items-center gap-4 text-sm text-muted-foreground mb-3">
                     {post.category && (
-                      <span className="bg-primary/10 text-primary px-2 py-1 rounded-md">
+                      <span className="bg-primary/10 text-primary px-2 py-1 rounded-md font-medium">
                         {post.category}
                       </span>
                     )}
@@ -101,10 +99,10 @@ export default async function BlogPage() {
                   </div>
 
                   {/* Title & Excerpt */}
-                  <h2 className="text-xl font-semibold mb-2 group-hover:text-primary transition-colors">
+                  <h2 className="text-xl font-semibold mb-3 group-hover:text-primary transition-colors line-clamp-2">
                     {post.title}
                   </h2>
-                  <p className="text-muted-foreground mb-4 line-clamp-2">
+                  <p className="text-muted-foreground mb-4 line-clamp-3 text-sm leading-relaxed">
                     {post.excerpt}
                   </p>
 
@@ -116,8 +114,8 @@ export default async function BlogPage() {
                         {formatDate(post.publishedAt)}
                       </time>
                     </div>
-                    <span className="text-primary flex items-center gap-1 text-sm">
-                      Read more <ArrowRight className="w-4 h-4" />
+                    <span className="text-primary flex items-center gap-1 text-sm font-medium group-hover:gap-2 transition-all">
+                      קרא עוד <ArrowRight className="w-4 h-4" />
                     </span>
                   </div>
                 </div>
@@ -125,7 +123,19 @@ export default async function BlogPage() {
             </Link>
           ))}
         </div>
+
+        {/* Empty state */}
+        {posts.length === 0 && (
+          <div className="text-center py-16">
+            <div className="rounded-lg border border-border/50 bg-card/50 backdrop-blur-sm p-12">
+              <h3 className="text-xl font-semibold mb-2">אין פוסטים להציג</h3>
+              <p className="text-muted-foreground">
+                אנחנו עובדים על תוכן חדש ומעניין. בקרו אותנו שוב בקרוב!
+              </p>
+            </div>
+          </div>
+        )}
       </div>
-    </div>
+    </main>
   );
 }

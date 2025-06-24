@@ -15,7 +15,7 @@ import { useLoading } from "@/contexts/loading-context";
 
 const navigation = [
   // { name: "For Businesses", href: "/business" },
-  // { name: "בלוג", href: "/blog" },
+  { name: "בלוג", href: "/blog" },
   { name: "אודות", href: "/about" },
 ];
 

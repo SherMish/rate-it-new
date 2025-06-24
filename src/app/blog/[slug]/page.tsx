@@ -4,7 +4,7 @@ import Image from "next/image";
 import connectDB from "@/lib/mongodb";
 import BlogPostModel from "@/lib/models/BlogPost";
 import { formatDate } from "@/lib/utils";
-import { CalendarDays, Clock, ArrowLeft } from "lucide-react";
+import { CalendarDays, Clock, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { BlogPost } from "@/lib/types/blog";
 import { Card } from "@/components/ui/card";
@@ -74,12 +74,12 @@ function generateStructuredData(post: BlogPost, baseUrl: string) {
     dateModified: post.updatedAt.toISOString(),
     author: {
       "@type": "Organization",
-      name: "AI-Radar Team",
+      name: "Rate It Team",
       url: baseUrl,
     },
     publisher: {
       "@type": "Organization",
-      name: "AI-Radar",
+      name: "Rate It",
       logo: {
         "@type": "ImageObject",
         url: `${baseUrl}/logo_new.svg`,
@@ -104,27 +104,27 @@ export async function generateMetadata({
 
   if (!post) {
     return {
-      title: "Post Not Found | AI-Radar Blog",
+      title: "פוסט לא נמצא | Rate It בלוג",
     };
   }
 
   return {
-    title: `${post.title} | AI-Radar Blog`,
+    title: `${post.title} | Rate It בלוג`,
     description: post.excerpt,
     keywords: [
-      "AI",
-      "artificial intelligence",
-      "technology",
+      "ביקורות עסקים",
+      "מוניטין דיגיטלי",
+      "עסקים בישראל",
       post.category,
     ].filter(Boolean),
-    authors: [{ name: "AI-Radar Team" }],
+    authors: [{ name: "Rate It Team" }],
     openGraph: {
       title: post.title,
       description: post.excerpt,
       type: "article",
       publishedTime: post.publishedAt.toISOString(),
       modifiedTime: post.updatedAt.toISOString(),
-      authors: ["AI-Radar Team"],
+      authors: ["Rate It Team"],
       images: post.coverImage
         ? [
             {
@@ -136,14 +136,14 @@ export async function generateMetadata({
           ]
         : [],
       url: `${baseUrl}/blog/${post.slug}`,
-      siteName: "AI-Radar Blog",
+      siteName: "Rate It בלוג",
     },
     twitter: {
       card: "summary_large_image",
       title: post.title,
       description: post.excerpt,
       images: post.coverImage ? [post.coverImage] : [],
-      creator: "@ai_radar", // Replace with your actual Twitter handle
+      creator: "@RateItIL",
     },
     alternates: {
       canonical: `${baseUrl}/blog/${post.slug}`,
@@ -164,7 +164,7 @@ export default async function BlogPostPage({ params }: PageProps) {
   const structuredData = generateStructuredData(post, baseUrl);
 
   return (
-    <div className="min-h-screen bg-background">
+    <main className="relative min-h-screen" dir="rtl">
       {/* Add structured data */}
       <script
         type="application/ld+json"
@@ -173,114 +173,132 @@ export default async function BlogPostPage({ params }: PageProps) {
         }}
       />
 
-      {/* Background effects - same as home page */}
-      {/* <div className="fixed inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_14px] [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]" /> */}
-      <div className="fixed inset-0 bg-gradient-to-tr from-background to-background [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)] opacity-90" />
-      <div className="fixed inset-0 bg-[radial-gradient(circle_500px_at_50%_200px,#1a1f2e,transparent)]" />
+      {/* Main background gradient - matching other pages */}
+      <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,#3b82f620,transparent_70%),radial-gradient(ellipse_at_bottom,#6366f115,transparent_70%)] pointer-events-none" />
 
-      <article className="relative container max-w-3xl mx-auto px-4 py-12">
+      <article className="relative container max-w-4xl mx-auto px-4 py-12">
         {/* Back Link */}
         <Link
           href="/blog"
-          className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors mb-8"
+          className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors mb-8 group"
         >
-          <ArrowLeft className="w-4 h-4 mr-1" />
-          Back to Blog
+          <ArrowRight className="w-4 h-4 ml-1 transition-transform group-hover:translate-x-1" />
+          חזרה לבלוג
         </Link>
 
-        {/* Cover Image */}
-        {post.coverImage && (
-          <div className="relative h-[400px] rounded-xl overflow-hidden mb-8">
-            <Image
-              src={post.coverImage}
-              alt={post.title}
-              fill
-              className="object-cover"
-              priority
+        {/* Article Container */}
+        <div className="rounded-xl border border-border/50 bg-card/50 backdrop-blur-sm shadow-lg overflow-hidden">
+          {/* Header */}
+          <header className="p-8 pb-6 border-b border-border/20">
+            {post.category && (
+              <span className="inline-block bg-primary/10 text-primary px-3 py-1 rounded-md text-sm font-medium mb-4">
+                {post.category}
+              </span>
+            )}
+            <h1 className="text-3xl md:text-4xl font-bold text-foreground leading-tight mb-4">
+              {post.title}
+            </h1>
+            <div className="flex items-center gap-4 text-muted-foreground">
+              <div className="flex items-center gap-2">
+                <CalendarDays className="w-4 h-4" />
+                <time dateTime={post.publishedAt.toISOString()}>
+                  {formatDate(post.publishedAt)}
+                </time>
+              </div>
+              <div className="flex items-center gap-2">
+                <Clock className="w-4 h-4" />
+                <span>{post.estimatedReadTime} דקות קריאה</span>
+              </div>
+            </div>
+          </header>
+
+          {/* Excerpt */}
+          {post.excerpt && (
+            <div className="px-8 py-6 bg-primary/5 border-b border-border/20">
+              <p className="text-lg text-foreground leading-relaxed font-medium italic">
+                {post.excerpt}
+              </p>
+            </div>
+          )}
+
+          {/* Cover Image */}
+          {post.coverImage && (
+            <div className="relative h-[400px] overflow-hidden">
+              <Image
+                src={post.coverImage}
+                alt={post.title}
+                fill
+                className="object-cover"
+                priority
+              />
+            </div>
+          )}
+
+          {/* Content */}
+          <div className="p-8">
+            <div
+              className="prose prose-slate dark:prose-invert max-w-none
+                 [&>p]:leading-relaxed [&>p]:mb-4 [&>p]:text-foreground
+                [&>h2]:text-foreground [&>h2]:font-semibold [&>h2]:mt-8 [&>h2]:mb-4 [&>h2]:text-2xl
+                [&>h3]:text-foreground [&>h3]:font-semibold [&>h3]:mt-8 [&>h3]:mb-4 [&>h3]:text-xl
+                [&>h4]:text-foreground [&>h4]:font-semibold [&>h4]:mt-8 [&>h4]:mb-4 [&>h4]:text-lg
+                [&>a]:text-primary [&>a]:no-underline hover:[&>a]:underline
+                [&>strong]:text-foreground [&>strong]:font-semibold
+                [&>ul]:list-disc [&>ul]:pl-6 [&>ul]:my-4 
+                [&>ol]:list-decimal [&>ol]:pl-6 [&>ol]:my-4
+                [&>li]:my-2 [&>li]:text-foreground
+                [&>blockquote]:border-r-4 [&>blockquote]:border-primary/50 [&>blockquote]:pr-4 [&>blockquote]:italic [&>blockquote]:bg-primary/5 [&>blockquote]:py-2
+                [&>table]:w-full [&>table]:my-6 [&>table]:text-sm
+                [&>thead>tr>th]:border [&>thead>tr>th]:border-border/50 [&>thead>tr>th]:p-2 [&>thead>tr>th]:bg-secondary/50
+                [&>tbody>tr>td]:border [&>tbody>tr>td]:border-border/50 [&>tbody>tr>td]:p-2
+                [&>code]:text-primary [&>code]:bg-primary/10 [&>code]:px-1 [&>code]:rounded
+                [&>pre]:bg-secondary/50 [&>pre]:p-4 [&>pre]:rounded-lg [&>pre]:border [&>pre]:border-border/50
+                [&>img]:rounded-lg [&>img]:my-8 [&>img]:shadow-md"
+              dangerouslySetInnerHTML={{ __html: post.content }}
             />
           </div>
-        )}
-
-        {/* Header */}
-        <header className="mb-8">
-          {post.category && (
-            <span className="inline-block bg-primary/10 text-primary px-3 py-1 rounded-md text-sm mb-4">
-              {post.category}
-            </span>
-          )}
-          <h1 className="text-4xl font-bold mb-4">{post.title}</h1>
-          <div className="flex items-center gap-4 text-muted-foreground">
-            <div className="flex items-center gap-2">
-              <CalendarDays className="w-4 h-4" />
-              <time dateTime={post.publishedAt.toISOString()}>
-                {formatDate(post.publishedAt)}
-              </time>
-            </div>
-            <div className="flex items-center gap-2">
-              <Clock className="w-4 h-4" />
-              <span>{post.estimatedReadTime} min read</span>
-            </div>
-          </div>
-        </header>
-
-        {/* Content */}
-        <div
-          className="prose prose-invert prose-slate max-w-none
-             [&>p]:leading-relaxed [&>p]:mb-4
-            [&>h2]:text-foreground [&>h2]:font-semibold [&>h2]:mt-8 [&>h2]:mb-4 [&>h2]:text-2xl
-            [&>h3]:text-foreground [&>h3]:font-semibold [&>h3]:mt-8 [&>h3]:mb-4 [&>h3]:text-xl
-            [&>h4]:text-foreground [&>h4]:font-semibold [&>h4]:mt-8 [&>h4]:mb-4 [&>h4]:text-lg
-            [&>a]:text-primary [&>a]:no-underline hover:[&>a]:underline
-            [&>strong]:text-foreground [&>strong]:font-semibold
-            [&>ul]:list-disc [&>ul]:pl-6 [&>ul]:my-4 
-            [&>ol]:list-decimal [&>ol]:pl-6 [&>ol]:my-4
-            [&>li]:my-2
-            [&>blockquote]:border-l-4 [&>blockquote]:border-primary/50 [&>blockquote]:pl-4 [&>blockquote]:italic
-            [&>table]:w-full [&>table]:my-6 [&>table]:text-sm
-            [&>thead>tr>th]:border [&>thead>tr>th]:border-border/50 [&>thead>tr>th]:p-2 [&>thead>tr>th]:bg-secondary/50
-            [&>tbody>tr>td]:border [&>tbody>tr>td]:border-border/50 [&>tbody>tr>td]:p-2
-            [&>code]:text-primary [&>code]:bg-primary/10 [&>code]:px-1 [&>code]:rounded
-            [&>pre]:bg-secondary/50 [&>pre]:p-4 [&>pre]:rounded-lg
-            [&>img]:rounded-lg [&>img]:my-8"
-          dangerouslySetInnerHTML={{ __html: post.content }}
-        />
+        </div>
       </article>
 
       {/* Related Posts */}
-      <div className="relative container max-w-3xl mx-auto px-4 mt-16 mb-12">
-        <h2 className="text-2xl font-bold mb-8">Continue Reading</h2>
-        <div className="grid gap-6 md:grid-cols-2">
-          {relatedPosts.map((relatedPost) => (
-            <Link key={relatedPost._id} href={`/blog/${relatedPost.slug}`}>
-              <Card className="group h-full overflow-hidden border border-border/50 bg-secondary/50 backdrop-blur-sm hover:bg-secondary/80 transition-colors">
-                {relatedPost.coverImage && (
-                  <div className="relative h-48 overflow-hidden">
-                    <Image
-                      src={relatedPost.coverImage}
-                      alt={relatedPost.title}
-                      fill
-                      className="object-cover transition-transform group-hover:scale-105"
-                    />
-                  </div>
-                )}
-                <div className="p-6">
-                  {relatedPost.category && (
-                    <span className="inline-block bg-primary/10 text-primary px-2 py-1 rounded-md text-sm mb-3">
-                      {relatedPost.category}
-                    </span>
+      {relatedPosts.length > 0 && (
+        <div className="relative container max-w-4xl mx-auto px-4 mt-16 mb-12">
+          <h2 className="text-2xl font-bold mb-8 text-foreground">
+            המשיכו לקרוא
+          </h2>
+          <div className="grid gap-6 md:grid-cols-2">
+            {relatedPosts.map((relatedPost) => (
+              <Link key={relatedPost._id} href={`/blog/${relatedPost.slug}`}>
+                <Card className="group h-full overflow-hidden border border-border/50 bg-card/50 backdrop-blur-sm hover:bg-card/80 transition-all duration-300 shadow-lg hover:shadow-xl">
+                  {relatedPost.coverImage && (
+                    <div className="relative h-48 overflow-hidden">
+                      <Image
+                        src={relatedPost.coverImage}
+                        alt={relatedPost.title}
+                        fill
+                        className="object-cover transition-transform duration-300 group-hover:scale-105"
+                      />
+                    </div>
                   )}
-                  <h3 className="text-lg font-semibold mb-2 group-hover:text-primary transition-colors">
-                    {relatedPost.title}
-                  </h3>
-                  <p className="text-muted-foreground text-sm line-clamp-2">
-                    {relatedPost.excerpt}
-                  </p>
-                </div>
-              </Card>
-            </Link>
-          ))}
+                  <div className="p-6">
+                    {relatedPost.category && (
+                      <span className="inline-block bg-primary/10 text-primary px-2 py-1 rounded-md text-sm mb-3 font-medium">
+                        {relatedPost.category}
+                      </span>
+                    )}
+                    <h3 className="text-lg font-semibold mb-2 group-hover:text-primary transition-colors line-clamp-2">
+                      {relatedPost.title}
+                    </h3>
+                    <p className="text-muted-foreground text-sm line-clamp-2 leading-relaxed">
+                      {relatedPost.excerpt}
+                    </p>
+                  </div>
+                </Card>
+              </Link>
+            ))}
+          </div>
         </div>
-      </div>
-    </div>
+      )}
+    </main>
   );
 }

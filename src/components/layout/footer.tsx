@@ -12,7 +12,7 @@ import {
 const navigation = {
   main: [
     { name: "אודות", href: "/about" },
-    // { name: "בלוג", href: "/blog" },
+    { name: "בלוג", href: "/blog" },
     { name: "לעסקים", href: "/business" },
     // { name: "Contact", href: "/contact" },
   ],
