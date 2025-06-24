@@ -72,7 +72,10 @@ export default async function BlogPage() {
         {/* Blog Posts Grid */}
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {posts.map((post) => (
-            <Link key={post._id.toString()} href={`/blog/${post.slug}`}>
+            <Link
+              key={post._id.toString()}
+              href={`/business/blog/${post.slug}`}
+            >
               <Card className="group h-full overflow-hidden border border-border/50 bg-card/50 backdrop-blur-sm hover:bg-card/80 transition-all duration-300 shadow-lg hover:shadow-xl">
                 {post.coverImage && (
                   <div className="relative h-48 overflow-hidden">
@@ -94,7 +97,7 @@ export default async function BlogPage() {
                     )}
                     <div className="flex items-center gap-1">
                       <Clock className="w-4 h-4" />
-                      <span>{post.estimatedReadTime} min read</span>
+                      <span>{post.estimatedReadTime} דקות לקריאה</span>
                     </div>
                   </div>
 

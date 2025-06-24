@@ -19,8 +19,10 @@ interface PageProps {
 
 async function getBlogPost(slug: string) {
   await connectDB();
+  // Decode the URL-encoded slug to match database entries
+  const decodedSlug = decodeURIComponent(slug);
   const post = (await BlogPostModel.findOne({
-    slug,
+    slug: decodedSlug,
     isPublished: true,
   }).lean()) as unknown as BlogPost & { _id: any };
 
@@ -87,7 +89,7 @@ function generateStructuredData(post: BlogPost, baseUrl: string) {
     },
     mainEntityOfPage: {
       "@type": "WebPage",
-      "@id": `${baseUrl}/blog/${post.slug}`,
+      "@id": `${baseUrl}/business/blog/${post.slug}`,
     },
     wordCount: post.content.split(/\s+/g).length,
     articleBody: post.content.replace(/<[^>]+>/g, ""), // Strip HTML tags
@@ -135,7 +137,7 @@ export async function generateMetadata({
             },
           ]
         : [],
-      url: `${baseUrl}/blog/${post.slug}`,
+      url: `${baseUrl}/business/blog/${post.slug}`,
       siteName: "Rate It בלוג",
     },
     twitter: {
@@ -146,7 +148,7 @@ export async function generateMetadata({
       creator: "@RateItIL",
     },
     alternates: {
-      canonical: `${baseUrl}/blog/${post.slug}`,
+      canonical: `${baseUrl}/business/blog/${post.slug}`,
     },
   };
 }
@@ -179,7 +181,7 @@ export default async function BlogPostPage({ params }: PageProps) {
       <article className="relative container max-w-4xl mx-auto px-4 py-12">
         {/* Back Link */}
         <Link
-          href="/blog"
+          href="/business/blog"
           className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors mb-8 group"
         >
           <ArrowRight className="w-4 h-4 ml-1 transition-transform group-hover:translate-x-1" />
@@ -268,7 +270,10 @@ export default async function BlogPostPage({ params }: PageProps) {
           </h2>
           <div className="grid gap-6 md:grid-cols-2">
             {relatedPosts.map((relatedPost) => (
-              <Link key={relatedPost._id} href={`/blog/${relatedPost.slug}`}>
+              <Link
+                key={relatedPost._id}
+                href={`/business/blog/${relatedPost.slug}`}
+              >
                 <Card className="group h-full overflow-hidden border border-border/50 bg-card/50 backdrop-blur-sm hover:bg-card/80 transition-all duration-300 shadow-lg hover:shadow-xl">
                   {relatedPost.coverImage && (
                     <div className="relative h-48 overflow-hidden">

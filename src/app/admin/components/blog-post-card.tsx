@@ -55,7 +55,7 @@ export function BlogPostCard({ post, onUpdate }: BlogPostCardProps) {
               </div>
               <div className="flex items-center gap-1">
                 <Clock className="w-4 h-4" />
-                {post.estimatedReadTime} min read
+                {post.estimatedReadTime} דקות לקריאה
               </div>
             </div>
           </div>

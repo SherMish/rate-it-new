@@ -15,7 +15,11 @@ import { useLoading } from "@/contexts/loading-context";
 
 const navigation = [
   // { name: "For Businesses", href: "/business" },
-  { name: "בלוג", href: "/blog" },
+  { name: "אודות", href: "/about" },
+];
+
+const businessNavigation = [
+  { name: "בלוג", href: "/business/blog" },
   { name: "אודות", href: "/about" },
 ];
 
@@ -106,12 +110,15 @@ export function Header() {
 
   const isBusinessHome = pathname === "/business";
   const isBusinessRegister = pathname === "/business/register";
+  const isBusinessDashboard = pathname?.includes("/business/dashboard");
 
   const isRegularSite = pathname?.includes("/business") !== true;
+  const isBusinessSection =
+    pathname?.includes("/business") === true &&
+    !isBusinessDashboard &&
+    !isBusinessRegister;
 
   const showSearch = pathname !== "/" && isRegularSite;
-
-  const isBusinessDashboard = pathname?.includes("/business/dashboard");
 
   if (isBusinessDashboard) return <> </>;
   else {
@@ -182,6 +189,16 @@ export function Header() {
                       {item.name}
                     </Link>
                   ))}
+                {!isRegularSite &&
+                  businessNavigation.map((item) => (
+                    <Link
+                      key={item.name}
+                      href={item.href}
+                      className="text-base font-medium text-muted-foreground transition-colors hover:text-foreground mr-8"
+                    >
+                      {item.name}
+                    </Link>
+                  ))}
 
                 {isRegularSite ? (
                   <button
@@ -199,7 +216,7 @@ export function Header() {
                   </button>
                 )}
 
-                {isBusinessHome && (
+                {isBusinessSection && (
                   <>
                     <Button
                       onClick={handleBusinessAccess}
@@ -290,6 +307,17 @@ export function Header() {
                       {item.name}
                     </Link>
                   ))}
+                {!isRegularSite &&
+                  businessNavigation.map((item) => (
+                    <Link
+                      key={item.name}
+                      href={item.href}
+                      className="block rounded-md px-3 py-4 text-base font-medium text-muted-foreground hover:bg-blue-50 hover:text-foreground transition-colors"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      {item.name}
+                    </Link>
+                  ))}
 
                 {isRegularSite ? (
                   <button
@@ -307,7 +335,7 @@ export function Header() {
                   </button>
                 )}
 
-                {isBusinessHome && (
+                {isBusinessSection && (
                   <>
                     <Button
                       onClick={() => {

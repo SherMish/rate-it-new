@@ -35,7 +35,7 @@ export async function RandomBlogPosts() {
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-12">
           {posts.map((post) => (
-            <Link key={post._id} href={`/blog/${post.slug}`}>
+            <Link key={post._id} href={`/business/blog/${post.slug}`}>
               <Card className="group h-full overflow-hidden border border-border bg-white shadow-sm hover:shadow-md transition-all">
                 {post.coverImage && (
                   <div className="relative h-48 overflow-hidden">
@@ -90,7 +90,7 @@ export async function RandomBlogPosts() {
         {/* View All Posts Button */}
         <div className="flex justify-center mt-8">
           <Link
-            href="/blog"
+            href="/business/blog"
             className="inline-flex items-center gap-2 bg-primary text-white px-6 py-3 rounded-lg font-medium shadow-sm hover:shadow-md hover:bg-primary/90 transition-all"
           >
             צפה בכל הפוסטים
