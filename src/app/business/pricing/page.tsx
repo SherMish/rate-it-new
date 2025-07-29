@@ -137,8 +137,8 @@ export default function BusinessPricingPage() {
     },
     {
       name: "פלוס",
-      price: calculatePrice(79, 25),
-      monthlyPrice: calculateMonthlyAverage(79, 25),
+      price: calculatePrice(199, 25),
+      monthlyPrice: calculateMonthlyAverage(199, 25),
       discount: 25,
       isComingSoon: true,
       features: plusFeatures,

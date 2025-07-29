@@ -13,20 +13,22 @@ import { CheckCircle2 } from "lucide-react";
 // STATIC PLAN DATA
 // ─────────────────────────────────────────────────────────────────────────────
 export const freeFeatures = [
-  { text: "לוח בקרה בסיסי" },
-  { text: "ניהול ביקורות" },
+  { text: "לוח בקרה בסיסי כולל ניתוח ביקורות" },
+  { text: "ניהול וטיפול בביקורות לקוחות" },
+  { text: "פרופיל עסק מקצועי ברייט-איט" },
+  { text: "עמוד ייעודי לעסק עם כל הפרטים" },
 ];
 
 export const plusFeatures = [
   { text: "כל מה שבחינם, ובנוסף:" },
-  { text: "תג מאומת (Verified Badge)", isHighlighted: true },
-
-  // { text: "רישום מומלץ בדף הבית" },
+  {
+    text: "תג מאומת (Verified Badge) - הוכח שהעסק אמיתי ואמין",
+    isHighlighted: true,
+  },
   { text: "נתוני חשיפה והתנהגות גולשים בזמן אמת", isHighlighted: true },
-  { text: "עדיפות במענה ותמיכה", isHighlighted: true },
-
-  // { text: "מיתוג מותאם אישית לדף העסק" },
-  // { text: "יצירת עד 5 קופונים" },
+  { text: "עדיפות במענה ותמיכה VIP", isHighlighted: true },
+  { text: "דוחות מתקדמים ואנליטיקה עסקית", isHighlighted: true },
+  { text: "הצגה מועדפת במנוע החיפוש", isHighlighted: true },
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -129,22 +131,22 @@ export function PricingSection({
       name: "חינם",
       price: "0 ₪",
       features: freeFeatures,
-      ctaText: "התחילו בחינם",
+      ctaText: "התחל בחינם עכשיו",
       onCtaClick: handleFreePlanRegistration,
-      bestFor: "דרך קלה להתחיל לבנות אמון עם הלקוחות – בלי עלות.",
+      bestFor: "מושלם להתחלה! התחל לבנות אמון עם הלקוחות שלך בחינם",
       planType: "free" as const,
     },
     {
       name: "פלוס",
-      price: calculatePrice(79, 25),
-      monthlyPrice: calculateMonthlyAverage(79, 25),
+      price: calculatePrice(199, 25),
+      monthlyPrice: calculateMonthlyAverage(199, 25),
       discount: 25,
       features: plusFeatures,
-      ctaText: "בקרוב",
+      ctaText: "שדרג לפלוס",
       onCtaClick: handlePlusSubscription,
-      // isRecommended: true,
-      // highlightColor: "primary",
-      bestFor: "מתאים לעסקים שמכוונים לבלוט בשוק תחרותי.",
+      isRecommended: true,
+      highlightColor: "primary",
+      bestFor: "לעסקים שרוצים למקסם אמינות ולבלוט על מתחרים",
       planType: "plus" as const,
       isComingSoon: true,
     },
@@ -154,10 +156,14 @@ export function PricingSection({
     <div className="space-y-8" dir="rtl">
       <LoadingModal open={loading || loadingParent} />
 
-      <Alert className="bg-green-100 border-green-200 text-green-700">
-        <CheckCircle2 className="h-4 w-4" />
-        <AlertDescription>
-          הדומיין שלך אומת בהצלחה! בחר/י את המסלול המתאים לך כדי להמשיך.
+      <Alert className="bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 text-green-800 p-6">
+        <CheckCircle2 className="h-5 w-5" />
+        <AlertDescription className="text-lg font-semibold">
+          🎉 מזל טוב! הדומיין שלך אומת בהצלחה!
+          <br />
+          <span className="font-normal">
+            כעת בחר את המסלול שיעזור לך להגיע ללקוחות חדשים
+          </span>
         </AlertDescription>
       </Alert>
 
@@ -168,9 +174,14 @@ export function PricingSection({
         onBillingChange={setIsAnnual}
       />
 
-      <p className="text-center text-sm text-muted-foreground">
-        תשלום מאובטח. ניתן לבטל בכל עת. המחירים לפני מע״מ.
-      </p>
+      <div className="text-center space-y-4 bg-muted/30 p-6 rounded-lg">
+        <p className="text-lg font-semibold text-foreground">
+          💳 תשלום מאובטח ובטוח
+        </p>
+        <p className="text-sm text-muted-foreground">
+          ביטול בכל עת • ללא התחייבויות • תמיכה 24/7 • המחירים לפני מע״מ
+        </p>
+      </div>
     </div>
   );
 }

@@ -1,7 +1,14 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { CheckCircle2, ArrowRight, BadgeCheck } from "lucide-react";
+import {
+  CheckCircle2,
+  ArrowRight,
+  BadgeCheck,
+  Star,
+  Zap,
+  Crown,
+} from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import {
   benefitExplanations,
@@ -46,8 +53,18 @@ export function PricingPlansUI({
 }: PricingPlansUIProps) {
   return (
     <div className="space-y-8">
+      {/* Header Section */}
+      <div className="text-center space-y-4">
+        <h2 className="text-4xl font-bold text-primary">
+          בחר את המסלול שמתאים לך
+        </h2>
+        <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+          התחל עם המסלול החינמי או שדרג למסלול הפלוס למקסימום חשיפה ואמון
+        </p>
+      </div>
+
       {onBillingChange && (
-        <div className="flex items-center justify-center gap-4">
+        <div className="flex items-center justify-center gap-4 bg-muted/30 p-4 rounded-lg">
           <span
             className={`text-sm ${
               !isAnnual ? "font-semibold" : "text-muted-foreground"
@@ -61,113 +78,120 @@ export function PricingPlansUI({
               isAnnual ? "font-semibold" : "text-muted-foreground"
             }`}
           >
-            שנתי <span className="text-green-600">(שלושה חודשים מתנה)</span>
+            שנתי <span className="text-green-600 font-bold">(חסוך 25%)</span>
           </span>
         </div>
       )}
-      <div className="grid md:grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+
+      {/* 2 Column Grid */}
+      <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
         {plans.map((plan, index) => (
           <Card
             key={index}
-            className={`p-6 border-2 flex flex-col h-full relative ${
+            className={`p-8 border-2 flex flex-col h-full relative transition-all duration-300 hover:shadow-2xl hover:scale-105 ${
               plan.isRecommended
-                ? `border-${plan.highlightColor || "primary"}`
-                : "border-border/50"
+                ? `border-primary-500 bg-gradient-to-b from-primary/5 to-primary/10 shadow-xl`
+                : "border-border/50 hover:border-primary/30"
             } ${plan.isCurrent ? "bg-primary/5" : ""} ${
-              plan.isComingSoon ? "opacity-75" : ""
+              plan.isComingSoon ? "opacity-80" : ""
             }`}
           >
             {plan.isRecommended && !plan.isComingSoon && (
-              <div
-                className={`absolute top-0 left-0 bg-${
-                  plan.highlightColor || "primary"
-                } text-primary-foreground text-sm px-3 py-1 rounded-br-lg`}
-              >
-                מומלץ
+              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                <div className="bg-gradient-to-r from-primary to-primary-600 text-white text-sm font-bold px-6 py-2 rounded-full shadow-lg flex items-center gap-1">
+                  <Crown className="h-4 w-4" />
+                  הכי פופולרי
+                </div>
               </div>
             )}
             {plan.isComingSoon && (
-              <div className="absolute top-0 left-0 bg-orange-500 text-white text-sm px-3 py-1 rounded-br-lg">
-                בקרוב
+              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                <div className="bg-gradient-to-r from-orange-500 to-orange-600 text-white text-sm font-bold px-6 py-2 rounded-full shadow-lg flex items-center gap-1">
+                  <Zap className="h-4 w-4" />
+                  בקרוב
+                </div>
               </div>
             )}
-            <div className="space-y-5 flex flex-col flex-grow">
-              <div>
-                <h3 className="text-2xl font-bold">{plan.name}</h3>
-                {plan.priceDetails && (
-                  <p className="text-muted-foreground mt-1">
-                    {plan.priceDetails}
-                  </p>
-                )}
+
+            <div className="space-y-6 flex flex-col flex-grow">
+              {/* Plan Header */}
+              <div className="text-center space-y-3">
+                <h3 className="text-3xl font-bold text-foreground">
+                  {plan.name}
+                </h3>
                 {plan.bestFor && (
-                  <p className="text-sm text-muted-foreground mt-2">
+                  <p className="text-sm text-muted-foreground font-medium bg-muted/50 p-3 rounded-lg">
                     {plan.bestFor}
                   </p>
                 )}
               </div>
-              <div className="space-y-1">
-                <div className="text-3xl font-bold">
+
+              {/* Price Display */}
+              <div className="text-center space-y-2">
+                <div className="text-5xl font-bold text-primary">
                   {isAnnual && plan.monthlyPrice
                     ? `${plan.monthlyPrice} ₪`
                     : plan.price}
-                  <span className="text-base font-normal text-muted-foreground mr-1">
-                    {isAnnual ? "לחודש" : "לחודש"}
+                  <span className="text-lg font-normal text-muted-foreground mr-2">
+                    לחודש
                   </span>
                 </div>
                 {isAnnual && plan.monthlyPrice && plan.discount && (
-                  <div className="text-sm text-muted-foreground">
-                    בחיוב שנתי •{" "}
-                    {Math.round(
-                      plan.monthlyPrice * 12 * (1 - plan.discount / 100)
-                    )}{" "}
-                    ₪ לשנה
+                  <div className="text-sm text-muted-foreground bg-green-50 p-2 rounded">
+                    חיסכון שנתי של{" "}
+                    <span className="font-bold text-green-600">
+                      {Math.round(
+                        plan.monthlyPrice * 12 * (plan.discount / 100)
+                      )}{" "}
+                      ₪
+                    </span>
                   </div>
                 )}
               </div>
-              <ul className="space-y-3 flex-grow">
+
+              {/* Features List */}
+              <ul className="space-y-4 flex-grow">
                 {plan.features.map((feature, idx) => (
                   <li
                     key={idx}
-                    className={`flex items-center gap-2 ${
+                    className={`flex items-center gap-3 ${
                       feature.isHighlighted
-                        ? `font-semibold text-${
-                            plan.highlightColor || "primary"
-                          }`
-                        : "text-muted-foreground"
+                        ? "font-bold text-primary bg-primary/5 p-2 rounded-lg"
+                        : "text-foreground"
                     }`}
                   >
                     {feature.isHighlighted ? (
-                      <BadgeCheck
-                        className={`h-5 w-5 text-${
-                          plan.highlightColor || "primary"
-                        }`}
-                      />
+                      <BadgeCheck className="h-6 w-6 text-primary flex-shrink-0" />
                     ) : (
-                      <CheckCircle2 className="h-5 w-5 text-green-500" />
+                      <CheckCircle2 className="h-5 w-5 text-green-500 flex-shrink-0" />
                     )}
-                    {feature.text}
+                    <span className="text-base">{feature.text}</span>
                   </li>
                 ))}
               </ul>
 
               {/* Benefit Explanations Section */}
               {plan.planType && planBenefitMappings[plan.planType] && (
-                <div className="space-y-4 pt-4 border-t border-border/50">
-                  <h4 className="font-semibold text-sm text-foreground">
+                <div className="space-y-4 pt-6 border-t border-border/50">
+                  <h4 className="font-bold text-base text-foreground flex items-center gap-2">
+                    <Star className="h-5 w-5 text-primary" />
                     היתרונות לעסק שלך:
                   </h4>
-                  <div className="space-y-3">
+                  <div className="space-y-4">
                     {planBenefitMappings[plan.planType].map((benefitKey) => {
                       const benefit =
                         benefitExplanations[
                           benefitKey as keyof typeof benefitExplanations
                         ];
                       return (
-                        <div key={benefitKey} className="space-y-1">
-                          <p className="text-sm font-medium text-foreground">
+                        <div
+                          key={benefitKey}
+                          className="space-y-1 bg-muted/30 p-3 rounded-lg"
+                        >
+                          <p className="text-sm font-bold text-foreground">
                             {benefit.title}
                           </p>
-                          <p className="text-xs text-muted-foreground leading-relaxed">
+                          <p className="text-sm text-muted-foreground leading-relaxed">
                             {benefit.description}
                           </p>
                         </div>
@@ -177,14 +201,14 @@ export function PricingPlansUI({
                 </div>
               )}
 
+              {/* CTA Button */}
               <Button
+                size="lg"
                 variant={plan.isRecommended ? "default" : "outline"}
-                className={`w-full mt-auto ${
+                className={`w-full mt-auto py-4 text-lg font-bold transition-all duration-300 ${
                   plan.isRecommended
-                    ? `bg-${plan.highlightColor || "primary"} hover:bg-${
-                        plan.highlightColor || "primary"
-                      }/90`
-                    : ""
+                    ? "bg-gradient-to-r from-primary to-primary-600 hover:from-primary-600 hover:to-primary-700 shadow-lg hover:shadow-xl"
+                    : "border-2 hover:border-primary hover:bg-primary/5"
                 } ${plan.isComingSoon ? "opacity-60" : ""}`}
                 onClick={() => plan.onCtaClick()}
                 disabled={
@@ -199,6 +223,9 @@ export function PricingPlansUI({
                   : plan.isComingSoon
                   ? "בקרוב"
                   : plan.ctaText}
+                {!plan.isCurrent && !plan.isComingSoon && (
+                  <ArrowRight className="h-5 w-5 mr-2" />
+                )}
               </Button>
             </div>
           </Card>
