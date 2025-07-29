@@ -171,7 +171,10 @@ export default function BusinessRegistration() {
               <DomainVerificationForm
                 websiteUrl={formData.websiteUrl}
                 businessName={formData.businessName}
-                onComplete={() => setStep(4)}
+                onComplete={(websiteUrl) => {
+                  setVerifiedWebsiteUrl(websiteUrl);
+                  setStep(4);
+                }}
                 onBack={() => setStep(2)}
               />
             )}

@@ -11,7 +11,7 @@ import { useRouter } from "next/navigation";
 interface DomainVerificationFormProps {
   websiteUrl: string;
   businessName: string;
-  onComplete: () => void;
+  onComplete: (websiteUrl: string) => void;
   onBack: () => void;
 }
 
@@ -130,7 +130,7 @@ export function DomainVerificationForm({
       const data = await response.json();
 
       if (data.success) {
-        onComplete();
+        onComplete(data.websiteUrl);
       } else if (data.maxAttemptsExceeded) {
         // Redirect to home page after max attempts
         router.push("/");
