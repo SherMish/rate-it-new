@@ -72,7 +72,7 @@ export function PricingSection({
     try {
       const domain = cleanDomain(websiteUrl);
 
-      // 1. Get current user
+      // 1. Get current userr
       const sessionRes = await fetch("/api/auth/session");
       const session = await sessionRes.json();
       const userId = session?.user?.id;
