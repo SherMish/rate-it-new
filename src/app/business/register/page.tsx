@@ -16,7 +16,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CheckCircle2 } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
-import { verifyDomain as verifyDomainAction } from "@/app/actions/verification";
+// verifyDomain import removed since token verification is deprecated
 import { HelpDialog } from "@/components/business/registration/HelpDialog";
 
 export default function BusinessRegistration() {
@@ -24,12 +24,7 @@ export default function BusinessRegistration() {
   const { update: updateSession, data: session, status } = useSession();
   const searchParams = useSearchParams();
   const [step, setStep] = useState(() => {
-    // Initialize step based on URL params
-    const token = searchParams?.get("token");
-    const stepParam = searchParams?.get("step");
-    if (token && stepParam === "4") {
-      return 4;
-    }
+    // Initialize step based on URL params - token verification is deprecated
     return 1;
   });
   const loginModal = useLoginModal();
@@ -55,136 +50,7 @@ export default function BusinessRegistration() {
     }
   }, [session]);
 
-  useEffect(() => {
-    const verifyToken = async () => {
-      const token = searchParams?.get("token");
-      if (token && step === 4) {
-        try {
-          const result = await verifyDomainAction(token);
-          if (!result.success) setVerifiedWebsiteUrl(null);
-          else {
-            setVerifiedWebsiteUrl(result.websiteUrl);
-            const websiteUrl = result.websiteUrl;
-            if (!websiteUrl) {
-              toast({
-                variant: "destructive",
-                title: "שגיאה",
-                description: "כתובת האתר חסרה. אנא נסו שוב.",
-              });
-              return;
-            }
-
-            setLoading(true);
-            try {
-              // 1. Clean domain
-              const domain = cleanDomain(websiteUrl);
-
-              // 2. Get current user
-              const sessionRes = await fetch("/api/auth/session");
-              const session = await sessionRes.json();
-              const userId = session?.user?.id;
-              if (!userId) throw new Error("המשתמש אינו מחובר");
-
-              // 3. Check if website already exists
-              const websiteCheckRes = await fetch(
-                `/api/website/check?url=${encodeURIComponent(domain)}`
-              );
-
-              if (!websiteCheckRes.ok && websiteCheckRes.status !== 404) {
-                throw new Error("שגיאה בבדיקת אתר קיים");
-              }
-              const existingWebsite = websiteCheckRes.ok
-                ? await websiteCheckRes.json()
-                : null;
-              // 4. Ownership collision guard
-              if (
-                existingWebsite?.owner &&
-                existingWebsite.owner !== userId /* someone else */
-              ) {
-                throw new Error("האתר כבר משויך למשתמש אחר");
-              }
-              // 5. Already mine & already on FREE → just go to dashboard
-              // if (
-              //   existingWebsite?.owner === userId &&
-              //   existingWebsite?.pricingModel === "free"
-              // ) {
-              //   router.push("/business/dashboard");
-              //   return;
-              // }
-
-              // 6. Prepare payload (merge, don't clobber)
-              const websitePayload = {
-                ...(existingWebsite ?? {}),
-                url: domain,
-                owner: userId,
-                isVerified: true,
-                pricingModel: "free",
-                // keep category/name if present, else fallback
-                category: existingWebsite?.category ?? "other",
-                name: existingWebsite?.name,
-              };
-
-              // 7. Create or update website
-              const websiteUpdateRes = await fetch("/api/website/update", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(websitePayload),
-              });
-              if (!websiteUpdateRes.ok)
-                throw new Error("נכשל בעדכון/יצירת האתר");
-              const { _id: websiteId } = await websiteUpdateRes.json();
-
-              // 8. Update user (API should merge arrays server-side)
-              const userUpdateRes = await fetch("/api/user/update", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                  role: "business_owner",
-                  isWebsiteOwner: true,
-                  isVerifiedWebsiteOwner: true,
-                  relatedWebsite: domain,
-                  websites: [websiteId],
-                  currentPricingModel: "free",
-                }),
-              });
-              if (!userUpdateRes.ok) throw new Error("נכשל בעדכון פרטי המשתמש");
-
-              // 9. Refresh session → redirect
-              await updateSession();
-              router.push("/business/dashboard?firstTime=true");
-            } catch (error) {
-              console.error("Error in handleFreePlanRegistration:", error);
-              toast({
-                variant: "destructive",
-                title: "שגיאה ברישום",
-                description:
-                  error instanceof Error
-                    ? error.message
-                    : "משהו השתבש. אנא נסו שוב.",
-              });
-            } finally {
-              setLoading(false);
-            }
-          }
-        } catch (error) {
-          console.error("Verification error:", error);
-          toast({
-            variant: "destructive",
-            title: "Error",
-            description:
-              error instanceof Error
-                ? error.message
-                : "Failed to verify domain ownership.",
-          });
-          setStep(3);
-        }
-      }
-    };
-
-    if (!verifiedWebsiteUrl) {
-      verifyToken();
-    }
-  }, []);
+  // Token verification has been removed - now handled in DomainVerificationForm
 
   if (status === "loading") {
     return <LoadingSpinner />;

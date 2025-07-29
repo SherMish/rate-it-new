@@ -76,9 +76,13 @@ const UserSchema = new mongoose.Schema(
     },
     lastLoginAt: Date,
     verification: {
-      token: {
+      code: {
         type: String,
         default: null,
+      },
+      attempts: {
+        type: Number,
+        default: 0,
       },
       expires: {
         type: Date,
@@ -89,6 +93,10 @@ const UserSchema = new mongoose.Schema(
         default: null,
       },
       businessName: {
+        type: String,
+        default: null,
+      },
+      email: {
         type: String,
         default: null,
       },

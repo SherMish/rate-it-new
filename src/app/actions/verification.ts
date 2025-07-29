@@ -5,8 +5,12 @@ import { authOptions } from "@/lib/auth";
 import connectDB from "@/lib/mongodb";
 import User from "@/lib/models/User";
 import Website from "@/lib/models/Website";
-import { generateToken } from "@/lib/utils";
 import { sendEmail } from "@/lib/email";
+
+// Generate 6-digit verification code
+function generateVerificationCode(): string {
+  return Math.floor(100000 + Math.random() * 900000).toString();
+}
 
 export async function sendVerificationEmail(
   email: string,
@@ -21,19 +25,21 @@ export async function sendVerificationEmail(
       throw new Error("Not authenticated");
     }
 
-    const verificationToken = generateToken();
+    const verificationCode = generateVerificationCode();
     const expires = new Date(Date.now() + 1 * 60 * 60 * 1000); // 1 hour
 
-    // Update user with verification token
+    // Update user with verification code
     const user = await User.findOneAndUpdate(
       { email: session.user.email },
       {
         $set: {
           verification: {
-            token: verificationToken,
+            code: verificationCode,
+            attempts: 0,
             expires: expires,
             websiteUrl: websiteUrl,
             businessName: businessName,
+            email: email,
           },
         },
       },
@@ -43,27 +49,26 @@ export async function sendVerificationEmail(
     if (!user) {
       throw new Error("User not found");
     }
-    console.log(`/business/register?token=${verificationToken}&step=4"`);
-    const verificationUrl = `${process.env.NEXT_PUBLIC_APP_URL}/business/register?token=${verificationToken}&step=4`;
 
-    // Send verification email
+    // Send verification email with code
     await sendEmail({
       to: email,
       subject: "אמת את הבעלות על הדומיין שלך",
       html: `
-        <div style="font-family: sans-serif;">
-          <h2>אמת את הבעלות על הדומיין שלך</h2>
-          <p>לחץ על הכפתור למטה כדי לאמת את הבעלות על הדומיין עבור ${websiteUrl}:</p>
-          <p style="color: #666;"> שימו לב! לצורך המשך תהליך הרשמה תקין וחלק, יש לפתוח את הלינק במכשיר ובדפדפן בהם התחלת את ההרשמה.</p>
-
-          <a 
-            href="${verificationUrl}"
-            style="display: inline-block; background-color: #0070f3; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; margin: 16px 0;"
-          >
-            אמת דומיין
-          </a>
-          <p style="color: #666;"> אם הכפתור לא עובד, העתק והדבק את הקישור הזה:</p>
-          <p style="color: #666; word-break: break-all;">${verificationUrl}</p>
+        <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+          <h2 style="color: #333; text-align: center;">אמת את הבעלות על הדומיין שלך</h2>
+          <p style="color: #666; font-size: 16px;">הזן את הקוד הבא כדי לאמת את הבעלות על הדומיין עבור ${websiteUrl}:</p>
+          
+          <div style="background-color: #f8f9fa; border: 2px dashed #dee2e6; border-radius: 8px; padding: 30px; text-align: center; margin: 30px 0;">
+            <div style="font-size: 32px; font-weight: bold; color: #0070f3; letter-spacing: 8px; font-family: monospace;">
+              ${verificationCode}
+            </div>
+          </div>
+          
+          <p style="color: #666; font-size: 14px;">
+            <strong>שימו לב:</strong> לצורך המשך תהליך הרשמה תקין וחלק, יש להזין את הקוד במכשיר ובדפדפן בהם התחלתם את ההרשמה.
+          </p>
+          <p style="color: #999; font-size: 12px;">הקוד תקף למשך שעה אחת בלבד.</p>
         </div>
       `,
     });
@@ -75,26 +80,39 @@ export async function sendVerificationEmail(
   }
 }
 
-export async function verifyDomain(token: string) {
+// New function to verify code instead of token
+export async function verifyCode(code: string) {
   try {
     await connectDB();
 
-    // Find user with this verification token
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.email) {
+      throw new Error("Not authenticated");
+    }
+
+    // Find user with this verification code
     const user = await User.findOne({
-      "verification.token": token,
+      email: session.user.email,
+      "verification.code": code,
       "verification.expires": { $gt: new Date() },
     });
 
-    //check if its the current logged in user
-    const session = await getServerSession(authOptions);
-    const userId = session?.user?.id;
-    if (user?.id !== userId) {
-      throw new Error("User mismatch! token doesnt belong");
+    if (!user) {
+      // Increment attempts for the current user if they exist
+      await User.findOneAndUpdate(
+        {
+          email: session.user.email,
+          "verification.expires": { $gt: new Date() },
+        },
+        { $inc: { "verification.attempts": 1 } }
+      );
+      throw new Error("Invalid or expired verification code");
     }
 
-
-    if (!user) {
-      throw new Error("Invalid or expired verification token");
+    // Check attempts limit
+    if (user.verification.attempts >= 2) {
+      // 2 previous attempts + this one = 3 total
+      throw new Error("Maximum attempts exceeded");
     }
 
     const websiteUrl = user.verification.websiteUrl;
@@ -107,9 +125,7 @@ export async function verifyDomain(token: string) {
       .split("/")[0]
       .split(":")[0];
 
-
-    // Update website and user only if not already verified
-    // if (!user.isVerifiedWebsiteOwner) {
+    // Update website and user
     const website = await Website.findOneAndUpdate(
       { url: cleanUrl },
       {
@@ -123,20 +139,30 @@ export async function verifyDomain(token: string) {
       },
       { upsert: true, new: true }
     );
-    // }
+
     await User.findByIdAndUpdate(user._id, {
       $set: {
         isWebsiteOwner: true,
         isVerifiedWebsiteOwner: true,
       },
+      $unset: {
+        verification: 1,
+      },
     });
 
     return { success: true, websiteUrl };
   } catch (error) {
-    console.error("Error verifying domain:", error);
+    console.error("Error verifying code:", error);
     if (error instanceof Error) {
       throw new Error(`Verification failed: ${error.message}`);
     }
-    throw new Error("Failed to verify domain");
+    throw new Error("Failed to verify code");
   }
+}
+
+// Keep the old verifyDomain function for backward compatibility, but it should not be used anymore
+export async function verifyDomain(token: string) {
+  throw new Error(
+    "Token-based verification is deprecated. Use code verification instead."
+  );
 }
