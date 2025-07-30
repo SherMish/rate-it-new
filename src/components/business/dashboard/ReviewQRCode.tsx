@@ -17,7 +17,7 @@ export function ReviewQRCode({ websiteUrl, className }: ReviewQRCodeProps) {
   const [copied, setCopied] = useState(false);
 
   // Create the review URL
-  const reviewUrl = `${process.env.NEXT_PUBLIC_APP_URL}/tool/${websiteUrl}/review`;
+  const reviewUrl = `https://rate-it.co.il/tool/${websiteUrl}/review`;
 
   const handleCopyImage = async () => {
     try {
@@ -189,17 +189,6 @@ export function ReviewQRCode({ websiteUrl, className }: ReviewQRCodeProps) {
             <Download className="h-4 w-4 mr-2" />
             הורד
           </Button>
-        </div>
-
-        {/* Usage instructions */}
-        <div className="text-xs text-muted-foreground space-y-1">
-          <p className="font-medium">💡 רעיונות לשימוש:</p>
-          <ul className="list-disc list-inside space-y-0.5 mr-2">
-            <li>הדביקו על השולחן או הקיר</li>
-            <li>הוסיפו לכרטיס ביקור</li>
-            <li>שלחו ב-WhatsApp ללקוחות</li>
-            <li>הדפיסו ושימו ליד הקופה</li>
-          </ul>
         </div>
       </CardContent>
     </Card>

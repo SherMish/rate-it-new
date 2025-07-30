@@ -51,7 +51,7 @@ export function WhatsAppReviewModal({
     return phone; // Return as-is if format is unclear
   };
 
-  const reviewUrl = `${process.env.NEXT_PUBLIC_APP_URL}/tool/${websiteUrl}/review`;
+  const reviewUrl = `https://rate-it.co.il/tool/${websiteUrl}/review`;
 
   const generateWhatsAppMessage = (): string => {
     if (customMessage.trim()) {
@@ -81,10 +81,10 @@ ${reviewUrl}
 
     const formattedPhone = formatIsraeliPhone(phoneNumber);
     const message = generateWhatsAppMessage();
-    const whatsappUrl = `https://wa.me/${formattedPhone.replace(
+    const whatsappUrl = `https://api.whatsapp.com/send?phone=${formattedPhone.replace(
       "+",
       ""
-    )}?text=${encodeURIComponent(message)}`;
+    )}&text=${encodeURIComponent(message)}`;
 
     // Open WhatsApp in new window
     window.open(whatsappUrl, "_blank");
