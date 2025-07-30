@@ -26,17 +26,17 @@ import {
 import Link from "next/link";
 import { toast } from "@/components/ui/use-toast";
 
-interface WhatsAppReviewModalProps {
+interface ReviewInvitationCardProps {
   websiteUrl: string;
   businessName: string;
   className?: string;
 }
 
-export function WhatsAppReviewModal({
+export function ReviewInvitationCard({
   websiteUrl,
   businessName,
   className,
-}: WhatsAppReviewModalProps) {
+}: ReviewInvitationCardProps) {
   const [open, setOpen] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [customMessage, setCustomMessage] = useState("");
@@ -205,7 +205,7 @@ ${reviewUrl}
             </h4>
             <Button
               onClick={() => setOpen(true)}
-              className="w-full bg-green-600 hover:bg-green-700 text-white mb-2"
+              className="w-full bg-green-600 hover:bg-green-700 text-white mb-2 gap-1"
             >
               <Phone className="h-4 w-4 mr-2" />
               שלח בקשת ביקורת

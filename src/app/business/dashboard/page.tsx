@@ -44,8 +44,8 @@ import { UpgradeButton } from "@/components/ui/upgrade-button";
 import { CopyLinksCard } from "@/app/components/CopyLinksCard";
 import { OnboardingGuide } from "@/app/components/OnboardingGuide";
 import { DashboardHelpDialog } from "@/components/business/dashboard/DashboardHelpDialog";
-import { ReviewQRCode } from "@/components/business/dashboard/ReviewQRCode";
-import { WhatsAppReviewModal } from "@/components/business/dashboard/WhatsAppReviewModal";
+import { QRCodeGeneratorCard } from "@/components/business/dashboard/QRCodeGeneratorCard";
+import { ReviewInvitationCard } from "@/components/business/dashboard/ReviewInvitationCard";
 
 type Feature = {
   id: string;
@@ -252,14 +252,13 @@ export default function DashboardPage() {
             כלים לאיסוף ביקורות
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-            {/* QR Code Card */}
-            <ReviewQRCode websiteUrl={website?.url || ""} />
-
-            {/* WhatsApp Card */}
-            <WhatsAppReviewModal
+            {/* Review Invitation Card */}
+            <ReviewInvitationCard
               websiteUrl={website?.url || ""}
               businessName={website?.name || "העסק שלכם"}
             />
+            {/* QR Code Generator Card */}
+            <QRCodeGeneratorCard websiteUrl={website?.url || ""} />
           </div>
         </div>
 

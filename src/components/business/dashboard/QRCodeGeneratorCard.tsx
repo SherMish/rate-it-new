@@ -7,12 +7,15 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { QrCode, Copy, Check, Download } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
 
-interface ReviewQRCodeProps {
+interface QRCodeGeneratorCardProps {
   websiteUrl: string;
   className?: string;
 }
 
-export function ReviewQRCode({ websiteUrl, className }: ReviewQRCodeProps) {
+export function QRCodeGeneratorCard({
+  websiteUrl,
+  className,
+}: QRCodeGeneratorCardProps) {
   const [copied, setCopied] = useState(false);
   const [qrWithLogo, setQrWithLogo] = useState<string>("");
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -87,7 +90,7 @@ export function ReviewQRCode({ websiteUrl, className }: ReviewQRCodeProps) {
           };
 
           // Use PNG version if available for better quality, fallback to SVG
-          logo.src = "/logo_new.png";
+          logo.src = "/rate_it_star.png";
         };
 
         img.src = "data:image/svg+xml;base64," + btoa(svgData);
