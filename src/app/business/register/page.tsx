@@ -42,13 +42,8 @@ export default function BusinessRegistration() {
 
   const [isLoading, setLoading] = useState(false);
 
-  // Redirect to dashboard if user is already linked to a business
-  useEffect(() => {
-    if (session?.user?.businessId && step === 1) {
-      //can use isWebsiteOwner
-      window.location.href = "/business/dashboard";
-    }
-  }, [session]);
+  // Remove automatic redirect - now handled in step 1 UI
+  // Users with verified businesses will see dashboard button in step 1 instead of automatic redirect
 
   // Token verification has been removed - now handled in DomainVerificationForm
 
@@ -134,25 +129,61 @@ export default function BusinessRegistration() {
             {/* Step 1: Authentication */}
             <div className={`${step !== 1 ? "hidden" : ""}`}>
               <div className="text-center">
-                <h2 className="text-2xl font-semibold mb-4">
-                  התחברות להתחלת רישום
-                </h2>
                 {!session ? (
-                  <Button
-                    size="lg"
-                    onClick={() => loginModal.onOpen()}
-                    className="w-full max-w-sm"
-                  >
-                    התחברות / הרשמה
-                  </Button>
-                ) : (
-                  <div className="flex flex-col items-center gap-4">
+                  <>
+                    <h2 className="text-2xl font-semibold mb-4">
+                      התחברות להתחלת רישום
+                    </h2>
+                    <Button
+                      size="lg"
+                      onClick={() => loginModal.onOpen()}
+                      className="w-full max-w-sm"
+                    >
+                      התחברות / הרשמה
+                    </Button>
+                  </>
+                ) : session.user.role === "business_owner" &&
+                  session.user.websites ? (
+                  // User already has a verified business
+                  <div className="flex flex-col items-center gap-6">
                     <div className="flex items-center gap-2 text-success">
-                      <CheckCircle2 className="w-5 h-5" />
-                      <span>מחובר/ת בתור {session.user.email}</span>
+                      <CheckCircle2 className="w-6 h-6" />
+                      <span className="text-lg font-medium">
+                        העסק שלך כבר רשום ופעיל!
+                      </span>
                     </div>
-                    <Button onClick={() => setStep(2)}>להמשך ההרשמה</Button>
+                    <div className="text-center space-y-2">
+                      <p className="text-muted-foreground">
+                        מחובר/ת בתור {session.user.email}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        אתה כבר בעל עסק רשום במערכת שלנו
+                      </p>
+                    </div>
+                    <Button
+                      size="lg"
+                      onClick={() =>
+                        (window.location.href = "/business/dashboard")
+                      }
+                      className="w-full max-w-sm"
+                    >
+                      מעבר לדשבורד העסק
+                    </Button>
                   </div>
+                ) : (
+                  // User is logged in but doesn't have a verified business
+                  <>
+                    <h2 className="text-2xl font-semibold mb-4">
+                      התחברות להתחלת רישום
+                    </h2>
+                    <div className="flex flex-col items-center gap-4">
+                      <div className="flex items-center gap-2 text-success">
+                        <CheckCircle2 className="w-5 h-5" />
+                        <span>מחובר/ת בתור {session.user.email}</span>
+                      </div>
+                      <Button onClick={() => setStep(2)}>להמשך ההרשמה</Button>
+                    </div>
+                  </>
                 )}
               </div>
             </div>
