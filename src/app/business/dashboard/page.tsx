@@ -44,6 +44,8 @@ import { UpgradeButton } from "@/components/ui/upgrade-button";
 import { CopyLinksCard } from "@/app/components/CopyLinksCard";
 import { OnboardingGuide } from "@/app/components/OnboardingGuide";
 import { DashboardHelpDialog } from "@/components/business/dashboard/DashboardHelpDialog";
+import { ReviewQRCode } from "@/components/business/dashboard/ReviewQRCode";
+import { WhatsAppReviewModal } from "@/components/business/dashboard/WhatsAppReviewModal";
 
 type Feature = {
   id: string;
@@ -243,6 +245,24 @@ export default function DashboardPage() {
           </div>
         </div>
 
+        {/* Review Collection Tools */}
+        <div className="mb-8" id="review-collection-tools">
+          <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+            <Star className="h-5 w-5 text-primary" />
+            כלים לאיסוף ביקורות
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            {/* QR Code Card */}
+            <ReviewQRCode websiteUrl={website?.url || ""} />
+
+            {/* WhatsApp Card */}
+            <WhatsAppReviewModal
+              websiteUrl={website?.url || ""}
+              businessName={website?.name || "העסק שלכם"}
+            />
+          </div>
+        </div>
+
         {/* Utility Cards Row */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 items-stretch">
           {/* Copy Links Card */}
@@ -361,10 +381,25 @@ export default function DashboardPage() {
               <div className="text-center py-8">
                 <MessageSquare className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
                 <h3 className="text-lg font-medium mb-2">אין ביקורות עדיין</h3>
-                <p className="text-muted-foreground">
-                  העסק שלך עדיין לא קיבל ביקורות. הביקורות יופיעו כאן ברגע
-                  שמשתמשים יתחילו לשתף את החוויות שלהם.
+                <p className="text-muted-foreground mb-4">
+                  העסק שלך עדיין לא קיבל ביקורות. השתמש בכלי איסוף הביקורות
+                  למעלה כדי להתחיל לקבל ביקורות מלקוחות!
                 </p>
+                <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      document
+                        .getElementById("review-collection-tools")
+                        ?.scrollIntoView({
+                          behavior: "smooth",
+                        });
+                    }}
+                  >
+                    🔽 צפה בכלי איסוף ביקורות
+                  </Button>
+                </div>
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
