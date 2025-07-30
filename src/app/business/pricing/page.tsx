@@ -1,112 +1,37 @@
 "use client";
-import { useState, useEffect } from "react";
+
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { PricingPlansUI } from "@/components/business/pricing-plans-ui";
-import { LoadingModal } from "@/components/ui/loading-modal";
-import { toast } from "@/components/ui/use-toast";
 import { useSession } from "next-auth/react";
-import { ArrowRight, BadgeCheck, CheckCircle2 } from "lucide-react";
-import { useBusinessGuard } from "@/hooks/use-business-guard";
-import { PricingModel } from "@/lib/types/website";
-import { plusFeatures } from "@/components/business/registration/PricingSection";
-import { freeFeatures } from "@/components/business/registration/PricingSection";
+import { CheckCircle2, ArrowRight, Users, Zap, Shield } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 
-// const freeFeatures = [
-//   { text: "פרופיל עסקי מאומת" },
-//   { text: "לוח בקרה בסיסי" },
-//   { text: "ניהול ביקורות" },
-//   { text: "תג של RateIt בדף העסק" },
-// ];
+// Use the same features from PricingSection
+export const freeFeatures = [
+  { text: "לוח בקרה בסיסי כולל ניתוח ביקורות" },
+  { text: "ניהול וטיפול בביקורות לקוחות" },
+  { text: "פרופיל עסק מקצועי ברייט-איט" },
+  { text: "עמוד ייעודי לעסק עם כל הפרטים" },
+];
 
-// const plusFeatures = [
-//   { text: "כל מה שבחינם, ובנוסף:", isHighlighted: true, icon: ArrowRight },
-//   { text: "רישום מומלץ בדף הבית ובקטגוריות", icon: BadgeCheck },
-//   { text: "אנליטיקות מתקדמות (צפיות, קליקים, המרות)", icon: BadgeCheck },
-//   { text: "תג מאומת (Verified Badge) המגביר אמינות", icon: BadgeCheck },
-//   { text: "מיתוג מותאם אישית - הסתרת תג RateIt", icon: BadgeCheck },
-//   { text: "יצירת עד 5 קופונים פעילים", icon: BadgeCheck },
-//   { text: "יכולת מענה לביקורות", icon: BadgeCheck },
-//   { text: "תמיכה מהירה יותר (עד 24 שעות)", icon: BadgeCheck },
-// ];
+export const plusFeatures = [
+  { text: "כל מה שבחינם, ובנוסף:" },
+  {
+    text: "תג מאומת (Verified Badge) - הוכח שהעסק אמיתי ואמין",
+    isHighlighted: true,
+  },
+  { text: "נתוני חשיפה והתנהגות גולשים בזמן אמת", isHighlighted: true },
+  { text: "עדיפות במענה ותמיכה VIP", isHighlighted: true },
+  { text: "דוחות מתקדמים ואנליטיקה עסקית", isHighlighted: true },
+  { text: "הצגה מועדפת במנוע החיפוש", isHighlighted: true },
+];
 
-// Placeholder for Pro plan if you add it
-// const proFeatures = [
-//   { text: "כל מה שבפלוס, ובנוסף:", isHighlighted: true, icon: ArrowRight },
-//   { text: "קידום VIP בתוצאות חיפוש", icon: BadgeCheck },
-//   { text: "ייעוץ אסטרטגי אישי (פעם ברבעון)", icon: BadgeCheck },
-//   { text: "יצירת קופונים ללא הגבלה", icon: BadgeCheck },
-//   { text: "API גישה לנתונים (בקרוב)", icon: BadgeCheck },
-//   { text: "תמיכה פרימיום ייעודית (עד 4 שעות)", icon: BadgeCheck },
-// ];
-
-export default function BusinessPricingPage() {
-  const [loading, setLoading] = useState(false);
+export default function PublicPricingPage() {
   const [isAnnual, setIsAnnual] = useState(false);
   const router = useRouter();
-  const { data: session, update: updateSession } = useSession();
-  const { website, user, isLoading: isGuardLoading } = useBusinessGuard();
-  const [currentPlan, setCurrentPlan] = useState<PricingModel | null>(null);
-
-  useEffect(() => {
-    if (website?.pricingModel) {
-      setCurrentPlan(website.pricingModel as PricingModel);
-    }
-  }, [website]);
-
-  const handleSubscription = async (plan: PricingModel) => {
-    setLoading(true);
-    if (!session?.user?.id || !website?._id) {
-      toast({
-        title: "שגיאה",
-        description: "נדרשת התחברות ופרטי עסק חסרים.",
-        variant: "destructive",
-      });
-      setLoading(false);
-      return;
-    }
-
-    // Placeholder for Stripe integration
-    // Replace with actual Stripe checkout logic
-    try {
-      // Simulate API call to update subscription
-      const response = await fetch("/api/business/update-subscription", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          websiteId: website._id,
-          newPricingModel: plan,
-          userId: session.user.id,
-          isAnnual,
-        }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "נכשל בעדכון המנוי.");
-      }
-
-      await updateSession(); // Refresh session data
-      setCurrentPlan(plan);
-
-      toast({
-        title: "הצלחה!",
-        description: `העסק שלך שודרג למסלול ${
-          plan === PricingModel.PLUS ? "פלוס" : plan
-        }.`,
-      });
-      router.push("/business/dashboard");
-    } catch (error) {
-      console.error("Subscription error:", error);
-      toast({
-        title: "שגיאת שדרוג",
-        description:
-          error instanceof Error ? error.message : "משהו השתבש. נסו שוב.",
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { data: session } = useSession();
 
   const calculatePrice = (basePrice: number, discount: number = 0) => {
     if (isAnnual) {
@@ -123,75 +48,180 @@ export default function BusinessPricingPage() {
     return basePrice;
   };
 
-  const plansConfig = [
+  const handleGetStarted = () => {
+    if (session?.user) {
+      // If logged in, redirect to registration
+      router.push("/business/register");
+    } else {
+      // If not logged in, redirect to registration (which will handle login)
+      router.push("/business/register");
+    }
+  };
+
+  const handleUpgrade = () => {
+    if (session?.user?.isWebsiteOwner) {
+      // If already a business owner, go to dashboard
+      router.push("/business/dashboard");
+    } else {
+      // Otherwise start registration process
+      router.push("/business/register");
+    }
+  };
+
+  const publicPlans = [
     {
       name: "חינם",
       price: "0 ₪",
       features: freeFeatures,
-      ctaText: "הישאר בחינם",
-      onCtaClick: () => router.push("/business/dashboard"),
-      isCurrent: currentPlan === PricingModel.FREE,
-      isDisabled: currentPlan === PricingModel.FREE,
-      bestFor: "דרך קלה להתחיל לבנות אמון עם הלקוחות – בלי עלות.",
+      ctaText: session?.user?.isWebsiteOwner
+        ? "המסלול הנוכחי שלך"
+        : "התחל בחינם",
+      onCtaClick: handleGetStarted,
+      bestFor: "מושלם להתחלה! התחל לבנות אמון עם הלקוחות שלך בחינם",
       planType: "free" as const,
+      isCurrent: session?.user?.isWebsiteOwner,
     },
     {
       name: "פלוס",
       price: calculatePrice(199, 25),
       monthlyPrice: calculateMonthlyAverage(199, 25),
       discount: 25,
-      isComingSoon: true,
       features: plusFeatures,
-      ctaText:
-        currentPlan === PricingModel.PLUS ? "המסלול הנוכחי שלך" : "שדרגו לפלוס",
-      onCtaClick: () => handleSubscription(PricingModel.PLUS),
-      // isRecommended: true,
-      isCurrent: currentPlan === PricingModel.PLUS,
-      isDisabled: currentPlan === PricingModel.PLUS,
-      // highlightColor: "primary",
-      bestFor: "מתאים לעסקים שמכוונים לבלוט בשוק תחרותי.",
+      ctaText: "שדרג לפלוס",
+      onCtaClick: handleUpgrade,
+      isRecommended: true,
+      highlightColor: "primary",
+      bestFor: "לעסקים שרוצים למקסם אמינות ולבלוט על מתחרים",
       planType: "plus" as const,
+      isComingSoon: true,
     },
-    // Example for a Pro plan, can be uncommented and configured later
-    // {
-    //   name: "פרו",
-    //   price: "99 ₪",
-    //   priceDetails: "לחודש (בתוספת מע״מ)",
-    //   features: proFeatures,
-    //   ctaText: "שדרגו לפרו",
-    //   onCtaClick: () => handleSubscription(PricingModel.PRO), // Assuming PricingModel.PRO exists
-    //   isCurrent: currentPlan === PricingModel.PRO,
-    //   isDisabled: true, // Disabled for now
-    //   highlightColor: "purple-600",
-    // },
   ];
 
-  if (isGuardLoading) {
-    return <LoadingModal open={true} />;
-  }
-
   return (
-    <div className="container mx-auto px-4 py-12 min-h-screen" dir="rtl">
-      <LoadingModal open={loading} />
-      <div className="text-center mb-12">
-        <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
-          שדרגו את התוכנית שלכם
-        </h1>
-        <p className="mt-3 text-xl text-muted-foreground sm:mt-4">
-          הלקוחות בודקים לפני שהם בוחרים. תנו להם סיבה לבחור דווקא בכם.
-        </p>
+    <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
+      {/* Hero Section */}
+      <div className="relative bg-gradient-to-r from-primary/10 to-primary/5 border-b">
+        <div className="max-w-7xl mx-auto px-4 py-16 sm:py-24">
+          <div className="text-center space-y-8">
+            <h1 className="text-5xl font-bold text-foreground">
+              איזה מסלול של רייט-איט הכי מתאים לעסק שלך?{" "}
+            </h1>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              התחילו במסלול שמתאים לכם – בין אם אתם רק מתחילים או מוכנים להמריא.
+            </p>
+
+            {/* Trust Indicators */}
+            <div className="flex justify-center items-center gap-8 pt-8">
+              <div className="flex items-center gap-2 text-primary">
+                <Users className="h-5 w-5" />
+                <span className="text-sm font-medium">
+                  אלפי עסקים בוטחים בנו
+                </span>
+              </div>
+              <div className="flex items-center gap-2 text-primary">
+                <Shield className="h-5 w-5" />
+                <span className="text-sm font-medium">בטוח ומאובטח</span>
+              </div>
+              <div className="flex items-center gap-2 text-primary">
+                <Zap className="h-5 w-5" />
+                <span className="text-sm font-medium">התחלה מיידית</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <PricingPlansUI
-        plans={plansConfig}
-        loading={loading}
-        isAnnual={isAnnual}
-        onBillingChange={setIsAnnual}
-      />
-      <div className="mt-12 text-center text-sm text-muted-foreground">
-        <p>
-          כל התשלומים מאובטחים. ניתן לשנות או לבטל את המסלול בכל עת. המחירים
-          לפני מע״מ
-        </p>
+
+      {/* Pricing Section */}
+      <div className="max-w-7xl mx-auto px-4 py-16" dir="rtl">
+        <PricingPlansUI
+          plans={publicPlans}
+          loading={false}
+          isAnnual={isAnnual}
+          onBillingChange={setIsAnnual}
+        />
+      </div>
+
+      {/* FAQ/Benefits Section */}
+      <div className="bg-muted/20 py-16">
+        <div className="max-w-4xl mx-auto px-4" dir="rtl">
+          <h2 className="text-3xl font-bold text-center mb-12">
+            למה לבחור ברייט-איט?
+          </h2>
+
+          <div className="grid md:grid-cols-2 gap-8">
+            <Card className="p-6">
+              <div className="flex items-start gap-4">
+                <CheckCircle2 className="h-6 w-6 text-green-500 flex-shrink-0 mt-1" />
+                <div>
+                  <h3 className="font-semibold text-lg mb-2">
+                    בניית אמון עם לקוחות
+                  </h3>
+                  <p className="text-muted-foreground">
+                    ביקורות אמיתיות ותג האימות שלנו יעזרו לכם לבנות אמון
+                    ולהיראות מקצועיים
+                  </p>
+                </div>
+              </div>
+            </Card>
+
+            <Card className="p-6">
+              <div className="flex items-start gap-4">
+                <CheckCircle2 className="h-6 w-6 text-green-500 flex-shrink-0 mt-1" />
+                <div>
+                  <h3 className="font-semibold text-lg mb-2">חשיפה מקסימלית</h3>
+                  <p className="text-muted-foreground">
+                    הופעה במנוע החיפוש ודף הבית שלנו תביא לכם לקוחות חדשים
+                  </p>
+                </div>
+              </div>
+            </Card>
+
+            <Card className="p-6">
+              <div className="flex items-start gap-4">
+                <CheckCircle2 className="h-6 w-6 text-green-500 flex-shrink-0 mt-1" />
+                <div>
+                  <h3 className="font-semibold text-lg mb-2">ניהול קל וחכם</h3>
+                  <p className="text-muted-foreground">
+                    לוח בקרה מתקדם שמאפשר לכם לנהל ביקורות ולראות נתוני ביצועים
+                  </p>
+                </div>
+              </div>
+            </Card>
+
+            <Card className="p-6">
+              <div className="flex items-start gap-4">
+                <CheckCircle2 className="h-6 w-6 text-green-500 flex-shrink-0 mt-1" />
+                <div>
+                  <h3 className="font-semibold text-lg mb-2">תמיכה מקצועית</h3>
+                  <p className="text-muted-foreground">
+                    צוות התמיכה שלנו כאן לעזור לכם בכל שלב - מההתחלה ועד ההצלחה
+                  </p>
+                </div>
+              </div>
+            </Card>
+          </div>
+        </div>
+      </div>
+
+      {/* CTA Section */}
+      <div className="bg-primary/5 py-16">
+        <div className="max-w-4xl mx-auto text-center px-4">
+          <h2 className="text-3xl font-bold mb-4">מוכנים להתחיל?</h2>
+          <p className="text-xl text-muted-foreground mb-8">
+            הצטרפו לאלפי עסקים שכבר בוחרים ברייט-איט לבניית האמינות שלהם
+          </p>
+          <Button
+            size="lg"
+            className="text-lg px-8 py-4"
+            onClick={handleGetStarted}
+          >
+            התחל עכשיו בחינם
+            <ArrowRight className="h-5 w-5 mr-2" />
+          </Button>
+          <p className="text-sm text-muted-foreground mt-4">
+            ללא התחייבות • התחלה תוך דקות • תמיכה 24/7
+          </p>
+        </div>
       </div>
     </div>
   );

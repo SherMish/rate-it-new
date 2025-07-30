@@ -20,6 +20,7 @@ const navigation = [
 
 const businessNavigation = [
   { name: "בלוג", href: "/business/blog" },
+  { name: "מסלולים", href: "/business/pricing" },
   { name: "אודות", href: "/about" },
 ];
 
