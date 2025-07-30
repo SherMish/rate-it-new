@@ -8,15 +8,15 @@ import { CheckCircle2, ArrowRight, Users, Zap, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
-// Use the same features from PricingSection
-export const freeFeatures = [
+// Feature constants for this page only
+const freeFeatures = [
   { text: "לוח בקרה בסיסי כולל ניתוח ביקורות" },
   { text: "ניהול וטיפול בביקורות לקוחות" },
   { text: "פרופיל עסק מקצועי ברייט-איט" },
   { text: "עמוד ייעודי לעסק עם כל הפרטים" },
 ];
 
-export const plusFeatures = [
+const plusFeatures = [
   { text: "כל מה שבחינם, ובנוסף:" },
   {
     text: "תג מאומת (Verified Badge) - הוכח שהעסק אמיתי ואמין",
