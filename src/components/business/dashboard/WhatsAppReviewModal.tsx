@@ -154,10 +154,6 @@ ${reviewUrl}
         <CardContent className="space-y-6">
           {/* Copy Links Section */}
           <div>
-            <h4 className="text-sm font-medium mb-3 flex items-center gap-2">
-              <Copy className="h-4 w-4 text-blue-600" />
-              קישורים לשיתוף
-            </h4>
             <div className="space-y-2">
               {/* Copy Business Page Link */}
               <button
@@ -216,6 +212,19 @@ ${reviewUrl}
             </Button>
             <p className="text-xs text-muted-foreground">
               שלח הודעה אישית ללקוח עם קישור לכתיבת ביקורת
+            </p>
+          </div>
+
+          {/* Link to Reviews Generator */}
+          <div className="border-t pt-3 mt-4">
+            <p className="text-xs text-muted-foreground text-center">
+              לדרכים מתקדמות יותר לשליחת הזמנות, עבור אל{" "}
+              <Link
+                href="/business/dashboard/reviews-generator"
+                className="text-primary hover:underline font-medium"
+              >
+                מחולל הביקורות
+              </Link>
             </p>
           </div>
         </CardContent>
