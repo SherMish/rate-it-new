@@ -35,9 +35,9 @@ export function ReviewQRCode({ websiteUrl, className }: ReviewQRCodeProps) {
         const ctx = canvas.getContext("2d");
         if (!ctx) return;
 
-        // Set canvas size
-        canvas.width = 200;
-        canvas.height = 200;
+        // Set canvas size (higher resolution for better quality)
+        canvas.width = 400;
+        canvas.height = 400;
 
         // Convert SVG to image
         const svgData = new XMLSerializer().serializeToString(qrSvg);
@@ -49,20 +49,31 @@ export function ReviewQRCode({ websiteUrl, className }: ReviewQRCodeProps) {
           ctx.fillRect(0, 0, canvas.width, canvas.height);
           ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
-          // Load and draw logo
+          // Load and draw logo with high quality
           const logo = document.createElement("img");
           logo.onload = () => {
-            // Create white circle background for logo
-            const logoSize = 40;
+            // Create white circle background for logo (larger for better visibility)
+            const logoSize = 80; // Doubled for higher resolution canvas
+            const circleRadius = logoSize / 2 + 8; // Larger padding
             const centerX = canvas.width / 2;
             const centerY = canvas.height / 2;
 
+            // Enable high-quality rendering
+            ctx.imageSmoothingEnabled = true;
+            ctx.imageSmoothingQuality = "high";
+
+            // Create white circle background with subtle border
             ctx.fillStyle = "#ffffff";
             ctx.beginPath();
-            ctx.arc(centerX, centerY, logoSize / 2 + 4, 0, 2 * Math.PI);
+            ctx.arc(centerX, centerY, circleRadius, 0, 2 * Math.PI);
             ctx.fill();
 
-            // Draw logo
+            // Add subtle border around circle
+            ctx.strokeStyle = "#e5e7eb";
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Draw logo with high quality
             ctx.drawImage(
               logo,
               centerX - logoSize / 2,
@@ -71,11 +82,12 @@ export function ReviewQRCode({ websiteUrl, className }: ReviewQRCodeProps) {
               logoSize
             );
 
-            // Convert to data URL
-            setQrWithLogo(canvas.toDataURL("image/png"));
+            // Convert to data URL with high quality
+            setQrWithLogo(canvas.toDataURL("image/png", 1.0));
           };
 
-          logo.src = "/logo_icon.svg";
+          // Use PNG version if available for better quality, fallback to SVG
+          logo.src = "/logo_new.png";
         };
 
         img.src = "data:image/svg+xml;base64," + btoa(svgData);
@@ -179,7 +191,10 @@ export function ReviewQRCode({ websiteUrl, className }: ReviewQRCodeProps) {
                 src={qrWithLogo}
                 alt="QR Code with Rate-It logo"
                 className="mx-auto"
-                style={{ width: 180, height: 180 }}
+                style={{
+                  width: 180,
+                  height: 180,
+                }}
               />
             ) : (
               <div className="w-[180px] h-[180px] flex items-center justify-center bg-gray-100 rounded">
