@@ -13,7 +13,17 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { MessageSquare, Send, Phone } from "lucide-react";
+import {
+  MessageSquare,
+  Send,
+  Phone,
+  Star,
+  Mail,
+  ExternalLink,
+  Copy,
+  Check,
+} from "lucide-react";
+import Link from "next/link";
 import { toast } from "@/components/ui/use-toast";
 
 interface WhatsAppReviewModalProps {
@@ -30,6 +40,10 @@ export function WhatsAppReviewModal({
   const [open, setOpen] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [customMessage, setCustomMessage] = useState("");
+  const [copiedLink, setCopiedLink] = useState<string | null>(null);
+
+  const reviewUrl = `https://rate-it.co.il/tool/${websiteUrl}/review`;
+  const businessPageUrl = `https://rate-it.co.il/tool/${websiteUrl}`;
 
   // Format Israeli phone number (054-1234567 -> +972541234567)
   const formatIsraeliPhone = (phone: string): string => {
@@ -50,8 +64,6 @@ export function WhatsAppReviewModal({
 
     return phone; // Return as-is if format is unclear
   };
-
-  const reviewUrl = `https://rate-it.co.il/tool/${websiteUrl}/review`;
 
   const generateWhatsAppMessage = (): string => {
     if (customMessage.trim()) {
@@ -109,37 +121,102 @@ ${reviewUrl}
     setPhoneNumber(value);
   };
 
+  const handleCopy = async (url: string, linkType: string) => {
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopiedLink(linkType);
+      toast({
+        title: "הקישור הועתק!",
+        description: `${linkType} הועתק ללוח בהצלחה`,
+      });
+      setTimeout(() => setCopiedLink(null), 2000);
+    } catch (error) {
+      toast({
+        title: "שגיאה בהעתקה",
+        description: "לא ניתן להעתיק את הקישור כרגע",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <>
-      <Card
-        className={`hover:shadow-lg transition-all cursor-pointer ${className}`}
-      >
+      <Card className={`hover:shadow-lg transition-all ${className}`}>
         <CardHeader className="pb-3">
           <CardTitle className="flex items-center gap-2 text-lg">
-            <MessageSquare className="h-5 w-5 text-green-600" />
-            בקשת ביקורת ב-WhatsApp
+            <Star className="h-5 w-5 text-primary" />
+            תנו ללקוחות לפרגן לכם – בקליק
           </CardTitle>
           <p className="text-sm text-muted-foreground">
-            שלח בקשה לביקורת ישירות ללקוחות ב-WhatsApp
+            שתפו את הקישור בסיום השירות – ותנו לביקורות לעבוד בשבילכם
           </p>
         </CardHeader>
-        <CardContent>
-          <Button
-            onClick={() => setOpen(true)}
-            className="w-full bg-green-600 hover:bg-green-700 text-white"
-          >
-            <Phone className="h-4 w-4 mr-2" />
-            שלח בקשת ביקורת
-          </Button>
+        <CardContent className="space-y-6">
+          {/* Copy Links Section */}
+          <div>
+            <h4 className="text-sm font-medium mb-3 flex items-center gap-2">
+              <Copy className="h-4 w-4 text-blue-600" />
+              קישורים לשיתוף
+            </h4>
+            <div className="space-y-2">
+              {/* Copy Business Page Link */}
+              <button
+                onClick={() => handleCopy(businessPageUrl, "דף העסק")}
+                className="w-full flex items-center justify-between p-3 bg-secondary/50 rounded-lg border border-border/70 hover:bg-secondary/70 transition-colors group"
+              >
+                <div className="flex items-center gap-2 min-w-0">
+                  <ExternalLink className="w-4 h-4 text-primary flex-shrink-0" />
+                  <span className="text-sm text-foreground truncate">
+                    קישור לדף העסק
+                  </span>
+                </div>
+                <div className="p-1.5">
+                  {copiedLink === "דף העסק" ? (
+                    <Check className="w-4 h-4 text-green-500" />
+                  ) : (
+                    <Copy className="w-4 h-4 text-muted-foreground group-hover:text-foreground transition-colors" />
+                  )}
+                </div>
+              </button>
 
-          {/* Usage tip */}
-          <div className="text-xs text-muted-foreground mt-3 space-y-1">
-            <p className="font-medium">💡 מתי לשלוח:</p>
-            <ul className="list-disc list-inside space-y-0.5 mr-2">
-              <li>לאחר מתן שירות טוב</li>
-              <li>כשהלקוח מרוצה</li>
-              <li>במהלך או בסיום העבודה</li>
-            </ul>
+              {/* Copy Review Link */}
+              <button
+                onClick={() => handleCopy(reviewUrl, "קישור לכתיבת ביקורת")}
+                className="w-full flex items-center justify-between p-3 bg-secondary/50 rounded-lg border border-border/70 hover:bg-secondary/70 transition-colors group"
+              >
+                <div className="flex items-center gap-2 min-w-0">
+                  <MessageSquare className="w-4 h-4 text-primary flex-shrink-0" />
+                  <span className="text-sm text-foreground truncate">
+                    קישור לכתיבת ביקורת
+                  </span>
+                </div>
+                <div className="p-1.5">
+                  {copiedLink === "קישור לכתיבת ביקורת" ? (
+                    <Check className="w-4 h-4 text-green-500" />
+                  ) : (
+                    <Copy className="w-4 h-4 text-muted-foreground group-hover:text-foreground transition-colors" />
+                  )}
+                </div>
+              </button>
+            </div>
+          </div>
+
+          {/* WhatsApp Section */}
+          <div className="border-t pt-4">
+            <h4 className="text-sm font-medium mb-3 flex items-center gap-2">
+              <MessageSquare className="h-4 w-4 text-green-600" />
+              בקשת ביקורת ב-WhatsApp
+            </h4>
+            <Button
+              onClick={() => setOpen(true)}
+              className="w-full bg-green-600 hover:bg-green-700 text-white mb-2"
+            >
+              <Phone className="h-4 w-4 mr-2" />
+              שלח בקשת ביקורת
+            </Button>
+            <p className="text-xs text-muted-foreground">
+              שלח הודעה אישית ללקוח עם קישור לכתיבת ביקורת
+            </p>
           </div>
         </CardContent>
       </Card>

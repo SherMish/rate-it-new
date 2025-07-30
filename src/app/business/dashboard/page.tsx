@@ -265,9 +265,6 @@ export default function DashboardPage() {
 
         {/* Utility Cards Row */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 items-stretch">
-          {/* Copy Links Card */}
-          <CopyLinksCard websiteUrl={website?.url} className="md:col-span-1" />
-
           {/* Daily Tip Card */}
           <DailyTipCard />
         </div>
