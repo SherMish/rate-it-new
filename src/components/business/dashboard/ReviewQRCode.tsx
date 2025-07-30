@@ -1,11 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import QRCode from "react-qr-code";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { QrCode, Copy, Check, Download } from "lucide-react";
-import Image from "next/image";
 import { toast } from "@/components/ui/use-toast";
 
 interface ReviewQRCodeProps {
@@ -15,58 +14,103 @@ interface ReviewQRCodeProps {
 
 export function ReviewQRCode({ websiteUrl, className }: ReviewQRCodeProps) {
   const [copied, setCopied] = useState(false);
+  const [qrWithLogo, setQrWithLogo] = useState<string>("");
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const hiddenQrRef = useRef<HTMLDivElement>(null);
 
   // Create the review URL
   const reviewUrl = `https://rate-it.co.il/tool/${websiteUrl}/review`;
 
+  // Generate QR code with embedded logo
+  useEffect(() => {
+    const generateQRWithLogo = async () => {
+      if (!hiddenQrRef.current) return;
+
+      // Wait a bit for the QR code to render
+      setTimeout(async () => {
+        const qrSvg = hiddenQrRef.current?.querySelector("svg");
+        if (!qrSvg || !canvasRef.current) return;
+
+        const canvas = canvasRef.current;
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return;
+
+        // Set canvas size
+        canvas.width = 200;
+        canvas.height = 200;
+
+        // Convert SVG to image
+        const svgData = new XMLSerializer().serializeToString(qrSvg);
+        const img = document.createElement("img");
+
+        img.onload = async () => {
+          // Draw QR code
+          ctx.fillStyle = "#ffffff";
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+          // Load and draw logo
+          const logo = document.createElement("img");
+          logo.onload = () => {
+            // Create white circle background for logo
+            const logoSize = 40;
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+
+            ctx.fillStyle = "#ffffff";
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, logoSize / 2 + 4, 0, 2 * Math.PI);
+            ctx.fill();
+
+            // Draw logo
+            ctx.drawImage(
+              logo,
+              centerX - logoSize / 2,
+              centerY - logoSize / 2,
+              logoSize,
+              logoSize
+            );
+
+            // Convert to data URL
+            setQrWithLogo(canvas.toDataURL("image/png"));
+          };
+
+          logo.src = "/logo_icon.svg";
+        };
+
+        img.src = "data:image/svg+xml;base64," + btoa(svgData);
+      }, 100);
+    };
+
+    generateQRWithLogo();
+  }, [reviewUrl]);
+
   const handleCopyImage = async () => {
+    if (!qrWithLogo) {
+      // Fallback: copy URL to clipboard
+      await navigator.clipboard.writeText(reviewUrl);
+      toast({
+        title: "הקישור הועתק!",
+        description: "קישור לכתיבת ביקורת הועתק ללוח.",
+      });
+      return;
+    }
+
     try {
-      // Get the QR code SVG element
-      const qrCodeElement = document.getElementById(`qr-code-${websiteUrl}`);
-      if (!qrCodeElement) return;
+      // Convert data URL to blob
+      const response = await fetch(qrWithLogo);
+      const blob = await response.blob();
 
-      // Create a canvas to convert SVG to image
-      const canvas = document.createElement("canvas");
-      const ctx = canvas.getContext("2d");
-      const svg = qrCodeElement.querySelector("svg");
+      await navigator.clipboard.write([
+        new ClipboardItem({ "image/png": blob }),
+      ]);
 
-      if (!svg || !ctx) return;
-
-      const svgData = new XMLSerializer().serializeToString(svg);
-      const img = document.createElement("img");
-
-      img.onload = () => {
-        canvas.width = img.width;
-        canvas.height = img.height;
-        ctx.drawImage(img, 0, 0);
-
-        // Convert to blob and copy to clipboard
-        canvas.toBlob(async (blob) => {
-          if (blob) {
-            try {
-              await navigator.clipboard.write([
-                new ClipboardItem({ "image/png": blob }),
-              ]);
-              setCopied(true);
-              toast({
-                title: "הקוד הועתק!",
-                description:
-                  "קוד ה-QR הועתק ללוח. ניתן להדביק אותו במקום הרצוי.",
-              });
-              setTimeout(() => setCopied(false), 2000);
-            } catch (err) {
-              // Fallback: copy URL to clipboard
-              await navigator.clipboard.writeText(reviewUrl);
-              toast({
-                title: "הקישור הועתק!",
-                description: "קישור לכתיבת ביקורת הועתק ללוח.",
-              });
-            }
-          }
-        });
-      };
-
-      img.src = "data:image/svg+xml;base64," + btoa(svgData);
+      setCopied(true);
+      toast({
+        title: "הקוד הועתק!",
+        description: "קוד ה-QR הועתק ללוח. ניתן להדביק אותו במקום הרצוי.",
+      });
+      setTimeout(() => setCopied(false), 2000);
     } catch (error) {
       // Fallback: copy URL to clipboard
       await navigator.clipboard.writeText(reviewUrl);
@@ -78,40 +122,26 @@ export function ReviewQRCode({ websiteUrl, className }: ReviewQRCodeProps) {
   };
 
   const handleDownload = () => {
+    if (!qrWithLogo) {
+      toast({
+        title: "שגיאה בהורדה",
+        description: "הקוד עדיין נטען. נסה שוב בעוד רגע.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     try {
-      const qrCodeElement = document.getElementById(`qr-code-${websiteUrl}`);
-      if (!qrCodeElement) return;
+      // Create download link
+      const link = document.createElement("a");
+      link.download = `rateit-qr-${websiteUrl}.png`;
+      link.href = qrWithLogo;
+      link.click();
 
-      const svg = qrCodeElement.querySelector("svg");
-      if (!svg) return;
-
-      const svgData = new XMLSerializer().serializeToString(svg);
-      const canvas = document.createElement("canvas");
-      const ctx = canvas.getContext("2d");
-      const img = document.createElement("img");
-
-      if (!ctx) return;
-
-      img.onload = () => {
-        canvas.width = img.width;
-        canvas.height = img.height;
-        ctx.fillStyle = "#ffffff";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.drawImage(img, 0, 0);
-
-        // Create download link
-        const link = document.createElement("a");
-        link.download = `rateit-qr-${websiteUrl}.png`;
-        link.href = canvas.toDataURL();
-        link.click();
-
-        toast({
-          title: "הקוד הורד!",
-          description: "קוד ה-QR נשמר במכשיר שלך.",
-        });
-      };
-
-      img.src = "data:image/svg+xml;base64," + btoa(svgData);
+      toast({
+        title: "הקוד הורד!",
+        description: "קוד ה-QR נשמר במכשיר שלך.",
+      });
     } catch (error) {
       toast({
         title: "שגיאה בהורדה",
@@ -133,30 +163,29 @@ export function ReviewQRCode({ websiteUrl, className }: ReviewQRCodeProps) {
         </p>
       </CardHeader>
       <CardContent className="space-y-4">
-        {/* QR Code with logo overlay */}
+        {/* Hidden QR Code for processing */}
+        <div ref={hiddenQrRef} className="hidden">
+          <QRCode value={reviewUrl} size={180} level="M" />
+        </div>
+
+        {/* Canvas for generating QR with logo */}
+        <canvas ref={canvasRef} className="hidden" />
+
+        {/* Display QR Code with logo */}
         <div className="flex justify-center">
-          <div
-            id={`qr-code-${websiteUrl}`}
-            className="relative bg-white p-4 rounded-lg shadow-sm border-2 border-gray-100"
-          >
-            <QRCode
-              value={reviewUrl}
-              size={180}
-              level="M"
-              className="mx-auto"
-            />
-            {/* Rate-It logo overlay */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="bg-white rounded-full p-2 shadow-lg border-2 border-primary/20">
-                <Image
-                  src="/logo_icon.svg"
-                  alt="Rate-It"
-                  width={24}
-                  height={24}
-                  className="rounded"
-                />
+          <div className="bg-white p-4 rounded-lg shadow-sm border-2 border-gray-100">
+            {qrWithLogo ? (
+              <img
+                src={qrWithLogo}
+                alt="QR Code with Rate-It logo"
+                className="mx-auto"
+                style={{ width: 180, height: 180 }}
+              />
+            ) : (
+              <div className="w-[180px] h-[180px] flex items-center justify-center bg-gray-100 rounded">
+                <span className="text-sm text-gray-500">טוען...</span>
               </div>
-            </div>
+            )}
           </div>
         </div>
 
