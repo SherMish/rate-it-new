@@ -4,8 +4,9 @@ import { useState } from "react";
 import Image from "next/image";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Edit2 } from "lucide-react";
+import { Edit2, BarChart3 } from "lucide-react";
 import { AddToolDialog } from "./add-tool-dialog";
+import { WebsiteStatisticsDialog } from "./website-statistics-dialog";
 import { WebsiteType } from "@/lib/models/Website";
 
 interface WebsiteCardProps {
@@ -15,6 +16,7 @@ interface WebsiteCardProps {
 
 export function WebsiteCard({ website, onUpdate }: WebsiteCardProps) {
   const [isEditOpen, setIsEditOpen] = useState(false);
+  const [isStatsOpen, setIsStatsOpen] = useState(false);
 
   return (
     <Card
@@ -60,6 +62,14 @@ export function WebsiteCard({ website, onUpdate }: WebsiteCardProps) {
               <Button
                 variant="outline"
                 size="sm"
+                onClick={() => setIsStatsOpen(true)}
+              >
+                <BarChart3 className="w-4 h-4 ml-2" />
+                סטטיסטיקות
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
                 onClick={() => setIsEditOpen(true)}
               >
                 <Edit2 className="w-4 h-4 ml-2" />
@@ -75,6 +85,12 @@ export function WebsiteCard({ website, onUpdate }: WebsiteCardProps) {
         open={isEditOpen}
         onOpenChange={setIsEditOpen}
         onToolAdded={onUpdate}
+      />
+
+      <WebsiteStatisticsDialog
+        open={isStatsOpen}
+        onOpenChange={setIsStatsOpen}
+        website={website}
       />
     </Card>
   );
