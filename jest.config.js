@@ -35,6 +35,21 @@ const customJestConfig = {
       },
     },
   ],
+  // Ensure TS/JS in tests are transformed via Babel using Next presets (includes TypeScript/react)
+  transform: {
+    '^.+\\.(ts|tsx)$': 'ts-jest',
+    '^.+\\.(js|jsx)$': ['babel-jest', { presets: ['next/babel'] }],
+  },
+  transformIgnorePatterns: [
+    '/node_modules/',
+  ],
+  globals: {
+    'ts-jest': {
+      tsconfig: '<rootDir>/tsconfig.json',
+      isolatedModules: true,
+      diagnostics: false,
+    },
+  },
   collectCoverageFrom: [
     'src/**/*.{js,jsx,ts,tsx}',
     '!src/**/*.d.ts',
