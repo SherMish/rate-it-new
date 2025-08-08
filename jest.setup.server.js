@@ -35,6 +35,22 @@ afterAll(async () => {
   }
 })
 
+// Mock NextAuth
+jest.mock('next-auth', () => ({
+  getServerSession: jest.fn(),
+}))
+
+// Mock Next.js server functions that might be used in API routes
+jest.mock('next/server', () => ({
+  NextResponse: {
+    json: jest.fn((data, options) => ({
+      json: () => Promise.resolve(data),
+      status: options?.status || 200,
+    })),
+  },
+  NextRequest: jest.fn(),
+}))
+
 // Mock Next.js request/response objects
 global.createMockRequest = (options = {}) => ({
   method: 'GET',

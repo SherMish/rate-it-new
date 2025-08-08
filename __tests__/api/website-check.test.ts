@@ -3,7 +3,6 @@
  */
 
 import { GET } from "@/app/api/website/check/route";
-import { NextRequest } from "next/server";
 import connectDB from "@/lib/mongodb";
 import Website from "@/lib/models/Website";
 
@@ -32,9 +31,9 @@ describe("/api/website/check", () => {
       mockConnectDB.mockResolvedValue(undefined);
       mockWebsite.findOne.mockResolvedValue(mockWebsiteData);
 
-      const request = new NextRequest(
-        "http://localhost:3000/api/website/check?url=https://example.com"
-      );
+      const url =
+        "http://localhost:3000/api/website/check?url=https://example.com";
+      const request = new Request(url);
 
       const response = await GET(request);
       const data = await response.json();
@@ -48,9 +47,9 @@ describe("/api/website/check", () => {
       mockConnectDB.mockResolvedValue(undefined);
       mockWebsite.findOne.mockResolvedValue(null);
 
-      const request = new NextRequest(
-        "http://localhost:3000/api/website/check?url=https://nonexistent.com"
-      );
+      const url =
+        "http://localhost:3000/api/website/check?url=https://nonexistent.com";
+      const request = new Request(url);
 
       const response = await GET(request);
       const data = await response.json();
@@ -60,9 +59,8 @@ describe("/api/website/check", () => {
     });
 
     it("should return 400 when URL parameter is missing", async () => {
-      const request = new NextRequest(
-        "http://localhost:3000/api/website/check"
-      );
+      const url = "http://localhost:3000/api/website/check";
+      const request = new Request(url);
 
       const response = await GET(request);
       const data = await response.json();
@@ -75,9 +73,9 @@ describe("/api/website/check", () => {
       mockConnectDB.mockResolvedValue(undefined);
       mockWebsite.findOne.mockResolvedValue(null);
 
-      const request = new NextRequest(
-        "http://localhost:3000/api/website/check?url=https://www.Example.com/path"
-      );
+      const url =
+        "http://localhost:3000/api/website/check?url=https://www.Example.com/path";
+      const request = new Request(url);
 
       await GET(request);
 
@@ -87,9 +85,9 @@ describe("/api/website/check", () => {
     it("should handle database errors gracefully", async () => {
       mockConnectDB.mockRejectedValue(new Error("Database connection failed"));
 
-      const request = new NextRequest(
-        "http://localhost:3000/api/website/check?url=https://example.com"
-      );
+      const url =
+        "http://localhost:3000/api/website/check?url=https://example.com";
+      const request = new Request(url);
 
       const response = await GET(request);
       const data = await response.json();

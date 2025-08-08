@@ -1,4 +1,4 @@
-import '@testing-library/jest-dom'
+require('@testing-library/jest-dom')
 
 // Mock Next.js router
 jest.mock('next/router', () => ({
@@ -51,6 +51,15 @@ jest.mock('next-auth/react', () => ({
   signIn: jest.fn(),
   signOut: jest.fn(),
   getSession: jest.fn(),
+}))
+
+// Mock loading context
+jest.mock('@/contexts/loading-context', () => ({
+  useLoading: jest.fn(() => ({
+    startLoading: jest.fn(),
+    stopLoading: jest.fn(),
+    isLoading: false,
+  })),
 }))
 
 // Mock environment variables

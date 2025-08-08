@@ -7,36 +7,40 @@ const createJestConfig = nextJest({
 
 // Add any custom config to be passed to Jest
 const customJestConfig = {
-  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
-  testEnvironment: 'jest-environment-jsdom',
-  moduleNameMapping: {
-    '^@/(.*)$': '<rootDir>/src/$1',
-  },
-  collectCoverageFrom: [
-    'src/**/*.{js,jsx,ts,tsx}',
-    '!src/**/*.d.ts',
-    '!src/lib/models/**',
-    '!src/app/layout.tsx',
-    '!src/app/globals.css',
-  ],
-  testMatch: [
-    '<rootDir>/__tests__/**/*.{js,jsx,ts,tsx}',
-    '<rootDir>/src/**/__tests__/**/*.{js,jsx,ts,tsx}',
-    '<rootDir>/src/**/*.{test,spec}.{js,jsx,ts,tsx}',
-  ],
   projects: [
     {
       displayName: 'client',
       testEnvironment: 'jest-environment-jsdom',
       testMatch: ['<rootDir>/__tests__/client/**/*.{js,jsx,ts,tsx}'],
       setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
+      moduleNameMapper: {
+        '^@/(.*)$': '<rootDir>/src/$1',
+      },
     },
     {
       displayName: 'server',
       testEnvironment: 'jest-environment-node',
       testMatch: ['<rootDir>/__tests__/api/**/*.{js,jsx,ts,tsx}'],
       setupFilesAfterEnv: ['<rootDir>/jest.setup.server.js'],
+      moduleNameMapper: {
+        '^@/(.*)$': '<rootDir>/src/$1',
+      },
     },
+    {
+      displayName: 'utils',
+      testEnvironment: 'jest-environment-node',
+      testMatch: ['<rootDir>/__tests__/utils/**/*.{js,jsx,ts,tsx}', '<rootDir>/__tests__/*.test.{js,jsx,ts,tsx}'],
+      moduleNameMapper: {
+        '^@/(.*)$': '<rootDir>/src/$1',
+      },
+    },
+  ],
+  collectCoverageFrom: [
+    'src/**/*.{js,jsx,ts,tsx}',
+    '!src/**/*.d.ts',
+    '!src/lib/models/**',
+    '!src/app/layout.tsx',
+    '!src/app/globals.css',
   ],
 }
 
