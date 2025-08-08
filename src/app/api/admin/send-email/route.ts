@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createUnifiedEmailTemplate } from "@/lib/email-templates";
-import { sendEmail } from "@/lib/email";
+import { sendUnifiedEmail } from "@/lib/email";
 import { checkAdminAuth } from "@/lib/admin-auth";
 
 export async function POST(request: NextRequest) {
@@ -18,22 +17,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create email template
-    const { html, text } = createUnifiedEmailTemplate({
+    // Send email using the unified email function (same as forgot-password and other working endpoints)
+    await sendUnifiedEmail({
+      to,
       subject,
       title,
       body: message,
       ctaText,
       ctaUrl,
       preheader: `הודעה חדשה מצוות Rate-It`,
-    });
-
-    // Send email
-    await sendEmail({
-      to,
-      subject,
-      html,
-      text,
     });
 
     return NextResponse.json({ success: true });

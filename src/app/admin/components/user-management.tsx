@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
@@ -43,16 +43,19 @@ export function UserManagement() {
   const [isEmailDialogOpen, setIsEmailDialogOpen] = useState(false);
   const [emailUser, setEmailUser] = useState<UserType | null>(null);
 
-  useEffect(() => {
-    fetchUsers();
-  }, [currentPage]);
-
-  const fetchUsers = async () => {
+  const fetchUsers = useCallback(async () => {
     setIsLoading(true);
     try {
-      const response = await fetch(
-        `/api/admin/users?page=${currentPage}&limit=${ITEMS_PER_PAGE}`
-      );
+      const params = new URLSearchParams({
+        page: currentPage.toString(),
+        limit: ITEMS_PER_PAGE.toString(),
+      });
+
+      if (searchQuery.trim()) {
+        params.append("search", searchQuery.trim());
+      }
+
+      const response = await fetch(`/api/admin/users?${params.toString()}`);
       const data = await response.json();
       setUsers(data.users || []);
       setTotalUsers(data.total || 0);
@@ -61,7 +64,24 @@ export function UserManagement() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [currentPage, searchQuery]);
+
+  useEffect(() => {
+    fetchUsers();
+  }, [fetchUsers]);
+
+  // Debounced search effect
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      if (currentPage !== 1) {
+        setCurrentPage(1); // Reset to first page when searching
+      } else {
+        fetchUsers();
+      }
+    }, 300);
+
+    return () => clearTimeout(timeoutId);
+  }, [searchQuery, currentPage, fetchUsers]);
 
   const maxPages = Math.ceil(totalUsers / ITEMS_PER_PAGE);
 
