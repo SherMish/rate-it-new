@@ -2,12 +2,12 @@ name: Automated Testing
 
 on:
   push:
-    branches: [ main, master, develop ]
+    branches: [main, master, develop]
   pull_request:
-    branches: [ main, master, develop ]
+    branches: [main, master, develop]
 
 env:
-  NODE_VERSION: '18'
+  NODE_VERSION: "18"
   MONGODB_URI: mongodb://localhost:27017/rateit-test
   NEXTAUTH_SECRET: test-secret-key-for-github-actions
   NEXTAUTH_URL: http://localhost:3000
@@ -25,7 +25,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci
@@ -40,7 +40,7 @@ jobs:
   test-unit:
     name: Unit & Integration Tests
     runs-on: ubuntu-latest
-    
+
     services:
       mongodb:
         image: mongo:5.0
@@ -60,7 +60,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci
@@ -103,7 +103,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci
@@ -120,7 +120,7 @@ jobs:
     name: E2E Tests
     runs-on: ubuntu-latest
     timeout-minutes: 20
-    
+
     services:
       mongodb:
         image: mongo:5.0
@@ -140,7 +140,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci
@@ -170,7 +170,7 @@ jobs:
           NEXTAUTH_URL: ${{ env.NEXTAUTH_URL }}
 
       - name: Upload E2E test results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: playwright-report
@@ -178,7 +178,7 @@ jobs:
           retention-days: 30
 
       - name: Upload E2E screenshots
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: e2e-screenshots
@@ -197,7 +197,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci
@@ -213,7 +213,7 @@ jobs:
     name: Performance Test
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
-    
+
     services:
       mongodb:
         image: mongo:5.0
@@ -228,7 +228,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci
@@ -272,4 +272,4 @@ jobs:
           echo "Unit Tests: ${{ needs.test-unit.result }}"
           echo "Build: ${{ needs.test-build.result }}"
           echo "E2E Tests: ${{ needs.test-e2e.result }}"
-          echo "Security: ${{ needs.security.result }}" 
+          echo "Security: ${{ needs.security.result }}"
