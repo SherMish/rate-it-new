@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Plus, ChevronLeft, ChevronRight } from "lucide-react";
+import { Plus, ChevronLeft, ChevronRight, BarChart3 } from "lucide-react";
 import { WebsiteType } from "@/lib/models/Website";
 import { WebsiteCard } from "./website-card";
 import { AddToolDialog } from "./add-tool-dialog";
@@ -13,6 +13,7 @@ import { AddBlogPostDialog } from "./add-blog-post-dialog";
 import { BlogPost } from "@/lib/types/blog";
 import { BlogPostCard } from "./blog-post-card";
 import { UserManagement } from "./user-management";
+import { AllWebsitesStatisticsDialog } from "./all-websites-statistics-dialog";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -26,6 +27,7 @@ export function AdminDashboard() {
   const [searchQuery, setSearchQuery] = useState("");
   const [isAddToolOpen, setIsAddToolOpen] = useState(false);
   const [isAddBlogPostOpen, setIsAddBlogPostOpen] = useState(false);
+  const [isAllStatsOpen, setIsAllStatsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<"tools" | "blogs" | "users">(
     "tools"
   );
@@ -175,13 +177,19 @@ export function AdminDashboard() {
               פוסט חדש
             </Button>
           ) : activeTab === "tools" ? (
-            <Button
-              onClick={() => setIsAddToolOpen(true)}
-              className="gradient-button"
-            >
-              <Plus className="w-4 h-4 ml-2" />
-              הוסף עסק חדש
-            </Button>
+            <div className="flex gap-2">
+              <Button onClick={() => setIsAllStatsOpen(true)} variant="outline">
+                <BarChart3 className="w-4 h-4 ml-2" />
+                סטטיסטיקות כל האתרים
+              </Button>
+              <Button
+                onClick={() => setIsAddToolOpen(true)}
+                className="gradient-button"
+              >
+                <Plus className="w-4 h-4 ml-2" />
+                הוסף עסק חדש
+              </Button>
+            </div>
           ) : null}
         </div>
       </div>
@@ -306,6 +314,11 @@ export function AdminDashboard() {
         open={isAddBlogPostOpen}
         onOpenChange={setIsAddBlogPostOpen}
         onBlogPostAdded={fetchBlogPosts}
+      />
+
+      <AllWebsitesStatisticsDialog
+        open={isAllStatsOpen}
+        onOpenChange={setIsAllStatsOpen}
       />
     </div>
   );
