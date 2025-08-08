@@ -30,26 +30,47 @@ export async function generateMetadata({
     };
   }
 
+  const categoryData = category.seo;
+
   return {
-    title: `${category.name} עסקים וביקורות | רייט-איט`,
-    description: `גלה והשווה את העסקים הטובים ביותר ב${category.name}. קרא ביקורות אותנטיות, דירוגים ותובנות ממשתמשים אמיתיים.`,
+    title: categoryData.title,
+    description: categoryData.description,
     keywords: [
-      `${category.name.toLowerCase()} עסקים`,
-      "ביקורות עסקים",
-      "השוואת עסקים",
-      "עסקים מובילים",
-      `${category.name.toLowerCase()} ביקורות`,
-      "דירוגי עסקים",
-      "ביקורות משתמשים",
+      ...categoryData.keywords,
+      "ביקורות עסקים דיגיטליים",
+      "אתרי אינטרנט ישראליים",
+      "קנייה בטוחה אונליין",
+      "ביקורות קונים אמיתיים",
+      "דירוגי אתרים",
+      "אמינות אתרי קנייה",
+      "שירות לקוחות אונליין",
+      "ביקורות לפני קנייה",
+      "אתרים מהימנים בישראל",
     ],
     openGraph: {
-      title: `העסקים הטובים ביותר ב${category.name} - ביקורות ודירוגים`,
-      description: `מצא והשווה עסקים מובילים ב${category.name.toLowerCase()} עם ביקורות ודירוגים אותנטיים ממשתמשים.`,
+      title: `${category.name} מהימנים - ביקורות קונים אמיתיים`,
+      description: `לפני שקונים ב${category.name.toLowerCase()} באינטרנט - קראו ביקורות של לקוחות אמיתיים. בדקו אמינות, איכות שירות ומשלוחים.`,
+      type: "website",
+      locale: "he_IL",
     },
     twitter: {
       card: "summary_large_image",
-      title: `העסקים הטובים ביותר ב${category.name} - ביקורות ודירוגים`,
-      description: `מצא והשווה עסקים מובילים ב${category.name.toLowerCase()} עם ביקורות ודירוגים אותנטיים ממשתמשים.`,
+      title: `ביקורות על ${category.name} - קנייה בטוחה אונליין`,
+      description: `מדריך לקנייה בטוחה: ביקורות אמיתיות על ${category.name.toLowerCase()} בישראל. בדקו לפני שקונים!`,
+    },
+    alternates: {
+      canonical: `${process.env.NEXT_PUBLIC_APP_URL}/category/${params.slug}`,
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-video-preview": -1,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+      },
     },
   };
 }

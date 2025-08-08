@@ -102,7 +102,8 @@ const jsonLd = {
   "@context": "https://schema.org",
   "@type": "WebPage",
   name: "עסקים - הצטרפו לרייט-איט",
-  description: "פלטפורמה מתקדמת לניהול ביקורות ומוניטין דיגיטלי לעסקים בישראל",
+  description:
+    "הפוך לקוחות מרוצים למכירות נוספות עם פלטפורמת הביקורות המובילה בישראל",
   url: `${process.env.NEXT_PUBLIC_APP_URL}/business`,
   isPartOf: {
     "@type": "WebSite",
@@ -148,26 +149,6 @@ const jsonLd = {
       validFrom: new Date().toISOString(),
       description: "תוכנית בסיסית חינמית לניהול ביקורות עסקיות",
     },
-    hasOfferCatalog: {
-      "@type": "OfferCatalog",
-      name: "תוכניות רייט-איט לעסקים",
-      itemListElement: [
-        {
-          "@type": "Offer",
-          name: "תוכנית Basic - חינמי",
-          price: "0",
-          priceCurrency: "ILS",
-          description: "פרופיל עסקי בסיסי, קבלת ביקורות, מענה ללקוחות",
-        },
-        {
-          "@type": "Offer",
-          name: "תוכנית Plus - מתקדמת",
-          price: "99",
-          priceCurrency: "ILS",
-          description: "תג עסק מאומת, חשיפה מוגברת, אנליטיקות מתקדמות",
-        },
-      ],
-    },
   },
   breadcrumb: {
     "@type": "BreadcrumbList",
@@ -189,14 +170,6 @@ const jsonLd = {
   faq: {
     "@type": "FAQPage",
     mainEntity: [
-      {
-        "@type": "Question",
-        name: "האם השירות באמת חינמי?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "כן! פתיחת פרופיל עסקי וקבלת ביקורות מלקוחות הן חינמיות לחלוטין. עסקים יכולים להזמין ביקורות, לנהל את הפרופיל ולהגיב – ללא עלות.",
-        },
-      },
       {
         "@type": "Question",
         name: "מי יכול להירשם לפלטפורמה?",
