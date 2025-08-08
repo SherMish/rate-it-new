@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
@@ -38,28 +38,7 @@ export function AdminDashboard() {
   const [isLoadingBlogs, setIsLoadingBlogs] = useState(true);
   const [allWebsites, setAllWebsites] = useState<WebsiteType[]>([]);
 
-  useEffect(() => {
-    if (status !== "authenticated") return;
-    if (hasRunGuard.current) return;
-
-    hasRunGuard.current = true;
-
-    const adminEmails = ["sharon.mishayev@gmail.com", "liamrose1220@gmail.com", "ed123@gmail.com"];
-    const userEmail = session?.user?.email;
-
-    if (!userEmail || !adminEmails.includes(userEmail)) {
-      router.push("/");
-      return;
-    }
-
-    if (activeTab === "tools") {
-      fetchWebsites();
-    } else if (activeTab === "blogs") {
-      fetchBlogPosts();
-    }
-  }, [status, session, activeTab]);
-
-  const fetchWebsites = async () => {
+  const fetchWebsites = useCallback(async () => {
     setIsLoadingTools(true);
     try {
       const response = await fetch(
@@ -73,9 +52,9 @@ export function AdminDashboard() {
     } finally {
       setIsLoadingTools(false);
     }
-  };
+  }, [toolsPage]);
 
-  const fetchBlogPosts = async () => {
+  const fetchBlogPosts = useCallback(async () => {
     setIsLoadingBlogs(true);
     try {
       const response = await fetch(
@@ -89,9 +68,34 @@ export function AdminDashboard() {
     } finally {
       setIsLoadingBlogs(false);
     }
-  };
+  }, [blogsPage]);
 
-  const fetchAllWebsites = async () => {
+  useEffect(() => {
+    if (status !== "authenticated") return;
+    if (hasRunGuard.current) return;
+
+    hasRunGuard.current = true;
+
+    const adminEmails = [
+      "sharon.mishayev@gmail.com",
+      "liamrose1220@gmail.com",
+      "ed123@gmail.com",
+    ];
+    const userEmail = session?.user?.email;
+
+    if (!userEmail || !adminEmails.includes(userEmail)) {
+      router.push("/");
+      return;
+    }
+
+    if (activeTab === "tools") {
+      fetchWebsites();
+    } else if (activeTab === "blogs") {
+      fetchBlogPosts();
+    }
+  }, [status, session, activeTab, router, fetchWebsites, fetchBlogPosts]);
+
+  const fetchAllWebsites = useCallback(async () => {
     try {
       const response = await fetch(`/api/admin/websites?limit=1000`);
       const data = await response.json();
@@ -99,7 +103,7 @@ export function AdminDashboard() {
     } catch (error) {
       console.error("Error fetching all websites:", error);
     }
-  };
+  }, []);
 
   useEffect(() => {
     if (searchQuery) {
@@ -107,7 +111,21 @@ export function AdminDashboard() {
     } else {
       fetchWebsites();
     }
-  }, [searchQuery]);
+  }, [searchQuery, fetchAllWebsites, fetchWebsites]);
+
+  // Fetch blog posts when page changes
+  useEffect(() => {
+    if (activeTab === "blogs") {
+      fetchBlogPosts();
+    }
+  }, [blogsPage, activeTab, fetchBlogPosts]);
+
+  // Fetch tools when page changes
+  useEffect(() => {
+    if (activeTab === "tools") {
+      fetchWebsites();
+    }
+  }, [toolsPage, activeTab, fetchWebsites]);
 
   const maxToolsPages = Math.ceil(totalTools / ITEMS_PER_PAGE);
   const maxBlogsPages = Math.ceil(totalBlogs / ITEMS_PER_PAGE);
