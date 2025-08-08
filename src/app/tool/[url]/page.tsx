@@ -105,6 +105,7 @@ interface PageProps {
   };
 }
 
+// Remove the database write from metadata generation and fix JSON-LD
 async function getWebsiteData(url: string) {
   await connectDB();
 
@@ -115,19 +116,13 @@ async function getWebsiteData(url: string) {
     notFound();
   }
 
-  // Calculate average rating and review count from reviews
+  // Calculate average rating and review count from reviews (but don't write to DB here)
   const reviews = await Review.find({ relatedWebsite: website._id });
   const reviewCount = reviews.length;
   const averageRating =
     reviewCount > 0
       ? reviews.reduce((acc, review) => acc + review.rating, 0) / reviewCount
       : 0;
-
-  // Update website with calculated stats
-  await Website.findByIdAndUpdate(website._id, {
-    averageRating: Math.round(averageRating * 10) / 10, // Round to 1 decimal
-    reviewCount,
-  });
 
   // Find all category data from categories.json
   const categoryDataList = website.categories
@@ -168,6 +163,7 @@ const getReviews = async (websiteId: string) => {
       "title body rating createdAt helpfulCount relatedUser isVerified businessResponse"
     )
     .populate("relatedUser", "name")
+    .sort({ createdAt: -1 }) // Show newest reviews first
     .lean<ReviewDoc[]>();
 
   return reviews.map((review) => ({
@@ -252,11 +248,12 @@ export async function generateMetadata(
   ].filter(Boolean);
 
   // Structured data for rich snippets
+  const positiveReviews = reviews?.filter((review) => review.rating > 3) || [];
   const structuredData = {
     "@context": "https://schema.org",
-    "@type": "Organization",
+    "@type": "LocalBusiness",
     name: website.name,
-    url: website.url,
+    url: `${process.env.NEXT_PUBLIC_APP_URL}/tool/${params.url}`,
     aggregateRating:
       reviewCount > 0
         ? {
@@ -264,27 +261,24 @@ export async function generateMetadata(
             ratingValue: averageRating,
             bestRating: "5",
             worstRating: "1",
-            ratingCount: reviewCount,
+            ratingCount: reviewCount, // All reviews count for aggregate
           }
         : undefined,
-    review:
-      reviews
-        ?.filter((review) => review.rating > 3)
-        .map((review) => ({
-          "@type": "Review",
-          reviewRating: {
-            "@type": "Rating",
-            ratingValue: review.rating,
-            bestRating: "5",
-            worstRating: "1",
-          },
-          author: {
-            "@type": "Person",
-            name: review.relatedUser?.name || "לקוח מאומת",
-          },
-          reviewBody: review.body,
-          datePublished: review.createdAt,
-        })) || [],
+    review: positiveReviews.map((review) => ({
+      "@type": "Review",
+      reviewRating: {
+        "@type": "Rating",
+        ratingValue: review.rating,
+        bestRating: "5",
+        worstRating: "1",
+      },
+      author: {
+        "@type": "Person",
+        name: review.relatedUser?.name || "לקוח מאומת",
+      },
+      reviewBody: review.body,
+      datePublished: review.createdAt,
+    })),
   };
 
   return {
@@ -304,11 +298,10 @@ export async function generateMetadata(
       // images: [
       //   {
       //     url:
-      //       website.logo ||
-      //       `${process.env.NEXT_PUBLIC_APP_URL}/default-business.jpg`,
+      //       website.logo || `${process.env.NEXT_PUBLIC_APP_URL}/logo_new.png`,
       //     width: 1200,
       //     height: 630,
-      //     alt: `לוגו ${website.name}`,
+      //     alt: `${website.name} - ביקורות וחוות דעת`,
       //   },
       // ],
     },
@@ -334,9 +327,7 @@ export async function generateMetadata(
         "max-snippet": -1,
       },
     },
-    other: {
-      "application/ld+json": JSON.stringify(structuredData),
-    },
+    // JSON-LD will be rendered in the page component
   };
 }
 
@@ -427,11 +418,13 @@ export default async function ToolPage({ params }: PageProps) {
   const ratingStatus = getRatingStatus(website.averageRating || 0);
 
   // Add structured data for rich results
+  const positiveReviews = reviews?.filter((review) => review.rating > 3) || [];
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "Product",
+    "@type": "LocalBusiness",
     name: website.name,
     description: website.description,
+    url: `${process.env.NEXT_PUBLIC_APP_URL}/tool/${params.url}`,
     aggregateRating:
       website.reviewCount > 0
         ? {
@@ -442,21 +435,21 @@ export default async function ToolPage({ params }: PageProps) {
             worstRating: "1",
           }
         : undefined,
-    review:
-      reviews && reviews.length > 0
-        ? reviews.map((review) => ({
-            "@type": "Review",
-            reviewRating: {
-              "@type": "Rating",
-              ratingValue: review.rating,
-            },
-            author: {
-              "@type": "Person",
-              name: review.relatedUser?.name || "אנונימי",
-            },
-            reviewBody: review.body,
-          }))
-        : undefined,
+    review: positiveReviews.map((review) => ({
+      "@type": "Review",
+      reviewRating: {
+        "@type": "Rating",
+        ratingValue: review.rating,
+        bestRating: "5",
+        worstRating: "1",
+      },
+      author: {
+        "@type": "Person",
+        name: review.relatedUser?.name || "לקוח מאומת",
+      },
+      reviewBody: review.body,
+      datePublished: review.createdAt,
+    })),
   };
 
   const suggestedTools = website.category
