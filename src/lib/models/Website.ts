@@ -149,6 +149,52 @@ if (mongoose.models.Website) {
 // Create and export the model
 const Website = mongoose.model("Website", WebsiteSchema);
 
+// Helper function to update website review statistics
+export async function updateWebsiteReviewStats(websiteId: string | ObjectId) {
+  try {
+    // Import Review model dynamically to avoid circular dependency
+    const Review = mongoose.models.Review || (await import("./Review")).default;
+
+    const reviews = await Review.find({ relatedWebsite: websiteId }).select(
+      "rating"
+    );
+    const reviewCount = reviews.length;
+    const averageRating =
+      reviewCount > 0
+        ? reviews.reduce((acc: number, review: any) => acc + review.rating, 0) /
+          reviewCount
+        : 0;
+
+    const updatedWebsite = await Website.findByIdAndUpdate(
+      websiteId,
+      {
+        reviewCount,
+        averageRating: Math.round(averageRating * 10) / 10, // Round to 1 decimal
+      },
+      { new: true }
+    );
+
+    if (!updatedWebsite) {
+      throw new Error(`Website with ID ${websiteId} not found`);
+    }
+
+    console.log(
+      `Updated website ${websiteId} stats: ${reviewCount} reviews, ${
+        Math.round(averageRating * 10) / 10
+      } avg rating`
+    );
+
+    return {
+      reviewCount,
+      averageRating: Math.round(averageRating * 10) / 10,
+      websiteId: updatedWebsite._id,
+    };
+  } catch (error) {
+    console.error("Error updating website review stats:", error);
+    throw error;
+  }
+}
+
 // Create indexes in a separate function that can be called explicitly
 export async function createIndexes() {
   try {
