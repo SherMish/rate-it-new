@@ -204,50 +204,138 @@ export async function generateMetadata(
 ): Promise<Metadata> {
   const decodedUrl = decodeURIComponent(params.url);
   const website = await getWebsiteData(decodedUrl);
+  const reviews = await getReviews(website._id.toString());
 
   if (!website) {
     return {
-      title: "עסק לא נמצא",
+      title: "עסק לא נמצא | רייט-איט",
     };
   }
 
-  const averageRating = website.averageRating?.toFixed(1) || "אין";
-  const reviewText = `${website.reviewCount} ${
-    website.reviewCount === 1 ? "ביקורת" : "ביקורות"
+  const averageRating = website.averageRating?.toFixed(1) || "0.0";
+  const reviewCount = website.reviewCount || 0;
+  const reviewText = `${reviewCount} ${
+    reviewCount === 1 ? "ביקורת" : "ביקורות"
   }`;
+  const categoryName = website.category?.name || "עסקים";
+
+  // Better title that includes search intent
+  const title =
+    reviewCount > 0
+      ? `${website.name} ביקורות - ${averageRating}★ (${reviewText}) | רייט-איט`
+      : `${website.name} ביקורות - האם כדאי? | רייט-איט`;
+
+  // More compelling description that addresses buyer concerns
+  const description =
+    reviewCount > 0
+      ? `לפני שקונים ב${website.name} - קראו ${reviewText} של לקוחות אמיתיים. דירוג ${averageRating}/5 כוכבים. בדקו מה אומרים על איכות ושירות.`
+      : `מתכננים לקנות ב${website.name}? בדקו ביקורות וחוות דעת לקוחות לפני הרכישה. קראו על איכות השירות והמוצרים.`;
+
+  // Enhanced keywords targeting purchase intent and common search patterns
+  const keywords = [
+    `${website.name} ביקורות`,
+    `${website.name} חוות דעת`,
+    `${website.name} האם כדאי`,
+    `ביקורות ${website.name}`,
+    `חוות דעת ${website.name}`,
+    `האם כדאי ${website.name}`,
+    `${website.name} ביקורות לקוחות`,
+    `${website.name} דעות`,
+    `קנייה ב${website.name}`,
+    `אמינות ${website.name}`,
+    `${website.name} איכות שירות`,
+    categoryName.toLowerCase(),
+    "ביקורות לפני קנייה",
+    "חוות דעת לקוחות",
+    "דירוגי אתרים",
+    "קנייה בטוחה אונליין",
+  ].filter(Boolean);
+
+  // Structured data for rich snippets
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: website.name,
+    url: website.url,
+    aggregateRating:
+      reviewCount > 0
+        ? {
+            "@type": "AggregateRating",
+            ratingValue: averageRating,
+            bestRating: "5",
+            worstRating: "1",
+            ratingCount: reviewCount,
+          }
+        : undefined,
+    review:
+      reviews
+        ?.filter((review) => review.rating > 3)
+        .map((review) => ({
+          "@type": "Review",
+          reviewRating: {
+            "@type": "Rating",
+            ratingValue: review.rating,
+            bestRating: "5",
+            worstRating: "1",
+          },
+          author: {
+            "@type": "Person",
+            name: review.relatedUser?.name || "לקוח מאומת",
+          },
+          reviewBody: review.body,
+          datePublished: review.createdAt,
+        })) || [],
+  };
 
   return {
-    title: `${website.name} ביקורות - ${averageRating}★ דירוג (${reviewText})`,
-    description:
-      website.description ||
-      `קרא ${reviewText} על ${website.name}. דירוגי משתמשים, משוב, וביקורות מפורטות. דירוג ממוצע: ${averageRating} מתוך 5 כוכבים.`,
-    keywords: [
-      website.name,
-      `${website.name} ביקורות`,
-      `${website.name} דירוגים`,
-      `${website.name} ביקורות משתמשים`,
-      `${website.name} משוב`,
-      website.category?.name || "",
-      "ביקורות עסקים",
-      "ביקורות שירות",
-      "ביקורות משתמשים",
-      "דירוגים וביקורות",
-    ].filter(Boolean),
+    title,
+    description,
+    keywords,
     openGraph: {
-      title: `${website.name} - ביקורות ודירוגים`,
+      title: `${website.name} ביקורות - כדאי לקנות?`,
       description:
-        website.description ||
-        `קרא ביקורות ודירוגי משתמשים עבור ${website.name}. דירוג ממוצע: ${averageRating} מתוך 5 כוכבים על בסיס ${reviewText}.`,
+        reviewCount > 0
+          ? `${reviewText} אמיתיות על ${website.name}. דירוג ${averageRating}/5. קראו לפני הקנייה!`
+          : `ביקורות וחוות דעת על ${website.name}. בדקו לפני הקנייה!`,
       type: "website",
       url: `${process.env.NEXT_PUBLIC_APP_URL}/tool/${params.url}`,
+      siteName: "רייט-איט",
+      locale: "he_IL",
+      // images: [
+      //   {
+      //     url:
+      //       website.logo ||
+      //       `${process.env.NEXT_PUBLIC_APP_URL}/default-business.jpg`,
+      //     width: 1200,
+      //     height: 630,
+      //     alt: `לוגו ${website.name}`,
+      //   },
+      // ],
     },
     twitter: {
       card: "summary_large_image",
-      title: `${website.name} ביקורות ודירוגים`,
-      description: `${averageRating}★ דירוג על בסיס ${reviewText}`,
+      title: `${website.name} ביקורות - ${averageRating}★`,
+      description:
+        reviewCount > 0
+          ? `${reviewText} אמיתיות. קראו לפני הקנייה!`
+          : `ביקורות וחוות דעת על ${website.name}`,
     },
     alternates: {
       canonical: `${process.env.NEXT_PUBLIC_APP_URL}/tool/${params.url}`,
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-video-preview": -1,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+      },
+    },
+    other: {
+      "application/ld+json": JSON.stringify(structuredData),
     },
   };
 }
