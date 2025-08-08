@@ -7,6 +7,12 @@
 
 # testing
 /coverage
+/test-results
+/playwright-report
+/playwright/.cache
+/.jest
+/jest-report
+*.lcov
 
 # next.js
 /.next/
@@ -26,8 +32,6 @@ yarn-error.log*
 
 # local env files
 .env*.local
-
-.env
 
 # vercel
 .vercel
