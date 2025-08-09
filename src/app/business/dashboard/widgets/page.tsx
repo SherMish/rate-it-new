@@ -243,10 +243,10 @@ function PreviewSimple({ data }: { data: RatingData }) {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          marginBottom: 16,
+          marginBottom: 8,
         }}
       >
-        <RateItLogo size={50} />
+        <RateItLogo size={60} />
       </div>
       {/* Stars row - improved styling */}
       <div
