@@ -66,7 +66,7 @@
         <div style="position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #7c3aed, #ec4899);"></div>
         
         <!-- Header -->
-        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; direction: ltr;">
           ${createRateItLogo(24)}
           <div style="font-size: 11px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 500;">
             דירוג לקוחות
@@ -81,9 +81,6 @@
             </div>
             <div style="flex: 1;">
               ${createStars(data.averageRating, 20)}
-              <div style="font-size: 13px; color: #64748b; margin-top: 2px;">
-                מתוך 5 כוכבים
-              </div>
             </div>
           </div>
           

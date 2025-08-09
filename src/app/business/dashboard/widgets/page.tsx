@@ -164,6 +164,7 @@ function PreviewCard({ data }: { data: RatingData }) {
           alignItems: "center",
           justifyContent: "space-between",
           marginBottom: 16,
+          direction: "ltr",
         }}
       >
         <RateItLogo size={24} />
@@ -202,15 +203,6 @@ function PreviewCard({ data }: { data: RatingData }) {
           </div>
           <div style={{ flex: 1 }}>
             <Stars value={data.averageRating} size={20} />
-            <div
-              style={{
-                fontSize: 13,
-                color: "#64748b",
-                marginTop: 2,
-              }}
-            >
-              מתוך 5 כוכבים
-            </div>
           </div>
         </div>
 
