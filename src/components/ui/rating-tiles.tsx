@@ -13,6 +13,9 @@ export type RatingTilesProps = {
   starFontSize?: number; // px
   useDynamicColor?: boolean; // color tiles by value thresholds
   tileRadius?: number; // px; if not provided, computed from size
+  hoverValue?: number; // optional value to display on hover (e.g., preview)
+  onHover?: (value: number) => void; // called with 1..5 on hover, 0 on leave
+  onChange?: (value: number) => void; // called with 1..5 on click
   className?: string;
 };
 
@@ -35,15 +38,20 @@ export default function RatingTiles({
   starFontSize = 32,
   useDynamicColor = false,
   tileRadius,
+  hoverValue,
+  onHover,
+  onChange,
   className,
 }: RatingTilesProps) {
   const normalized = Number(value) || 0;
+  const displayValue = hoverValue && hoverValue > 0 ? hoverValue : normalized;
+
   const dynamicColor = useDynamicColor
-    ? normalized >= 4
+    ? displayValue >= 4
       ? "#10B981" // green for great
-      : normalized >= 3
+      : displayValue >= 3
       ? "#F59E0B" // amber for good/avg
-      : normalized >= 1
+      : displayValue >= 1
       ? "#EF4444" // red for low
       : filledColor
     : filledColor;
@@ -54,7 +62,7 @@ export default function RatingTiles({
       : Math.max(3, Math.round(size / 6));
 
   const tiles = Array.from({ length: 5 }).map((_, i) => {
-    const fill = getFillForIndex(normalized, i);
+    const fill = getFillForIndex(displayValue, i);
     const bgColor = dynamicColor;
     const background =
       fill === 1
@@ -64,9 +72,26 @@ export default function RatingTiles({
         : emptyColor;
     const starColor = fill === 0 ? starEmptyColor : starFilledColor;
 
+    const isInteractive = Boolean(onHover || onChange);
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+      if (!onChange) return;
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        onChange(i + 1);
+      }
+    };
+
     return (
       <div
         key={i}
+        role={isInteractive ? "button" : undefined}
+        aria-label={isInteractive ? `דירוג ${i + 1}` : undefined}
+        tabIndex={isInteractive ? 0 : -1}
+        onMouseEnter={onHover ? () => onHover(i + 1) : undefined}
+        onMouseLeave={onHover ? () => onHover(0) : undefined}
+        onClick={onChange ? () => onChange(i + 1) : undefined}
+        onKeyDown={isInteractive ? handleKeyDown : undefined}
         style={{
           width: size,
           height: size,
@@ -76,6 +101,8 @@ export default function RatingTiles({
           alignItems: "center",
           justifyContent: "center",
           transition: "all 0.2s ease",
+          cursor: isInteractive ? "pointer" : "default",
+          outline: "none",
         }}
       >
         <span

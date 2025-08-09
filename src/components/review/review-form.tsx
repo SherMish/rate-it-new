@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { signIn, useSession } from "next-auth/react";
 import { Star, Upload, Eye, AlertCircle, Loader2 } from "lucide-react";
+import RatingTiles from "@/components/ui/rating-tiles";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -454,24 +455,18 @@ export default function ReviewForm({
           <div className="space-y-2">
             <label className="text-sm font-medium">דירוג</label>
             <div className="flex gap-2">
-              {[1, 2, 3, 4, 5].map((index) => (
-                <button
-                  key={index}
-                  type="button"
-                  className="p-1"
-                  onMouseEnter={() => setHoveredRating(index)}
-                  onMouseLeave={() => setHoveredRating(0)}
-                  onClick={() => handleFieldChange("rating", index)}
-                >
-                  <Star
-                    className={`w-8 h-8 ${
-                      index <= (hoveredRating || reviewData.rating)
-                        ? "text-yellow-400 fill-yellow-400"
-                        : "text-zinc-300"
-                    }`}
-                  />
-                </button>
-              ))}
+              <RatingTiles
+                value={reviewData.rating}
+                hoverValue={hoveredRating}
+                onHover={(v) => setHoveredRating(v)}
+                onChange={(v) => handleFieldChange("rating", v)}
+                size={32}
+                starFontSize={22}
+                gap={3}
+                emptyColor="#e5e7eb"
+                tileRadius={6}
+                useDynamicColor
+              />
             </div>
             {formErrors.rating && (
               <p className="text-sm text-destructive">{formErrors.rating}</p>
