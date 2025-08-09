@@ -4,6 +4,7 @@
   const ATTR_WEBSITE_ID = 'data-rateit-website-id';
   const ATTR_TYPE = 'data-rateit-type';
   const ATTR_SRC = 'data-rateit-src';
+  const ATTR_WEBSITE_URL = 'data-rateit-website-url';
 
   const LOGO_URL = 'https://res.cloudinary.com/dwqdhp70e/image/upload/v1754689799/defypsjlegiwhfwqwwzf.png';
 
@@ -26,9 +27,9 @@
   }
 
   // Existing Card widget remains unchanged
-  function createCard(data) {
+  function createCard(data, websiteUrl) {
     const cardId = 'rateit-card-' + Date.now();
-    return `
+    const inner = `
       <div id="${cardId}" style="display:inline-block;padding:20px;background:linear-gradient(135deg,#ffffff 0%,#f8fafc 100%);border:1px solid #e2e8f0;border-radius:16px;box-shadow:0 4px 16px rgba(124,58,237,0.08),0 2px 8px rgba(0,0,0,0.1);min-width:280px;max-width:320px;color:#1e293b;transition:all .3s ease;cursor:pointer;position:relative;overflow:hidden;text-decoration:none;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
         <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#7c3aed,#ec4899);"></div>
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;direction:ltr;">
@@ -49,10 +50,14 @@
       </div>
       <script>(function(){const c=document.getElementById('${cardId}');c.addEventListener('mouseenter',function(){this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(124,58,237,0.12),0 4px 12px rgba(0,0,0,0.15)';this.style.background='linear-gradient(135deg,#ffffff 0%,#fefefe 100%)';});c.addEventListener('mouseleave',function(){this.style.transform='translateY(0)';this.style.boxShadow='0 4px 16px rgba(124,58,237,0.08),0 2px 8px rgba(0,0,0,0.1)';this.style.background='linear-gradient(135deg,#ffffff 0%,#f8fafc 100%)';});})();</script>
     `;
+    if (websiteUrl) {
+      return `<a href="https://rate-it.co.il/tools/${websiteUrl}" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;">${inner}</a>`;
+    }
+    return inner;
   }
 
   // New Simple widget (logo row, brand tiles stars, rating + reviews)
-  function createSimple(data) {
+  function createSimple(data, websiteUrl) {
     const id = 'rateit-simple-' + Date.now();
     const filled = Math.round(Number(data.averageRating || 0));
     const tiles = Array.from({ length: 5 }).map((_, i) => `
@@ -60,7 +65,7 @@
         <span style="color:${i < filled ? '#fff' : '#94a3b8'};font-size:24px;line-height:1;font-weight:bold;">★</span>
       </div>`).join('');
 
-    return `
+    const inner = `
       <div id="${id}" style="display:inline-block;padding:16px;background:#fff;border:1px solid #e2e8f0;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.06);min-width:320px;color:#1e293b;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
         <div style="display:flex;align-items:center;justify-content:center;margin-bottom:8px;">
           ${createRateItLogo(60)}
@@ -72,15 +77,19 @@
           <span>${Number(data.reviewCount || 0)} ביקורות</span>
         </div>
       </div>`;
+    if (websiteUrl) {
+      return `<a href="https://rate-it.co.il/tools/${websiteUrl}" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;">${inner}</a>`;
+    }
+    return inner;
   }
 
-  function render(type, data) {
+  function render(type, data, websiteUrl) {
     switch ((type || 'card').toLowerCase()) {
       case 'simple':
-        return createSimple(data);
+        return createSimple(data, websiteUrl);
       case 'card':
       default:
-        return createCard(data);
+        return createCard(data, websiteUrl);
     }
   }
 
@@ -108,10 +117,11 @@
     const websiteId = script.getAttribute(ATTR_WEBSITE_ID);
     const type = script.getAttribute(ATTR_TYPE) || 'card';
     const dataSrc = script.getAttribute(ATTR_SRC);
+    const websiteUrl = script.getAttribute(ATTR_WEBSITE_URL);
     if (!websiteId || !dataSrc) { console.warn('Rate-It widget: Missing required attributes'); return; }
     const cacheKey = `rateit-${websiteId}-${type}`;
     fetchWithHourlyCache(dataSrc, cacheKey).then(data => {
-      const html = render(type, data);
+      const html = render(type, data, websiteUrl);
       script.insertAdjacentHTML('afterend', html);
     }).catch(err => console.warn('Rate-It widget failed to load:', err));
   }

@@ -35,10 +35,18 @@ type RatingData = { averageRating: number; reviewCount: number };
 const LOGO_URL =
   "https://res.cloudinary.com/dwqdhp70e/image/upload/v1754689799/defypsjlegiwhfwqwwzf.png";
 
-function getEmbedSnippet(baseUrl: string, websiteId: string, type: string) {
+function getEmbedSnippet(
+  baseUrl: string,
+  websiteId: string,
+  type: string,
+  websiteUrl?: string
+) {
   const scriptSrc = `${baseUrl}/widget/embed.js`;
   const dataSrc = `${baseUrl}/api/public/widget?websiteId=${websiteId}`;
-  return `<!-- Rate-It Widget (${type}) -->\n<script async src="${scriptSrc}" data-rateit-website-id="${websiteId}" data-rateit-type="${type}" data-rateit-src="${dataSrc}"></script>`;
+  const websiteUrlAttr = websiteUrl
+    ? ` data-rateit-website-url="${websiteUrl}"`
+    : "";
+  return `<!-- Rate-It Widget (${type}) -->\n<script async src="${scriptSrc}" data-rateit-website-id="${websiteId}" data-rateit-type="${type}" data-rateit-src="${dataSrc}"${websiteUrlAttr}></script>`;
 }
 
 function RateItLogo({ size = 24 }: { size?: number }) {
@@ -349,7 +357,12 @@ export default function WidgetsPage() {
 
   const handleCopy = async (type: string) => {
     if (!website?._id) return;
-    const snippet = getEmbedSnippet(baseUrl, website._id.toString(), type);
+    const snippet = getEmbedSnippet(
+      baseUrl,
+      website._id.toString(),
+      type,
+      website?.url || ""
+    );
     await navigator.clipboard.writeText(snippet);
     setCopied(type);
     toast.success("הקוד הועתק ללוח. הדביקו את הקוד באתר שלכם");
@@ -370,7 +383,7 @@ export default function WidgetsPage() {
         </div>
       )}
       <div className="space-y-8">
-        {/* Card widget */}
+        {/* Simple widget */}
         <div className="flex justify-center">
           <Card
             className={`${
@@ -383,86 +396,9 @@ export default function WidgetsPage() {
                   1
                 </div>
                 <div>
-                  <CardTitle className="text-lg">Card - כרטיס אמון</CardTitle>
-                  <CardDescription className="text-sm">
-                    כרטיס עשיר המציג דירוג, מספר ביקורות וקישור לדף Rate-It
-                    שלכם.
-                  </CardDescription>
-                </div>
-              </div>
-            </CardHeader>
-
-            <CardContent className="space-y-6">
-              {/* Preview */}
-              <div className="bg-slate-50 border border-slate-200 rounded-xl p-6">
-                <div className="font-semibold mb-4 text-slate-700 flex items-center gap-2">
-                  <div className="w-2 h-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full"></div>
-                  תצוגה מקדימה
-                </div>
-                {loading && (
-                  <div className="text-sm text-slate-500 animate-pulse">
-                    טוען תצוגה...
-                  </div>
-                )}
-                {error && <div className="text-sm text-red-600">{error}</div>}
-                {!loading && (
-                  <div className="flex justify-center">
-                    <PreviewCard data={data} />
-                  </div>
-                )}
-                {/* Removed caption under preview per request */}
-              </div>
-
-              {/* Embed Code */}
-              <div className="bg-slate-900 border border-slate-700 rounded-xl p-4">
-                <div className="font-semibold mb-3 text-slate-200 flex items-center gap-2">
-                  <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-                  קוד הטמעה
-                </div>
-                <pre className="text-xs text-slate-300 overflow-x-auto whitespace-pre-wrap font-mono leading-relaxed">
-                  {website?._id
-                    ? getEmbedSnippet(baseUrl, website._id.toString(), "card")
-                    : ""}
-                </pre>
-                <div className="flex justify-between items-center mt-4">
-                  <Button
-                    size="sm"
-                    disabled={isDisabled}
-                    onClick={() => handleCopy("card")}
-                    className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white border-0"
-                  >
-                    <Copy className="w-4 h-4 mr-2" />
-                    {copied === "card" ? "הועתק!" : "העתק קוד"}
-                  </Button>
-                  <a
-                    href="#instructions"
-                    className="text-xs text-slate-400 hover:text-slate-200 flex items-center gap-1 transition-colors"
-                  >
-                    <Info className="w-3.5 h-3.5" /> הוראות הטמעה
-                  </a>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Simple widget */}
-        <div className="flex justify-center">
-          <Card
-            className={`${
-              isDisabled ? "opacity-60" : ""
-            } border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-white/80 backdrop-blur-sm max-w-lg w-full`}
-          >
-            <CardHeader className="pb-4">
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg flex items-center justify-center text-white font-semibold text-sm bg-gradient-to-r from-purple-500 to-purple-600">
-                  2
-                </div>
-                <div>
                   <CardTitle className="text-lg">Simple - כוכבים</CardTitle>
                   <CardDescription className="text-sm">
-                    וידג׳ט מינימליסטי עם לוגו וכוכבים, כולל דירוג ומספר ביקורות
-                    (ללא TrustScore).
+                    וידג׳ט מינימליסטי עם לוגו וכוכבים, כולל דירוג ומספר ביקורות.
                   </CardDescription>
                 </div>
               </div>
@@ -482,7 +418,14 @@ export default function WidgetsPage() {
                 {error && <div className="text-sm text-red-600">{error}</div>}
                 {!loading && (
                   <div className="flex justify-center">
-                    <PreviewSimple data={data} />
+                    <a
+                      href={`https://rate-it.co.il/tools/${website?.url || ""}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-block"
+                    >
+                      <PreviewSimple data={data} />
+                    </a>
                   </div>
                 )}
               </div>
@@ -495,7 +438,12 @@ export default function WidgetsPage() {
                 </div>
                 <pre className="text-xs text-slate-300 overflow-x-auto whitespace-pre-wrap font-mono leading-relaxed">
                   {website?._id
-                    ? getEmbedSnippet(baseUrl, website._id.toString(), "simple")
+                    ? getEmbedSnippet(
+                        baseUrl,
+                        website._id.toString(),
+                        "simple",
+                        website.url || ""
+                      )
                     : ""}
                 </pre>
                 <div className="flex justify-between items-center mt-4">
