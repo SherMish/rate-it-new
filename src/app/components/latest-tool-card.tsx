@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Star, LucideIcon } from "lucide-react";
+import RatingTiles from "@/components/ui/rating-tiles";
 import { motion } from "framer-motion";
 import { useRef } from "react";
 import { useInView } from "framer-motion";
@@ -85,16 +86,15 @@ export function LatestToolCard({ website, index }: LatestToolCardProps) {
                     <div className="flex items-center gap-1 sm:gap-2 min-w-0 max-w-full">
                       <div className="flex items-center gap-1 min-w-0">
                         <div className="flex items-center flex-shrink-0">
-                          {[...Array(5)].map((_, i) => (
-                            <Star
-                              key={i}
-                              className={`w-3 h-3 sm:w-4 sm:h-4 ${
-                                i < Math.floor(website.averageRating || 0)
-                                  ? "text-yellow-500 fill-yellow-500"
-                                  : "text-gray-300 fill-gray-300"
-                              }`}
-                            />
-                          ))}
+                          <RatingTiles
+                            value={website.averageRating || 0}
+                            size={16}
+                            starFontSize={12}
+                            gap={2}
+                            emptyColor="#e5e7eb"
+                            tileRadius={3}
+                            useDynamicColor
+                          />
                         </div>
                         {(website.averageRating ?? 0) > 0 && (
                           <span className="text-xs sm:text-sm font-medium text-gray-900 flex-shrink-0">
