@@ -246,7 +246,7 @@ function PreviewSimple({ data }: { data: RatingData }) {
           marginBottom: 16,
         }}
       >
-        <RateItLogo size={32} />
+        <RateItLogo size={50} />
       </div>
       {/* Stars row - improved styling */}
       <div

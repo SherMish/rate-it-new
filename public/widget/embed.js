@@ -63,7 +63,7 @@
     return `
       <div id="${id}" style="display:inline-block;padding:16px;background:#fff;border:1px solid #e2e8f0;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.06);min-width:320px;color:#1e293b;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
         <div style="display:flex;align-items:center;justify-content:center;margin-bottom:16px;">
-          ${createRateItLogo(32)}
+          ${createRateItLogo(50)}
         </div>
         <div style="display:flex;gap:6px;margin-bottom:12px;justify-content:center;">${tiles}</div>
         <div style="display:flex;align-items:center;justify-content:center;gap:10px;font-weight:600;color:#0f172a;">
