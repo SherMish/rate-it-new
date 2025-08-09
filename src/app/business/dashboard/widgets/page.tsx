@@ -15,16 +15,6 @@ import { toast } from "sonner";
 
 const WIDGET_TYPES = [
   {
-    id: "badge",
-    name: "Badge - תגית דירוג",
-    description: "תגית קומפקטית המציגה את הדירוג הממוצע ומספר הביקורות.",
-  },
-  {
-    id: "bar",
-    name: "Bar - פס דירוג",
-    description: "פס אופקי עם כוכבים ומספר הדירוג הממוצע.",
-  },
-  {
     id: "card",
     name: "Card - כרטיס אמון",
     description:
@@ -63,13 +53,14 @@ function RateItLogo({
             display: "block",
             objectFit: "contain",
             filter: "brightness(1.1) contrast(1.05)",
+            backgroundColor: "transparent",
           }}
         />
         <span
           style={{
             fontWeight: 700,
             fontSize: Math.max(12, size * 0.5),
-            color: "#2c1810",
+            color: "#334155",
             letterSpacing: 0.5,
             fontFamily:
               "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
@@ -91,6 +82,7 @@ function RateItLogo({
         display: "block",
         objectFit: "contain",
         filter: "brightness(1.1) contrast(1.05)",
+        backgroundColor: "transparent",
       }}
     />
   );
@@ -118,123 +110,20 @@ function Stars({ value, size = 16 }: { value: number; size?: number }) {
   );
 }
 
-function PreviewBadge({ data }: { data: RatingData }) {
-  return (
-    <div
-      style={{
-        display: "inline-flex",
-        alignItems: "center",
-        gap: 8,
-        padding: "8px 16px",
-        background: "linear-gradient(135deg, #fefdfb 0%, #f7f5f3 100%)",
-        border: "1px solid #e8e4e0",
-        borderRadius: 50,
-        boxShadow:
-          "0 2px 8px rgba(44, 24, 16, 0.08), 0 1px 3px rgba(0, 0, 0, 0.1)",
-        fontSize: 13,
-        fontWeight: 500,
-        color: "#2c1810",
-        transition: "all 0.2s ease",
-        cursor: "pointer",
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.transform = "translateY(-1px)";
-        e.currentTarget.style.boxShadow =
-          "0 4px 12px rgba(44, 24, 16, 0.12), 0 2px 6px rgba(0, 0, 0, 0.15)";
-        e.currentTarget.style.background =
-          "linear-gradient(135deg, #ffffff 0%, #f9f7f5 100%)";
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.transform = "translateY(0)";
-        e.currentTarget.style.boxShadow =
-          "0 2px 8px rgba(44, 24, 16, 0.08), 0 1px 3px rgba(0, 0, 0, 0.1)";
-        e.currentTarget.style.background =
-          "linear-gradient(135deg, #fefdfb 0%, #f7f5f3 100%)";
-      }}
-    >
-      <RateItLogo size={20} />
-      <div
-        style={{
-          width: 1,
-          height: 16,
-          background: "linear-gradient(to bottom, #8b7355, #6b5b47)",
-          opacity: 0.4,
-          borderRadius: 1,
-        }}
-      />
-      <Stars value={data.averageRating} size={14} />
-      <span style={{ fontWeight: 600, color: "#8b7355" }}>
-        {data.averageRating.toFixed(1)}
-      </span>
-      <span style={{ color: "#6b5b47", fontSize: 12 }}>
-        ({data.reviewCount})
-      </span>
-    </div>
-  );
-}
-
-function PreviewBar({ data }: { data: RatingData }) {
-  return (
-    <div
-      style={{
-        display: "inline-flex",
-        alignItems: "center",
-        gap: 12,
-        padding: "12px 20px",
-        background: "linear-gradient(135deg, #fefdfb 0%, #f7f5f3 100%)",
-        border: "1px solid #e8e4e0",
-        borderRadius: 12,
-        boxShadow:
-          "0 2px 8px rgba(44, 24, 16, 0.08), 0 1px 3px rgba(0, 0, 0, 0.1)",
-        fontSize: 14,
-        color: "#2c1810",
-        minWidth: 200,
-        transition: "all 0.2s ease",
-        cursor: "pointer",
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.transform = "translateY(-1px)";
-        e.currentTarget.style.boxShadow =
-          "0 4px 12px rgba(44, 24, 16, 0.12), 0 2px 6px rgba(0, 0, 0, 0.15)";
-        e.currentTarget.style.background =
-          "linear-gradient(135deg, #ffffff 0%, #f9f7f5 100%)";
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.transform = "translateY(0)";
-        e.currentTarget.style.boxShadow =
-          "0 2px 8px rgba(44, 24, 16, 0.08), 0 1px 3px rgba(0, 0, 0, 0.1)";
-        e.currentTarget.style.background =
-          "linear-gradient(135deg, #fefdfb 0%, #f7f5f3 100%)";
-      }}
-    >
-      <RateItLogo size={24} />
-      <div style={{ flex: 1, display: "flex", alignItems: "center", gap: 8 }}>
-        <Stars value={data.averageRating} size={16} />
-        <span style={{ fontWeight: 700, fontSize: 16, color: "#8b7355" }}>
-          {data.averageRating.toFixed(1)}
-        </span>
-        <span style={{ color: "#6b5b47", fontSize: 13 }}>
-          מתוך 5 ({data.reviewCount} ביקורות)
-        </span>
-      </div>
-    </div>
-  );
-}
-
 function PreviewCard({ data }: { data: RatingData }) {
   return (
     <div
       style={{
         display: "inline-block",
         padding: 20,
-        background: "linear-gradient(135deg, #fefdfb 0%, #f7f5f3 100%)",
-        border: "1px solid #e8e4e0",
+        background: "linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)",
+        border: "1px solid #e2e8f0",
         borderRadius: 16,
         boxShadow:
-          "0 4px 16px rgba(44, 24, 16, 0.08), 0 2px 8px rgba(0, 0, 0, 0.1)",
+          "0 4px 16px rgba(124, 58, 237, 0.08), 0 2px 8px rgba(0, 0, 0, 0.1)",
         minWidth: 280,
         maxWidth: 320,
-        color: "#2c1810",
+        color: "#1e293b",
         transition: "all 0.3s ease",
         cursor: "pointer",
         position: "relative" as const,
@@ -243,19 +132,19 @@ function PreviewCard({ data }: { data: RatingData }) {
       onMouseEnter={(e) => {
         e.currentTarget.style.transform = "translateY(-2px)";
         e.currentTarget.style.boxShadow =
-          "0 8px 24px rgba(44, 24, 16, 0.12), 0 4px 12px rgba(0, 0, 0, 0.15)";
+          "0 8px 24px rgba(124, 58, 237, 0.12), 0 4px 12px rgba(0, 0, 0, 0.15)";
         e.currentTarget.style.background =
-          "linear-gradient(135deg, #ffffff 0%, #f9f7f5 100%)";
+          "linear-gradient(135deg, #ffffff 0%, #fefefe 100%)";
       }}
       onMouseLeave={(e) => {
         e.currentTarget.style.transform = "translateY(0)";
         e.currentTarget.style.boxShadow =
-          "0 4px 16px rgba(44, 24, 16, 0.08), 0 2px 8px rgba(0, 0, 0, 0.1)";
+          "0 4px 16px rgba(124, 58, 237, 0.08), 0 2px 8px rgba(0, 0, 0, 0.1)";
         e.currentTarget.style.background =
-          "linear-gradient(135deg, #fefdfb 0%, #f7f5f3 100%)";
+          "linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)";
       }}
     >
-      {/* Elegant accent */}
+      {/* Purple accent */}
       <div
         style={{
           position: "absolute",
@@ -263,7 +152,7 @@ function PreviewCard({ data }: { data: RatingData }) {
           left: 0,
           right: 0,
           height: 3,
-          background: "linear-gradient(90deg, #8b7355, #6b5b47)",
+          background: "linear-gradient(90deg, #7c3aed, #ec4899)",
         }}
       />
 
@@ -280,7 +169,7 @@ function PreviewCard({ data }: { data: RatingData }) {
         <div
           style={{
             fontSize: 11,
-            color: "#6b5b47",
+            color: "#64748b",
             textTransform: "uppercase",
             letterSpacing: 0.5,
             fontWeight: 500,
@@ -304,7 +193,7 @@ function PreviewCard({ data }: { data: RatingData }) {
             style={{
               fontSize: 32,
               fontWeight: 800,
-              color: "#8b7355",
+              color: "#7c3aed",
               lineHeight: 1,
             }}
           >
@@ -315,7 +204,7 @@ function PreviewCard({ data }: { data: RatingData }) {
             <div
               style={{
                 fontSize: 13,
-                color: "#6b5b47",
+                color: "#64748b",
                 marginTop: 2,
               }}
             >
@@ -327,7 +216,7 @@ function PreviewCard({ data }: { data: RatingData }) {
         <div
           style={{
             fontSize: 14,
-            color: "#6b5b47",
+            color: "#64748b",
             fontWeight: 500,
           }}
         >
@@ -343,9 +232,9 @@ function PreviewCard({ data }: { data: RatingData }) {
           gap: 8,
           padding: "8px 12px",
           background:
-            "linear-gradient(135deg, rgba(139, 115, 85, 0.05) 0%, rgba(107, 91, 71, 0.05) 100%)",
+            "linear-gradient(135deg, rgba(124, 58, 237, 0.05) 0%, rgba(236, 72, 153, 0.05) 100%)",
           borderRadius: 8,
-          border: "1px solid rgba(139, 115, 85, 0.15)",
+          border: "1px solid rgba(124, 58, 237, 0.1)",
         }}
       >
         <div
@@ -420,120 +309,107 @@ export default function WidgetsPage() {
     const snippet = getEmbedSnippet(baseUrl, website._id.toString(), type);
     await navigator.clipboard.writeText(snippet);
     setCopied(type);
-    toast.success("הודבק ללוח. הדביקו את הקוד באתר שלכם");
+    toast.success("הקוד הועתק ללוח. הדביקו את הקוד באתר שלכם");
     setTimeout(() => setCopied(null), 2000);
   };
 
   return (
     <div className="p-6 w-full min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
-      <div className="max-w-6xl mx-auto space-y-8">
+      <div className="max-w-4xl mx-auto space-y-8">
         {/* Header */}
         <div className="text-center space-y-4">
           <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">
-            וידג'טים להטמעה
+            וידג'ט להטמעה
           </h1>
           <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-            הטמיעו וידג'טי דירוג מתקדמים באתר שלכם והציגו את האמינות שלכם
-            ללקוחות. הווידג'טים מתעדכנים אוטומטית עם הדירוגים החדשים.
+            הטמיעו וידג'ט דירוג מתקדם באתר שלכם והציגו את האמינות שלכם ללקוחות.
+            הווידג'ט מתעדכן אוטומטית עם הדירוגים החדשים.
           </p>
           {isDisabled && (
             <div className="mt-4 p-4 bg-amber-50 border border-amber-200 rounded-lg text-amber-800 flex items-center justify-center gap-2 max-w-md mx-auto">
               <Info className="w-5 h-5" />
-              כדי להפעיל את הווידג'טים, יש צורך בביקורת אחת לפחות.
+              כדי להפעיל את הווידג'ט, יש צורך בביקורת אחת לפחות.
             </div>
           )}
         </div>
 
-        {/* Widgets Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {WIDGET_TYPES.map((w, index) => (
-            <Card
-              key={w.id}
-              className={`${
-                isDisabled ? "opacity-60" : ""
-              } border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-white/80 backdrop-blur-sm`}
-            >
-              <CardHeader className="pb-4">
-                <div className="flex items-center gap-3">
-                  <div
-                    className={`w-8 h-8 rounded-lg flex items-center justify-center text-white font-semibold text-sm
-                    ${
-                      index === 0
-                        ? "bg-gradient-to-r from-blue-500 to-blue-600"
-                        : index === 1
-                        ? "bg-gradient-to-r from-emerald-500 to-emerald-600"
-                        : "bg-gradient-to-r from-purple-500 to-purple-600"
-                    }`}
+        {/* Widget Card */}
+        <div className="flex justify-center">
+          <Card
+            className={`${
+              isDisabled ? "opacity-60" : ""
+            } border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-white/80 backdrop-blur-sm max-w-lg w-full`}
+          >
+            <CardHeader className="pb-4">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg flex items-center justify-center text-white font-semibold text-sm bg-gradient-to-r from-purple-500 to-purple-600">
+                  1
+                </div>
+                <div>
+                  <CardTitle className="text-lg">Card - כרטיס אמון</CardTitle>
+                  <CardDescription className="text-sm">
+                    כרטיס עשיר המציג דירוג, מספר ביקורות וקישור לדף Rate-It
+                    שלכם.
+                  </CardDescription>
+                </div>
+              </div>
+            </CardHeader>
+
+            <CardContent className="space-y-6">
+              {/* Preview */}
+              <div className="bg-slate-50 border border-slate-200 rounded-xl p-6">
+                <div className="font-semibold mb-4 text-slate-700 flex items-center gap-2">
+                  <div className="w-2 h-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full"></div>
+                  תצוגה מקדימה
+                </div>
+                {loading && (
+                  <div className="text-sm text-slate-500 animate-pulse">
+                    טוען תצוגה...
+                  </div>
+                )}
+                {error && <div className="text-sm text-red-600">{error}</div>}
+                {!loading && (
+                  <div className="flex justify-center">
+                    <PreviewCard data={data} />
+                  </div>
+                )}
+                <div className="text-xs text-slate-500 mt-4 text-center">
+                  דירוג ממוצע: {data.averageRating?.toFixed?.(1) || "4.2"} •{" "}
+                  {data.reviewCount || 87} ביקורות
+                </div>
+              </div>
+
+              {/* Embed Code */}
+              <div className="bg-slate-900 border border-slate-700 rounded-xl p-4">
+                <div className="font-semibold mb-3 text-slate-200 flex items-center gap-2">
+                  <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                  קוד הטמעה
+                </div>
+                <pre className="text-xs text-slate-300 overflow-x-auto whitespace-pre-wrap font-mono leading-relaxed">
+                  {website?._id
+                    ? getEmbedSnippet(baseUrl, website._id.toString(), "card")
+                    : ""}
+                </pre>
+                <div className="flex justify-between items-center mt-4">
+                  <Button
+                    size="sm"
+                    disabled={isDisabled}
+                    onClick={() => handleCopy("card")}
+                    className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white border-0"
                   >
-                    {index + 1}
-                  </div>
-                  <div>
-                    <CardTitle className="text-lg">{w.name}</CardTitle>
-                    <CardDescription className="text-sm">
-                      {w.description}
-                    </CardDescription>
-                  </div>
+                    <Copy className="w-4 h-4 mr-2" />
+                    {copied === "card" ? "הועתק!" : "העתק קוד"}
+                  </Button>
+                  <a
+                    href="#instructions"
+                    className="text-xs text-slate-400 hover:text-slate-200 flex items-center gap-1 transition-colors"
+                  >
+                    <Info className="w-3.5 h-3.5" /> הוראות הטמעה
+                  </a>
                 </div>
-              </CardHeader>
-
-              <CardContent className="space-y-6">
-                {/* Preview */}
-                <div className="bg-slate-50 border border-slate-200 rounded-xl p-6">
-                  <div className="font-semibold mb-4 text-slate-700 flex items-center gap-2">
-                    <div className="w-2 h-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full"></div>
-                    תצוגה מקדימה
-                  </div>
-                  {loading && (
-                    <div className="text-sm text-slate-500 animate-pulse">
-                      טוען תצוגה...
-                    </div>
-                  )}
-                  {error && <div className="text-sm text-red-600">{error}</div>}
-                  {!loading && (
-                    <div className="flex justify-center">
-                      {w.id === "badge" && <PreviewBadge data={data} />}
-                      {w.id === "bar" && <PreviewBar data={data} />}
-                      {w.id === "card" && <PreviewCard data={data} />}
-                    </div>
-                  )}
-                  <div className="text-xs text-slate-500 mt-4 text-center">
-                    דירוג ממוצע: {data.averageRating?.toFixed?.(1) || "4.2"} •{" "}
-                    {data.reviewCount || 87} ביקורות
-                  </div>
-                </div>
-
-                {/* Embed Code */}
-                <div className="bg-slate-900 border border-slate-700 rounded-xl p-4">
-                  <div className="font-semibold mb-3 text-slate-200 flex items-center gap-2">
-                    <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-                    קוד הטמעה
-                  </div>
-                  <pre className="text-xs text-slate-300 overflow-x-auto whitespace-pre-wrap font-mono leading-relaxed">
-                    {website?._id
-                      ? getEmbedSnippet(baseUrl, website._id.toString(), w.id)
-                      : ""}
-                  </pre>
-                  <div className="flex justify-between items-center mt-4">
-                    <Button
-                      size="sm"
-                      disabled={isDisabled}
-                      onClick={() => handleCopy(w.id)}
-                      className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white border-0"
-                    >
-                      <Copy className="w-4 h-4 mr-2" />
-                      {copied === w.id ? "הועתק!" : "העתק קוד"}
-                    </Button>
-                    <a
-                      href="#instructions"
-                      className="text-xs text-slate-400 hover:text-slate-200 flex items-center gap-1 transition-colors"
-                    >
-                      <Info className="w-3.5 h-3.5" /> הוראות הטמעה
-                    </a>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+              </div>
+            </CardContent>
+          </Card>
         </div>
 
         {/* Instructions */}
@@ -596,7 +472,7 @@ export default function WidgetsPage() {
                   <span className="w-6 h-6 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-sm font-bold">
                     ✓
                   </span>
-                  יתרונות הווידג'טים
+                  יתרונות הווידג'ט
                 </h3>
                 <ul className="space-y-3 text-sm text-slate-600">
                   <li className="flex gap-3">
