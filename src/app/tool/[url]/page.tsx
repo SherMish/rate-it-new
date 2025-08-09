@@ -186,15 +186,17 @@ const getReviews = async (websiteId: string) => {
 
 function getRatingStatus(rating: number): { label: string; color: string } {
   if (rating === 0) return { label: "ניטרלי", color: "text-zinc-500" };
-  // Green for strong ratings (>= 4.0)
-  if (rating >= 4.5) return { label: "מצוין", color: "text-green-500" };
-  if (rating >= 4.0) return { label: "טוב מאוד", color: "text-green-500" };
-  // Amber for average ratings (3.0–3.9)
-  if (rating >= 3.5) return { label: "טוב", color: "text-amber-500" };
-  if (rating >= 3.0) return { label: "ממוצע", color: "text-amber-500" };
-  // Red for low ratings (1.0–2.9)
-  if (rating >= 1.0) return { label: "מתחת לממוצע", color: "text-red-500" };
-  return { label: "חלש", color: "text-red-500" };
+  // 4.5–5.0 dark green – Excellent
+  if (rating >= 4.5) return { label: "מצוין", color: "text-emerald-600" };
+  // 4.0–4.4 light green – Very Good
+  if (rating >= 4.0) return { label: "טוב מאוד", color: "text-emerald-500" };
+  // 3.0–3.9 amber – Good
+  if (rating >= 3.0) return { label: "טוב", color: "text-amber-500" };
+  // 2.0–2.9 orange-red – Poor
+  if (rating >= 2.0) return { label: "מתחת לממוצע", color: "text-orange-600" };
+  // 1.0–1.9 red – Very Poor
+  if (rating >= 1.0) return { label: "חלש", color: "text-red-600" };
+  return { label: "ניטרלי", color: "text-zinc-500" };
 }
 
 // Generate metadata for SEO
