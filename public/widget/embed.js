@@ -70,7 +70,7 @@
       const starColor = '#ffffff';
       return `
       <div style="width:48px;height:48px;border-radius:8px;background:${bg};display:flex;align-items:center;justify-content:center;transition:all .2s ease;">
-        <span style="color:${starColor};font-size:24px;line-height:1;font-weight:bold;">★</span>
+                 <span style="color:${starColor};font-size:32px;line-height:1;font-weight:bold;">★</span>
       </div>`;
     }).join('');
 
@@ -79,7 +79,7 @@
         <div style="display:flex;align-items:center;justify-content:center;margin-bottom:8px;">
           ${createRateItLogo(60)}
         </div>
-        <div style="display:flex;gap:6px;margin-bottom:12px;justify-content:center;">${tiles}</div>
+                 <div style="display:flex;gap:3px;margin-bottom:12px;justify-content:center;">${tiles}</div>
         <div style="display:flex;align-items:center;justify-content:center;gap:10px;font-weight:600;color:#0f172a;">
           <span>${formatRating(data.averageRating)}</span>
           <span style="opacity:.4;">|</span>

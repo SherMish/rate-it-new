@@ -10,6 +10,7 @@ export type RatingTilesProps = {
   emptyColor?: string;
   starFilledColor?: string;
   starEmptyColor?: string;
+  starFontSize?: number; // px
   className?: string;
 };
 
@@ -29,6 +30,7 @@ export default function RatingTiles({
   emptyColor = "#e2e8f0",
   starFilledColor = "#ffffff",
   starEmptyColor = "#ffffff",
+  starFontSize = 32,
   className,
 }: RatingTilesProps) {
   const tiles = Array.from({ length: 5 }).map((_, i) => {
@@ -58,7 +60,7 @@ export default function RatingTiles({
         <span
           style={{
             color: starColor,
-            fontSize: Math.round(size * 0.5),
+            fontSize: starFontSize,
             lineHeight: 1,
             fontWeight: "bold",
           }}

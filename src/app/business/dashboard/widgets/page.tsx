@@ -260,11 +260,12 @@ function PreviewSimple({ data }: { data: RatingData }) {
       <RatingTiles
         value={data.averageRating}
         size={48}
-        gap={6}
+        gap={3}
         filledColor="#494bd6"
         emptyColor="#e2e8f0"
         starFilledColor="#ffffff"
         starEmptyColor="#94a3b8"
+        starFontSize={32}
       />
       {/* Rating and count - centered */}
       <div
