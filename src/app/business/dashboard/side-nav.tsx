@@ -37,11 +37,11 @@ const menuItems = [
     href: "/business/dashboard/reviews-generator",
     icon: Users,
   },
-  // {
-  //   title: "וידג'טים",
-  //   href: "/business/dashboard/widgets",
-  //   icon: Puzzle,
-  // },
+  {
+    title: "וידג'טים",
+    href: "/business/dashboard/widgets",
+    icon: Puzzle,
+  },
   {
     title: "דף העסק",
     href: "/business/dashboard/tool",

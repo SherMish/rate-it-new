@@ -58,6 +58,7 @@ import { VerifiedBadge } from "@/components/verified-badge";
 import "@/lib/models/User"; // Ensure User model is registered before populate calls
 import { WriteFirstReviewButton } from "./components/WriteFirstReviewButton";
 import { WebsiteLogo } from "@/components/website-logo";
+import RatingTiles from "@/components/ui/rating-tiles";
 
 interface WebsiteDoc {
   _id: Types.ObjectId;
@@ -614,17 +615,15 @@ export default async function ToolPage({ params }: PageProps) {
                           ? website.averageRating.toFixed(1)
                           : "0"}
                       </div>
-                      <div className="flex items-center gap-1 mb-2">
-                        {[...Array(5)].map((_, i) => (
-                          <Star
-                            key={i}
-                            className={`w-6 h-6 ${
-                              i < (website.averageRating || 0)
-                                ? "text-yellow-400 fill-yellow-400"
-                                : "text-zinc-300"
-                            }`}
-                          />
-                        ))}
+                      <div className="mb-2">
+                        <RatingTiles
+                          value={website.averageRating || 0}
+                          size={24}
+                          starFontSize={16}
+                          gap={2}
+                          filledColor="#494bd6"
+                          emptyColor="#e2e8f0"
+                        />
                       </div>
                       <div
                         className={`text-sm font-medium ${ratingStatus.color} mb-1`}
