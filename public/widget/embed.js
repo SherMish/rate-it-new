@@ -56,17 +56,17 @@
     const id = 'rateit-simple-' + Date.now();
     const filled = Math.round(Number(data.averageRating || 0));
     const tiles = Array.from({ length: 5 }).map((_, i) => `
-      <div style="width:44px;height:44px;border-radius:6px;background:#7c3aed;display:flex;align-items:center;justify-content:center;">
-        <span style="color:#fff;font-size:22px;line-height:1;">${i < filled ? '★' : '☆'}</span>
+      <div style="width:48px;height:48px;border-radius:8px;background:${i < filled ? '#7c3aed' : '#e2e8f0'};display:flex;align-items:center;justify-content:center;transition:all .2s ease;">
+        <span style="color:${i < filled ? '#fff' : '#94a3b8'};font-size:24px;line-height:1;font-weight:bold;">★</span>
       </div>`).join('');
 
     return `
       <div id="${id}" style="display:inline-block;padding:16px;background:#fff;border:1px solid #e2e8f0;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.06);min-width:320px;color:#1e293b;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
-        <div style="display:flex;align-items:center;justify-content:flex-start;gap:10px;margin-bottom:12px;direction:ltr;">
-          ${createRateItLogo(26)}
+        <div style="display:flex;align-items:center;justify-content:center;margin-bottom:16px;">
+          ${createRateItLogo(32)}
         </div>
-        <div style="display:flex;gap:8px;margin-bottom:12px;">${tiles}</div>
-        <div style="display:flex;align-items:center;gap:10px;font-weight:600;color:#0f172a;">
+        <div style="display:flex;gap:6px;margin-bottom:12px;justify-content:center;">${tiles}</div>
+        <div style="display:flex;align-items:center;justify-content:center;gap:10px;font-weight:600;color:#0f172a;">
           <span>${formatRating(data.averageRating)}</span>
           <span style="opacity:.4;">|</span>
           <span>${Number(data.reviewCount || 0)} ביקורות</span>

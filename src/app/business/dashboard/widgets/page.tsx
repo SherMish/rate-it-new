@@ -21,7 +21,12 @@ const WIDGET_TYPES = [
     description:
       "כרטיס עשיר המציג דירוג, מספר ביקורות וקישור לדף Rate-It שלכם.",
   },
-  { id: "simple", name: "Simple - כוכבים", description: "וידג׳ט מינימליסטי עם לוגו וכוכבים, כולל דירוג ומספר ביקורות (ללא TrustScore)." },
+  {
+    id: "simple",
+    name: "Simple - כוכבים",
+    description:
+      "וידג׳ט מינימליסטי עם לוגו וכוכבים, כולל דירוג ומספר ביקורות (ללא TrustScore).",
+  },
 ] as const;
 
 type RatingData = { averageRating: number; reviewCount: number };
@@ -36,11 +41,7 @@ function getEmbedSnippet(baseUrl: string, websiteId: string, type: string) {
   return `<!-- Rate-It Widget (${type}) -->\n<script async src="${scriptSrc}" data-rateit-website-id="${websiteId}" data-rateit-type="${type}" data-rateit-src="${dataSrc}"></script>`;
 }
 
-function RateItLogo({
-  size = 24,
-}: {
-  size?: number;
-}) {
+function RateItLogo({ size = 24 }: { size?: number }) {
   return (
     <img
       src={LOGO_URL}
@@ -224,30 +225,76 @@ function PreviewCard({ data }: { data: RatingData }) {
 function PreviewSimple({ data }: { data: RatingData }) {
   const filled = Math.round(data.averageRating);
   return (
-    <div style={{
-      display: "inline-block",
-      padding: 16,
-      background: "#ffffff",
-      border: "1px solid #e2e8f0",
-      borderRadius: 12,
-      boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
-      minWidth: 320,
-      color: "#1e293b",
-    }}>
-      {/* Header LTR for left-aligned logo */}
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-start", gap: 10, marginBottom: 12, direction: "ltr" }}>
-        <RateItLogo size={26} />
+    <div
+      style={{
+        display: "inline-block",
+        padding: 16,
+        background: "#ffffff",
+        border: "1px solid #e2e8f0",
+        borderRadius: 12,
+        boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
+        minWidth: 320,
+        color: "#1e293b",
+      }}
+    >
+      {/* Header - centered logo */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          marginBottom: 16,
+        }}
+      >
+        <RateItLogo size={32} />
       </div>
-      {/* Stars row - brand colored tiles */}
-      <div style={{ display: "flex", gap: 8, marginBottom: 12 }}>
+      {/* Stars row - improved styling */}
+      <div
+        style={{
+          display: "flex",
+          gap: 6,
+          marginBottom: 12,
+          justifyContent: "center",
+        }}
+      >
         {Array.from({ length: 5 }).map((_, i) => (
-          <div key={i} style={{ width: 44, height: 44, borderRadius: 6, background: "#7c3aed", display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <span style={{ color: "white", fontSize: 22, lineHeight: 1 }}>{i < filled ? "★" : "☆"}</span>
+          <div
+            key={i}
+            style={{
+              width: 48,
+              height: 48,
+              borderRadius: 8,
+              background: i < filled ? "#7c3aed" : "#e2e8f0",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              transition: "all 0.2s ease",
+            }}
+          >
+            <span
+              style={{
+                color: i < filled ? "white" : "#94a3b8",
+                fontSize: 24,
+                lineHeight: 1,
+                fontWeight: "bold",
+              }}
+            >
+              ★
+            </span>
           </div>
         ))}
       </div>
-      {/* Rating and count */}
-      <div style={{ display: "flex", alignItems: "center", gap: 10, fontWeight: 600, color: "#0f172a" }}>
+      {/* Rating and count - centered */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 10,
+          fontWeight: 600,
+          color: "#0f172a",
+        }}
+      >
         <span>{data.averageRating.toFixed(1)}</span>
         <span style={{ opacity: 0.4 }}>|</span>
         <span>{data.reviewCount} ביקורות</span>
@@ -414,7 +461,8 @@ export default function WidgetsPage() {
                 <div>
                   <CardTitle className="text-lg">Simple - כוכבים</CardTitle>
                   <CardDescription className="text-sm">
-                    וידג׳ט מינימליסטי עם לוגו וכוכבים, כולל דירוג ומספר ביקורות (ללא TrustScore).
+                    וידג׳ט מינימליסטי עם לוגו וכוכבים, כולל דירוג ומספר ביקורות
+                    (ללא TrustScore).
                   </CardDescription>
                 </div>
               </div>
