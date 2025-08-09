@@ -317,18 +317,16 @@ export default function WidgetsPage() {
     <div className="p-6 w-full min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
       <div className="max-w-4xl mx-auto space-y-8">
         {/* Header */}
-        <div className="text-center space-y-4">
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">
-            וידג'ט להטמעה
-          </h1>
-          <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-            הטמיעו וידג'ט דירוג מתקדם באתר שלכם והציגו את האמינות שלכם ללקוחות.
-            הווידג'ט מתעדכן אוטומטית עם הדירוגים החדשים.
+        <div className="mb-8" dir="rtl">
+          <h1 className="text-2xl font-bold mb-6">וידג׳ט להטמעה</h1>
+          <p className="text-muted-foreground mb-8">
+            הטמיעו וידג׳ט דירוג מתקדם באתר שלכם והציגו את האמינות שלכם ללקוחות.
+            הווידג׳ט מתעדכן אוטומטית עם הדירוגים החדשים.
           </p>
           {isDisabled && (
-            <div className="mt-4 p-4 bg-amber-50 border border-amber-200 rounded-lg text-amber-800 flex items-center justify-center gap-2 max-w-md mx-auto">
+            <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-lg text-amber-800 flex items-center gap-2 max-w-md">
               <Info className="w-5 h-5" />
-              כדי להפעיל את הווידג'ט, יש צורך בביקורת אחת לפחות.
+              כדי להפעיל את הווידג׳ט, יש צורך בביקורת אחת לפחות.
             </div>
           )}
         </div>
@@ -450,7 +448,7 @@ export default function WidgetsPage() {
                     <span className="w-5 h-5 bg-slate-100 rounded-full flex items-center justify-center text-xs">
                       •
                     </span>
-                    חפשו "Custom HTML" או "Embed Code"
+                    חפשו &quot;Custom HTML&quot; או &quot;Embed Code&quot;
                   </li>
                   <li className="flex gap-3">
                     <span className="w-5 h-5 bg-slate-100 rounded-full flex items-center justify-center text-xs">
@@ -472,7 +470,7 @@ export default function WidgetsPage() {
                   <span className="w-6 h-6 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-sm font-bold">
                     ✓
                   </span>
-                  יתרונות הווידג'ט
+                  יתרונות הווידג׳ט
                 </h3>
                 <ul className="space-y-3 text-sm text-slate-600">
                   <li className="flex gap-3">
