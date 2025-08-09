@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Star, ThumbsUp, Flag, ShieldCheck, ShieldAlert } from "lucide-react";
+import RatingTiles from "@/components/ui/rating-tiles";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import Link from "next/link";
@@ -157,16 +158,15 @@ export function ReviewCard({ review }: ReviewCardProps) {
 
         {/* Rating Stars */}
         <div className="flex">
-          {[...Array(5)].map((_, i) => (
-            <Star
-              key={i}
-              className={`w-4 h-4 ${
-                i < review.rating
-                  ? "text-yellow-400 fill-yellow-400"
-                  : "text-zinc-300"
-              }`}
-            />
-          ))}
+          <RatingTiles
+            value={review.rating}
+            size={20}
+            starFontSize={14}
+            gap={3}
+            emptyColor="#e5e7eb"
+            tileRadius={4}
+            useDynamicColor
+          />
         </div>
       </div>
 
