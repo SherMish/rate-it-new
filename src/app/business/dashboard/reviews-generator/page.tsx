@@ -29,6 +29,7 @@ import {
 import { useToast } from "@/components/ui/use-toast";
 import { useBusinessGuard } from "@/hooks/use-business-guard";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import DashboardContainer from "@/app/business/components/DashboardContainer";
 
 interface EmailRecipient {
   name: string;
@@ -289,12 +290,12 @@ export default function ReviewsGeneratorPage() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8" dir="rtl">
-      <h1 className="text-2xl font-bold mb-6">יצירת ביקורות</h1>
-      <p className="text-muted-foreground mb-8">
-        צור הזמנות למשתמשים שלך להשאיר ביקורות ולשפר את ציון האמון שלך.
-      </p>
-
+    <DashboardContainer
+      title={"יצירת ביקורות"}
+      subtitle={
+        "צור הזמנות למשתמשים שלך להשאיר ביקורות ולשפר את ציון האמון שלך."
+      }
+    >
       <div className="grid md:grid-cols-2 gap-8">
         {/* Email Invitation Section */}
         <Card className="p-6">
@@ -338,44 +339,29 @@ export default function ReviewsGeneratorPage() {
 
             <div className="flex items-center gap-2">
               <div className="h-px bg-border flex-1" />
-              <span className="text-xs text-muted-foreground">או</span>
+              <p className="text-sm text-muted-foreground">או</p>
               <div className="h-px bg-border flex-1" />
             </div>
 
             <div>
-              <Label htmlFor="csvUpload">העלאת CSV</Label>
-              <div className="mt-1 flex items-center gap-3">
+              <Label htmlFor="csvUpload">ייבוא מקובץ CSV</Label>
+              <div className="flex items-center gap-2 mt-1">
                 <Input
                   ref={fileInputRef}
                   id="csvUpload"
                   type="file"
                   accept=".csv"
-                  onChange={handleFileUpload}
-                  className="hidden"
                 />
                 <Button
-                  variant="outline"
+                  variant="secondary"
                   onClick={() => fileInputRef.current?.click()}
-                  className="w-full"
                 >
-                  <Upload className="w-4 h-4 ml-2" />
-                  העלאת נמענים (CSV)
+                  <Upload className="w-4 h-4 ml-2" /> בחר קובץ
                 </Button>
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <AlertCircle className="w-4 h-4 text-muted-foreground" />
-                    </TooltipTrigger>
-                    <TooltipContent className="max-w-[300px]" dir="rtl">
-                      <p>
-                        קובץ CSV צריך להכיל עמודות: שם, אימייל
-                        <br />
-                        דוגמה: &rdquo;ישראל ישראלי,israel@example.com&ldquo;
-                      </p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
               </div>
+              <p className="text-xs text-muted-foreground mt-2">
+                הפורמט הנתמך: name,email
+              </p>
             </div>
 
             {emailRecipients.length > 0 && (
@@ -447,89 +433,75 @@ export default function ReviewsGeneratorPage() {
           </div>
         </Card>
 
-        <div className="space-y-8">
-          {/* Shareable Link Section */}
-          <Card className="p-6">
-            <div className="flex items-center mb-4">
-              <LinkIcon className="w-5 h-5 text-primary ml-2" />
-              <h2 className="text-lg font-medium">קישור לשיתוף ביקורת</h2>
-            </div>
+        {/* Link & API Section */}
+        <Card className="p-6">
+          <div className="flex items-center mb-4">
+            <LinkIcon className="w-5 h-5 text-primary ml-2" />
+            <h2 className="text-lg font-medium">שיתוף קישור / API</h2>
+          </div>
 
-            <p className="text-sm text-muted-foreground mb-4">
-              ניתן גם להזמין משתמשים להשאיר ביקורת על ידי שיתוף הקישור הזה באופן
-              ידני דרך הערוצים שלך.
-            </p>
-
-            <div className="flex items-center gap-2">
-              <Input
-                readOnly
-                value={reviewLink}
-                className="font-mono text-sm"
-              />
-              <Button
-                size="icon"
-                variant="outline"
-                onClick={() => copyToClipboard(reviewLink, setCopyLinkSuccess)}
-              >
-                {copyLinkSuccess ? (
-                  <Check className="h-4 w-4 text-green-500" />
-                ) : (
-                  <Copy className="h-4 w-4" />
-                )}
-              </Button>
-            </div>
-          </Card>
-
-          {/* API Integration Section (Coming Soon) */}
-          <Card className="p-6 opacity-70">
-            <div className="flex items-center mb-4">
-              <Code className="w-5 h-5 text-primary ml-2" />
-              <h2 className="text-lg font-medium">
-                הזמנות ביקורת תכנותיות (API)
-              </h2>
-              <span className="mr-2 text-xs bg-yellow-50 text-yellow-600 px-2 py-0.5 rounded border border-yellow-200">
-                בקרוב
-              </span>
-            </div>
-
-            <p className="text-sm text-muted-foreground mb-4">
-              חבר את המוצר שלך ישירות כדי להפעיל הזמנות ביקורת באופן תכנותי
-              באמצעות ה-API שלנו.
-            </p>
-
-            <div className="flex items-center gap-2">
-              <Input
-                readOnly
-                value={`${
-                  process.env.NEXT_PUBLIC_BASE_URL || "https://rate-it.co.il"
-                }/api/invite-review`}
-                className="font-mono text-sm"
-                disabled
-              />
-              <Button
-                size="icon"
-                variant="outline"
-                disabled
-                onClick={() =>
-                  copyToClipboard(
-                    `${
-                      process.env.NEXT_PUBLIC_BASE_URL ||
-                      "https://rate-it.co.il"
-                    }/api/invite-review`,
-                    setCopyApiSuccess
-                  )
-                }
-              >
-                {copyApiSuccess ? (
-                  <Check className="h-4 w-4 text-green-500" />
-                ) : (
-                  <Copy className="h-4 w-4" />
-                )}
-              </Button>
-            </div>
-          </Card>
-        </div>
+          <Tabs defaultValue="link" className="w-full">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="link">קישור</TabsTrigger>
+              <TabsTrigger value="api">API</TabsTrigger>
+            </TabsList>
+            <TabsContent value="link">
+              <div className="flex items-center gap-2">
+                <Input
+                  readOnly
+                  value={reviewLink}
+                  className="font-mono text-sm"
+                />
+                <Button
+                  size="icon"
+                  variant="outline"
+                  onClick={() =>
+                    copyToClipboard(reviewLink, setCopyLinkSuccess)
+                  }
+                >
+                  {copyLinkSuccess ? (
+                    <Check className="h-4 w-4 text-green-500" />
+                  ) : (
+                    <Copy className="h-4 w-4" />
+                  )}
+                </Button>
+              </div>
+            </TabsContent>
+            <TabsContent value="api">
+              <div className="flex items-center gap-2">
+                <Input
+                  readOnly
+                  value={`${
+                    process.env.NEXT_PUBLIC_BASE_URL || "https://rate-it.co.il"
+                  }/api/invite-review`}
+                  className="font-mono text-sm"
+                  disabled
+                />
+                <Button
+                  size="icon"
+                  variant="outline"
+                  disabled
+                  onClick={() =>
+                    copyToClipboard(
+                      `${
+                        process.env.NEXT_PUBLIC_BASE_URL ||
+                        "https://rate-it.co.il"
+                      }/api/invite-review`,
+                      setCopyApiSuccess
+                    )
+                  }
+                >
+                  {copyApiSuccess ? (
+                    <Check className="h-4 w-4 text-green-500" />
+                  ) : (
+                    <Copy className="h-4 w-4" />
+                  )}
+                </Button>
+              </div>
+            </TabsContent>
+          </Tabs>
+        </Card>
       </div>
-    </div>
+    </DashboardContainer>
   );
 }

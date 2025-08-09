@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { useBusinessGuard } from "@/hooks/use-business-guard";
 import { Copy, Info } from "lucide-react";
 import { toast } from "sonner";
+import DashboardContainer from "@/app/business/components/DashboardContainer";
 
 const WIDGET_TYPES = [
   {
@@ -314,23 +315,19 @@ export default function WidgetsPage() {
   };
 
   return (
-    <div className="p-6 w-full min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
-      <div className="max-w-4xl mx-auto space-y-8">
-        {/* Header */}
-        <div className="mb-8" dir="rtl">
-          <h1 className="text-2xl font-bold mb-6">וידג׳ט להטמעה</h1>
-          <p className="text-muted-foreground mb-8">
-            הטמיעו וידג׳ט דירוג מתקדם באתר שלכם והציגו את האמינות שלכם ללקוחות.
-            הווידג׳ט מתעדכן אוטומטית עם הדירוגים החדשים.
-          </p>
-          {isDisabled && (
-            <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-lg text-amber-800 flex items-center gap-2 max-w-md">
-              <Info className="w-5 h-5" />
-              כדי להפעיל את הווידג׳ט, יש צורך בביקורת אחת לפחות.
-            </div>
-          )}
+    <DashboardContainer
+      title={"וידג׳ט להטמעה"}
+      subtitle={
+        "הטמיעו וידג׳ט דירוג מתקדם באתר שלכם והציגו את האמינות שלכם ללקוחות. הווידג׳ט מתעדכן אוטומטית עם הדירוגים החדשים."
+      }
+    >
+      {isDisabled && (
+        <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-lg text-amber-800 flex items-center gap-2 max-w-md">
+          <Info className="w-5 h-5" />
+          כדי להפעיל את הווידג׳ט, יש צורך בביקורת אחת לפחות.
         </div>
-
+      )}
+      <div className="space-y-8">
         {/* Widget Card */}
         <div className="flex justify-center">
           <Card
@@ -511,6 +508,6 @@ export default function WidgetsPage() {
           </CardContent>
         </Card>
       </div>
-    </div>
+    </DashboardContainer>
   );
 }
