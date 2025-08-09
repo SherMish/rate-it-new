@@ -166,7 +166,7 @@ function PreviewCard({ data }: { data: RatingData }) {
           marginBottom: 16,
         }}
       >
-        <RateItLogo size={32} showText />
+        <RateItLogo size={24} />
         <div
           style={{
             fontSize: 11,
@@ -368,10 +368,7 @@ export default function WidgetsPage() {
                     <PreviewCard data={data} />
                   </div>
                 )}
-                <div className="text-xs text-slate-500 mt-4 text-center">
-                  דירוג ממוצע: {data.averageRating?.toFixed?.(1) || "4.2"} •{" "}
-                  {data.reviewCount || 87} ביקורות
-                </div>
+                {/* Removed caption under preview per request */}
               </div>
 
               {/* Embed Code */}

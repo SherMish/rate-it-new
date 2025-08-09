@@ -12,9 +12,8 @@
     return (Math.round(r * 10) / 10).toFixed(1);
   }
 
-  function createRateItLogo(size = 24, showText = false) {
-    // Using the actual Rate-It logo with proper scaling
-    const logoHtml = `
+  function createRateItLogo(size = 24) {
+    return `
       <img 
         src="${LOGO_URL}" 
         alt="Rate-It" 
@@ -29,23 +28,6 @@
         loading="lazy"
       />
     `;
-    
-    if (showText) {
-      return `
-        <div style="display: inline-flex; align-items: center; gap: 8px;">
-          ${logoHtml}
-          <span style="
-            font-weight: 700;
-            font-size: ${Math.max(12, size * 0.5)}px;
-            color: #334155;
-            letter-spacing: 0.5px;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-          ">Rate·It</span>
-        </div>
-      `;
-    }
-    
-    return logoHtml;
   }
 
   function createStars(value, size = 16) {
@@ -85,7 +67,7 @@
         
         <!-- Header -->
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
-          ${createRateItLogo(32, true)}
+          ${createRateItLogo(24)}
           <div style="font-size: 11px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 500;">
             דירוג לקוחות
           </div>
@@ -157,34 +139,27 @@
 
   async function fetchWithHourlyCache(url, cacheKey) {
     try {
-      // Check localStorage cache
       if (typeof Storage !== 'undefined') {
         const cached = localStorage.getItem(cacheKey);
         if (cached) {
           const parsed = JSON.parse(cached);
-          const hourAgo = Date.now() - (60 * 60 * 1000); // 1 hour
+          const hourAgo = Date.now() - (60 * 60 * 1000);
           if (parsed.timestamp > hourAgo) {
             return parsed.data;
           }
         }
       }
 
-      // Fetch fresh data
       const response = await fetch(url);
       if (!response.ok) throw new Error('Network error');
       const data = await response.json();
 
-      // Cache the result
       if (typeof Storage !== 'undefined') {
-        localStorage.setItem(cacheKey, JSON.stringify({
-          data: data,
-          timestamp: Date.now()
-        }));
+        localStorage.setItem(cacheKey, JSON.stringify({ data, timestamp: Date.now() }));
       }
 
       return data;
     } catch (error) {
-      // Return fallback data
       return { averageRating: 4.5, reviewCount: 0 };
     }
   }
@@ -201,19 +176,19 @@
 
     const cacheKey = `rateit-${websiteId}-${type}`;
 
-    fetchWithHourlyCache(dataSrc, cacheKey).then(data => {
-      const widgetHtml = render(type, data);
-      script.insertAdjacentHTML('afterend', widgetHtml);
-    }).catch(error => {
-      console.warn('Rate-It widget failed to load:', error);
-    });
+    fetchWithHourlyCache(dataSrc, cacheKey)
+      .then(data => {
+        const widgetHtml = render(type, data);
+        script.insertAdjacentHTML('afterend', widgetHtml);
+      })
+      .catch(error => {
+        console.warn('Rate-It widget failed to load:', error);
+      });
   }
 
-  // Initialize all widgets
   if (document.currentScript) {
     init(document.currentScript);
   } else {
-    // Fallback for older browsers
     const scripts = document.querySelectorAll(`script[${ATTR_WEBSITE_ID}]`);
     scripts.forEach(init);
   }
