@@ -47,12 +47,16 @@ export default function RatingTiles({
   const displayValue = hoverValue && hoverValue > 0 ? hoverValue : normalized;
 
   const dynamicColor = useDynamicColor
-    ? displayValue >= 4
-      ? "#10B981" // green for great
-      : displayValue >= 3
-      ? "#F59E0B" // amber for good/avg
-      : displayValue >= 1
-      ? "#EF4444" // red for low
+    ? displayValue >= 4.5
+      ? "#059669" // dark green - Excellent
+      : displayValue >= 4.0
+      ? "#10B981" // light green - Very Good
+      : displayValue >= 3.0
+      ? "#F59E0B" // amber - Good
+      : displayValue >= 2.0
+      ? "#EA580C" // orange-red - Poor
+      : displayValue >= 1.0
+      ? "#DC2626" // red - Very Poor
       : filledColor
     : filledColor;
 
@@ -111,6 +115,7 @@ export default function RatingTiles({
             fontSize: starFontSize,
             lineHeight: 1,
             fontWeight: "bold",
+            opacity: fill === 0 ? 0.85 : 1,
             textShadow: fill === 0 ? "none" : "0 1px 2px rgba(0,0,0,0.25)",
           }}
         >
