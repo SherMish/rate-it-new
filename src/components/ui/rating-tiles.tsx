@@ -11,6 +11,7 @@ export type RatingTilesProps = {
   starFilledColor?: string;
   starEmptyColor?: string;
   starFontSize?: number; // px
+  useDynamicColor?: boolean; // color tiles by value thresholds
   className?: string;
 };
 
@@ -31,15 +32,27 @@ export default function RatingTiles({
   starFilledColor = "#ffffff",
   starEmptyColor = "#ffffff",
   starFontSize = 32,
+  useDynamicColor = false,
   className,
 }: RatingTilesProps) {
+  const dynamicColor = useDynamicColor
+    ? value >= 4
+      ? "#10B981" // green for great
+      : value >= 3
+      ? "#F59E0B" // amber for good/avg
+      : value >= 1
+      ? "#EF4444" // red for low
+      : filledColor
+    : filledColor;
+
   const tiles = Array.from({ length: 5 }).map((_, i) => {
     const fill = getFillForIndex(value, i);
+    const bgColor = dynamicColor;
     const background =
       fill === 1
-        ? filledColor
+        ? bgColor
         : fill === 0.5
-        ? `linear-gradient(90deg, ${emptyColor} 50%, ${filledColor} 50%)`
+        ? `linear-gradient(90deg, ${emptyColor} 50%, ${bgColor} 50%)`
         : emptyColor;
     const starColor = fill === 0 ? starEmptyColor : starFilledColor;
 
@@ -63,6 +76,7 @@ export default function RatingTiles({
             fontSize: starFontSize,
             lineHeight: 1,
             fontWeight: "bold",
+            textShadow: fill === 0 ? "none" : "0 1px 2px rgba(0,0,0,0.25)",
           }}
         >
           ★

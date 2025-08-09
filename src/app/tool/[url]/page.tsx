@@ -623,6 +623,7 @@ export default async function ToolPage({ params }: PageProps) {
                           gap={2}
                           filledColor="#494bd6"
                           emptyColor="#e2e8f0"
+                          useDynamicColor
                         />
                       </div>
                       <div

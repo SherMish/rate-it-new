@@ -266,6 +266,7 @@ function PreviewSimple({ data }: { data: RatingData }) {
         starFilledColor="#ffffff"
         starEmptyColor="#94a3b8"
         starFontSize={32}
+        useDynamicColor
       />
       {/* Rating and count - centered */}
       <div
