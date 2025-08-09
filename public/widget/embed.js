@@ -51,7 +51,7 @@
       <script>(function(){const c=document.getElementById('${cardId}');c.addEventListener('mouseenter',function(){this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(124,58,237,0.12),0 4px 12px rgba(0,0,0,0.15)';this.style.background='linear-gradient(135deg,#ffffff 0%,#fefefe 100%)';});c.addEventListener('mouseleave',function(){this.style.transform='translateY(0)';this.style.boxShadow='0 4px 16px rgba(124,58,237,0.08),0 2px 8px rgba(0,0,0,0.1)';this.style.background='linear-gradient(135deg,#ffffff 0%,#f8fafc 100%)';});})();</script>
     `;
     if (websiteUrl) {
-      return `<a href="https://rate-it.co.il/tools/${websiteUrl}" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;">${inner}</a>`;
+      return `<a href="https://rate-it.co.il/tool/${websiteUrl}" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;">${inner}</a>`;
     }
     return inner;
   }
@@ -60,10 +60,19 @@
   function createSimple(data, websiteUrl) {
     const id = 'rateit-simple-' + Date.now();
     const filled = Math.round(Number(data.averageRating || 0));
-    const tiles = Array.from({ length: 5 }).map((_, i) => `
-      <div style="width:48px;height:48px;border-radius:8px;background:${i < filled ? '#7c3aed' : '#e2e8f0'};display:flex;align-items:center;justify-content:center;transition:all .2s ease;">
-        <span style="color:${i < filled ? '#fff' : '#94a3b8'};font-size:24px;line-height:1;font-weight:bold;">★</span>
-      </div>`).join('');
+    const exact = Number(data.averageRating || 0);
+    const tiles = Array.from({ length: 5 }).map((_, i) => {
+      const diff = exact - i; // e.g. for i=3 and exact=4.3 => 1.3
+      let bg;
+      if (diff >= 0.75) bg = '#494bd6';
+      else if (diff >= 0.25) bg = 'linear-gradient(90deg, #e2e8f0 50%, #494bd6 50%)';
+      else bg = '#e2e8f0';
+      const starColor = '#ffffff';
+      return `
+      <div style="width:48px;height:48px;border-radius:8px;background:${bg};display:flex;align-items:center;justify-content:center;transition:all .2s ease;">
+        <span style="color:${starColor};font-size:24px;line-height:1;font-weight:bold;">★</span>
+      </div>`;
+    }).join('');
 
     const inner = `
       <div id="${id}" style="display:inline-block;padding:16px;background:#fff;border:1px solid #e2e8f0;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.06);min-width:320px;color:#1e293b;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
@@ -78,7 +87,7 @@
         </div>
       </div>`;
     if (websiteUrl) {
-      return `<a href="https://rate-it.co.il/tools/${websiteUrl}" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;">${inner}</a>`;
+      return `<a href="https://rate-it.co.il/tool/${websiteUrl}" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;">${inner}</a>`;
     }
     return inner;
   }

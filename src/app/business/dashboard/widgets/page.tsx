@@ -13,6 +13,7 @@ import { useBusinessGuard } from "@/hooks/use-business-guard";
 import { Copy, Info } from "lucide-react";
 import { toast } from "sonner";
 import DashboardContainer from "@/app/business/components/DashboardContainer";
+import RatingTiles from "@/components/ui/rating-tiles";
 
 const WIDGET_TYPES = [
   {
@@ -231,7 +232,6 @@ function PreviewCard({ data }: { data: RatingData }) {
 }
 
 function PreviewSimple({ data }: { data: RatingData }) {
-  const filled = Math.round(data.averageRating);
   return (
     <div
       style={{
@@ -256,42 +256,16 @@ function PreviewSimple({ data }: { data: RatingData }) {
       >
         <RateItLogo size={60} />
       </div>
-      {/* Stars row - improved styling */}
-      <div
-        style={{
-          display: "flex",
-          gap: 6,
-          marginBottom: 12,
-          justifyContent: "center",
-        }}
-      >
-        {Array.from({ length: 5 }).map((_, i) => (
-          <div
-            key={i}
-            style={{
-              width: 48,
-              height: 48,
-              borderRadius: 8,
-              background: i < filled ? "#7c3aed" : "#e2e8f0",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              transition: "all 0.2s ease",
-            }}
-          >
-            <span
-              style={{
-                color: i < filled ? "white" : "#94a3b8",
-                fontSize: 24,
-                lineHeight: 1,
-                fontWeight: "bold",
-              }}
-            >
-              ★
-            </span>
-          </div>
-        ))}
-      </div>
+      {/* Stars row - improved styling using reusable component */}
+      <RatingTiles
+        value={data.averageRating}
+        size={48}
+        gap={6}
+        filledColor="#494bd6"
+        emptyColor="#e2e8f0"
+        starFilledColor="#ffffff"
+        starEmptyColor="#94a3b8"
+      />
       {/* Rating and count - centered */}
       <div
         style={{
@@ -419,7 +393,7 @@ export default function WidgetsPage() {
                 {!loading && (
                   <div className="flex justify-center">
                     <a
-                      href={`https://rate-it.co.il/tools/${website?.url || ""}`}
+                      href={`https://rate-it.co.il/tool/${website?.url || ""}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-block"
