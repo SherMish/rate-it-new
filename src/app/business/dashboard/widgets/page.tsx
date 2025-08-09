@@ -21,6 +21,7 @@ const WIDGET_TYPES = [
     description:
       "כרטיס עשיר המציג דירוג, מספר ביקורות וקישור לדף Rate-It שלכם.",
   },
+  { id: "simple", name: "Simple - כוכבים", description: "וידג׳ט מינימליסטי עם לוגו וכוכבים, כולל דירוג ומספר ביקורות (ללא TrustScore)." },
 ] as const;
 
 type RatingData = { averageRating: number; reviewCount: number };
@@ -37,42 +38,9 @@ function getEmbedSnippet(baseUrl: string, websiteId: string, type: string) {
 
 function RateItLogo({
   size = 24,
-  showText = false,
 }: {
   size?: number;
-  showText?: boolean;
 }) {
-  if (showText) {
-    return (
-      <div style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
-        <img
-          src={LOGO_URL}
-          alt="Rate-It"
-          style={{
-            height: size,
-            width: "auto",
-            display: "block",
-            objectFit: "contain",
-            filter: "brightness(1.1) contrast(1.05)",
-            backgroundColor: "transparent",
-          }}
-        />
-        <span
-          style={{
-            fontWeight: 700,
-            fontSize: Math.max(12, size * 0.5),
-            color: "#334155",
-            letterSpacing: 0.5,
-            fontFamily:
-              "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
-          }}
-        >
-          Rate·It
-        </span>
-      </div>
-    );
-  }
-
   return (
     <img
       src={LOGO_URL}
@@ -253,6 +221,41 @@ function PreviewCard({ data }: { data: RatingData }) {
   );
 }
 
+function PreviewSimple({ data }: { data: RatingData }) {
+  const filled = Math.round(data.averageRating);
+  return (
+    <div style={{
+      display: "inline-block",
+      padding: 16,
+      background: "#ffffff",
+      border: "1px solid #e2e8f0",
+      borderRadius: 12,
+      boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
+      minWidth: 320,
+      color: "#1e293b",
+    }}>
+      {/* Header LTR for left-aligned logo */}
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-start", gap: 10, marginBottom: 12, direction: "ltr" }}>
+        <RateItLogo size={26} />
+      </div>
+      {/* Stars row - brand colored tiles */}
+      <div style={{ display: "flex", gap: 8, marginBottom: 12 }}>
+        {Array.from({ length: 5 }).map((_, i) => (
+          <div key={i} style={{ width: 44, height: 44, borderRadius: 6, background: "#7c3aed", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <span style={{ color: "white", fontSize: 22, lineHeight: 1 }}>{i < filled ? "★" : "☆"}</span>
+          </div>
+        ))}
+      </div>
+      {/* Rating and count */}
+      <div style={{ display: "flex", alignItems: "center", gap: 10, fontWeight: 600, color: "#0f172a" }}>
+        <span>{data.averageRating.toFixed(1)}</span>
+        <span style={{ opacity: 0.4 }}>|</span>
+        <span>{data.reviewCount} ביקורות</span>
+      </div>
+    </div>
+  );
+}
+
 export default function WidgetsPage() {
   const { website } = useBusinessGuard();
   const [copied, setCopied] = useState<string | null>(null);
@@ -320,7 +323,7 @@ export default function WidgetsPage() {
         </div>
       )}
       <div className="space-y-8">
-        {/* Widget Card */}
+        {/* Card widget */}
         <div className="flex justify-center">
           <Card
             className={`${
@@ -383,6 +386,79 @@ export default function WidgetsPage() {
                   >
                     <Copy className="w-4 h-4 mr-2" />
                     {copied === "card" ? "הועתק!" : "העתק קוד"}
+                  </Button>
+                  <a
+                    href="#instructions"
+                    className="text-xs text-slate-400 hover:text-slate-200 flex items-center gap-1 transition-colors"
+                  >
+                    <Info className="w-3.5 h-3.5" /> הוראות הטמעה
+                  </a>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Simple widget */}
+        <div className="flex justify-center">
+          <Card
+            className={`${
+              isDisabled ? "opacity-60" : ""
+            } border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-white/80 backdrop-blur-sm max-w-lg w-full`}
+          >
+            <CardHeader className="pb-4">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg flex items-center justify-center text-white font-semibold text-sm bg-gradient-to-r from-purple-500 to-purple-600">
+                  2
+                </div>
+                <div>
+                  <CardTitle className="text-lg">Simple - כוכבים</CardTitle>
+                  <CardDescription className="text-sm">
+                    וידג׳ט מינימליסטי עם לוגו וכוכבים, כולל דירוג ומספר ביקורות (ללא TrustScore).
+                  </CardDescription>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              {/* Preview */}
+              <div className="bg-slate-50 border border-slate-200 rounded-xl p-6">
+                <div className="font-semibold mb-4 text-slate-700 flex items-center gap-2">
+                  <div className="w-2 h-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full"></div>
+                  תצוגה מקדימה
+                </div>
+                {loading && (
+                  <div className="text-sm text-slate-500 animate-pulse">
+                    טוען תצוגה...
+                  </div>
+                )}
+                {error && <div className="text-sm text-red-600">{error}</div>}
+                {!loading && (
+                  <div className="flex justify-center">
+                    <PreviewSimple data={data} />
+                  </div>
+                )}
+              </div>
+
+              {/* Embed Code */}
+              <div className="bg-slate-900 border border-slate-700 rounded-xl p-4">
+                <div className="font-semibold mb-3 text-slate-200 flex items-center gap-2">
+                  <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                  קוד הטמעה
+                </div>
+                <pre className="text-xs text-slate-300 overflow-x-auto whitespace-pre-wrap font-mono leading-relaxed">
+                  {website?._id
+                    ? getEmbedSnippet(baseUrl, website._id.toString(), "simple")
+                    : ""}
+                </pre>
+                <div className="flex justify-between items-center mt-4">
+                  <Button
+                    size="sm"
+                    disabled={isDisabled}
+                    onClick={() => handleCopy("simple")}
+                    className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white border-0"
+                  >
+                    <Copy className="w-4 h-4 mr-2" />
+                    {copied === "simple" ? "הועתק!" : "העתק קוד"}
                   </Button>
                   <a
                     href="#instructions"
