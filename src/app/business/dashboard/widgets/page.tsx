@@ -264,8 +264,9 @@ function PreviewSimple({ data }: { data: RatingData }) {
         filledColor="#494bd6"
         emptyColor="#e2e8f0"
         starFilledColor="#ffffff"
-        starEmptyColor="#94a3b8"
+        starEmptyColor="#ffffff"
         starFontSize={32}
+        tileRadius={8}
         useDynamicColor
       />
       {/* Rating and count - centered */}

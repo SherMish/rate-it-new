@@ -12,6 +12,7 @@ export type RatingTilesProps = {
   starEmptyColor?: string;
   starFontSize?: number; // px
   useDynamicColor?: boolean; // color tiles by value thresholds
+  tileRadius?: number; // px; if not provided, computed from size
   className?: string;
 };
 
@@ -33,20 +34,27 @@ export default function RatingTiles({
   starEmptyColor = "#ffffff",
   starFontSize = 32,
   useDynamicColor = false,
+  tileRadius,
   className,
 }: RatingTilesProps) {
+  const normalized = Number(value) || 0;
   const dynamicColor = useDynamicColor
-    ? value >= 4
+    ? normalized >= 4
       ? "#10B981" // green for great
-      : value >= 3
+      : normalized >= 3
       ? "#F59E0B" // amber for good/avg
-      : value >= 1
+      : normalized >= 1
       ? "#EF4444" // red for low
       : filledColor
     : filledColor;
 
+  const radius =
+    typeof tileRadius === "number"
+      ? tileRadius
+      : Math.max(3, Math.round(size / 6));
+
   const tiles = Array.from({ length: 5 }).map((_, i) => {
-    const fill = getFillForIndex(value, i);
+    const fill = getFillForIndex(normalized, i);
     const bgColor = dynamicColor;
     const background =
       fill === 1
@@ -62,7 +70,7 @@ export default function RatingTiles({
         style={{
           width: size,
           height: size,
-          borderRadius: 8,
+          borderRadius: radius,
           background,
           display: "flex",
           alignItems: "center",
