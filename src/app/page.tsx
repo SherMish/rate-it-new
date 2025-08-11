@@ -30,7 +30,8 @@ import { Types, Document } from "mongoose";
 
 import { LatestToolCard } from "@/app/components/latest-tool-card";
 import { LatestToolsContent } from "@/app/components/latest-tools-content";
-import { WebsiteType } from "@/lib/models/Website";
+import { WebsiteType, SerializedWebsiteType } from "@/lib/models/Website";
+import { serializeMongoDocuments } from "@/lib/utils/serialize";
 
 const categories = [
   { name: "יצירת טקסט", icon: MessageSquare, count: 156 },
@@ -93,21 +94,21 @@ interface Suggestion {
   url: string;
 }
 
-async function getLatestTools(limit = 6) {
+async function getLatestTools(limit = 6): Promise<SerializedWebsiteType[]> {
   await connectDB();
 
   const tools = await Website.find()
     .sort({ createdAt: -1 })
     .limit(limit)
-    .lean<WebsiteType[]>();
+    .lean();
 
-  // Serialize ObjectIds to strings for client components
+  // Manually serialize ObjectIds to strings for client components
   return tools.map((tool) => ({
     ...tool,
     _id: tool._id.toString(),
     createdBy: tool.createdBy?.toString() || null,
     owner: tool.owner?.toString() || null,
-  }));
+  })) as SerializedWebsiteType[];
 }
 export const metadata: Metadata = {
   title: "Rate It | פלטפורמה לביקורות אמינות על עסקים בישראל",

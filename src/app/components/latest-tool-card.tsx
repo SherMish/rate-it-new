@@ -8,14 +8,14 @@ import { motion } from "framer-motion";
 import { useRef } from "react";
 import { useInView } from "framer-motion";
 import { PricingModel } from "@/lib/types/website";
-import { WebsiteType } from "@/lib/models/Website";
+import { WebsiteType, SerializedWebsiteType } from "@/lib/models/Website";
 import { VerifiedBadge } from "@/components/verified-badge";
 import categoriesData from "@/lib/data/categories.json";
 import * as Icons from "lucide-react";
 import { WebsiteLogo } from "@/components/website-logo";
 
 interface LatestToolCardProps {
-  website: WebsiteType;
+  website: SerializedWebsiteType;
   index: number;
 }
 

@@ -39,6 +39,13 @@ export interface WebsiteType {
   updatedAt?: Date;
 }
 
+// Serialized version for client components (ObjectIds converted to strings)
+export interface SerializedWebsiteType extends Omit<WebsiteType, '_id' | 'createdBy' | 'owner'> {
+  _id: string;
+  createdBy?: string | null;
+  owner?: string | null;
+}
+
 const WebsiteSchema = new Schema(
   {
     name: {

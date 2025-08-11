@@ -28,7 +28,6 @@ export async function GET(request: Request) {
       _id: website._id.toString(),
       createdBy: website.createdBy?.toString() || null,
       owner: website.owner?._id?.toString() || null,
-      relatedCategory: website.relatedCategory?._id?.toString() || null,
     }));
     
     return NextResponse.json(serializedWebsites);
