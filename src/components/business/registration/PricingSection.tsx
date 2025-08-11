@@ -8,23 +8,6 @@ import { toast } from "@/components/ui/use-toast";
 import { useSession } from "next-auth/react";
 import { CheckCircle2 } from "lucide-react";
 
-// ─────────────────────────────────────────────────────────────────────────────
-// HELPERS
-// ─────────────────────────────────────────────────────────────────────────────
-/** Normalises any URL → host part ("example.com"). */
-export const cleanDomain = (raw: string): string => {
-  try {
-    const urlObj = new URL(/^https?:\/\//i.test(raw) ? raw : `https://${raw}`);
-    return urlObj.host.toLowerCase().replace(/^www\./, "");
-  } catch {
-    // fall back to basic sanitising
-    return raw
-      .toLowerCase()
-      .replace(/^(https?|ftp):\/\//, "")
-      .replace(/^www\./, "")
-      .split("/")[0];
-  }
-};
 
 // ─────────────────────────────────────────────────────────────────────────────
 // HELPERS
@@ -44,76 +27,13 @@ export function PricingSection({
   const { update: updateSession, data: session } = useSession();
 
   // ───────────────────────────────────────────────────────────────────────────
-  // FREE PLAN REGISTRATION / DOWNGRADE
+  // FREE PLAN REGISTRATION - SIMPLIFIED (Business logic moved to verification)
   // ───────────────────────────────────────────────────────────────────────────
   const handleFreePlanRegistration = async () => {
     setLoading(true);
     try {
-      const domain = cleanDomain(websiteUrl);
-
-      // 1. Get current user
-      const sessionRes = await fetch("/api/auth/session");
-      const currentSession = await sessionRes.json();
-      const userId = currentSession?.user?.id;
-      if (!userId) throw new Error("המשתמש אינו מחובר");
-
-      // 2. Check if website already exists
-      const websiteCheckRes = await fetch(
-        `/api/website/check?url=${encodeURIComponent(domain)}`
-      );
-
-      if (!websiteCheckRes.ok && websiteCheckRes.status !== 404) {
-        throw new Error("שגיאה בבדיקת אתר קיים");
-      }
-      const existingWebsite = websiteCheckRes.ok
-        ? await websiteCheckRes.json()
-        : null;
-
-      // 3. Ownership collision guard
-      if (
-        existingWebsite?.owner &&
-        existingWebsite.owner !== userId /* someone else */
-      ) {
-        throw new Error("האתר כבר משויך למשתמש אחר");
-      }
-
-      // 4. Prepare website payload (merge, don't clobber)
-      const websitePayload = {
-        ...(existingWebsite ?? {}),
-        url: domain,
-        owner: userId,
-        isVerified: true,
-        pricingModel: "free",
-        // keep category/name if present, else fallback
-        categories: existingWebsite?.categories ?? ["other"],
-        name: existingWebsite?.name ?? websiteUrl,
-      };
-
-      // 5. Create or update website
-      const websiteUpdateRes = await fetch("/api/website/update", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(websitePayload),
-      });
-      if (!websiteUpdateRes.ok) throw new Error("נכשל בעדכון/יצירת האתר");
-      const { _id: websiteId } = await websiteUpdateRes.json();
-
-      // 6. Update user (API should merge arrays server-side)
-      const userUpdateRes = await fetch("/api/user/update", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          role: "business_owner",
-          isWebsiteOwner: true,
-          isVerifiedWebsiteOwner: true,
-          relatedWebsite: domain,
-          websites: [websiteId],
-          currentPricingModel: "free",
-        }),
-      });
-      if (!userUpdateRes.ok) throw new Error("נכשל בעדכון פרטי המשתמש");
-
-      // 7. Refresh session → redirect
+      // Since verification already completed business registration,
+      // we just need to refresh session and redirect to dashboard
       await updateSession();
 
       console.log("Redirecting to dashboard...");
@@ -122,9 +42,8 @@ export function PricingSection({
       console.error("Error in handleFreePlanRegistration:", error);
       toast({
         variant: "destructive",
-        title: "שגיאה ברישום",
-        description:
-          error instanceof Error ? error.message : "משהו השתבש. אנא נסו שוב.",
+        title: "שגיאה",
+        description: "משהו השתבש בניתוב לדשבורד. אנא נסו שוב.",
       });
     } finally {
       setLoading(false);

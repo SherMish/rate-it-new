@@ -6,6 +6,7 @@ import connectDB from "@/lib/mongodb";
 import User from "@/lib/models/User";
 import Website from "@/lib/models/Website";
 import { sendEmail } from "@/lib/email";
+import { PricingModel } from "@/lib/types/website";
 
 // Generate 6-digit verification code
 function generateVerificationCode(): string {
@@ -118,6 +119,10 @@ export async function verifyCode(code: string) {
     const websiteUrl = user.verification.websiteUrl;
     const businessName = user.verification.businessName;
 
+    if (!websiteUrl || !businessName) {
+      throw new Error("Missing verification data");
+    }
+
     // Clean the URL to match storage format
     const cleanUrl = websiteUrl
       .toLowerCase()
@@ -125,32 +130,47 @@ export async function verifyCode(code: string) {
       .split("/")[0]
       .split(":")[0];
 
-    // Update website and user
+    // Check if website already exists and if it's owned by someone else
+    const existingWebsite = await Website.findOne({ url: cleanUrl });
+    if (existingWebsite?.owner && existingWebsite.owner.toString() !== (user._id as any)?.toString()) {
+      throw new Error("האתר כבר משויך למשתמש אחר");
+    }
+
+    // Create or update website with complete business registration logic
+    const websitePayload = {
+      ...(existingWebsite ?? {}),
+      url: cleanUrl,
+      owner: user._id,
+      isVerified: true,
+      pricingModel: PricingModel.FREE, // Default to free plan
+      verifiedAt: new Date(),
+      name: existingWebsite?.name ?? businessName,
+      categories: existingWebsite?.categories ?? ["other"],
+      isActive: true,
+    };
+
     const website = await Website.findOneAndUpdate(
       { url: cleanUrl },
-      {
-        $set: {
-          url: cleanUrl,
-          isVerified: true,
-          owner: user._id,
-          verifiedAt: new Date(),
-          name: businessName,
-        },
-      },
+      { $set: websitePayload },
       { upsert: true, new: true }
     );
 
+    // Update user with complete business owner permissions
     await User.findByIdAndUpdate(user._id, {
       $set: {
+        role: "business_owner",
         isWebsiteOwner: true,
         isVerifiedWebsiteOwner: true,
+        relatedWebsite: cleanUrl,
+        currentPricingModel: PricingModel.FREE,
+        websites: website._id, // Single website ID, not an array
       },
       $unset: {
         verification: 1,
       },
     });
 
-    return { success: true, websiteUrl };
+    return { success: true, websiteUrl: cleanUrl, websiteId: website._id.toString() };
   } catch (error) {
     console.error("Error verifying code:", error);
     if (error instanceof Error) {
