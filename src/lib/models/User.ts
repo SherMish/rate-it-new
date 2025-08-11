@@ -1,7 +1,44 @@
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 
-const UserSchema = new mongoose.Schema(
+// Interface for User document
+interface IUser extends mongoose.Document {
+  name: string;
+  email: string;
+  hashedPassword: string;
+  phone?: string;
+  workRole?: string;
+  workEmail?: string;
+  image?: string;
+  emailVerified?: Date;
+  googleId?: string;
+  websites?: mongoose.Types.ObjectId;
+  role: "user" | "admin" | "business_owner" | "business_user";
+  relatedWebsite?: string;
+  isWebsiteOwner: boolean;
+  isVerifiedWebsiteOwner: boolean;
+  reviewCount: number;
+  isAgreeMarketing: boolean;
+  resetToken?: string;
+  resetTokenExpiry?: Date;
+  lastLoginAt?: Date;
+  verification: {
+    code?: string;
+    attempts: number;
+    expires?: Date;
+    websiteUrl?: string;
+    businessName?: string;
+    email?: string;
+  };
+  comparePassword(candidatePassword: string): Promise<boolean>;
+}
+
+// Interface for User model
+interface IUserModel extends mongoose.Model<IUser> {
+  safelyAssignGoogleId(userId: string, googleId: string): Promise<IUser>;
+}
+
+const UserSchema = new mongoose.Schema<IUser>(
   {
     name: {
       type: String,
@@ -114,8 +151,32 @@ UserSchema.methods.comparePassword = async function (
   return bcrypt.compare(candidatePassword, this.hashedPassword);
 };
 
+// Static method to safely assign Google ID
+UserSchema.statics.safelyAssignGoogleId = async function (userId: string, googleId: string) {
+  try {
+    // Check if Google ID is already used by another user
+    const existingUserWithGoogleId = await this.findOne({ googleId });
+    
+    if (existingUserWithGoogleId && existingUserWithGoogleId._id.toString() !== userId) {
+      throw new Error(`Google ID ${googleId} is already used by another user`);
+    }
+    
+    // Update the user with the Google ID
+    const updatedUser = await this.findByIdAndUpdate(
+      userId,
+      { googleId },
+      { new: true }
+    );
+    
+    return updatedUser;
+  } catch (error) {
+    console.error('Error assigning Google ID:', error);
+    throw error;
+  }
+};
+
 // Use mongoose.models.User if it exists, otherwise create a new model
-const User = mongoose.models.User || mongoose.model("User", UserSchema);
+const User = (mongoose.models.User as IUserModel) || mongoose.model<IUser, IUserModel>("User", UserSchema);
 
 // Drop the existing index and create a new one
 async function setupIndexes() {

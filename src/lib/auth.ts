@@ -38,7 +38,12 @@ export const authOptions: NextAuthOptions = {
           throw new Error("Invalid credentials");
         }
 
-        return user;
+        return {
+          id: (user._id as any)?.toString(),
+          email: user.email,
+          name: user.name,
+          image: user.image,
+        } as any;
       },
     }),
   ],
@@ -54,7 +59,22 @@ export const authOptions: NextAuthOptions = {
         try {
           await connectDB();
 
-          // Check if user already exists
+          // First check if this Google ID is already used by another user
+          const userWithGoogleId = await User.findOne({ googleId: user.id });
+          
+          if (userWithGoogleId) {
+            // Google ID already exists, check if it's the same email
+            if (userWithGoogleId.email === user.email) {
+              // Same user, allow sign in
+              return true;
+            } else {
+              // Different user with same Google ID - this shouldn't happen but handle it
+              console.error(`Google ID ${user.id} already exists for different email: ${userWithGoogleId.email} vs ${user.email}`);
+              return false;
+            }
+          }
+
+          // Check if user already exists by email
           const existingUser = await User.findOne({ email: user.email });
 
           if (!existingUser) {
@@ -69,6 +89,13 @@ export const authOptions: NextAuthOptions = {
             });
           } else if (!existingUser.googleId) {
             // If user exists but doesn't have googleId, update it
+            // But first double-check no one else has this Google ID
+            const duplicateCheck = await User.findOne({ googleId: user.id });
+            if (duplicateCheck && (duplicateCheck._id as any)?.toString() !== (existingUser._id as any)?.toString()) {
+              console.error(`Cannot assign Google ID ${user.id} to user ${existingUser.email} - already used by ${duplicateCheck.email}`);
+              return false;
+            }
+            
             const updatedUser = await User.findByIdAndUpdate(
               existingUser._id,
               {
@@ -108,9 +135,9 @@ export const authOptions: NextAuthOptions = {
             // Update with fresh database data
             session.user = {
               ...session.user,
-              id: dbUser._id.toString(),
+              id: (dbUser._id as any)?.toString(),
               role: dbUser.role,
-              websites: dbUser.websites,
+              websites: dbUser.websites?.toString(),
               isWebsiteOwner: dbUser.isWebsiteOwner,
               isVerifiedWebsiteOwner: dbUser.isVerifiedWebsiteOwner,
             };
