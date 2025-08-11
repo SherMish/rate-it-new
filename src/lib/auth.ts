@@ -169,18 +169,23 @@ export const authOptions: NextAuthOptions = {
         return { ...token, ...session.user };
       }
 
-      if (account?.type === "oauth" && user) {
+      // Always fetch fresh user data from database when token is accessed
+      // This ensures the JWT token stays in sync with database changes
+      if (token.email) {
         try {
           await connectDB();
-          const dbUser = await User.findOne({ email: user.email });
+          const dbUser = await User.findOne({ email: token.email });
           if (dbUser) {
             token.role = dbUser.role;
-            token.websites = dbUser.websites;
+            token.websites = dbUser.websites?.toString();
+            token.isWebsiteOwner = dbUser.isWebsiteOwner;
+            token.isVerifiedWebsiteOwner = dbUser.isVerifiedWebsiteOwner;
           }
         } catch (error) {
-          console.error("Error in jwt callback:", error);
+          console.error("Error fetching fresh user data in jwt callback:", error);
         }
       }
+      
       return token;
     },
   },
