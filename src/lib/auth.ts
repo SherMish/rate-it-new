@@ -115,16 +115,20 @@ export const authOptions: NextAuthOptions = {
       return true;
     },
     async session({ session, token }) {
-      if (session?.user) {
+      // Always ensure we have a user object if we have a token
+      if (token && token.email) {
         try {
-          // First, populate session with token data as fallback
+          // Initialize user from token data
           session.user = {
             ...session.user,
             id: (token.sub || token.id) as string,
-            role: token.role as string,
+            name: token.name as string,
+            email: token.email as string,
+            image: token.picture as string,
+            role: (token.role as string) || "user",
             websites: token.websites as string | undefined,
-            isWebsiteOwner: token.isWebsiteOwner as boolean,
-            isVerifiedWebsiteOwner: token.isVerifiedWebsiteOwner as boolean,
+            isWebsiteOwner: (token.isWebsiteOwner as boolean) || false,
+            isVerifiedWebsiteOwner: (token.isVerifiedWebsiteOwner as boolean) || false,
           };
 
           // Then try to get fresh data from database
@@ -146,12 +150,14 @@ export const authOptions: NextAuthOptions = {
           console.error("Error in session callback:", error);
           // If database fails, at least use token data
           session.user = {
-            ...session.user,
             id: (token.sub || token.id) as string,
-            role: token.role as string,
+            name: token.name as string,
+            email: token.email as string,
+            image: token.picture as string,
+            role: (token.role as string) || "user",
             websites: token.websites as string | undefined,
-            isWebsiteOwner: token.isWebsiteOwner as boolean,
-            isVerifiedWebsiteOwner: token.isVerifiedWebsiteOwner as boolean,
+            isWebsiteOwner: (token.isWebsiteOwner as boolean) || false,
+            isVerifiedWebsiteOwner: (token.isVerifiedWebsiteOwner as boolean) || false,
           };
         }
       }
