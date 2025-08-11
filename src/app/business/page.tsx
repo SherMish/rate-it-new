@@ -413,7 +413,7 @@ export default function BusinessPage() {
                 שדרגו את <AnimatedWord /> <br /> של העסק שלכם בעזרת רייט-איט
               </h1>
               <p className="text-xl text-muted-foreground">
-                הפכו ביקורות אמיתיות לנכס שיווקי שמושך לקוחות חדשים.
+                פלטפורמת הביקורות שמגדילה אמון ורווחים לעסקים ישראליים
               </p>
               <Button
                 size="lg"
@@ -547,7 +547,9 @@ export default function BusinessPage() {
               variants={itemVariants}
             >
               <p className="text-xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
-                עזרו ללקוחות למצוא אתכם - הוסיפו את העסק שלכם עכשיו
+                הלקוחות הישראלים בודקים ביקורות לפני כל קנייה.
+                <br />
+                האם הם מוצאים ביקורות חיוביות על העסק שלכם?
               </p>
             </motion.div>
 
@@ -958,9 +960,9 @@ export default function BusinessPage() {
                   <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-600">
                     כל מה שצריך
                   </span>{" "}
-                  כדי לבנות{" "}
+                  כדי להגדיל{" "}
                   <span className="relative">
-                    <span className="text-primary">אמון</span>
+                    <span className="text-primary">מכירות</span>
                   </span>{" "}
                   - במקום אחד
                 </h2>
