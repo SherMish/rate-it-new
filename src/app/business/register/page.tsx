@@ -7,7 +7,6 @@ import { LoginModal } from "@/components/auth/login-modal";
 import { WebsiteRegistrationForm } from "@/components/business/registration/WebsiteForm";
 import { DomainVerificationForm } from "@/components/business/registration/DomainVerificationForm";
 import {
-  cleanDomain,
   PricingSection,
 } from "@/components/business/registration/PricingSection";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
@@ -64,7 +63,9 @@ export default function BusinessRegistration() {
       <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,#3b82f615,transparent_70%),radial-gradient(ellipse_at_bottom,#6366f115,transparent_70%)] pointer-events-none" />
 
       {/* Content */}
-      <div className="relative max-w-4xl mx-auto px-4 py-8">
+      <div className={`relative mx-auto px-4 py-8 ${
+        step === 4 ? 'max-w-7xl' : 'max-w-4xl'
+      }`}>
         <div className="text-center mb-12">
           <h1 className="text-3xl font-bold mb-4">
             הדרך הנכונה להפוך לקוחות מרוצים לשגרירים{" "}
