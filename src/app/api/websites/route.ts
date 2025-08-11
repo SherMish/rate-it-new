@@ -19,9 +19,19 @@ export async function GET(request: Request) {
     
     const websites = await Website.find(query)
       .populate('relatedCategory', 'name')
-      .populate('owner', 'name');
+      .populate('owner', 'name')
+      .lean();
     
-    return NextResponse.json(websites);
+    // Serialize ObjectIds to strings for client components
+    const serializedWebsites = websites.map((website) => ({
+      ...website,
+      _id: website._id.toString(),
+      createdBy: website.createdBy?.toString() || null,
+      owner: website.owner?._id?.toString() || null,
+      relatedCategory: website.relatedCategory?._id?.toString() || null,
+    }));
+    
+    return NextResponse.json(serializedWebsites);
   } catch (error) {
     return NextResponse.json(
       { error: 'Failed to fetch websites' },

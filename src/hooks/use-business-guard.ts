@@ -5,6 +5,7 @@ import { WebsiteType } from '@/lib/models/Website';
 
 export function useBusinessGuard() {
   const { data: session, status, update: updateSession } = useSession();
+  console.log("session", session);
   const router = useRouter();
   const [website, setWebsite] = useState<WebsiteType | null>(null);
 

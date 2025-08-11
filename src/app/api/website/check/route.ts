@@ -19,8 +19,20 @@ export async function GET(request: Request) {
       .split("/")[0]
       .split(":")[0];
 
-    const website = await Website.findOne({ url: cleanUrl });
-    return NextResponse.json(website || {});
+    const website = await Website.findOne({ url: cleanUrl }).lean();
+    
+    if (website) {
+      // Serialize ObjectIds to strings for client components
+      const serializedWebsite = {
+        ...website,
+        _id: website._id.toString(),
+        createdBy: website.createdBy?.toString() || null,
+        owner: website.owner?.toString() || null,
+      };
+      return NextResponse.json(serializedWebsite);
+    }
+    
+    return NextResponse.json({});
   } catch (error) {
     console.error("Error checking website:", error);
     return NextResponse.json({ error: "Failed to check website" }, { status: 500 });

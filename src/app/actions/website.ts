@@ -13,7 +13,13 @@ export async function fetchLatestWebsites(limit: number = 2) {
       .limit(limit)
       .lean();
 
-    return websites;
+    // Serialize ObjectIds to strings for client components
+    return websites.map((website) => ({
+      ...website,
+      _id: website._id.toString(),
+      createdBy: website.createdBy?.toString() || null,
+      owner: website.owner?.toString() || null,
+    }));
   } catch (error) {
     console.error("Error fetching latest websites:", error);
     return [];

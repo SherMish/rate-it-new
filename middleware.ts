@@ -37,6 +37,7 @@ export async function middleware(request: NextRequest) {
     }
 
     // Check both role and websites
+    console.log("token.role", token)
     if (token.role !== "business_owner" || !token.websites) {
       return NextResponse.redirect(new URL("/business/register", request.url));
     }

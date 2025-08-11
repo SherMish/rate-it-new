@@ -101,7 +101,13 @@ async function getLatestTools(limit = 6) {
     .limit(limit)
     .lean<WebsiteType[]>();
 
-  return tools;
+  // Serialize ObjectIds to strings for client components
+  return tools.map((tool) => ({
+    ...tool,
+    _id: tool._id.toString(),
+    createdBy: tool.createdBy?.toString() || null,
+    owner: tool.owner?.toString() || null,
+  }));
 }
 export const metadata: Metadata = {
   title: "Rate It | פלטפורמה לביקורות אמינות על עסקים בישראל",

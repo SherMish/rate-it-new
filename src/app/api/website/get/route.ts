@@ -19,13 +19,21 @@ export async function GET(request: Request) {
     }
 
     await connectDB();
-    const website = await Website.findById(id);
+    const website = await Website.findById(id).lean();
 
     if (!website) {
       return NextResponse.json({ error: "Website not found" }, { status: 404 });
     }
 
-    return NextResponse.json(website);
+    // Serialize ObjectIds to strings for client components
+    const serializedWebsite = {
+      ...website,
+      _id: website._id.toString(),
+      createdBy: website.createdBy?.toString() || null,
+      owner: website.owner?.toString() || null,
+    };
+
+    return NextResponse.json(serializedWebsite);
   } catch (error) {
     console.error("Error fetching website:", error);
     return NextResponse.json({ error: "Failed to fetch website" }, { status: 500 });
