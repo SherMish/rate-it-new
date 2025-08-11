@@ -136,38 +136,47 @@ export function WebsiteRegistrationForm({
   };
 
   const onSubmit = async (data: FormData) => {
-    // The websiteUrl should already be sanitized by the schema transform
-    const sanitizedUrl = data.websiteUrl;
+    setLoading(true);
+    try {
+      // The websiteUrl should already be sanitized by the schema transform
+      const sanitizedUrl = data.websiteUrl;
 
-    const existingWebsite = await checkWebsiteExists(sanitizedUrl);
+      const existingWebsite = await checkWebsiteExists(sanitizedUrl);
 
-    if (existingWebsite?.isVerified) {
-      form.setError("websiteUrl", {
-        message: "אתר זה כבר אומת. אנא צרו קשר עם מנהל האתר כדי לבקש גישה.",
+      if (existingWebsite?.isVerified) {
+        form.setError("websiteUrl", {
+          message: "אתר זה כבר אומת. אנא צרו קשר עם מנהל האתר כדי לבקש גישה.",
+        });
+        return;
+      }
+
+      // Save form data to localStorage with sanitized URL
+      const formData = {
+        ...data,
+        websiteUrl: sanitizedUrl,
+        step: 3,
+        email: data.email,
+      };
+      localStorage.setItem("businessRegistration", JSON.stringify(formData));
+
+      await fetch("/api/user/update", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: data.fullName,
+          phone: data.phoneNumber,
+          workRole: data.role,
+        }),
       });
-      return;
+      
+      setFormData({ ...data, websiteUrl: sanitizedUrl });
+      onComplete();
+    } catch (error) {
+      console.error("Error in form submission:", error);
+      // Optionally show an error message to the user
+    } finally {
+      setLoading(false);
     }
-
-    // Save form data to localStorage with sanitized URL
-    const formData = {
-      ...data,
-      websiteUrl: sanitizedUrl,
-      step: 3,
-      email: data.email,
-    };
-    localStorage.setItem("businessRegistration", JSON.stringify(formData));
-
-    await fetch("/api/user/update", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name: data.fullName,
-        phone: data.phoneNumber,
-        workRole: data.role,
-      }),
-    });
-    setFormData({ ...data, websiteUrl: sanitizedUrl });
-    onComplete();
   };
 
   // Add useEffect to load saved data on mount
