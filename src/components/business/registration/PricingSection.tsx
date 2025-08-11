@@ -94,7 +94,7 @@ export function PricingSection({
         planActions={planActions}
         loading={loading}
         showBillingToggle={true}
-        defaultAnnual={false}
+        defaultAnnual={true}
       />
 
       <div className="text-center space-y-4 bg-muted/30 p-6 rounded-lg">
