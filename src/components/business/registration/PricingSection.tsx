@@ -1,8 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { PricingPlansUI } from "@/components/business/pricing-plans-ui";
+import { SharedPricingTable } from "@/components/business/shared-pricing-table";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { LoadingModal } from "@/components/ui/loading-modal";
 import { toast } from "@/components/ui/use-toast";
@@ -10,31 +9,9 @@ import { useSession } from "next-auth/react";
 import { CheckCircle2 } from "lucide-react";
 
 // ─────────────────────────────────────────────────────────────────────────────
-// STATIC PLAN DATA
-// ─────────────────────────────────────────────────────────────────────────────
-export const freeFeatures = [
-  { text: "לוח בקרה בסיסי כולל ניתוח ביקורות" },
-  { text: "ניהול וטיפול בביקורות לקוחות" },
-  { text: "פרופיל עסק מקצועי ברייט-איט" },
-  { text: "עמוד ייעודי לעסק עם כל הפרטים" },
-];
-
-export const plusFeatures = [
-  { text: "כל מה שבחינם, ובנוסף:" },
-  {
-    text: "תג מאומת (Verified Badge) - הוכח שהעסק אמיתי ואמין",
-    isHighlighted: true,
-  },
-  { text: "נתוני חשיפה והתנהגות גולשים בזמן אמת", isHighlighted: true },
-  { text: "עדיפות במענה ותמיכה VIP", isHighlighted: true },
-  { text: "דוחות מתקדמים ואנליטיקה עסקית", isHighlighted: true },
-  { text: "הצגה מועדפת במנוע החיפוש", isHighlighted: true },
-];
-
-// ─────────────────────────────────────────────────────────────────────────────
 // HELPERS
 // ─────────────────────────────────────────────────────────────────────────────
-/** Normalises any URL → host part (“example.com”). */
+/** Normalises any URL → host part ("example.com"). */
 export const cleanDomain = (raw: string): string => {
   try {
     const urlObj = new URL(/^https?:\/\//i.test(raw) ? raw : `https://${raw}`);
@@ -50,6 +27,10 @@ export const cleanDomain = (raw: string): string => {
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
+// HELPERS
+// ─────────────────────────────────────────────────────────────────────────────
+/** Normalises any URL → host part (“example.com”). */
+// ─────────────────────────────────────────────────────────────────────────────
 // MAIN COMPONENT
 // ─────────────────────────────────────────────────────────────────────────────
 export function PricingSection({
@@ -60,8 +41,6 @@ export function PricingSection({
   loadingParent: boolean;
 }) {
   const [loading, setLoading] = useState(false);
-  const [isAnnual, setIsAnnual] = useState(false);
-  const router = useRouter();
   const { update: updateSession, data: session } = useSession();
 
   // ───────────────────────────────────────────────────────────────────────────
@@ -72,10 +51,10 @@ export function PricingSection({
     try {
       const domain = cleanDomain(websiteUrl);
 
-      // 1. Get current userr
+      // 1. Get current user
       const sessionRes = await fetch("/api/auth/session");
-      const session = await sessionRes.json();
-      const userId = session?.user?.id;
+      const currentSession = await sessionRes.json();
+      const userId = currentSession?.user?.id;
       if (!userId) throw new Error("המשתמש אינו מחובר");
 
       // 2. Check if website already exists
@@ -153,81 +132,29 @@ export function PricingSection({
   };
 
   // ───────────────────────────────────────────────────────────────────────────
-  // PLUS PLAN (placeholder / future Stripe)
+  // BASIC/PRO PLAN HANDLERS (COMING SOON)
   // ───────────────────────────────────────────────────────────────────────────
-  const handlePlusSubscription = async () => {
-    setLoading(true);
-    try {
-      const domain = cleanDomain(websiteUrl);
-
-      // check current plan
-      const res = await fetch(
-        `/api/website/check?url=${encodeURIComponent(domain)}`
-      );
-      if (res.ok) {
-        const ws = await res.json();
-        if (ws.owner === session?.user?.id && ws.pricingModel === "plus") {
-          toast({
-            title: "כבר במסלול פלוס",
-            description: "תודה על התמיכה!",
-          });
-          return;
-        }
-      }
-
-      // TODO: Stripe checkout logic here …
-      toast({
-        title: "בקרוב!",
-        description: "אפשרות התשלום למסלול פלוס תהיה זמינה בקרוב.",
-      });
-    } finally {
-      setLoading(false);
-    }
+  const handleBasicSubscription = async () => {
+    toast({
+      title: "מסלול Basic",
+      description: "המסלול Basic יהיה זמין בקרוב. נרשמת למסלול החינמי.",
+    });
+    await handleFreePlanRegistration();
   };
 
-  const calculatePrice = (basePrice: number, discount: number = 0) => {
-    if (isAnnual) {
-      const annualPrice = Math.round(basePrice * 12 * (1 - discount / 100));
-      return `${annualPrice} ₪`;
-    }
-    return `${basePrice} ₪`;
+  const handleProSubscription = () => {
+    toast({
+      title: "מסלול Pro",
+      description: "המסלול Pro יהיה זמין בקרוב!",
+    });
   };
 
-  const calculateMonthlyAverage = (basePrice: number, discount: number = 0) => {
-    if (isAnnual) {
-      return Math.round(basePrice * (1 - discount / 100));
-    }
-    return basePrice;
+  // Define plan actions for the shared component
+  const planActions = {
+    onStarterClick: handleFreePlanRegistration,
+    onBasicClick: handleBasicSubscription,
+    onProClick: handleProSubscription,
   };
-
-  // ───────────────────────────────────────────────────────────────────────────
-  // RENDER
-  // ───────────────────────────────────────────────────────────────────────────
-  const registrationPlans = [
-    {
-      name: "חינם",
-      price: "0 ₪",
-      features: freeFeatures,
-      ctaText: "התחל בחינם עכשיו",
-      onCtaClick: handleFreePlanRegistration,
-      bestFor: "מושלם להתחלה! התחל לבנות אמון עם הלקוחות שלך בחינם",
-      planType: "free" as const,
-    },
-    {
-      name: "פלוס",
-      price: calculatePrice(199, 25),
-      monthlyPrice: calculateMonthlyAverage(199, 25),
-      discount: 25,
-      features: plusFeatures,
-      ctaText: "שדרג לפלוס",
-      onCtaClick: handlePlusSubscription,
-      isRecommended: true,
-      highlightColor: "primary",
-      bestFor: "לעסקים שרוצים למקסם אמינות ולבלוט על מתחרים",
-      planType: "plus" as const,
-      isComingSoon: true,
-    },
-  ];
 
   return (
     <div className="space-y-8" dir="rtl">
@@ -244,11 +171,11 @@ export function PricingSection({
         </AlertDescription>
       </Alert>
 
-      <PricingPlansUI
-        plans={registrationPlans}
+      <SharedPricingTable
+        planActions={planActions}
         loading={loading}
-        isAnnual={isAnnual}
-        onBillingChange={setIsAnnual}
+        showBillingToggle={true}
+        defaultAnnual={false}
       />
 
       <div className="text-center space-y-4 bg-muted/30 p-6 rounded-lg">
