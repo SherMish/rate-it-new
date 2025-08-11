@@ -90,11 +90,22 @@ export const authOptions: NextAuthOptions = {
     async session({ session, token }) {
       if (session?.user) {
         try {
+          // First, populate session with token data as fallback
+          session.user = {
+            ...session.user,
+            id: (token.sub || token.id) as string,
+            role: token.role as string,
+            websites: token.websites as string | undefined,
+            isWebsiteOwner: token.isWebsiteOwner as boolean,
+            isVerifiedWebsiteOwner: token.isVerifiedWebsiteOwner as boolean,
+          };
+
+          // Then try to get fresh data from database
           await connectDB();
           const dbUser = await User.findOne({ email: session.user.email });
 
           if (dbUser) {
-            // Ensure we're copying all relevant fields
+            // Update with fresh database data
             session.user = {
               ...session.user,
               id: dbUser._id.toString(),
@@ -103,13 +114,18 @@ export const authOptions: NextAuthOptions = {
               isWebsiteOwner: dbUser.isWebsiteOwner,
               isVerifiedWebsiteOwner: dbUser.isVerifiedWebsiteOwner,
             };
-
-            // Also update the token
-            token.role = dbUser.role;
-            token.websites = dbUser.websites;
           }
         } catch (error) {
           console.error("Error in session callback:", error);
+          // If database fails, at least use token data
+          session.user = {
+            ...session.user,
+            id: (token.sub || token.id) as string,
+            role: token.role as string,
+            websites: token.websites as string | undefined,
+            isWebsiteOwner: token.isWebsiteOwner as boolean,
+            isVerifiedWebsiteOwner: token.isVerifiedWebsiteOwner as boolean,
+          };
         }
       }
       return session;
