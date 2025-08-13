@@ -53,7 +53,7 @@ export default function PublicPricingPage() {
                 בחרו את התכנית שתגדיל את המכירות שלכם
               </h1>
               <p className="text-xl text-muted-foreground max-w-3xl mx-auto font-medium">
-                מביקורות אמיתיות למכירות אמיתיות - התחילו בחינם והגדילו בהדרגה
+הדרך הפשוטה להפוך לקוחות מרוצים לביקורות חיוביות
               </p>
             </div>
 

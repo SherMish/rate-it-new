@@ -14,9 +14,9 @@ export const starterFeatures = [
 
 export const basicFeatures = [
   { text: "כל מה שבתכנית ה-Starter, ובנוסף:" },
-  { text: "עד 50 ביקורות בחודש" },
+  { text: "עד 50 ביקורות בחודש", isHighlighted: true, },
   {
-    text: "תג 'עסק מאומת' - הגדילו אמינות ב-67%",
+    text: "תג 'עסק מאומת'",
     isHighlighted: true,
   },
   { text: "הצגה מועדפת בתוצאות החיפוש", isHighlighted: true },
@@ -26,7 +26,7 @@ export const basicFeatures = [
 
 export const proFeatures = [
   { text: "כל מה שבתכנית ה-Basic, ובנוסף:" },
-  { text: "ביקורות ללא הגבלה" },
+  { text: "ביקורות ללא הגבלה", isHighlighted: true  },
   { text: "אוטומציה מלאה - הזמנות ביקורת אוטומטיות", isHighlighted: true },
   { text: "דוחות וניתוחים עסקיים מתקדמים", isHighlighted: true },
   { text: "API לשילוב עם מערכות קיימות", isHighlighted: true },
