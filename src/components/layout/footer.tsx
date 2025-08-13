@@ -53,7 +53,7 @@ export function Footer() {
               />
             </Link>
             <p className="text-sm text-muted-foreground">
-              גלו עסקים, קראו ביקורות אמיתיות – ושתפו גם את החוויות שלכם
+בדקו מה לקוחות אמיתיים חושבים לפני שאתם קונים באינטרנט
             </p>
           </div>
 

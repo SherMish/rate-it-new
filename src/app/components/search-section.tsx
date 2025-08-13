@@ -117,7 +117,7 @@ export function SearchSection() {
             variants={itemVariants}
             className="text-xl md:text-2xl text-foreground/80 mb-6 max-w-2xl mx-auto"
           >
-            גלו עסקים, קראו ביקורות אמיתיות – ושתפו גם את החוויות שלכם
+בדקו מה לקוחות אמיתיים חושבים לפני שאתם קונים באינטרנט
           </motion.p>
 
           {/* Premium search box with glow effect */}
