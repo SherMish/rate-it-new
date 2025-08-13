@@ -621,7 +621,7 @@ export default function BusinessPage() {
               className="text-4xl md:text-5xl font-bold"
               variants={itemVariants}
             >
-              <span className="text-foreground">
+              <span className="text-gray-900">
                 קחו שליטה על המוניטין שלכם.
               </span>{" "}
               <span className="inline-block px-2 py-1 bg-primary text-white rounded-md transform shadow-md font-extrabold mt-2">
@@ -629,7 +629,7 @@ export default function BusinessPage() {
               </span>
             </motion.h2>
             <motion.p
-              className="text-xl text-muted-foreground"
+              className="text-xl text-gray-700 leading-relaxed"
               variants={itemVariants}
             >
               הלקוחות הישראלים הם לא פרייארים – הם בודקים, משווים ורוצים לראות
@@ -652,8 +652,8 @@ export default function BusinessPage() {
               <div className="w-12 h-12 rounded-xl bg-green-100 flex items-center justify-center mb-6">
                 <CheckCircle2 className="w-6 h-6 text-green-600" />
               </div>
-              <h3 className="text-xl font-semibold mb-3">פרופיל מאומת</h3>
-              <p className="text-muted-foreground">
+              <h3 className="text-xl font-semibold mb-3 text-gray-900">פרופיל מאומת</h3>
+              <p className="text-gray-700 leading-relaxed">
                 קבלו תג מאומת, צרו נוכחות מקצועית, שדרו אמינות, והראו ללקוחות
                 שאתם עסק איכותי.
               </p>
@@ -666,8 +666,8 @@ export default function BusinessPage() {
               <div className="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center mb-6">
                 <RadarIcon className="w-6 h-6 text-blue-600" />
               </div>
-              <h3 className="text-xl font-semibold mb-3">ניהול ביקורות</h3>
-              <p className="text-muted-foreground">
+              <h3 className="text-xl font-semibold mb-3 text-gray-900">ניהול ביקורות</h3>
+              <p className="text-gray-700 leading-relaxed">
                 הגיבו לביקורות, אספו פידבק אמיתי וצרו קשר מתמשך עם הקהל שלכם.{" "}
               </p>
             </motion.div>
@@ -679,8 +679,8 @@ export default function BusinessPage() {
               <div className="w-12 h-12 rounded-xl bg-purple-100 flex items-center justify-center mb-6">
                 <ArrowUp className="w-6 h-6 text-purple-600" />
               </div>
-              <h3 className="text-xl font-semibold mb-3">דאשבורד ביצועים</h3>
-              <p className="text-muted-foreground">
+              <h3 className="text-xl font-semibold mb-3 text-gray-900">דאשבורד ביצועים</h3>
+              <p className="text-gray-700 leading-relaxed">
                 קבלו גישה לתובנות מפורטות על הביצועים שלכם, מעורבות משתמשים,
                 ומיקום בשוק.
               </p>
