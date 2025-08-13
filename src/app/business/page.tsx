@@ -1085,8 +1085,8 @@ export default function BusinessPage() {
                 className="text-lg px-8 py-4 bg-gradient-to-r from-primary to-blue-600 hover:from-primary-600 hover:to-blue-700 shadow-lg hover:shadow-xl transition-all"
                 onClick={() => router.push("/business/register")}
               >
-                רשמו את העסק שלכם בחינם - ללא כרטיס אשראי
-                <ArrowRight className="h-5 w-5 mr-2" />
+                רשמו את העסק שלכם בחינם
+                <ArrowLeft className="h-5 w-5 mr-2" />
               </Button>
               <p className="text-sm text-muted-foreground mt-4">
                 התחלה תוך 5 דקות • ביטול בכל עת • תמיכה 24/7
