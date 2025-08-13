@@ -511,7 +511,7 @@ export default function BusinessPage() {
             animate={searchSectionInView ? "visible" : "hidden"}
           >
             <motion.div
-              className="inline-block px-6 py-3 bg-white/90 backdrop-blur-sm rounded-full shadow-lg shadow-primary/10 mb-4"
+              className="inline-block px-8 py-4 bg-white/90 backdrop-blur-sm rounded-full shadow-lg shadow-primary/10 mb-8"
               variants={itemVariants}
             >
               <p className="text-xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
@@ -522,40 +522,68 @@ export default function BusinessPage() {
             </motion.div>
 
             <motion.div
-              className="relative max-w-xl mx-auto p-8 bg-white/90 backdrop-blur-xl rounded-xl border-2 border-primary/20 shadow-xl"
+              className="relative max-w-xl mx-auto p-6 md:p-8 bg-white/90 backdrop-blur-xl rounded-xl border-2 border-primary/20 shadow-xl"
               variants={itemVariants}
             >
-              <div className="absolute -top-5 left-1/2 transform -translate-x-1/2 px-4 py-2 bg-primary text-white font-bold rounded-full shadow-lg">
+              <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 px-4 py-2 bg-primary text-white font-bold rounded-full shadow-lg text-sm md:text-base">
                 שלב 1: הזינו את כתובת האתר שלכם
               </div>
 
-              <div className="relative mt-4">
-                <Input
-                  type="url"
-                  placeholder="הזינו את כתובת האתר שלכם"
-                  className="h-14 pr-5 pl-36 text-lg bg-white/80 border-2 border-primary/30 focus:border-primary/70 shadow-inner"
-                  value={websiteUrl}
-                  onChange={(e) => setWebsiteUrl(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      handleUrlSubmit();
-                    }
-                  }}
-                  dir="rtl"
-                />
-                <Button
-                  className="absolute left-2 top-2 h-10 px-8 text-base bg-gradient-to-r from-primary to-purple-600 text-white hover:shadow-md hover:shadow-primary/20 transition-all"
-                  onClick={handleUrlSubmit}
-                >
-                  הוסיפו עכשיו
-                </Button>
+              <div className="relative mt-6">
+                {/* Desktop Layout */}
+                <div className="hidden md:block">
+                  <Input
+                    type="url"
+                    placeholder="הזינו את כתובת האתר שלכם"
+                    className="h-14 pr-5 pl-36 text-lg bg-white/80 border-2 border-primary/30 focus:border-primary/70 shadow-inner"
+                    value={websiteUrl}
+                    onChange={(e) => setWebsiteUrl(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        handleUrlSubmit();
+                      }
+                    }}
+                    dir="rtl"
+                  />
+                  <Button
+                    className="absolute left-2 top-2 h-10 px-8 text-base bg-gradient-to-r from-primary to-purple-600 text-white hover:shadow-md hover:shadow-primary/20 transition-all"
+                    onClick={handleUrlSubmit}
+                  >
+                    הוסיפו עכשיו
+                  </Button>
+                </div>
+
+                {/* Mobile Layout - Vertical */}
+                <div className="md:hidden space-y-3">
+                  <Input
+                    type="url"
+                    placeholder="הזינו את כתובת האתר שלכם"
+                    className="h-12 px-4 text-base bg-white/80 border-2 border-primary/30 focus:border-primary/70 shadow-inner w-full"
+                    value={websiteUrl}
+                    onChange={(e) => setWebsiteUrl(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        handleUrlSubmit();
+                      }
+                    }}
+                    dir="rtl"
+                  />
+                  <Button
+                    className="w-full h-12 text-base bg-gradient-to-r from-primary to-purple-600 text-white hover:shadow-md hover:shadow-primary/20 transition-all"
+                    onClick={handleUrlSubmit}
+                  >
+                    הוסיפו עכשיו
+                  </Button>
+                </div>
               </div>
+
               <div className="mt-4 text-sm text-muted-foreground text-center">
                 לדוגמה: www.your-business.co.il
               </div>
 
-              <div className="mt-6 flex items-center justify-center gap-4">
-                <div className="flex items-center p-2">
+              {/* Benefits - Mobile Vertical, Desktop Horizontal */}
+              <div className="mt-6 flex flex-col md:flex-row items-center justify-center gap-2 md:gap-4">
+                <div className="flex items-center p-2 gap-2">
                   <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center text-primary mr-2 text-xs font-bold">
                     ✓
                   </div>
@@ -563,7 +591,7 @@ export default function BusinessPage() {
                     הגדילו את החשיפה שלכם
                   </span>
                 </div>
-                <div className="flex items-center p-2">
+                <div className="flex items-center p-2 gap-2">
                   <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center text-primary mr-2 text-xs font-bold">
                     ✓
                   </div>
