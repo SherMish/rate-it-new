@@ -252,8 +252,16 @@ export default function ReviewForm({
             proof: reviewData.proof,
           }),
         });
-
         if (!reviewResponse.ok) {
+          if (reviewResponse.status === 429) {
+            const data = await reviewResponse.json();
+            setFormErrors((prev) => ({
+              ...prev,
+              submit: data.message ||
+                "לא ניתן להוסיף ביקורת נוספת על עסק זה כרגע. נסה שוב מאוחר יותר.",
+            }));
+            return;
+          }
           throw new Error("Failed to create review");
         }
 
@@ -294,8 +302,16 @@ export default function ReviewForm({
             proof: reviewData.proof,
           }),
         });
-
         if (!reviewResponse.ok) {
+          if (reviewResponse.status === 429) {
+            const data = await reviewResponse.json();
+            setFormErrors((prev) => ({
+              ...prev,
+              submit: data.message ||
+                "לא ניתן להוסיף ביקורת נוספת על עסק זה כרגע. נסה שוב מאוחר יותר.",
+            }));
+            return;
+          }
           throw new Error("Failed to create review");
         }
 

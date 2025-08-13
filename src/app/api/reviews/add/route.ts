@@ -18,6 +18,33 @@ export async function POST(request: Request) {
 
     await connectDB();
 
+    // Rate limit: one review per user per website per 30 days
+    const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000; // Approximation of a month
+    const sinceDate = new Date(Date.now() - THIRTY_DAYS_MS);
+
+    const existingRecentReview = (await Review.findOne({
+      relatedUser: session.user.id,
+      relatedWebsite: reviewData.relatedWebsite,
+      createdAt: { $gte: sinceDate },
+    })
+      .select("_id createdAt")
+      .lean()) as { _id: string; createdAt: Date } | null;
+
+    if (existingRecentReview) {
+      const nextAllowedDate = new Date(
+        existingRecentReview.createdAt.getTime() + THIRTY_DAYS_MS
+      );
+      return NextResponse.json(
+        {
+          error: "RATE_LIMIT",
+          message:
+            "כבר כתבת ביקורת על עסק זה במהלך החודש האחרון. ניתן לכתוב ביקורת נוספת רק לאחר 30 ימים.",
+          nextAllowedDate,
+        },
+        { status: 429 }
+      );
+    }
+
     const review = await Review.create({
       ...reviewData,
       relatedUser: session.user.id, // Use the actual user ID from the session
@@ -36,7 +63,7 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error("Error creating review:", error);
     return NextResponse.json(
-      { error: "Failed to create review" },
+      { error: "FAILED", message: "Failed to create review" },
       { status: 500 }
     );
   }
