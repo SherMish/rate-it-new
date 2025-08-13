@@ -690,148 +690,7 @@ export default function BusinessPage() {
       </section>
 
       {/* Latest Listings Section - Scroll animation */}
-      <section
-        ref={latestListingsRef}
-        className="relative py-24 bg-secondary/50 backdrop-blur-sm"
-      >
-        <div className="container mx-auto px-4">
-          <motion.div
-            className="max-w-6xl mx-auto"
-            variants={containerVariants}
-            initial="hidden"
-            animate={latestListingsInView ? "visible" : "hidden"}
-          >
-            <motion.h2
-              className="text-3xl md:text-4xl font-bold text-center mb-16"
-              variants={fadeInUpVariants}
-            >
-              העסקים האחרונים שהצטרפו לרייט-איט:
-            </motion.h2>
-
-            <motion.div
-              className="max-w-full mx-auto"
-              variants={fadeInUpVariants}
-            >
-              <Swiper
-                modules={[Autoplay]}
-                spaceBetween={20}
-                slidesPerView={1}
-                breakpoints={{
-                  640: {
-                    slidesPerView: 2,
-                  },
-                  1024: {
-                    slidesPerView: 3,
-                  },
-                }}
-                autoplay={{
-                  delay: 3000,
-                  disableOnInteraction: false,
-                }}
-                loop={true}
-                className="rounded-xl"
-                dir="rtl"
-              >
-                {latestTools.map((tool) => (
-                  <SwiperSlide key={tool._id}>
-                    <Card
-                      className="p-4 bg-white border-border shadow-sm h-[230px] flex flex-col cursor-pointer hover:bg-blue-50/50 transition-colors"
-                      onClick={() => router.push(`/tool/${tool.url}`)}
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-secondary/50 border border-border flex items-center justify-center overflow-hidden">
-                          {tool.logo ? (
-                            <Image
-                              src={tool.logo}
-                              alt={tool.name}
-                              width={28}
-                              height={28}
-                              className="object-contain"
-                            />
-                          ) : (
-                            <div className="w-5 h-5 bg-primary/20 rounded-full flex items-center justify-center">
-                              <span className="text-xs text-primary">
-                                {tool.name.charAt(0)}
-                              </span>
-                            </div>
-                          )}
-                        </div>
-                        <div className="flex-1 min-w-0 text-right">
-                          <h3 className="text-base font-semibold text-foreground truncate">
-                            {tool.name}
-                          </h3>
-                          <p className="text-xs text-muted-foreground truncate">
-                            {tool.url}
-                          </p>
-                        </div>
-
-                        {/* Move RadarTrust to more prominent position */}
-                        {tool.radarTrust && (
-                          <div className="flex items-center px-2 py-1 bg-primary/10 rounded-lg border border-primary/20">
-                            <span className="text-xs font-medium text-primary ml-1">
-                              {tool.radarTrust}
-                            </span>
-                            <RadarIcon className="w-3 h-3 text-primary" />
-                            <span className="text-[10px] font-medium text-primary mr-1">
-                              דירוג אמון
-                            </span>
-                          </div>
-                        )}
-                      </div>
-
-                      {tool.shortDescription && (
-                        <div className="mt-3 space-y-1">
-                          <p className="text-sm text-muted-foreground line-clamp-2 text-right">
-                            {tool.shortDescription}
-                          </p>
-                          {/* Show business model with proper formatting */}
-                          {tool.businessModel && (
-                            <div className="flex items-center justify-end">
-                              <span className="text-xs text-muted-foreground bg-secondary/50 px-2 py-0.5 rounded-full">
-                                {tool.businessModel}
-                              </span>
-                            </div>
-                          )}
-                        </div>
-                      )}
-
-                      <div className="mt-auto pt-3">
-                        <div className="flex items-center justify-end">
-                          {tool.reviewCount > 0 ? (
-                            <div className="flex items-center gap-2">
-                              <span className="text-xs text-muted-foreground">
-                                {tool.averageRating.toFixed(1)} (
-                                {tool.reviewCount})
-                              </span>
-                              <div className="flex items-center">
-                                {[...Array(5)].map((_, i) => (
-                                  <Star
-                                    key={i}
-                                    className={`w-3 h-3 ${
-                                      i < tool.averageRating
-                                        ? "text-yellow-400 fill-yellow-400"
-                                        : "text-secondary"
-                                    }`}
-                                  />
-                                ))}
-                              </div>
-                            </div>
-                          ) : (
-                            <span className="text-xs text-muted-foreground">
-                              אין ביקורות עדיין
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    </Card>
-                  </SwiperSlide>
-                ))}
-              </Swiper>
-            </motion.div>
-          </motion.div>
-        </div>
-      </section>
-
+{/*       
       {/* How it Works Section - Enhanced with pricing page styling */}
       <section ref={howItWorksRef} className="relative py-20 bg-white">
         <div className="container mx-auto px-4">
@@ -1010,6 +869,93 @@ export default function BusinessPage() {
                 </Button>
               </div>
             </motion.div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Testimonials Section */}
+      <section className="relative py-20 bg-gradient-to-br from-white to-slate-50/70 border-y border-border/40">
+        <div className="container mx-auto px-4">
+          <motion.div
+            className="max-w-3xl mx-auto text-center"
+            variants={fadeInUpVariants}
+            initial="hidden"
+            animate="visible"
+          >
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              לקוחות מספרים
+            </h2>
+            <p className="text-muted-foreground mb-10">
+              מה אומרים עלינו בעלי עסקים שהצטרפו ל-Rate-It
+            </p>
+
+            <div className="space-y-4 max-w-2xl mx-auto">
+              {[
+                {
+                  quote:
+                    "חוויה מעולה! קל לאסוף ביקורות מלקוחות ולהציג אותן בצורה שמגדילה אמון והמרות.",
+                  author: "יונת אבורוס",
+                  role: "בעלת חנות אינטרנט בתחום המזון הטבעוני",
+                  businessName: "טבע האוכל",
+                  businessLogo:
+                    "https://res.cloudinary.com/dwqdhp70e/image/upload/v1748685831/ipxz10s0777npuogfa0s.avif",
+                },
+                {
+                  quote:
+                    "הכי אהבתי שזה פשוט - לא צריך להיות מומחה טכנולוגיה. תוך שבוע כבר היו לנו ביקורות ראשונות, ועכשיו זה עובד אוטומטית. חוסך לי המון זמן.",
+                  author: "אלי רוזן",
+                  role: "בעל משרד לשירותי שיווק דיגיטלי",
+                },
+                {
+                  quote:
+                    "לקוחות שואלים אותי 'איך אני יודע שאתם אמינים?' - עכשיו יש לי תשובה. הביקורות ברייט-איט עושות את העבודה בשבילי. פחות שכנוע, יותר מכירות.",
+                  author: "שרון גבע",
+                  role: "יועצת עסקית, עובדת עצמאית",
+                },
+              ].map((t, idx) => (
+                <motion.div
+                  key={idx}
+                  className="bg-white/90 backdrop-blur rounded-2xl border border-border/60 shadow-lg p-6 md:p-7 mx-auto"
+                  variants={cardVariants}
+                  initial="hidden"
+                  animate="visible"
+                >
+                  {/* Prominent business header (if provided) */}
+                  {(t as any).businessLogo || (t as any).businessName ? (
+                    <div className="flex items-center justify-center gap-3 mb-4">
+                      {(t as any).businessLogo ? (
+                        <Image
+                          src={(t as any).businessLogo}
+                          alt={(t as any).businessName || "לוגו העסק"}
+                          width={44}
+                          height={44}
+                          className="rounded-lg border border-border object-contain bg-white w-11 h-11 p-1"
+                        />
+                      ) : null}
+                      {(t as any).businessName ? (
+                        <div className="text-lg font-semibold text-foreground">
+                          {(t as any).businessName}
+                        </div>
+                      ) : null}
+                    </div>
+                  ) : null}
+                  <div className="flex justify-center mb-3" aria-label="5 כוכבים">
+                    {[1, 2, 3, 4, 5].map((i) => (
+                      <Star key={i} className="w-5 h-5 text-yellow-400 fill-yellow-400 ml-1" />
+                    ))}
+                  </div>
+                  <div className="flex items-start justify-center gap-2 mb-2">
+                    <Quote className="w-6 h-6 text-primary/70 mt-0.5 flex-shrink-0" aria-hidden="true" />
+                    <p className="text-base leading-relaxed">{t.quote}</p>
+                    <Quote className="w-6 h-6 text-primary/70 mt-0.5 rotate-180 flex-shrink-0" aria-hidden="true" />
+                  </div>
+                  <div className="mt-4 text-sm text-muted-foreground">
+                    <div className="font-semibold text-foreground">{t.author}</div>
+                    <div>{t.role}</div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
           </motion.div>
         </div>
       </section>
