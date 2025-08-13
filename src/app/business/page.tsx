@@ -16,6 +16,7 @@ import {
   ChevronDown,
   Plus,
   Minus,
+  ArrowLeft,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -393,132 +394,99 @@ export default function BusinessPage() {
       {/* Background effects - match main page */}
       <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,#3b82f620,transparent_70%),radial-gradient(ellipse_at_bottom,#6366f115,transparent_70%)] pointer-events-none" />
 
-      {/* Hero Section - No scroll animation for first view */}
-      <section className="relative">
-        <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,#3b82f615,transparent_70%),radial-gradient(ellipse_at_bottom,#6366f115,transparent_70%)] pointer-events-none" />
-        <div className="relative container mx-auto px-4 py-24">
-          <motion.div
-            className="grid md:grid-cols-2 gap-12 items-center"
-            initial="hidden"
-            animate="visible"
-            variants={containerVariants}
-          >
-            {/* Right Column - Content */}
+      {/* Hero Section - Unified Background */}
+      <section className="relative z-10">
+        {/* Unified Hero Background - Connects all elements */}
+        <div className="absolute inset-0 overflow-hidden">
+          {/* Base gradient that spans the entire section */}
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/8 via-blue-500/5 to-purple-500/8" />
+          
+          {/* Connecting gradient between left and right */}
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+          
+          {/* Flowing background elements that connect both sides */}
+          <div className="absolute top-1/4 left-0 w-full h-32 bg-gradient-to-r from-primary/15 via-blue-500/10 to-purple-500/15 blur-3xl transform -skew-y-1" />
+          <div className="absolute bottom-1/4 left-0 w-full h-24 bg-gradient-to-r from-purple-500/10 via-primary/8 to-blue-500/12 blur-3xl transform skew-y-1" />
+          
+          {/* Floating orbs that bridge the gap */}
+          <div className="absolute top-1/3 left-1/4 w-32 h-32 bg-primary/10 rounded-full blur-2xl animate-slow-pulse" />
+          <div className="absolute bottom-1/3 right-1/4 w-24 h-24 bg-blue-500/15 rounded-full blur-2xl animate-float" />
+          <div className="absolute top-2/3 left-1/2 w-20 h-20 bg-purple-500/12 rounded-full blur-xl animate-float-right" />
+        </div>
+        
+        <div className="relative container mx-auto px-4 py-16 sm:py-24">
+            
+            {/* Main Content Section - Single Column */}
             <motion.div
-              className="text-right space-y-8"
+              className="max-w-4xl mx-auto text-center"
+              initial="hidden"
+              animate="visible"
+              variants={containerVariants}
               dir="rtl"
-              variants={fadeInRightVariants}
             >
-              <h1 className="text-4xl md:text-5xl font-bold">
-                שדרגו את <AnimatedWord /> <br /> של העסק שלכם בעזרת רייט-איט
-              </h1>
-              <p className="text-xl text-muted-foreground">
-                פלטפורמת הביקורות שמגדילה אמון ורווחים לעסקים ישראליים
-              </p>
-              <Button
-                size="lg"
-                className="gradient-button"
-                onClick={() => router.push("/business/register")}
+              {/* Main Title Content - No Card Background */}
+              <motion.div
+                className="space-y-8 py-8"
+                variants={fadeInUpVariants}
               >
-                הירשמו בחינם עכשיו
-                <ArrowRight className="mr-2 h-5 w-5" />
-              </Button>
-            </motion.div>
-
-            {/* Left Column - Graphic */}
-            <motion.div
-              className="relative aspect-square md:aspect-auto md:h-[500px] rounded-lg overflow-hidden"
-              variants={fadeInLeftVariants}
-            >
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-secondary/10 backdrop-blur-sm border border-border/50 rounded-lg">
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="relative w-full max-w-[90%] md:max-w-[80%] aspect-square">
-                    {/* Floating Elements */}
-                    <div className="absolute top-0 right-[10%] w-20 h-20 bg-primary/20 rounded-lg animate-float-diagonal" />
-                    <div className="absolute top-[20%] left-[10%] w-16 h-16 bg-secondary/20 rounded-full animate-float-right" />
-                    <div className="absolute bottom-[20%] right-[20%] w-24 h-24 bg-blue-500/20 rounded-lg rotate-45 animate-float-left" />
-
-                    {/* Central Element - Adjust sizing for mobile */}
-                    <div className="absolute inset-[10%] md:inset-[20%] bg-background/50 backdrop-blur-xl rounded-2xl border border-border/50 shadow-2xl p-4 md:p-6">
-                      <div className="h-full flex flex-col">
-                        {/* Analytics Header - Adjust spacing for mobile */}
-                        <div className="flex items-center justify-between mb-4 md:mb-6">
-                          <div className="flex items-center gap-2 md:gap-3">
-                            <div className="w-8 h-8 md:w-10 md:h-10 rounded-xl bg-gradient-to-br from-blue-500/20 to-purple-500/20 border border-blue-500/20 flex items-center justify-center relative group">
-                              <Bot className="w-4 h-4 md:w-5 md:h-5 text-primary absolute group-hover:opacity-0 transition-opacity" />
-                              <Sparkles className="w-4 h-4 md:w-5 md:h-5 text-primary absolute opacity-0 group-hover:opacity-100 transition-opacity" />
-                            </div>
-                            <div className="text-right">
-                              <div className="font-medium text-sm md:text-base">
-                                העסק שלכם
-                              </div>
-                              <div className="text-xs md:text-sm text-muted-foreground">
-                                30 הימים האחרונים
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Stats Grid - Adjust spacing and text sizes for mobile */}
-                        <div className="grid grid-cols-2 gap-2 md:gap-4 mb-4 md:mb-6">
-                          <div className="bg-background/50 rounded-lg p-2 md:p-3">
-                            <div className="text-xs md:text-sm text-muted-foreground text-right">
-                              צפיות בעמוד
-                            </div>
-                            <div className="text-lg md:text-2xl font-bold text-right">
-                              {useCountUp(9752, 1500)}
-                            </div>
-                            <div className="text-right">
-                              <GrowthIndicator value={12} />
-                            </div>
-                          </div>
-                          <div className="bg-background/50 rounded-lg p-2 md:p-3">
-                            <div className="text-xs md:text-sm text-muted-foreground text-right">
-                              המרות
-                            </div>
-                            <div className="text-lg md:text-2xl font-bold text-right">
-                              {useCountUp(1239, 1500)}
-                            </div>
-                            <div className="text-right">
-                              <GrowthIndicator value={26} />
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Trust Score - Adjust spacing and text sizes for mobile */}
-                        <div className="mt-auto">
-                          <div className="flex items-center justify-between mb-2">
-                            <div className="flex items-center gap-1 text-primary">
-                              <span className="text-xs md:text-sm font-medium">
-                                דירוג אמון
-                              </span>
-                              <RadarIcon className="w-3 h-3 md:w-4 md:h-4" />
-                            </div>
-                            <div className="text-xs md:text-sm text-primary">
-                              {useCountUp(9.1, 1500, 1)}
-                            </div>
-                          </div>
-                          <div className="h-1.5 md:h-2 rounded-full bg-background overflow-hidden">
-                            <div
-                              className="h-full bg-gradient-to-r from-primary to-blue-500 rounded-full transition-all duration-[1500ms]"
-                              style={{ width: `${useCountUp(91, 1500)}%` }}
-                            />
-                          </div>
-                          <div className="mt-1 md:mt-2 text-[10px] md:text-xs text-muted-foreground text-right">
-                            העסק שלכם בין 9% העליונים
-                          </div>
-                        </div>
-                      </div>
+                <h1 className="text-4xl md:text-4xl lg:text-6xl font-bold text-gray-900 mb-6">
+                  שדרגו את <span className="bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent"><AnimatedWord /></span> <br /> של העסק שלכם בעזרת רייט-איט
+                </h1>
+                <p className="text-xl md:text-2xl text-gray-700 font-medium mb-8">
+                  פלטפורמת הביקורות שמגדילה אמון ורווחים לעסקים ישראליים
+                </p>
+                
+                {/* Trust Indicators - Centered */}
+                <div className="flex justify-center items-center gap-4 flex-wrap mb-8">
+                  <motion.div 
+                    className="flex items-center gap-3 bg-white/80 backdrop-blur-lg px-6 py-4 rounded-xl shadow-lg border border-green-200/50"
+                    whileHover={{ scale: 1.05 }}
+                    transition={{ type: "spring", stiffness: 300 }}
+                  >
+                    <div className="w-8 h-8 bg-green-100/70 rounded-full flex items-center justify-center">
+                      <CheckCircle2 className="h-4 w-4 text-green-600" />
                     </div>
-
-                    {/* Additional Floating Elements */}
-                    <div className="absolute bottom-[10%] left-[15%] w-12 h-12 bg-purple-500/20 rounded-full animate-float" />
-                    <div className="absolute top-[40%] right-[5%] w-14 h-14 bg-pink-500/20 rounded-lg rotate-12 animate-float-right" />
-                  </div>
+                    <span className="text-sm font-bold text-green-700">
+300+ עסקים כבר בוטחים בנו                    </span>
+                  </motion.div>
+                  <motion.div 
+                    className="flex items-center gap-3 bg-white/80 backdrop-blur-lg px-6 py-4 rounded-xl shadow-lg border border-blue-200/50"
+                    whileHover={{ scale: 1.05 }}
+                    transition={{ type: "spring", stiffness: 300 }}
+                  >
+                    <div className="w-8 h-8 bg-blue-100/70 rounded-full flex items-center justify-center">
+                      <Star className="h-4 w-4 text-blue-600" />
+                    </div>
+                    <span className="text-sm font-bold text-blue-700">4.8/5 שביעות רצון</span>
+                  </motion.div>
+                  <motion.div 
+                    className="flex items-center gap-3 bg-white/80 backdrop-blur-lg px-6 py-4 rounded-xl shadow-lg border border-orange-200/50"
+                    whileHover={{ scale: 1.05 }}
+                    transition={{ type: "spring", stiffness: 300 }}
+                  >
+                    <div className="w-8 h-8 bg-orange-100/70 rounded-full flex items-center justify-center">
+                      <Sparkles className="h-4 w-4 text-orange-600" />
+                    </div>
+                    <span className="text-sm font-bold text-orange-700">ללא התחייבות</span>
+                  </motion.div>
                 </div>
-              </div>
+
+                {/* CTA Button - Centered */}
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                >
+                  <Button
+                    size="lg"
+                    className="text-xl px-12 py-6 bg-gradient-to-r from-primary to-blue-600 hover:from-primary-600 hover:to-blue-700 shadow-lg hover:shadow-xl transition-all rounded-xl"
+                    onClick={() => router.push("/business/register")}
+                  >
+התחילו עכשיו בחינם                    <ArrowLeft className="mr-3 h-6 w-6" />
+                  </Button>
+                </motion.div>
+              </motion.div>
             </motion.div>
-          </motion.div>
         </div>
       </section>
 
@@ -554,7 +522,7 @@ export default function BusinessPage() {
             </motion.div>
 
             <motion.div
-              className="relative max-w-xl mx-auto p-8 bg-white backdrop-blur-xl rounded-xl border-2 border-primary/20 shadow-xl"
+              className="relative max-w-xl mx-auto p-8 bg-white/90 backdrop-blur-xl rounded-xl border-2 border-primary/20 shadow-xl"
               variants={itemVariants}
             >
               <div className="absolute -top-5 left-1/2 transform -translate-x-1/2 px-4 py-2 bg-primary text-white font-bold rounded-full shadow-lg">
@@ -609,10 +577,10 @@ export default function BusinessPage() {
         </div>
       </section>
 
-      {/* Control Section - Scroll animation */}
+      {/* Control Section - Enhanced with pricing page styling */}
       <section
         ref={controlSectionRef}
-        className="relative py-24 bg-secondary/5"
+        className="relative py-24 bg-white"
       >
         <div className="container mx-auto px-4">
           <motion.div
@@ -650,11 +618,11 @@ export default function BusinessPage() {
             animate={controlSectionInView ? "visible" : "hidden"}
           >
             <motion.div
-              className="p-6 rounded-xl border border-border/50 bg-card/50 backdrop-blur-sm"
+              className="p-6 rounded-xl border-l-4 border-l-green-500 bg-white shadow-lg"
               variants={cardVariants}
             >
-              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-6">
-                <CheckCircle2 className="w-6 h-6 text-primary" />
+              <div className="w-12 h-12 rounded-xl bg-green-100 flex items-center justify-center mb-6">
+                <CheckCircle2 className="w-6 h-6 text-green-600" />
               </div>
               <h3 className="text-xl font-semibold mb-3">פרופיל מאומת</h3>
               <p className="text-muted-foreground">
@@ -664,11 +632,11 @@ export default function BusinessPage() {
             </motion.div>
 
             <motion.div
-              className="p-6 rounded-xl border border-border/50 bg-card/50 backdrop-blur-sm"
+              className="p-6 rounded-xl border-l-4 border-l-blue-500 bg-white shadow-lg"
               variants={cardVariants}
             >
-              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-6">
-                <RadarIcon className="w-6 h-6 text-primary" />
+              <div className="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center mb-6">
+                <RadarIcon className="w-6 h-6 text-blue-600" />
               </div>
               <h3 className="text-xl font-semibold mb-3">ניהול ביקורות</h3>
               <p className="text-muted-foreground">
@@ -677,11 +645,11 @@ export default function BusinessPage() {
             </motion.div>
 
             <motion.div
-              className="p-6 rounded-xl border border-border/50 bg-card/50 backdrop-blur-sm"
+              className="p-6 rounded-xl border-l-4 border-l-purple-500 bg-white shadow-lg"
               variants={cardVariants}
             >
-              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-6">
-                <ArrowUp className="w-6 h-6 text-primary" />
+              <div className="w-12 h-12 rounded-xl bg-purple-100 flex items-center justify-center mb-6">
+                <ArrowUp className="w-6 h-6 text-purple-600" />
               </div>
               <h3 className="text-xl font-semibold mb-3">דאשבורד ביצועים</h3>
               <p className="text-muted-foreground">
@@ -836,8 +804,8 @@ export default function BusinessPage() {
         </div>
       </section>
 
-      {/* How it Works Section - Scroll animation */}
-      <section ref={howItWorksRef} className="relative py-20 bg-secondary/5">
+      {/* How it Works Section - Enhanced with pricing page styling */}
+      <section ref={howItWorksRef} className="relative py-20 bg-white">
         <div className="container mx-auto px-4">
           <motion.h2
             className="text-3xl font-bold text-center mb-12"
@@ -857,11 +825,21 @@ export default function BusinessPage() {
             {steps.map((step, index) => (
               <motion.div
                 key={index}
-                className="p-6 rounded-xl border border-border/50 bg-background/50 backdrop-blur-sm"
+                className={`p-6 rounded-xl bg-white shadow-lg border-l-4 ${
+                  index === 0 ? 'border-l-green-500' :
+                  index === 1 ? 'border-l-blue-500' :
+                  index === 2 ? 'border-l-purple-500' :
+                  'border-l-orange-500'
+                }`}
                 variants={cardVariants}
                 custom={index}
               >
-                <div className="text-4xl font-bold text-primary mb-4">
+                <div className={`text-4xl font-bold mb-4 ${
+                  index === 0 ? 'text-green-600' :
+                  index === 1 ? 'text-blue-600' :
+                  index === 2 ? 'text-purple-600' :
+                  'text-orange-600'
+                }`}>
                   {(index + 1).toString().padStart(2, "0")}
                 </div>
                 <h3 className="text-xl font-semibold mb-2">{step.title}</h3>
@@ -878,7 +856,7 @@ export default function BusinessPage() {
           >
             <Button
               size="lg"
-              className="gradient-button"
+              className="text-lg px-8 py-4 bg-gradient-to-r from-primary to-blue-600 hover:from-primary-600 hover:to-blue-700 shadow-lg hover:shadow-xl transition-all"
               onClick={() => router.push("/business/register")}
             >
               רשמו את העסק שלכם
@@ -1080,36 +1058,39 @@ export default function BusinessPage() {
         </div>
       </section>
 
-      {/* Final CTA Section - Scroll animation */}
-      <section ref={finalCtaRef} className="relative py-20">
-        <div className="relative container mx-auto px-4">
+      {/* Final CTA Section - Enhanced with pricing page styling */}
+      <section ref={finalCtaRef} className="bg-gradient-to-r from-primary/10 via-blue-600/10 to-purple-700/15 py-16">
+        <div className="max-w-4xl mx-auto text-center px-4">
           <motion.div
-            className="max-w-3xl mx-auto text-center space-y-8"
+            className="space-y-8"
             variants={containerVariants}
             initial="hidden"
             animate={finalCtaInView ? "visible" : "hidden"}
           >
             <motion.h2
-              className="text-3xl font-bold"
+              className="text-3xl font-bold mb-4"
               variants={fadeInUpVariants}
             >
-              ביקורת אחת יכולה להפוך התלבטות להחלטה.{" "}
+              🚀 ביקורת אחת יכולה להפוך התלבטות להחלטה
             </motion.h2>
             <motion.p
-              className="text-xl text-muted-foreground"
+              className="text-xl text-muted-foreground mb-8"
               variants={fadeInUpVariants}
             >
-              התחילו לבנות אמון ושקיפות עם הקהל שלכם כבר היום.
+              התחילו לבנות אמון ושקיפות עם הקהל שלכם כבר היום
             </motion.p>
             <motion.div variants={fadeInUpVariants}>
               <Button
                 size="lg"
-                className="gradient-button"
+                className="text-lg px-8 py-4 bg-gradient-to-r from-primary to-blue-600 hover:from-primary-600 hover:to-blue-700 shadow-lg hover:shadow-xl transition-all"
                 onClick={() => router.push("/business/register")}
               >
-                רשמו את העסק שלכם בחינם
-                <ArrowRight className="mr-2 h-5 w-5" />
+                רשמו את העסק שלכם בחינם - ללא כרטיס אשראי
+                <ArrowRight className="h-5 w-5 mr-2" />
               </Button>
+              <p className="text-sm text-muted-foreground mt-4">
+                התחלה תוך 5 דקות • ביטול בכל עת • תמיכה 24/7
+              </p>
             </motion.div>
           </motion.div>
         </div>
