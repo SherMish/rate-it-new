@@ -691,70 +691,8 @@ export default function BusinessPage() {
 
       {/* Latest Listings Section - Scroll animation */}
 {/*       
-      {/* How it Works Section - Enhanced with pricing page styling */}
-      <section ref={howItWorksRef} className="relative py-20 bg-white">
-        <div className="container mx-auto px-4">
-          <motion.h2
-            className="text-3xl font-bold text-center mb-12"
-            variants={fadeInUpVariants}
-            initial="hidden"
-            animate={howItWorksInView ? "visible" : "hidden"}
-          >
-            איך זה עובד
-          </motion.h2>
-
-          <motion.div
-            className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto"
-            variants={containerVariants}
-            initial="hidden"
-            animate={howItWorksInView ? "visible" : "hidden"}
-          >
-            {steps.map((step, index) => (
-              <motion.div
-                key={index}
-                className={`p-6 rounded-xl bg-white shadow-lg border-l-4 ${
-                  index === 0 ? 'border-l-green-500' :
-                  index === 1 ? 'border-l-blue-500' :
-                  index === 2 ? 'border-l-purple-500' :
-                  'border-l-orange-500'
-                }`}
-                variants={cardVariants}
-                custom={index}
-              >
-                <div className={`text-4xl font-bold mb-4 ${
-                  index === 0 ? 'text-green-600' :
-                  index === 1 ? 'text-blue-600' :
-                  index === 2 ? 'text-purple-600' :
-                  'text-orange-600'
-                }`}>
-                  {(index + 1).toString().padStart(2, "0")}
-                </div>
-                <h3 className="text-xl font-semibold mb-2">{step.title}</h3>
-                <p className="text-muted-foreground">{step.description}</p>
-              </motion.div>
-            ))}
-          </motion.div>
-
-          <motion.div
-            className="mt-16 text-center"
-            variants={fadeInUpVariants}
-            initial="hidden"
-            animate={howItWorksInView ? "visible" : "hidden"}
-          >
-            <Button
-              size="lg"
-              className="text-lg px-8 py-4 bg-gradient-to-r from-primary to-blue-600 hover:from-primary-600 hover:to-blue-700 shadow-lg hover:shadow-xl transition-all"
-              onClick={() => router.push("/business/register")}
-            >
-              רשמו את העסק שלכם
-              <ArrowRight className="mr-2 h-5 w-5" />
-            </Button>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* TrustRadar Section - Scroll animation */}
-      <section ref={trustRadarRef} className="py-24 relative overflow-hidden">
+      {/* כל מה שצריך כדי להגדיל מכירות Section */}
+      <section className="py-24 relative overflow-hidden bg-gradient-to-br from-white to-slate-50/70">
         {/* Add decorative background elements */}
         <div className="absolute inset-0">
           <div className="absolute top-0 left-1/4 w-64 h-64 bg-gradient-to-br from-primary/10 to-purple-500/5 rounded-full blur-3xl"></div>
@@ -770,7 +708,7 @@ export default function BusinessPage() {
             className="grid lg:grid-cols-[400px,1fr] gap-12 items-center"
             variants={containerVariants}
             initial="hidden"
-            animate={trustRadarInView ? "visible" : "hidden"}
+            animate="visible"
           >
             {/* Right Column - Visual */}
             <motion.div
@@ -873,6 +811,69 @@ export default function BusinessPage() {
         </div>
       </section>
 
+      {/* How it Works Section - Enhanced with pricing page styling */}
+      <section ref={howItWorksRef} className="relative py-20 bg-white">
+        <div className="container mx-auto px-4">
+          <motion.h2
+            className="text-3xl font-bold text-center mb-12"
+            variants={fadeInUpVariants}
+            initial="hidden"
+            animate={howItWorksInView ? "visible" : "hidden"}
+          >
+            איך זה עובד
+          </motion.h2>
+
+          <motion.div
+            className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto"
+            variants={containerVariants}
+            initial="hidden"
+            animate={howItWorksInView ? "visible" : "hidden"}
+          >
+            {steps.map((step, index) => (
+              <motion.div
+                key={index}
+                className={`p-6 rounded-xl bg-white shadow-lg border-l-4 ${
+                  index === 0 ? 'border-l-green-500' :
+                  index === 1 ? 'border-l-blue-500' :
+                  index === 2 ? 'border-l-purple-500' :
+                  'border-l-orange-500'
+                }`}
+                variants={cardVariants}
+                custom={index}
+              >
+                <div className={`text-4xl font-bold mb-4 ${
+                  index === 0 ? 'text-green-600' :
+                  index === 1 ? 'text-blue-600' :
+                  index === 2 ? 'text-purple-600' :
+                  'text-orange-600'
+                }`}>
+                  {(index + 1).toString().padStart(2, "0")}
+                </div>
+                <h3 className="text-xl font-semibold mb-2">{step.title}</h3>
+                <p className="text-muted-foreground">{step.description}</p>
+              </motion.div>
+            ))}
+          </motion.div>
+
+          <motion.div
+            className="mt-16 text-center"
+            variants={fadeInUpVariants}
+            initial="hidden"
+            animate={howItWorksInView ? "visible" : "hidden"}
+          >
+            <Button
+              size="lg"
+              className="text-lg px-8 py-4 bg-gradient-to-r from-primary to-blue-600 hover:from-primary-600 hover:to-blue-700 shadow-lg hover:shadow-xl transition-all"
+              onClick={() => router.push("/business/register")}
+            >
+              רשמו את העסק שלכם
+              <ArrowRight className="mr-2 h-5 w-5" />
+            </Button>
+          </motion.div>
+        </div>
+      </section>
+
+      
       {/* Testimonials Section */}
       <section className="relative py-20 bg-gradient-to-br from-white to-slate-50/70 border-y border-border/40">
         <div className="container mx-auto px-4">
