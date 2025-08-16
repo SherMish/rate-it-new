@@ -32,30 +32,6 @@ import "swiper/css/autoplay";
 import { motion } from "framer-motion";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
-const benefits = [
-  {
-    title: "הגדילו את החשיפה",
-    description:
-      "גלו על ידי לקוחות פוטנציאליים המחפשים באופן פעיל עסקים כמו שלכם",
-    icon: Search,
-  },
-  {
-    title: "בנו אמון",
-    description: "אספו והציגו ביקורות משתמשים מאומתות כדי לחזק את האמינות שלכם",
-    icon: CheckCircle2,
-  },
-  {
-    title: "פנו ללקוחות",
-    description: "הגיבו לביקורות, הציגו עדכונים, ותקשרו עם לקוחות פוטנציאליים",
-    icon: ArrowRight,
-  },
-  {
-    title: "נתונים ותובנות",
-    description: "קבלו גישה לאנליטיקות על מעורבות משתמשים, מגמות שוק ומתחרים",
-    icon: ArrowRight,
-  },
-];
-
 const steps = [
   {
     title: "פתחו פרופיל עסקי ברייט-איט",
@@ -79,32 +55,6 @@ const steps = [
   },
 ];
 
-const trustedCompanies = [
-  { name: "עסק א'", logo: "א" },
-  { name: "עסק ב'", logo: "ב" },
-  { name: "עסק ג'", logo: "ג" },
-  { name: "עסק ד'", logo: "ד" },
-  { name: "עסק ה'", logo: "ה" },
-  { name: "עסק ו'", logo: "ו" },
-];
-
-const testimonials = [
-  {
-    quote:
-      "הפלטפורמה הייתה כלי חיוני בעזרה לנו להבין את צרכי הלקוחות שלנו ולשפר את המוצר שלנו. התובנות שהשגנו הן ללא תחליף.",
-    author: "שרה כהן",
-    role: "מנהלת מוצר בחברת TechBiz",
-    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330",
-  },
-  {
-    quote:
-      "איכות המשוב והמעורבות מהקהילה עלתה על הציפיות שלנו. זה הפך לחלק חיוני באסטרטגיית הצמיחה שלנו.",
-    author: "מיכאל רוזנברג",
-    role: 'מנכ"ל BusinessPro',
-    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e",
-  },
-];
-
 interface Tool {
   _id: string;
   name: string;
@@ -116,70 +66,6 @@ interface Tool {
   reviewCount: number;
   radarTrust?: number;
   businessModel?: string;
-}
-
-// Add an interface for Website
-interface Website {
-  id: string;
-  name: string;
-  url: string;
-  description?: string;
-  shortDescription?: string;
-  logo?: string;
-  averageRating?: number;
-  reviewCount?: number;
-  radarTrust?: number;
-}
-
-function useCountUp(
-  end: number,
-  duration: number = 1000,
-  decimals: number = 0
-) {
-  const [count, setCount] = useState(0);
-
-  useEffect(() => {
-    let startTimestamp: number | null = null;
-    const step = (timestamp: number) => {
-      if (!startTimestamp) startTimestamp = timestamp;
-      const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-
-      setCount(progress * end);
-
-      if (progress < 1) {
-        window.requestAnimationFrame(step);
-      }
-    };
-
-    window.requestAnimationFrame(step);
-  }, [end, duration]);
-
-  return decimals === 0 ? Math.floor(count) : count.toFixed(decimals);
-}
-
-function GrowthIndicator({
-  value,
-  delay = 1500,
-}: {
-  value: number;
-  delay?: number;
-}) {
-  const [show, setShow] = useState(false);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setShow(true), delay);
-    return () => clearTimeout(timer);
-  }, [delay]);
-
-  return (
-    <div
-      className={`text-xs text-emerald-500 transition-opacity duration-300 ${
-        show ? "opacity-100" : "opacity-0"
-      }`}
-    >
-      ↑ {value}%
-    </div>
-  );
 }
 
 // Animations variants

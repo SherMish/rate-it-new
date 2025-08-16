@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     default: "Rate It",
     template: "%s | Rate It",
   },
-  description: "מצא וסקור כלי בינה מלאכותית",
+  description: "הפלטפורמה הישראלית לביקורות עסקים דיגיטליים. בדקו מה לקוחות אמיתיים חושבים לפני הקנייה ושתפו את החוויות שלכם עם אחרים.",
   icons: {
     icon: [
       {
