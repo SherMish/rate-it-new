@@ -156,21 +156,34 @@ export async function verifyCode(code: string) {
     );
 
     // Update user with complete business owner permissions
+    const userUpdateData: any = {
+      role: "business_owner",
+      isWebsiteOwner: true,
+      isVerifiedWebsiteOwner: true,
+      relatedWebsite: cleanUrl,
+      currentPricingModel: PricingModel.BASIC,
+      websites: website._id, // Single website ID, not an array
+    };
+
+    // Save the work email from verification if it exists
+    if (user.verification.email) {
+      userUpdateData.workEmail = user.verification.email;
+      console.log(`Saving work email: ${user.verification.email} for user: ${user.email}`);
+    }
+
     await User.findByIdAndUpdate(user._id, {
-      $set: {
-        role: "business_owner",
-        isWebsiteOwner: true,
-        isVerifiedWebsiteOwner: true,
-        relatedWebsite: cleanUrl,
-        currentPricingModel: PricingModel.BASIC,
-        websites: website._id, // Single website ID, not an array
-      },
+      $set: userUpdateData,
       $unset: {
         verification: 1,
       },
     });
 
-    return { success: true, websiteUrl: cleanUrl, websiteId: website._id.toString() };
+    return { 
+      success: true, 
+      websiteUrl: cleanUrl, 
+      websiteId: website._id.toString(),
+      workEmail: user.verification.email || null 
+    };
   } catch (error) {
     console.error("Error verifying code:", error);
     if (error instanceof Error) {
