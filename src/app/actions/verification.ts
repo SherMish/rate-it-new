@@ -142,7 +142,7 @@ export async function verifyCode(code: string) {
       url: cleanUrl,
       owner: user._id,
       isVerified: true,
-      pricingModel: PricingModel.FREE, // Default to free plan
+      pricingModel: PricingModel.BASIC, // Default to basic plan
       verifiedAt: new Date(),
       name: existingWebsite?.name ?? businessName,
       categories: existingWebsite?.categories ?? ["other"],
@@ -162,7 +162,7 @@ export async function verifyCode(code: string) {
         isWebsiteOwner: true,
         isVerifiedWebsiteOwner: true,
         relatedWebsite: cleanUrl,
-        currentPricingModel: PricingModel.FREE,
+        currentPricingModel: PricingModel.BASIC,
         websites: website._id, // Single website ID, not an array
       },
       $unset: {

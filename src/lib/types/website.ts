@@ -1,5 +1,5 @@
 export enum PricingModel {
-  FREE = "free",
+  BASIC = "basic",
   PLUS = "plus",
   PRO = "pro",
 }
@@ -38,13 +38,13 @@ export const isPro = (
 };
 
 /**
- * Checks if the pricing model is 'free' and the license is valid.
+ * Checks if the pricing model is 'basic' and the license is valid.
  */
-export const isFree = (
+export const isBasic = (
   pricingModel: PricingModel,
   licenseValidDate: Date | string | null
 ): boolean => {
-  return pricingModel === PricingModel.FREE && isLicenseValid(licenseValidDate);
+  return pricingModel === PricingModel.BASIC && isLicenseValid(licenseValidDate);
 };
 
 /**

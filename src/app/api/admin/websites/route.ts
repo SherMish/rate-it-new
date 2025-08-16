@@ -92,7 +92,7 @@ export async function POST(request: Request) {
       address: address || "",
       contact: contact || "",
       socialUrls: socialUrls || {},
-      pricingModel: pricingModel || "FREE",
+      pricingModel: pricingModel || "BASIC",
       isVerified: isVerified || false,
       isVerifiedByRateIt: isVerifiedByRateIt || false,
       licenseValidDate: licenseValidDate ? new Date(licenseValidDate) : null,

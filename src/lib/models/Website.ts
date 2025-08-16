@@ -124,7 +124,7 @@ const WebsiteSchema = new Schema(
     pricingModel: {
       type: String,
       enum: Object.values(PricingModel),
-      default: PricingModel.FREE,
+      default: PricingModel.BASIC,
     },
     isVerifiedByRateIt: {
       type: Boolean,

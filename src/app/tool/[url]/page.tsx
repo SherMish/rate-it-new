@@ -148,7 +148,7 @@ async function getWebsiteData(url: string) {
 
   return {
     ...website,
-    pricingModel: (website.pricingModel as PricingModel) || PricingModel.FREE,
+    pricingModel: (website.pricingModel as PricingModel) || PricingModel.BASIC,
     _id: website._id.toString(),
     averageRating: Math.round(averageRating * 10) / 10,
     reviewCount,
@@ -522,7 +522,7 @@ export default async function ToolPage({ params }: PageProps) {
                       {/* Verification Badge as another tag */}
                       <VerifiedBadge
                         isVerified={website.isVerified ?? false}
-                        pricingModel={website.pricingModel ?? PricingModel.FREE}
+                        pricingModel={website.pricingModel ?? PricingModel.BASIC}
                         licenseValidDate={website.licenseValidDate}
                         isVerifiedByRateIt={website.isVerifiedByRateIt ?? false}
                         showUnverified={true}
@@ -550,7 +550,7 @@ export default async function ToolPage({ params }: PageProps) {
                             <VerifiedBadge
                               isVerified={website.isVerified ?? false}
                               pricingModel={
-                                website.pricingModel ?? PricingModel.FREE
+                                website.pricingModel ?? PricingModel.BASIC
                               }
                               licenseValidDate={website.licenseValidDate}
                               isVerifiedByRateIt={

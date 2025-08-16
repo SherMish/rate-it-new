@@ -69,7 +69,7 @@ export function WebsiteCard({ website }: WebsiteCardProps) {
                   <div className="flex-shrink-0">
                     <VerifiedBadge
                       isVerified={website.isVerified ?? false}
-                      pricingModel={website.pricingModel ?? PricingModel.FREE}
+                      pricingModel={website.pricingModel ?? PricingModel.BASIC}
                       licenseValidDate={website.licenseValidDate}
                       isVerifiedByRateIt={website.isVerifiedByRateIt}
                     />

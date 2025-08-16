@@ -53,7 +53,7 @@ export function AddToolDialog({
     description: "",
     shortDescription: "",
     logo: "",
-    pricingModel: "free",
+    pricingModel: "basic",
     launchYear: "",
     address: "",
     contact: {
@@ -93,7 +93,7 @@ export function AddToolDialog({
         description: website.description || "",
         shortDescription: website.shortDescription || "",
         logo: website.logo || "",
-        pricingModel: website.pricingModel || "free",
+        pricingModel: website.pricingModel || "basic",
         launchYear: website.launchYear ? website.launchYear.toString() : "",
         address: website.address || "",
         contact: {
@@ -125,7 +125,7 @@ export function AddToolDialog({
         description: "",
         shortDescription: "",
         logo: "",
-        pricingModel: "free",
+        pricingModel: "basic",
         launchYear: "",
         address: "",
         contact: {
@@ -171,7 +171,7 @@ export function AddToolDialog({
         description: "",
         shortDescription: "",
         logo: "",
-        pricingModel: "free",
+        pricingModel: "basic",
         launchYear: "",
         address: "",
         contact: {

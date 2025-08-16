@@ -172,8 +172,8 @@ export const AnalyticsEvents = {
   BUSINESS_VERIFICATION_CODE_VERIFIED: "business_verification_code_verified",
   BUSINESS_VERIFICATION_RESEND_CLICKED: "business_verification_resend_clicked",
   BUSINESS_VERIFICATION_BACK_CLICKED: "business_verification_back_clicked",
-  BUSINESS_PRICING_FREE_SELECTED: "business_pricing_free_selected",
   BUSINESS_PRICING_BASIC_SELECTED: "business_pricing_basic_selected",
+  BUSINESS_PRICING_PLUS_SELECTED: "business_pricing_plus_selected",
   BUSINESS_PRICING_PRO_SELECTED: "business_pricing_pro_selected",
   BUSINESS_REGISTRATION_COMPLETED: "business_registration_completed",
   // Business Dashboard Events

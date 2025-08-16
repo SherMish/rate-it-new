@@ -4,7 +4,7 @@ import { useState } from "react";
 import { PricingPlansUI } from "@/components/business/pricing-plans-ui";
 
 // Plan feature definitions
-export const starterFeatures = [
+export const basicFeatures = [
   { text: "פרופיל עסק מקצועי - דף ייעודי לעסק שלכם" },
   { text: "קבלת עד 10 ביקורות בחודש" },
   { text: "מענה בסיסי לביקורות לקוחות" },
@@ -12,8 +12,8 @@ export const starterFeatures = [
   { text: "לוח בקרה בסיסי עם סטטיסטיקות" },
 ];
 
-export const basicFeatures = [
-  { text: "כל מה שבתכנית ה-Starter, ובנוסף:" },
+export const plusFeatures = [
+  { text: "כל מה שבתכנית ה-Basic, ובנוסף:" },
   { text: "עד 50 ביקורות בחודש", isHighlighted: true, },
   {
     text: "תג 'עסק מאומת'",
@@ -25,7 +25,7 @@ export const basicFeatures = [
 ];
 
 export const proFeatures = [
-  { text: "כל מה שבתכנית ה-Basic, ובנוסף:" },
+  { text: "כל מה שבתכנית ה-Plus, ובנוסף:" },
   { text: "ביקורות ללא הגבלה", isHighlighted: true  },
   { text: "אוטומציה מלאה - הזמנות ביקורת אוטומטיות", isHighlighted: true },
   { text: "דוחות וניתוחים עסקיים מתקדמים", isHighlighted: true },
@@ -35,8 +35,8 @@ export const proFeatures = [
 ];
 
 interface PlanActions {
-  onStarterClick: () => void;
   onBasicClick: () => void;
+  onPlusClick: () => void;
   onProClick: () => void;
 }
 
@@ -46,8 +46,8 @@ interface SharedPricingTableProps {
   showBillingToggle?: boolean;
   defaultAnnual?: boolean;
   isCurrent?: {
-    starter?: boolean;
     basic?: boolean;
+    plus?: boolean;
     pro?: boolean;
   };
 }
@@ -78,34 +78,34 @@ export function SharedPricingTable({
 
   const plans = [
     {
-      name: "Starter",
+      name: "Basic",
       price: "0 ₪",
-      features: starterFeatures,
-      ctaText: isCurrent.starter ? "המסלול הנוכחי שלך" : "התחילו בחינם",
-      onCtaClick: planActions.onStarterClick,
+      features: basicFeatures,
+      ctaText: isCurrent.basic ? "המסלול הנוכחי שלך" : "התחילו בחינם",
+      onCtaClick: planActions.onBasicClick,
       bestFor: "מושלם להתחלה! התחילו לבנות אמון עם הלקוחות שלכם בחינם",
-      isCurrent: isCurrent.starter,
+      isCurrent: isCurrent.basic,
     },
     {
-      name: "Basic",
-      price: calculatePrice(79, 30),
-      originalPrice: isAnnual ? "79 ₪" : undefined,
-      monthlyPrice: calculateMonthlyAverage(79, 30),
+      name: "Plus",
+      price: calculatePrice(99, 30),
+      originalPrice: isAnnual ? "99 ₪" : undefined,
+      monthlyPrice: calculateMonthlyAverage(99, 30),
       discount: 30,
-      features: basicFeatures,
-      ctaText: isCurrent.basic ? "המסלול הנוכחי שלך" : "שדרגו ל-Basic",
-      onCtaClick: planActions.onBasicClick,
+      features: plusFeatures,
+      ctaText: isCurrent.plus ? "המסלול הנוכחי שלך" : "שדרגו ל-Plus",
+      onCtaClick: planActions.onPlusClick,
       isRecommended: true,
       highlightColor: "primary",
       bestFor: "לעסקים שרוצים למקסם אמינות ולבלוט על מתחרים",
       badge: "הכי מומלץ",
-      isCurrent: isCurrent.basic,
+      isCurrent: isCurrent.plus,
     },
     {
       name: "Pro",
-      price: calculatePrice(149, 25),
-      originalPrice: isAnnual ? "149 ₪" : undefined,
-      monthlyPrice: calculateMonthlyAverage(149, 25),
+      price: calculatePrice(159, 25),
+      originalPrice: isAnnual ? "159 ₪" : undefined,
+      monthlyPrice: calculateMonthlyAverage(159, 25),
       discount: 25,
       features: proFeatures,
       ctaText: "בקרוב",

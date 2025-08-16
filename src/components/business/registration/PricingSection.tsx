@@ -28,16 +28,16 @@ export function PricingSection({
   const { update: updateSession, data: session } = useSession();
 
   // ───────────────────────────────────────────────────────────────────────────
-  // FREE PLAN REGISTRATION - SIMPLIFIED (Business logic moved to verification)
+  // BASIC PLAN REGISTRATION - SIMPLIFIED (Business logic moved to verification)
   // ───────────────────────────────────────────────────────────────────────────
-  const handleFreePlanRegistration = async () => {
+  const handleBasicPlanRegistration = async () => {
     setLoading(true);
     
-    // Track free plan selection
-    trackEvent(AnalyticsEvents.BUSINESS_PRICING_FREE_SELECTED, {
+    // Track basic plan selection
+    trackEvent(AnalyticsEvents.BUSINESS_PRICING_BASIC_SELECTED, {
       step: "pricing_selection",
       website_url: websiteUrl,
-      plan_type: "free"
+      plan_type: "basic"
     });
     
     try {
@@ -48,14 +48,14 @@ export function PricingSection({
       // Track completed registration
       trackEvent(AnalyticsEvents.BUSINESS_REGISTRATION_COMPLETED, {
         website_url: websiteUrl,
-        plan_selected: "free",
+        plan_selected: "basic",
         final_step: "pricing"
       });
 
       console.log("Redirecting to dashboard...");
       window.location.href = "/business/dashboard?firstTime=true";
     } catch (error) {
-      console.error("Error in handleFreePlanRegistration:", error);
+      console.error("Error in handleBasicPlanRegistration:", error);
       toast({
         variant: "destructive",
         title: "שגיאה",
@@ -67,21 +67,21 @@ export function PricingSection({
   };
 
   // ───────────────────────────────────────────────────────────────────────────
-  // BASIC/PRO PLAN HANDLERS (COMING SOON)
+  // PLUS/PRO PLAN HANDLERS (COMING SOON)
   // ───────────────────────────────────────────────────────────────────────────
-  const handleBasicSubscription = async () => {
-    // Track basic plan selection attempt
-    trackEvent(AnalyticsEvents.BUSINESS_PRICING_BASIC_SELECTED, {
+  const handlePlusSubscription = async () => {
+    // Track plus plan selection attempt
+    trackEvent(AnalyticsEvents.BUSINESS_PRICING_PLUS_SELECTED, {
       step: "pricing_selection",
       website_url: websiteUrl,
-      plan_type: "basic"
+      plan_type: "plus"
     });
     
     toast({
-      title: "מסלול Basic",
-      description: "המסלול Basic יהיה זמין בקרוב. נרשמת למסלול החינמי.",
+      title: "מסלול Plus",
+      description: "המסלול Plus יהיה זמין בקרוב. נרשמת למסלול החינמי.",
     });
-    await handleFreePlanRegistration();
+    await handleBasicPlanRegistration();
   };
 
   const handleProSubscription = () => {
@@ -100,8 +100,8 @@ export function PricingSection({
 
   // Define plan actions for the shared component
   const planActions = {
-    onStarterClick: handleFreePlanRegistration,
-    onBasicClick: handleBasicSubscription,
+    onBasicClick: handleBasicPlanRegistration,
+    onPlusClick: handlePlusSubscription,
     onProClick: handleProSubscription,
   };
 

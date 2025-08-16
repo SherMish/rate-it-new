@@ -27,6 +27,6 @@ export const benefitExplanations = {
 };
 
 export const planBenefitMappings = {
-  free: ["basic_dashboard", "review_management"],
+  basic: ["basic_dashboard", "review_management"],
   plus: ["verified_badge", "real_time_analytics", "priority_support"],
 };

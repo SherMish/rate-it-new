@@ -128,7 +128,7 @@ export function SideNav() {
       {/* Upgrade to Plus CTA - Placed before User Profile */}
       {!isLoading &&
         !isPlus(
-          website?.pricingModel ?? PricingModel.FREE,
+          website?.pricingModel ?? PricingModel.BASIC,
           website?.licenseValidDate ?? null
         ) && (
           <div className="px-4 pt-4 pb-2 mt-auto border-t border-border">

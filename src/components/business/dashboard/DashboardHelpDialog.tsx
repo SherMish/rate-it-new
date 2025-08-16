@@ -28,7 +28,7 @@ export function DashboardHelpDialog({ website }: DashboardHelpDialogProps) {
     setOpen(isOpen);
     if (isOpen) {
       trackEvent(AnalyticsEvents.BUSINESS_DASHBOARD_HELP_OPENED, {
-        user_plan: isPlusUser ? "plus" : "free",
+        user_plan: isPlusUser ? "plus" : "basic",
         website_pricing_model: website?.pricingModel
       });
     }

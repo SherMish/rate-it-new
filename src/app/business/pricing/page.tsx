@@ -34,13 +34,13 @@ export default function PublicPricingPage() {
 
   // Define plan actions for the shared component
   const planActions = {
-    onStarterClick: handleGetStarted,
-    onBasicClick: handleUpgrade,
+    onBasicClick: handleGetStarted,
+    onPlusClick: handleUpgrade,
     onProClick: handleProClick,
   };
 
   // Determine current plan if user is logged in
-  const isCurrent = session?.user?.isWebsiteOwner ? { starter: true } : {};
+  const isCurrent = session?.user?.isWebsiteOwner ? { basic: true } : {};
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">

@@ -36,7 +36,7 @@ interface Plan {
   isComingSoon?: boolean; // New property for coming soon plans
   highlightColor?: string; // e.g., 'primary', 'green-500'
   bestFor?: string; // New field for describing who the plan is best for
-  planType?: "starter" | "basic" | "pro"; // Updated plan types
+  planType?: "basic" | "plus" | "pro"; // Updated plan types
   badge?: string; // Custom badge text
 }
 
