@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import { Review } from "@/lib/models";
+import User from "@/lib/models/User";
 import { updateWebsiteReviewStats } from "@/lib/models/Website";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
@@ -57,6 +58,19 @@ export async function POST(request: Request) {
     } catch (error) {
       console.error("Failed to update website stats:", error);
       // Don't fail the request if stats update fails
+    }
+
+    // Update user review count
+    try {
+      await User.findByIdAndUpdate(
+        session.user.id,
+        { $inc: { reviewCount: 1 } },
+        { new: true }
+      );
+      console.log(`Incremented review count for user: ${session.user.id}`);
+    } catch (error) {
+      console.error("Failed to update user review count:", error);
+      // Don't fail the request if user stats update fails
     }
 
     return NextResponse.json(review);
