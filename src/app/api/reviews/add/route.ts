@@ -2,9 +2,11 @@ import { NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import { Review } from "@/lib/models";
 import User from "@/lib/models/User";
+import Website from "@/lib/models/Website";
 import { updateWebsiteReviewStats } from "@/lib/models/Website";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { sendReviewAlert } from "@/lib/telegram";
 
 export async function POST(request: Request) {
   try {
@@ -71,6 +73,27 @@ export async function POST(request: Request) {
     } catch (error) {
       console.error("Failed to update user review count:", error);
       // Don't fail the request if user stats update fails
+    }
+
+    // Send Telegram alert for new review
+    try {
+      const website = await Website.findById(reviewData.relatedWebsite).select('name url');
+      const user = await User.findById(session.user.id).select('name');
+      
+      if (website && user) {
+        await sendReviewAlert({
+          userName: user.name || 'משתמש אנונימי',
+          websiteName: website.name || 'עסק לא ידוע',
+          websiteUrl: website.url || '',
+          rating: reviewData.rating,
+          title: reviewData.title || '',
+          body: reviewData.body || '',
+          hasProof: !!reviewData.proof
+        });
+      }
+    } catch (error) {
+      console.error("Failed to send Telegram alert:", error);
+      // Don't fail the request if Telegram alert fails
     }
 
     return NextResponse.json(review);

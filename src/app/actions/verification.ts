@@ -7,6 +7,7 @@ import User from "@/lib/models/User";
 import Website from "@/lib/models/Website";
 import { sendEmail } from "@/lib/email";
 import { PricingModel } from "@/lib/types/website";
+import { sendBusinessVerificationAlert, sendBusinessCreatedAlert } from "@/lib/telegram";
 
 // Generate 6-digit verification code
 function generateVerificationCode(): string {
@@ -72,6 +73,14 @@ export async function sendVerificationEmail(
           <p style="color: #999; font-size: 12px;">הקוד תקף למשך שעה אחת בלבד.</p>
         </div>
       `,
+    });
+
+    // Send Telegram alert for business verification step
+    await sendBusinessVerificationAlert({
+      businessName: businessName,
+      websiteUrl: websiteUrl,
+      workEmail: email,
+      fullName: user.name || 'משתמש לא ידוע',
     });
 
     return { success: true };
@@ -176,6 +185,16 @@ export async function verifyCode(code: string) {
       $unset: {
         verification: 1,
       },
+    });
+
+    // Send Telegram alert for successful business creation
+    await sendBusinessCreatedAlert({
+      businessName: businessName,
+      websiteUrl: cleanUrl,
+      ownerName: user.name || 'בעלים לא ידוע',
+      ownerEmail: user.email,
+      workEmail: user.verification.email,
+      pricingModel: PricingModel.BASIC,
     });
 
     return { 

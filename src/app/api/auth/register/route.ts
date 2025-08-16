@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs';
 import connectDB from '@/lib/mongodb';
 import User from '@/lib/models/User';
 import * as z from 'zod';
+import { sendUserSignupAlert } from '@/lib/telegram';
 
 const registerSchema = z.object({
   name: z.string().min(2),
@@ -46,6 +47,19 @@ export async function POST(request: Request) {
       hashedPassword,
       isAgreeMarketing: isAgreeMarketing === true, // Explicitly convert to boolean
     });
+
+    // Send Telegram alert for new user signup
+    try {
+      await sendUserSignupAlert({
+        name: user.name,
+        email: user.email,
+        isAgreeMarketing: isAgreeMarketing === true,
+        signupMethod: 'אימייל'
+      });
+    } catch (error) {
+      console.error("Failed to send Telegram signup alert:", error);
+      // Don't fail the request if Telegram alert fails
+    }
 
     return NextResponse.json({
       user: {

@@ -4,6 +4,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import User from "@/lib/models/User";
 import connectDB from "@/lib/mongodb";
+import { sendUserSignupAlert } from "@/lib/telegram";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -86,6 +87,14 @@ export const authOptions: NextAuthOptions = {
               googleId: user.id,
               hashedPassword: await bcrypt.hash(Math.random().toString(36), 12),
               emailVerified: new Date(),
+            });
+
+            // Send Telegram alert for new Google sign-up
+            await sendUserSignupAlert({
+              name: user.name || 'משתמש Google',
+              email: user.email || '',
+              signupMethod: 'Google OAuth',
+              isAgreeMarketing: false, // Google signups don't have marketing preference
             });
           } else if (!existingUser.googleId) {
             // If user exists but doesn't have googleId, update it
