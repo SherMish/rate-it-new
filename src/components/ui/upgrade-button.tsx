@@ -4,10 +4,19 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Sparkles } from "lucide-react";
+import { trackEvent, AnalyticsEvents } from "@/lib/analytics";
 
 export function UpgradeButton() {
+  const handleClick = () => {
+    trackEvent(AnalyticsEvents.BUSINESS_DASHBOARD_UPGRADE_CLICKED, {
+      source: "dashboard",
+      button_location: "upgrade_button",
+      page: window.location.pathname
+    });
+  };
+
   return (
-    <Link href="/business/pricing">
+    <Link href="/business/pricing" onClick={handleClick}>
       <motion.div
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}

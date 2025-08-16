@@ -46,6 +46,7 @@ import { OnboardingGuide } from "@/app/components/OnboardingGuide";
 import { DashboardHelpDialog } from "@/components/business/dashboard/DashboardHelpDialog";
 import { QRCodeGeneratorCard } from "@/components/business/dashboard/QRCodeGeneratorCard";
 import { ReviewInvitationCard } from "@/components/business/dashboard/ReviewInvitationCard";
+import { trackEvent, AnalyticsEvents } from "@/lib/analytics";
 
 type Feature = {
   id: string;
@@ -117,6 +118,19 @@ export default function DashboardPage() {
   const [totalClicks, setTotalClicks] = useState(0);
   const [isImprovementDialogOpen, setIsImprovementDialogOpen] = useState(false);
 
+  // Track dashboard view when component mounts
+  useEffect(() => {
+    if (website && user) {
+      trackEvent(AnalyticsEvents.BUSINESS_DASHBOARD_VIEWED, {
+        website_id: website._id,
+        website_name: website.name,
+        user_role: user.role,
+        review_count: website.reviewCount || 0,
+        average_rating: website.averageRating || 0
+      });
+    }
+  }, [website, user]);
+
   useEffect(() => {
     const fetchReviews = async () => {
       try {
@@ -149,6 +163,11 @@ export default function DashboardPage() {
 
   // Handle dialog close
   const handleDialogClose = () => {
+    trackEvent(AnalyticsEvents.BUSINESS_DASHBOARD_FIRST_TIME_DIALOG_CLOSED, {
+      website_id: website?._id,
+      user_email: user?.email
+    });
+    
     setShowFirstTimeDialog(false);
     // Remove the firstTime parameter from the URL without refreshing the page
     const url = new URL(window.location.href);
@@ -200,6 +219,13 @@ export default function DashboardPage() {
               href={`/tool/${website?.url}`}
               target="_blank"
               className="text-primary hover:underline flex items-center gap-2"
+              onClick={() => {
+                trackEvent(AnalyticsEvents.BUSINESS_DASHBOARD_PUBLIC_PAGE_CLICKED, {
+                  website_id: website?._id,
+                  website_url: website?.url,
+                  website_name: website?.name
+                });
+              }}
             >
               <span>צפייה בדף הציבורי</span>
             </Link>
@@ -368,6 +394,12 @@ export default function DashboardPage() {
               <Link
                 href="/business/dashboard/reviews"
                 className="text-sm text-primary hover:underline"
+                onClick={() => {
+                  trackEvent(AnalyticsEvents.BUSINESS_DASHBOARD_ALL_REVIEWS_CLICKED, {
+                    website_id: website?._id,
+                    review_count: reviews.length
+                  });
+                }}
               >
                 צפייה בכולן
               </Link>
@@ -386,6 +418,10 @@ export default function DashboardPage() {
                     variant="outline"
                     size="sm"
                     onClick={() => {
+                      trackEvent(AnalyticsEvents.BUSINESS_DASHBOARD_REVIEW_COLLECTION_SCROLLED, {
+                        website_id: website?._id,
+                        trigger: "no_reviews_cta"
+                      });
                       document
                         .getElementById("review-collection-tools")
                         ?.scrollIntoView({

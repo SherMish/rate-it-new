@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { toast } from "@/components/ui/use-toast";
+import { trackEvent, AnalyticsEvents } from "@/lib/analytics";
 
 interface ReviewInvitationCardProps {
   websiteUrl: string;
@@ -90,6 +91,15 @@ ${reviewUrl}
       });
       return;
     }
+
+    // Track review invitation sent
+    trackEvent(AnalyticsEvents.BUSINESS_DASHBOARD_REVIEW_INVITE_SENT, {
+      method: "whatsapp",
+      website_url: websiteUrl,
+      business_name: businessName,
+      phone_number: formatIsraeliPhone(phoneNumber),
+      has_custom_message: customMessage.trim().length > 0
+    });
 
     const formattedPhone = formatIsraeliPhone(phoneNumber);
     const message = generateWhatsAppMessage();

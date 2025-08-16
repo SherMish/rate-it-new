@@ -12,6 +12,7 @@ import {
   Info,
 } from "lucide-react";
 import Link from "next/link";
+import { trackEvent, AnalyticsEvents } from "@/lib/analytics";
 
 interface CopyLinksCardProps {
   websiteUrl?: string;
@@ -32,6 +33,13 @@ export function CopyLinksCard({ websiteUrl, className }: CopyLinksCardProps) {
 
   const handleCopy = async (textToCopy: string, linkType: string) => {
     if (!textToCopy) return;
+
+    // Track link copy event
+    trackEvent(AnalyticsEvents.BUSINESS_DASHBOARD_LINK_COPIED, {
+      link_type: linkType,
+      website_url: websiteUrl,
+      copied_url: textToCopy
+    });
 
     try {
       console.log("Attempting to copy:", textToCopy);

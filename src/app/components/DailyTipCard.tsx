@@ -6,6 +6,7 @@ import { Lightbulb } from "lucide-react";
 import * as Icons from "lucide-react";
 import { useSpring, animated } from "@react-spring/web";
 import tipsData from "@/lib/data/daily-tips.json";
+import { trackEvent, AnalyticsEvents } from "@/lib/analytics";
 
 export function DailyTipCard() {
   const [tip, setTip] = useState<{
@@ -31,6 +32,15 @@ export function DailyTipCard() {
       tipsData.tips.find((t) => t.id === tipIndex) || tipsData.tips[0];
 
     setTip(todaysTip);
+
+    // Track daily tip viewed
+    if (todaysTip) {
+      trackEvent(AnalyticsEvents.BUSINESS_DASHBOARD_DAILY_TIP_VIEWED, {
+        tip_id: todaysTip.id,
+        tip_title: todaysTip.title,
+        day_of_month: currentDay
+      });
+    }
   }, []);
 
   if (!tip) return null;

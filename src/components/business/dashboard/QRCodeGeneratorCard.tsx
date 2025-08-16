@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { QrCode, Copy, Check, Download } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
+import { trackEvent, AnalyticsEvents } from "@/lib/analytics";
 
 interface QRCodeGeneratorCardProps {
   websiteUrl: string;
@@ -101,6 +102,13 @@ export function QRCodeGeneratorCard({
   }, [reviewUrl]);
 
   const handleCopyImage = async () => {
+    // Track QR code copy event
+    trackEvent(AnalyticsEvents.BUSINESS_DASHBOARD_QR_CODE_GENERATED, {
+      action: "copy",
+      website_url: websiteUrl,
+      review_url: reviewUrl
+    });
+
     if (!qrWithLogo) {
       // Fallback: copy URL to clipboard
       await navigator.clipboard.writeText(reviewUrl);
@@ -137,6 +145,13 @@ export function QRCodeGeneratorCard({
   };
 
   const handleDownload = () => {
+    // Track QR code download event
+    trackEvent(AnalyticsEvents.BUSINESS_DASHBOARD_QR_CODE_GENERATED, {
+      action: "download",
+      website_url: websiteUrl,
+      review_url: reviewUrl
+    });
+
     if (!qrWithLogo) {
       toast({
         title: "שגיאה בהורדה",

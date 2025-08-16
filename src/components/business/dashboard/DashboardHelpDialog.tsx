@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { HelpCircle, MessageCircle, Mail, Crown } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { isPlus, PricingModel } from "@/lib/types/website";
+import { trackEvent, AnalyticsEvents } from "@/lib/analytics";
 
 interface DashboardHelpDialogProps {
   website?: {
@@ -22,6 +23,16 @@ interface DashboardHelpDialogProps {
 
 export function DashboardHelpDialog({ website }: DashboardHelpDialogProps) {
   const [open, setOpen] = useState(false);
+
+  const handleOpen = (isOpen: boolean) => {
+    setOpen(isOpen);
+    if (isOpen) {
+      trackEvent(AnalyticsEvents.BUSINESS_DASHBOARD_HELP_OPENED, {
+        user_plan: isPlusUser ? "plus" : "free",
+        website_pricing_model: website?.pricingModel
+      });
+    }
+  };
 
   const isPlusUser =
     website?.pricingModel &&
@@ -78,7 +89,7 @@ export function DashboardHelpDialog({ website }: DashboardHelpDialogProps) {
         }
       `}</style>
 
-      <Dialog open={open} onOpenChange={setOpen}>
+      <Dialog open={open} onOpenChange={handleOpen}>
         <DialogTrigger asChild>
           <div className="fixed bottom-6 left-6 z-50">
             {/* Pulse ring effect - slower animation */}

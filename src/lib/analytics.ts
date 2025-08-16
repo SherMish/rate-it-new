@@ -176,4 +176,16 @@ export const AnalyticsEvents = {
   BUSINESS_PRICING_BASIC_SELECTED: "business_pricing_basic_selected",
   BUSINESS_PRICING_PRO_SELECTED: "business_pricing_pro_selected",
   BUSINESS_REGISTRATION_COMPLETED: "business_registration_completed",
+  // Business Dashboard Events
+  BUSINESS_DASHBOARD_VIEWED: "business_dashboard_viewed",
+  BUSINESS_DASHBOARD_PUBLIC_PAGE_CLICKED: "business_dashboard_public_page_clicked",
+  BUSINESS_DASHBOARD_REVIEW_COLLECTION_SCROLLED: "business_dashboard_review_collection_scrolled",
+  BUSINESS_DASHBOARD_ALL_REVIEWS_CLICKED: "business_dashboard_all_reviews_clicked",
+  BUSINESS_DASHBOARD_UPGRADE_CLICKED: "business_dashboard_upgrade_clicked",
+  BUSINESS_DASHBOARD_QR_CODE_GENERATED: "business_dashboard_qr_code_generated",
+  BUSINESS_DASHBOARD_LINK_COPIED: "business_dashboard_link_copied",
+  BUSINESS_DASHBOARD_REVIEW_INVITE_SENT: "business_dashboard_review_invite_sent",
+  BUSINESS_DASHBOARD_FIRST_TIME_DIALOG_CLOSED: "business_dashboard_first_time_dialog_closed",
+  BUSINESS_DASHBOARD_HELP_OPENED: "business_dashboard_help_opened",
+  BUSINESS_DASHBOARD_DAILY_TIP_VIEWED: "business_dashboard_daily_tip_viewed",
 } as const;
