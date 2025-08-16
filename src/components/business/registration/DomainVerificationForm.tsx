@@ -7,6 +7,7 @@ import { Card } from "@/components/ui/card";
 import { Mail, AlertCircle, CheckCircle, ArrowLeft } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useRouter } from "next/navigation";
+import { trackEvent, AnalyticsEvents } from "@/lib/analytics";
 
 interface DomainVerificationFormProps {
   websiteUrl: string;
@@ -62,6 +63,15 @@ export function DomainVerificationForm({
     }
 
     setLoading(true);
+    
+    // Track email verification attempt
+    trackEvent(AnalyticsEvents.BUSINESS_VERIFICATION_EMAIL_SENT, {
+      step: "domain_verification",
+      domain: domain,
+      email: email,
+      attempt_number: attempts + 1
+    });
+    
     try {
       // Save the work email to localStorage by updating the existing data
       const savedData = JSON.parse(
@@ -120,6 +130,15 @@ export function DomainVerificationForm({
     if (code.length !== 6) return;
 
     setVerifyingCode(true);
+    
+    // Track code verification attempt
+    trackEvent(AnalyticsEvents.BUSINESS_VERIFICATION_CODE_VERIFIED, {
+      step: "domain_verification",
+      domain: domain,
+      email: email,
+      code_attempt: codeAttempts + 1
+    });
+    
     try {
       const response = await fetch("/api/business/verify-code", {
         method: "POST",
@@ -158,14 +177,17 @@ export function DomainVerificationForm({
   };
 
   const handleResendCode = () => {
+    trackEvent(AnalyticsEvents.BUSINESS_VERIFICATION_RESEND_CLICKED, {
+      step: "domain_verification",
+      domain: domain,
+      email: email
+    });
+    
+    setShowCodeInput(false);
+    setEmailSent(false);
     setVerificationCode(["", "", "", "", "", ""]);
     setCodeAttempts(0);
-    setEmailSent(false);
-    setShowCodeInput(false);
-    inputRefs.current[0]?.focus();
-  };
-
-  return (
+  };  return (
     <div className="space-y-6" dir="rtl">
       <div className="text-center space-y-2">
         <h2 className="text-2xl font-semibold">אימות בעלות על הדומיין</h2>
@@ -302,7 +324,13 @@ export function DomainVerificationForm({
         <div className="text-center">
           <Button
             variant="link"
-            onClick={onBack}
+            onClick={() => {
+              trackEvent(AnalyticsEvents.BUSINESS_VERIFICATION_BACK_CLICKED, {
+                step: "domain_verification",
+                domain: domain
+              });
+              onBack();
+            }}
             className="text-sm"
             disabled={loading}
           >

@@ -7,6 +7,7 @@ import { LoadingModal } from "@/components/ui/loading-modal";
 import { toast } from "@/components/ui/use-toast";
 import { useSession } from "next-auth/react";
 import { CheckCircle2 } from "lucide-react";
+import { trackEvent, AnalyticsEvents } from "@/lib/analytics";
 
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -31,10 +32,25 @@ export function PricingSection({
   // ───────────────────────────────────────────────────────────────────────────
   const handleFreePlanRegistration = async () => {
     setLoading(true);
+    
+    // Track free plan selection
+    trackEvent(AnalyticsEvents.BUSINESS_PRICING_FREE_SELECTED, {
+      step: "pricing_selection",
+      website_url: websiteUrl,
+      plan_type: "free"
+    });
+    
     try {
       // Since verification already completed business registration,
       // we just need to refresh session and redirect to dashboard
       await updateSession();
+
+      // Track completed registration
+      trackEvent(AnalyticsEvents.BUSINESS_REGISTRATION_COMPLETED, {
+        website_url: websiteUrl,
+        plan_selected: "free",
+        final_step: "pricing"
+      });
 
       console.log("Redirecting to dashboard...");
       window.location.href = "/business/dashboard?firstTime=true";
@@ -54,6 +70,13 @@ export function PricingSection({
   // BASIC/PRO PLAN HANDLERS (COMING SOON)
   // ───────────────────────────────────────────────────────────────────────────
   const handleBasicSubscription = async () => {
+    // Track basic plan selection attempt
+    trackEvent(AnalyticsEvents.BUSINESS_PRICING_BASIC_SELECTED, {
+      step: "pricing_selection",
+      website_url: websiteUrl,
+      plan_type: "basic"
+    });
+    
     toast({
       title: "מסלול Basic",
       description: "המסלול Basic יהיה זמין בקרוב. נרשמת למסלול החינמי.",
@@ -62,6 +85,13 @@ export function PricingSection({
   };
 
   const handleProSubscription = () => {
+    // Track pro plan selection attempt
+    trackEvent(AnalyticsEvents.BUSINESS_PRICING_PRO_SELECTED, {
+      step: "pricing_selection",
+      website_url: websiteUrl,
+      plan_type: "pro"
+    });
+    
     toast({
       title: "מסלול Pro",
       description: "המסלול Pro יהיה זמין בקרוב!",

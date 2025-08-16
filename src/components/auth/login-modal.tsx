@@ -29,6 +29,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Checkbox } from "@/components/ui/checkbox";
+import { trackEvent, AnalyticsEvents } from "@/lib/analytics";
 
 const loginSchema = z.object({
   email: z.string().min(1, "אימייל נדרש").email("כתובת אימייל לא תקינה"),
@@ -82,12 +83,28 @@ export function LoginModal() {
 
   /* ---------- helpers ---------- */
 
-  const handleGoogleLogin = () =>
+  const handleGoogleLogin = () => {
+    // Track Google login attempt
+    trackEvent(AnalyticsEvents.SIGN_IN, {
+      method: "google",
+      context: "modal",
+      page: window.location.pathname
+    });
+    
     signIn("google", { callbackUrl: window.location.href, redirect: true });
+  };
 
   const onLoginSubmit = async (data: LoginFormValues) => {
     setIsLoading(true);
     setAuthError(null);
+    
+    // Track login attempt
+    trackEvent(AnalyticsEvents.SIGN_IN, {
+      method: "credentials",
+      context: "modal",
+      page: window.location.pathname
+    });
+    
     try {
       const res = await signIn("credentials", {
         ...data,
@@ -112,6 +129,14 @@ export function LoginModal() {
   const onRegisterSubmit = async (data: RegisterFormValues) => {
     try {
       setIsLoading(true);
+      
+      // Track registration attempt
+      trackEvent(AnalyticsEvents.SIGN_IN, {
+        method: "register",
+        context: "modal",
+        page: window.location.pathname,
+        marketing_consent: data.agreeToMarketing
+      });
 
       const exists = await fetch(
         `/api/auth/check-email?email=${encodeURIComponent(data.email)}`

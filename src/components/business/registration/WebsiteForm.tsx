@@ -26,6 +26,7 @@ import {
   isValidUrl,
   getUrlErrorMessage,
 } from "@/lib/utils/url-validation";
+import { trackEvent, AnalyticsEvents } from "@/lib/analytics";
 
 const formSchema = z.object({
   websiteUrl: z
@@ -137,6 +138,15 @@ export function WebsiteRegistrationForm({
 
   const onSubmit = async (data: FormData) => {
     setLoading(true);
+    
+    // Track form submission
+    trackEvent(AnalyticsEvents.BUSINESS_REGISTRATION_FORM_SUBMITTED, {
+      step: "website_form",
+      website_url: data.websiteUrl,
+      business_name: data.businessName,
+      user_role: data.role
+    });
+    
     try {
       // The websiteUrl should already be sanitized by the schema transform
       const sanitizedUrl = data.websiteUrl;

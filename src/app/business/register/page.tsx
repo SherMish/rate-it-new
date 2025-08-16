@@ -17,6 +17,7 @@ import { CheckCircle2 } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
 // verifyDomain import removed since token verification is deprecated
 import { HelpDialog } from "@/components/business/registration/HelpDialog";
+import { trackEvent, AnalyticsEvents } from "@/lib/analytics";
 
 export default function BusinessRegistration() {
   const router = useRouter();
@@ -40,6 +41,14 @@ export default function BusinessRegistration() {
   );
 
   const [isLoading, setLoading] = useState(false);
+
+  // Track business registration started when page loads
+  useEffect(() => {
+    trackEvent(AnalyticsEvents.BUSINESS_REGISTRATION_STARTED, {
+      source: "registration_page",
+      step: "landing"
+    });
+  }, []);
 
   // Remove automatic redirect - now handled in step 1 UI
   // Users with verified businesses will see dashboard button in step 1 instead of automatic redirect
@@ -137,7 +146,13 @@ export default function BusinessRegistration() {
                     </h2>
                     <Button
                       size="lg"
-                      onClick={() => loginModal.onOpen()}
+                      onClick={() => {
+                        trackEvent(AnalyticsEvents.BUSINESS_REGISTRATION_LOGIN_CLICKED, {
+                          step: "authentication",
+                          user_type: "new_user"
+                        });
+                        loginModal.onOpen();
+                      }}
                       className="w-full max-w-sm"
                     >
                       התחברות / הרשמה
@@ -182,7 +197,18 @@ export default function BusinessRegistration() {
                         <CheckCircle2 className="w-5 h-5" />
                         <span>מחובר/ת בתור {session.user.email}</span>
                       </div>
-                      <Button onClick={() => setStep(2)}>להמשך ההרשמה</Button>
+                    <Button
+                      onClick={() => {
+                        trackEvent(AnalyticsEvents.BUSINESS_REGISTRATION_CONTINUE_CLICKED, {
+                          step: "authentication_complete",
+                          user_email: session.user.email,
+                          user_type: "existing_user"
+                        });
+                        setStep(2);
+                      }}
+                    >
+                      להמשך ההרשמה
+                    </Button>
                     </div>
                   </>
                 )}

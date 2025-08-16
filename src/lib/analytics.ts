@@ -163,4 +163,17 @@ export const AnalyticsEvents = {
   SEARCH_PERFORMED: "search_performed",
   FILTER_APPLIED: "filter_applied",
   EXTERNAL_LINK_CLICKED: "external_link_clicked",
+  // Business Registration Events
+  BUSINESS_REGISTRATION_STARTED: "business_registration_started",
+  BUSINESS_REGISTRATION_LOGIN_CLICKED: "business_registration_login_clicked",
+  BUSINESS_REGISTRATION_FORM_SUBMITTED: "business_registration_form_submitted",
+  BUSINESS_REGISTRATION_CONTINUE_CLICKED: "business_registration_continue_clicked",
+  BUSINESS_VERIFICATION_EMAIL_SENT: "business_verification_email_sent",
+  BUSINESS_VERIFICATION_CODE_VERIFIED: "business_verification_code_verified",
+  BUSINESS_VERIFICATION_RESEND_CLICKED: "business_verification_resend_clicked",
+  BUSINESS_VERIFICATION_BACK_CLICKED: "business_verification_back_clicked",
+  BUSINESS_PRICING_FREE_SELECTED: "business_pricing_free_selected",
+  BUSINESS_PRICING_BASIC_SELECTED: "business_pricing_basic_selected",
+  BUSINESS_PRICING_PRO_SELECTED: "business_pricing_pro_selected",
+  BUSINESS_REGISTRATION_COMPLETED: "business_registration_completed",
 } as const;
