@@ -38,22 +38,19 @@ const steps = [
     description:
       "אמתו את הבעלות על האתר שלכם והתחילו לבנות נוכחות אמינה מול לקוחות.",
   },
-  {
-    title: "שפרו את הפרופיל העסקי שלכם",
-    description:
-      " הוסיפו תיאור, שירותים, שעות פעילות ומחירים – כדי להפוך מבקרים ללקוחות.",
-  },
+{
+  title: "הוסיפו מידע בסיסי על העסק",
+  description: "כמה פרטים פשוטים יעזרו ללקוחות להכיר אתכם ולהבין איך אתם יכולים לעזור להם."
+},
   {
     title: " קבלו חוות דעת אמיתיות מלקוחות אמיתיים",
     description:
       "עודדו לקוחות מרוצים להשאיר ביקורות – זה מחזק אמון ומניע לפעולה.",
   },
-  {
-    title: "הפיקו יותר מהביקורות שלכם",
-    description:
-      "גשו לנתונים, נתחו תובנות ושפרו את הביצועים דרך לוח הבקרה שלנו.",
-  },
-];
+ {
+  title: "צמחו מהר יותר עם ביקורות חיוביות",
+  description: "השתמשו בביקורות לשיווק, שפרו את השירות על בסיס פידבק ומשכו לקוחות חדשים."
+},];
 
 interface Tool {
   _id: string;
@@ -319,7 +316,7 @@ export default function BusinessPage() {
                   שדרגו את <span className="bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent"><AnimatedWord /></span> <br /> של העסק שלכם בעזרת רייט-איט
                 </h1>
                 <p className="text-xl md:text-2xl text-gray-700 font-medium mb-8">
-                  פלטפורמת הביקורות שמגדילה אמון ורווחים לעסקים ישראליים
+                  מערכת הביקורות שמגדילה אמון ורווחים לעסקים ישראליים
                 </p>
                 
                 {/* Trust Indicators - Centered */}
@@ -491,86 +488,64 @@ export default function BusinessPage() {
         </div>
       </section>
 
-      {/* Control Section - Enhanced with pricing page styling */}
-      <section
-        ref={controlSectionRef}
-        className="relative py-24 bg-white"
-      >
+      {/* How it Works Section - Enhanced with pricing page styling */}
+      <section ref={howItWorksRef} className="relative py-20 bg-white">
         <div className="container mx-auto px-4">
+          <motion.h2
+            className="text-3xl font-bold text-center mb-12"
+            variants={fadeInUpVariants}
+            initial="hidden"
+            animate={howItWorksInView ? "visible" : "hidden"}
+          >
+            איך זה עובד
+          </motion.h2>
+
           <motion.div
-            className="max-w-4xl mx-auto text-center space-y-4"
+            className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto"
             variants={containerVariants}
             initial="hidden"
-            animate={controlSectionInView ? "visible" : "hidden"}
+            animate={howItWorksInView ? "visible" : "hidden"}
           >
-            <motion.h2
-              className="text-4xl md:text-5xl font-bold"
-              variants={itemVariants}
-            >
-              <span className="text-gray-900">
-                קחו שליטה על המוניטין שלכם.
-              </span>{" "}
-              <span className="inline-block px-2 py-1 bg-primary text-white rounded-md transform shadow-md font-extrabold mt-2">
-                צמחו מהר יותר
-              </span>
-            </motion.h2>
-            <motion.p
-              className="text-xl text-gray-700 leading-relaxed"
-              variants={itemVariants}
-            >
-              הלקוחות הישראלים הם לא פרייארים – הם בודקים, משווים ורוצים לראות
-              ביקורות חיוביות מאנשים אמיתיים.
-              <br />
-              תנו להם לראות את מה שעושה אתכם טובים – ותזכו באמון שמוביל לפעולה{" "}
-            </motion.p>
+            {steps.map((step, index) => (
+              <motion.div
+                key={index}
+                className={`p-6 rounded-xl bg-white shadow-lg border-l-4 ${
+                  index === 0 ? 'border-l-green-500' :
+                  index === 1 ? 'border-l-blue-500' :
+                  index === 2 ? 'border-l-purple-500' :
+                  'border-l-orange-500'
+                }`}
+                variants={cardVariants}
+                custom={index}
+              >
+                <div className={`text-4xl font-bold mb-4 ${
+                  index === 0 ? 'text-green-600' :
+                  index === 1 ? 'text-blue-600' :
+                  index === 2 ? 'text-purple-600' :
+                  'text-orange-600'
+                }`}>
+                  {(index + 1).toString().padStart(2, "0")}
+                </div>
+                <h3 className="text-xl font-semibold mb-2">{step.title}</h3>
+                <p className="text-muted-foreground">{step.description}</p>
+              </motion.div>
+            ))}
           </motion.div>
 
           <motion.div
-            className="mt-16 grid md:grid-cols-3 gap-8 max-w-6xl mx-auto"
-            variants={containerVariants}
+            className="mt-16 text-center"
+            variants={fadeInUpVariants}
             initial="hidden"
-            animate={controlSectionInView ? "visible" : "hidden"}
+            animate={howItWorksInView ? "visible" : "hidden"}
           >
-            <motion.div
-              className="p-6 rounded-xl border-l-4 border-l-green-500 bg-white shadow-lg"
-              variants={cardVariants}
+            <Button
+              size="lg"
+              className="text-lg px-8 py-4 bg-gradient-to-r from-primary to-blue-600 hover:from-primary-600 hover:to-blue-700 shadow-lg hover:shadow-xl transition-all"
+              onClick={() => router.push("/business/register")}
             >
-              <div className="w-12 h-12 rounded-xl bg-green-100 flex items-center justify-center mb-6">
-                <CheckCircle2 className="w-6 h-6 text-green-600" />
-              </div>
-              <h3 className="text-xl font-semibold mb-3 text-gray-900">פרופיל מאומת</h3>
-              <p className="text-gray-700 leading-relaxed">
-                קבלו תג מאומת, צרו נוכחות מקצועית, שדרו אמינות, והראו ללקוחות
-                שאתם עסק איכותי.
-              </p>
-            </motion.div>
-
-            <motion.div
-              className="p-6 rounded-xl border-l-4 border-l-blue-500 bg-white shadow-lg"
-              variants={cardVariants}
-            >
-              <div className="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center mb-6">
-                <RadarIcon className="w-6 h-6 text-blue-600" />
-              </div>
-              <h3 className="text-xl font-semibold mb-3 text-gray-900">ניהול ביקורות</h3>
-              <p className="text-gray-700 leading-relaxed">
-                הגיבו לביקורות, אספו פידבק אמיתי וצרו קשר מתמשך עם הקהל שלכם.{" "}
-              </p>
-            </motion.div>
-
-            <motion.div
-              className="p-6 rounded-xl border-l-4 border-l-purple-500 bg-white shadow-lg"
-              variants={cardVariants}
-            >
-              <div className="w-12 h-12 rounded-xl bg-purple-100 flex items-center justify-center mb-6">
-                <ArrowUp className="w-6 h-6 text-purple-600" />
-              </div>
-              <h3 className="text-xl font-semibold mb-3 text-gray-900">דאשבורד ביצועים</h3>
-              <p className="text-gray-700 leading-relaxed">
-                קבלו גישה לתובנות מפורטות על הביצועים שלכם, מעורבות משתמשים,
-                ומיקום בשוק.
-              </p>
-            </motion.div>
+              רשמו את העסק שלכם
+              <ArrowRight className="mr-2 h-5 w-5" />
+            </Button>
           </motion.div>
         </div>
       </section>
@@ -697,72 +672,100 @@ export default function BusinessPage() {
         </div>
       </section>
 
-      {/* How it Works Section - Enhanced with pricing page styling */}
-      <section ref={howItWorksRef} className="relative py-20 bg-white">
+      {/* Control Section - Enhanced with pricing page styling */}
+      <section
+        ref={controlSectionRef}
+        className="relative py-24 bg-white"
+      >
         <div className="container mx-auto px-4">
-          <motion.h2
-            className="text-3xl font-bold text-center mb-12"
-            variants={fadeInUpVariants}
-            initial="hidden"
-            animate={howItWorksInView ? "visible" : "hidden"}
-          >
-            איך זה עובד
-          </motion.h2>
-
           <motion.div
-            className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto"
+            className="max-w-4xl mx-auto text-center space-y-4"
             variants={containerVariants}
             initial="hidden"
-            animate={howItWorksInView ? "visible" : "hidden"}
+            animate={controlSectionInView ? "visible" : "hidden"}
           >
-            {steps.map((step, index) => (
-              <motion.div
-                key={index}
-                className={`p-6 rounded-xl bg-white shadow-lg border-l-4 ${
-                  index === 0 ? 'border-l-green-500' :
-                  index === 1 ? 'border-l-blue-500' :
-                  index === 2 ? 'border-l-purple-500' :
-                  'border-l-orange-500'
-                }`}
-                variants={cardVariants}
-                custom={index}
-              >
-                <div className={`text-4xl font-bold mb-4 ${
-                  index === 0 ? 'text-green-600' :
-                  index === 1 ? 'text-blue-600' :
-                  index === 2 ? 'text-purple-600' :
-                  'text-orange-600'
-                }`}>
-                  {(index + 1).toString().padStart(2, "0")}
-                </div>
-                <h3 className="text-xl font-semibold mb-2">{step.title}</h3>
-                <p className="text-muted-foreground">{step.description}</p>
-              </motion.div>
-            ))}
+            <motion.h2
+              className="text-4xl md:text-5xl font-bold"
+              variants={itemVariants}
+            >
+              <span className="text-gray-900">
+                קחו שליטה על המוניטין שלכם.
+              </span>{" "}
+              <span className="inline-block px-2 py-1 bg-primary text-white rounded-md transform shadow-md font-extrabold mt-2">
+                צמחו מהר יותר
+              </span>
+            </motion.h2>
+            <motion.p
+              className="text-xl text-gray-700 leading-relaxed"
+              variants={itemVariants}
+            >
+              הלקוחות הישראלים הם לא פרייארים – הם בודקים, משווים ורוצים לראות
+              ביקורות חיוביות מאנשים אמיתיים.
+              <br />
+              תנו להם לראות את מה שעושה אתכם טובים – ותזכו באמון שמוביל לפעולה{" "}
+            </motion.p>
           </motion.div>
 
           <motion.div
-            className="mt-16 text-center"
-            variants={fadeInUpVariants}
+            className="mt-16 grid md:grid-cols-3 gap-8 max-w-6xl mx-auto"
+            variants={containerVariants}
             initial="hidden"
-            animate={howItWorksInView ? "visible" : "hidden"}
+            animate={controlSectionInView ? "visible" : "hidden"}
           >
-            <Button
-              size="lg"
-              className="text-lg px-8 py-4 bg-gradient-to-r from-primary to-blue-600 hover:from-primary-600 hover:to-blue-700 shadow-lg hover:shadow-xl transition-all"
-              onClick={() => router.push("/business/register")}
+            <motion.div
+              className="p-6 rounded-xl border-l-4 border-l-green-500 bg-white shadow-lg"
+              variants={cardVariants}
             >
-              רשמו את העסק שלכם
-              <ArrowRight className="mr-2 h-5 w-5" />
-            </Button>
+              <div className="w-12 h-12 rounded-xl bg-green-100 flex items-center justify-center mb-6">
+                <CheckCircle2 className="w-6 h-6 text-green-600" />
+              </div>
+              <h3 className="text-xl font-semibold mb-3 text-gray-900">פרופיל מאומת</h3>
+              <p className="text-gray-700 leading-relaxed">
+                קבלו תג מאומת, צרו נוכחות מקצועית, שדרו אמינות, והראו ללקוחות
+                שאתם עסק איכותי.
+              </p>
+            </motion.div>
+
+            <motion.div
+              className="p-6 rounded-xl border-l-4 border-l-blue-500 bg-white shadow-lg"
+              variants={cardVariants}
+            >
+              <div className="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center mb-6">
+                <RadarIcon className="w-6 h-6 text-blue-600" />
+              </div>
+              <h3 className="text-xl font-semibold mb-3 text-gray-900">ניהול ביקורות</h3>
+              <p className="text-gray-700 leading-relaxed">
+                הגיבו לביקורות, אספו פידבק אמיתי וצרו קשר מתמשך עם הקהל שלכם.{" "}
+              </p>
+            </motion.div>
+
+            <motion.div
+              className="p-6 rounded-xl border-l-4 border-l-purple-500 bg-white shadow-lg"
+              variants={cardVariants}
+            >
+              <div className="w-12 h-12 rounded-xl bg-purple-100 flex items-center justify-center mb-6">
+                <ArrowUp className="w-6 h-6 text-purple-600" />
+              </div>
+              <h3 className="text-xl font-semibold mb-3 text-gray-900">דאשבורד ביצועים</h3>
+              <p className="text-gray-700 leading-relaxed">
+                קבלו גישה לתובנות מפורטות על הביצועים שלכם, מעורבות משתמשים,
+                ומיקום בשוק.
+              </p>
+            </motion.div>
           </motion.div>
         </div>
       </section>
 
       
       {/* Testimonials Section */}
-      <section className="relative py-20 bg-gradient-to-br from-white to-slate-50/70 border-y border-border/40">
-        <div className="container mx-auto px-4">
+      <section className="relative py-20 bg-gradient-to-br from-blue-50/80 via-indigo-50/60 to-purple-50/80 border-y border-indigo-200/40 overflow-hidden">
+        {/* Background decorative elements */}
+        <div className="absolute inset-0 opacity-30">
+          <div className="absolute top-10 left-10 w-32 h-32 bg-blue-200/40 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-10 right-10 w-40 h-40 bg-purple-200/40 rounded-full blur-3xl"></div>
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-60 h-60 bg-indigo-200/30 rounded-full blur-3xl"></div>
+        </div>
+        <div className="container mx-auto px-4 relative z-10">
           <motion.div
             className="max-w-3xl mx-auto text-center"
             variants={fadeInUpVariants}
@@ -802,7 +805,7 @@ export default function BusinessPage() {
               ].map((t, idx) => (
                 <motion.div
                   key={idx}
-                  className="bg-white/90 backdrop-blur rounded-2xl border border-border/60 shadow-lg p-6 md:p-7 mx-auto"
+                  className="bg-white/95 backdrop-blur-sm rounded-2xl border border-white/60 shadow-xl hover:shadow-2xl transition-all duration-300 p-6 md:p-7 mx-auto hover:scale-[1.02] hover:bg-white"
                   variants={cardVariants}
                   initial="hidden"
                   animate="visible"
