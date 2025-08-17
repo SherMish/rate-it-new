@@ -607,6 +607,7 @@ export default async function ToolPage({ params }: PageProps) {
                         websiteId={website._id.toString()}
                         url={website.url}
                         buttonText="בקר באתר"
+                        className="w-full"
                       />
                     </div>
                   </div>
