@@ -240,7 +240,12 @@ export function ReviewsCarousel() {
                   {currentReview.title}
                 </h3>
                 <p className="text-gray-700 leading-relaxed flex-1 overflow-hidden">
-                  {truncateText(currentReview.body, 200)}
+                  <span className="md:hidden">
+                    {truncateText(currentReview.body, 160)}
+                  </span>
+                  <span className="hidden md:block">
+                    {currentReview.body}
+                  </span>
                 </p>
               </div>
             </Link>
