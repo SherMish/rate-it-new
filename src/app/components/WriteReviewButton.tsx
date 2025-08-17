@@ -7,11 +7,13 @@ import { useLoading } from "@/contexts/loading-context";
 interface WriteReviewButtonProps {
   url: string;
   buttonText?: string;
+  className?: string;
 }
 
 export default function WriteReviewButton({
   url,
   buttonText = "כתוב ביקורת",
+  className = "",
 }: WriteReviewButtonProps) {
   const router = useRouter();
   const { startLoading, stopLoading, isLoading } = useLoading();
@@ -33,7 +35,7 @@ export default function WriteReviewButton({
 
   return (
     <Button
-      className="gradient-button px-4 h-[40px]"
+      className={`gradient-button px-4 h-[40px] ${className}`}
       disabled={isLoading}
       onClick={handleClick}
     >

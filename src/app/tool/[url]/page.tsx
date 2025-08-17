@@ -479,7 +479,7 @@ export default async function ToolPage({ params }: PageProps) {
             <div className="p-6 space-y-6">
               {/* Logo and Basic Info */}
               <div>
-                <div className="flex flex-col gap-6 lg:gap-0">
+                <div className="flex flex-col gap-3 lg:gap-0">
                   {/* Mobile Layout */}
                   <div className="lg:hidden">
                     <div className="flex items-start gap-4 mb-3" style={{ height: "75px" }}>
@@ -595,16 +595,20 @@ export default async function ToolPage({ params }: PageProps) {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-3 lg:hidden">
-                    <VisitToolButtonDesktop
-                      websiteId={website._id.toString()}
-                      url={website.url}
-                      buttonText="בקר באתר"
-                    />
+                  {/* Mobile buttons - Write Review as full width CTA */}
+                  <div className="lg:hidden space-y-3">
                     <WriteReviewButton
                       url={params.url}
                       buttonText="כתוב ביקורת"
+                      className="w-full"
                     />
+                    <div className="flex justify-center">
+                      <VisitToolButtonDesktop
+                        websiteId={website._id.toString()}
+                        url={website.url}
+                        buttonText="בקר באתר"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
