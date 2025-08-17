@@ -40,12 +40,13 @@ export function VerifiedBadge({
           ) : (
             showUnverified &&
             !isVerified && (
-              <span
-                className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-gray-50 border border-gray-200 text-gray-600 text-xs font-medium cursor-default ${className}`}
-              >
-                <AlertCircle className="w-3.5 h-3.5" />
-                <span>לא מאומת</span>
-              </span>
+              <></>
+              // <span
+              //   className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-gray-50 border border-gray-200 text-gray-600 text-xs font-medium cursor-default ${className}`}
+              // >
+              //   <AlertCircle className="w-3.5 h-3.5" />
+              //   <span>לא מאומת</span>
+              // </span>
             )
           )}
         </TooltipTrigger>
