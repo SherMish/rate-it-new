@@ -473,7 +473,7 @@ export default async function ToolPage({ params }: PageProps) {
       <div className="min-h-screen bg-background relative" dir="rtl">
         <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,#3b82f615,transparent_70%),radial-gradient(ellipse_at_bottom,#6366f115,transparent_70%)] pointer-events-none" />
 
-        <div className="relative container max-w-6xl mx-auto px-4 py-6 lg:py-8">
+        <div className="relative container max-w-6xl mx-auto py-6 lg:py-8">
           {/* Header Section */}
           <div className="bg-white rounded-xl border border-border shadow-sm mb-6">
             <div className="p-6 space-y-6">
@@ -614,7 +614,7 @@ export default async function ToolPage({ params }: PageProps) {
               </div>
 
               {/* Rating Overview */}
-              <div className="p-6 rounded-lg border border-border bg-background/50">
+              <div className="p-4 rounded-lg border border-border bg-background/50">
                 <div className="flex flex-col md:flex-row gap-6 md:gap-8">
                   {/* User Rating Column - Only show if there are reviews */}
                   {website.reviewCount > 0 && (
