@@ -482,23 +482,32 @@ export default async function ToolPage({ params }: PageProps) {
                 <div className="flex flex-col gap-6 lg:gap-0">
                   {/* Mobile Layout */}
                   <div className="lg:hidden">
-                    <div className="flex items-start gap-4 mb-3">
+                    <div className="flex items-start gap-4 mb-3" style={{ height: "75px" }}>
                       <WebsiteLogo
                         logo={website.logo}
                         name={website.name}
                         size="lg"
                       />
-                      <div className="flex-1 min-w-0">
+                      <div className="flex-1 min-w-0 flex flex-col justify-center h-full gap-1">
                         <h1
                           className="text-2xl font-bold leading-tight"
                           style={{ fontFamily: "inherit" }}
                         >
                           {website.name}
                         </h1>
+                        <div className="flex justify-start">
+                          <VerifiedBadge
+                            isVerified={website.isVerified ?? false}
+                            pricingModel={website.pricingModel ?? PricingModel.BASIC}
+                            licenseValidDate={website.licenseValidDate}
+                            isVerifiedByRateIt={website.isVerifiedByRateIt ?? false}
+                            showUnverified={true}
+                          />
+                        </div>
                       </div>
                     </div>
 
-                    {/* Tags Row - Categories and Badge as unified list */}
+                    {/* Tags Row - Categories only */}
                     <div className="flex flex-wrap items-center gap-1.5 mb-4">
                       {/* Categories as individual tags */}
                       {website.categories &&
@@ -518,15 +527,6 @@ export default async function ToolPage({ params }: PageProps) {
                             </Link>
                           ) : null
                         )}
-
-                      {/* Verification Badge as another tag */}
-                      <VerifiedBadge
-                        isVerified={website.isVerified ?? false}
-                        pricingModel={website.pricingModel ?? PricingModel.BASIC}
-                        licenseValidDate={website.licenseValidDate}
-                        isVerifiedByRateIt={website.isVerifiedByRateIt ?? false}
-                        showUnverified={true}
-                      />
                     </div>
                   </div>
 
