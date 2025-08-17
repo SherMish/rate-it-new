@@ -314,7 +314,7 @@ export default function BusinessPage() {
             <motion.div className="space-y-8 py-8" variants={fadeInUpVariants}>
               <h1 className="text-4xl md:text-4xl lg:text-6xl font-bold text-gray-900 mb-6">
                 שדרגו את{" "}
-                <span className="bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent italic">
                   <AnimatedWord />
                 </span>{" "}
                 <br /> של העסק שלכם בעזרת רייט-איט

@@ -24,8 +24,8 @@ export function AnimatedWord() {
   }, []);
 
   return (
-    <span className="inline-block relative" dir="rtl">
-      <span className="invisible">
+    <span className="inline-block relative min-w-fit" dir="rtl" style={{ overflow: 'visible' }}>
+      <span className="invisible font-semibold" style={{ padding: '2px' }}>
         {words.reduce((a, b) => (a.length > b.length ? a : b))}
       </span>
       <AnimatePresence mode="wait">
@@ -41,9 +41,21 @@ export function AnimatedWord() {
             },
           }}
           exit={{ y: -10, opacity: 0 }}
-          className="absolute inset-0 flex items-center"
+          className="absolute top-0 left-0 w-full h-full flex items-center"
+          style={{ overflow: 'visible', padding: '2px' }}
         >
-          <span className="bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent font-semibold">
+          <span 
+            className="font-semibold relative"
+            style={{
+              background: 'linear-gradient(to right, hsl(var(--primary)), rgb(147 51 234))',
+              WebkitBackgroundClip: 'text',
+              backgroundClip: 'text',
+              color: 'transparent',
+              display: 'inline-block',
+              padding: '1px 2px',
+              margin: '-1px -2px'
+            }}
+          >
             {words[currentIndex]}
           </span>
         </motion.span>
