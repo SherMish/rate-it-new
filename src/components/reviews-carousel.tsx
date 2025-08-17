@@ -100,9 +100,13 @@ const reviewsData: ReviewData[] = [
 export function ReviewsCarousel() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
+  const [isPaused, setIsPaused] = useState(false);
+  const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
 
   // Auto-advance carousel
   useEffect(() => {
+    if (isPaused) return;
+
     const interval = setInterval(() => {
       setIsVisible(false);
       setTimeout(() => {
@@ -113,8 +117,17 @@ export function ReviewsCarousel() {
       }, 300);
     }, 4000);
 
+    setIntervalId(interval);
     return () => clearInterval(interval);
-  }, []);
+  }, [isPaused, currentIndex]); // Restart timer when currentIndex changes (manual navigation)
+
+  // Function to restart the timer
+  const restartTimer = () => {
+    if (intervalId) {
+      clearInterval(intervalId);
+    }
+    setIsPaused(false);
+  };
 
   const nextReview = () => {
     setIsVisible(false);
@@ -124,6 +137,7 @@ export function ReviewsCarousel() {
       );
       setIsVisible(true);
     }, 300);
+    restartTimer(); // Restart timer after manual navigation
   };
 
   const prevReview = () => {
@@ -134,6 +148,7 @@ export function ReviewsCarousel() {
       );
       setIsVisible(true);
     }, 300);
+    restartTimer(); // Restart timer after manual navigation
   };
 
   const goToReview = (index: number) => {
@@ -143,6 +158,7 @@ export function ReviewsCarousel() {
         setCurrentIndex(index);
         setIsVisible(true);
       }, 300);
+      restartTimer(); // Restart timer after manual navigation
     }
   };
 
@@ -165,7 +181,11 @@ export function ReviewsCarousel() {
         
 
         {/* Carousel Container */}
-        <div className="relative max-w-3xl mx-auto">
+        <div 
+          className="relative max-w-3xl mx-auto"
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
+        >
           {/* Main Review Card */}
           <Card className={`h-80 shadow-xl border-2 transition-all duration-500 bg-white overflow-hidden ${
             isVisible ? 'opacity-100 transform scale-100' : 'opacity-0 transform scale-95'
