@@ -58,6 +58,7 @@ import { VerifiedBadge } from "@/components/verified-badge";
 import "@/lib/models/User"; // Ensure User model is registered before populate calls
 import { WriteFirstReviewButton } from "./components/WriteFirstReviewButton";
 import { WebsiteLogo } from "@/components/website-logo";
+import { TruncatedDescription } from "./components/TruncatedDescription";
 import RatingTiles from "@/components/ui/rating-tiles";
 
 interface WebsiteDoc {
@@ -658,9 +659,22 @@ export default async function ToolPage({ params }: PageProps) {
                     </h3>
                     <div className="space-y-4 text-muted-foreground">
                       {website.description ? (
-                        <p style={{ fontFamily: "inherit" }}>
-                          {website.description}
-                        </p>
+                        <>
+                          {/* Mobile: Truncated description */}
+                          <div className="md:hidden">
+                            <TruncatedDescription
+                              description={website.description}
+                              maxLength={150}
+                              style={{ fontFamily: "inherit" }}
+                            />
+                          </div>
+                          {/* Desktop: Full description */}
+                          <div className="hidden md:block">
+                            <p style={{ fontFamily: "inherit" }}>
+                              {website.description}
+                            </p>
+                          </div>
+                        </>
                       ) : (
                         <>
                           <p style={{ fontFamily: "inherit" }}>תיאור לא זמין</p>
