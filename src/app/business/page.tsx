@@ -31,6 +31,7 @@ import "swiper/css";
 import "swiper/css/autoplay";
 import { motion } from "framer-motion";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { ReviewsCarousel } from "@/components/reviews-carousel";
 
 const steps = [
   {
@@ -38,19 +39,22 @@ const steps = [
     description:
       "אמתו את הבעלות על האתר שלכם והתחילו לבנות נוכחות אמינה מול לקוחות.",
   },
-{
-  title: "הוסיפו מידע בסיסי על העסק",
-  description: "כמה פרטים פשוטים יעזרו ללקוחות להכיר אתכם ולהבין איך אתם יכולים לעזור להם."
-},
+  {
+    title: "הוסיפו מידע בסיסי על העסק",
+    description:
+      "כמה פרטים פשוטים יעזרו ללקוחות להכיר אתכם ולהבין איך אתם יכולים לעזור להם.",
+  },
   {
     title: " קבלו חוות דעת אמיתיות מלקוחות אמיתיים",
     description:
       "עודדו לקוחות מרוצים להשאיר ביקורות – זה מחזק אמון ומניע לפעולה.",
   },
- {
-  title: "צמחו מהר יותר עם ביקורות חיוביות",
-  description: "השתמשו בביקורות לשיווק, שפרו את השירות על בסיס פידבק ומשכו לקוחות חדשים."
-},];
+  {
+    title: "צמחו מהר יותר עם ביקורות חיוביות",
+    description:
+      "השתמשו בביקורות לשיווק, שפרו את השירות על בסיס פידבק ומשכו לקוחות חדשים.",
+  },
+];
 
 interface Tool {
   _id: string;
@@ -283,93 +287,98 @@ export default function BusinessPage() {
         <div className="absolute inset-0 overflow-hidden">
           {/* Base gradient that spans the entire section */}
           <div className="absolute inset-0 bg-gradient-to-br from-primary/8 via-blue-500/5 to-purple-500/8" />
-          
+
           {/* Connecting gradient between left and right */}
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-          
+
           {/* Flowing background elements that connect both sides */}
           <div className="absolute top-1/4 left-0 w-full h-32 bg-gradient-to-r from-primary/15 via-blue-500/10 to-purple-500/15 blur-3xl transform -skew-y-1" />
           <div className="absolute bottom-1/4 left-0 w-full h-24 bg-gradient-to-r from-purple-500/10 via-primary/8 to-blue-500/12 blur-3xl transform skew-y-1" />
-          
+
           {/* Floating orbs that bridge the gap */}
           <div className="absolute top-1/3 left-1/4 w-32 h-32 bg-primary/10 rounded-full blur-2xl animate-slow-pulse" />
           <div className="absolute bottom-1/3 right-1/4 w-24 h-24 bg-blue-500/15 rounded-full blur-2xl animate-float" />
           <div className="absolute top-2/3 left-1/2 w-20 h-20 bg-purple-500/12 rounded-full blur-xl animate-float-right" />
         </div>
-        
-        <div className="relative container mx-auto px-4 py-16 sm:py-24">
-            
-            {/* Main Content Section - Single Column */}
-            <motion.div
-              className="max-w-4xl mx-auto text-center"
-              initial="hidden"
-              animate="visible"
-              variants={containerVariants}
-              dir="rtl"
-            >
-              {/* Main Title Content - No Card Background */}
-              <motion.div
-                className="space-y-8 py-8"
-                variants={fadeInUpVariants}
-              >
-                <h1 className="text-4xl md:text-4xl lg:text-6xl font-bold text-gray-900 mb-6">
-                  שדרגו את <span className="bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent"><AnimatedWord /></span> <br /> של העסק שלכם בעזרת רייט-איט
-                </h1>
-                <p className="text-xl md:text-2xl text-gray-700 font-medium mb-8">
-                  מערכת הביקורות שמגדילה אמון ורווחים לעסקים ישראליים
-                </p>
-                
-                {/* Trust Indicators - Centered */}
-                <div className="flex justify-center items-center gap-4 flex-wrap mb-8">
-                  <motion.div 
-                    className="flex items-center gap-3 bg-white/80 backdrop-blur-lg px-6 py-4 rounded-xl shadow-lg border border-green-200/50"
-                    whileHover={{ scale: 1.05 }}
-                    transition={{ type: "spring", stiffness: 300 }}
-                  >
-                    <div className="w-8 h-8 bg-green-100/70 rounded-full flex items-center justify-center">
-                      <CheckCircle2 className="h-4 w-4 text-green-600" />
-                    </div>
-                    <span className="text-sm font-bold text-green-700">
-300+ עסקים כבר בוטחים בנו                    </span>
-                  </motion.div>
-                  <motion.div 
-                    className="flex items-center gap-3 bg-white/80 backdrop-blur-lg px-6 py-4 rounded-xl shadow-lg border border-blue-200/50"
-                    whileHover={{ scale: 1.05 }}
-                    transition={{ type: "spring", stiffness: 300 }}
-                  >
-                    <div className="w-8 h-8 bg-blue-100/70 rounded-full flex items-center justify-center">
-                      <Star className="h-4 w-4 text-blue-600" />
-                    </div>
-                    <span className="text-sm font-bold text-blue-700">4.8/5 שביעות רצון</span>
-                  </motion.div>
-                  <motion.div 
-                    className="flex items-center gap-3 bg-white/80 backdrop-blur-lg px-6 py-4 rounded-xl shadow-lg border border-orange-200/50"
-                    whileHover={{ scale: 1.05 }}
-                    transition={{ type: "spring", stiffness: 300 }}
-                  >
-                    <div className="w-8 h-8 bg-orange-100/70 rounded-full flex items-center justify-center">
-                      <Sparkles className="h-4 w-4 text-orange-600" />
-                    </div>
-                    <span className="text-sm font-bold text-orange-700">ללא התחייבות</span>
-                  </motion.div>
-                </div>
 
-                {/* CTA Button - Centered */}
+        <div className="relative container mx-auto px-4 py-16 sm:py-24">
+          {/* Main Content Section - Single Column */}
+          <motion.div
+            className="max-w-4xl mx-auto text-center"
+            initial="hidden"
+            animate="visible"
+            variants={containerVariants}
+            dir="rtl"
+          >
+            {/* Main Title Content - No Card Background */}
+            <motion.div className="space-y-8 py-8" variants={fadeInUpVariants}>
+              <h1 className="text-4xl md:text-4xl lg:text-6xl font-bold text-gray-900 mb-6">
+                שדרגו את{" "}
+                <span className="bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
+                  <AnimatedWord />
+                </span>{" "}
+                <br /> של העסק שלכם בעזרת רייט-איט
+              </h1>
+              <p className="text-xl md:text-2xl text-gray-700 font-medium mb-8">
+                מערכת הביקורות שמגדילה אמון ורווחים לעסקים ישראליים
+              </p>
+
+              {/* Trust Indicators - Centered */}
+              <div className="flex justify-center items-center gap-4 flex-wrap mb-8">
                 <motion.div
+                  className="flex items-center gap-3 bg-white/80 backdrop-blur-lg px-6 py-4 rounded-xl shadow-lg border border-green-200/50"
                   whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
                   transition={{ type: "spring", stiffness: 300 }}
                 >
-                  <Button
-                    size="lg"
-                    className="text-xl px-12 py-6 bg-gradient-to-r from-primary to-blue-600 hover:from-primary-600 hover:to-blue-700 shadow-lg hover:shadow-xl transition-all rounded-xl"
-                    onClick={() => router.push("/business/register")}
-                  >
-התחילו עכשיו בחינם                    <ArrowLeft className="mr-3 h-6 w-6" />
-                  </Button>
+                  <div className="w-8 h-8 bg-green-100/70 rounded-full flex items-center justify-center">
+                    <CheckCircle2 className="h-4 w-4 text-green-600" />
+                  </div>
+                  <span className="text-sm font-bold text-green-700">
+                    300+ עסקים כבר בוטחים בנו{" "}
+                  </span>
                 </motion.div>
+                <motion.div
+                  className="flex items-center gap-3 bg-white/80 backdrop-blur-lg px-6 py-4 rounded-xl shadow-lg border border-blue-200/50"
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                >
+                  <div className="w-8 h-8 bg-blue-100/70 rounded-full flex items-center justify-center">
+                    <Star className="h-4 w-4 text-blue-600" />
+                  </div>
+                  <span className="text-sm font-bold text-blue-700">
+                    4.8/5 שביעות רצון
+                  </span>
+                </motion.div>
+                <motion.div
+                  className="flex items-center gap-3 bg-white/80 backdrop-blur-lg px-6 py-4 rounded-xl shadow-lg border border-orange-200/50"
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                >
+                  <div className="w-8 h-8 bg-orange-100/70 rounded-full flex items-center justify-center">
+                    <Sparkles className="h-4 w-4 text-orange-600" />
+                  </div>
+                  <span className="text-sm font-bold text-orange-700">
+                    ללא התחייבות
+                  </span>
+                </motion.div>
+              </div>
+
+              {/* CTA Button - Centered */}
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ type: "spring", stiffness: 300 }}
+              >
+                <Button
+                  size="lg"
+                  className="text-xl px-12 py-6 bg-gradient-to-r from-primary to-blue-600 hover:from-primary-600 hover:to-blue-700 shadow-lg hover:shadow-xl transition-all rounded-xl"
+                  onClick={() => router.push("/business/register")}
+                >
+                  התחילו עכשיו בחינם <ArrowLeft className="mr-3 h-6 w-6" />
+                </Button>
               </motion.div>
             </motion.div>
+          </motion.div>
         </div>
       </section>
 
@@ -398,7 +407,7 @@ export default function BusinessPage() {
               variants={itemVariants}
             >
               <p className="text-xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
-                הלקוחות הישראלים בודקים ביקורות לפני כל קנייה.
+                87% מהקונים בודקים ביקורות לפני הרכישה.
                 <br />
                 האם הם מוצאים ביקורות חיוביות על העסק שלכם?
               </p>
@@ -488,6 +497,94 @@ export default function BusinessPage() {
         </div>
       </section>
 
+      {/* Control Section - Enhanced with pricing page styling */}
+      <section ref={controlSectionRef} className="relative py-24 bg-white">
+        <div className="container mx-auto px-4">
+          <motion.div
+            className="max-w-4xl mx-auto text-center space-y-4"
+            variants={containerVariants}
+            initial="hidden"
+            animate={controlSectionInView ? "visible" : "hidden"}
+          >
+            <motion.h2
+              className="text-4xl md:text-5xl font-bold"
+              variants={itemVariants}
+            >
+              <span className="text-gray-900">קחו שליטה על המוניטין שלכם.</span>{" "}
+              <span className="inline-block px-2 py-1 bg-primary text-white rounded-md transform shadow-md font-extrabold mt-2">
+                צמחו מהר יותר
+              </span>
+            </motion.h2>
+            <motion.p
+              className="text-xl text-gray-700 leading-relaxed"
+              variants={itemVariants}
+            >
+              הלקוחות הישראלים הם לא פרייארים – הם בודקים, משווים ורוצים לראות
+              ביקורות חיוביות מאנשים אמיתיים.
+              <br />
+              תנו להם לראות את מה שעושה אתכם טובים – ותזכו באמון שמוביל לפעולה{" "}
+            </motion.p>
+          </motion.div>
+
+          <motion.div
+            className="mt-16 grid md:grid-cols-3 gap-8 max-w-6xl mx-auto"
+            variants={containerVariants}
+            initial="hidden"
+            animate={controlSectionInView ? "visible" : "hidden"}
+          >
+            <motion.div
+              className="p-6 rounded-xl border-l-4 border-l-green-500 bg-white shadow-lg"
+              variants={cardVariants}
+            >
+              <div className="w-12 h-12 rounded-xl bg-green-100 flex items-center justify-center mb-6">
+                <CheckCircle2 className="w-6 h-6 text-green-600" />
+              </div>
+              <h3 className="text-xl font-semibold mb-3 text-gray-900">
+                פרופיל מאומת
+              </h3>
+              <p className="text-gray-700 leading-relaxed">
+                קבלו תג מאומת, צרו נוכחות מקצועית, שדרו אמינות, והראו ללקוחות
+                שאתם עסק איכותי.
+              </p>
+            </motion.div>
+
+            <motion.div
+              className="p-6 rounded-xl border-l-4 border-l-blue-500 bg-white shadow-lg"
+              variants={cardVariants}
+            >
+              <div className="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center mb-6">
+                <RadarIcon className="w-6 h-6 text-blue-600" />
+              </div>
+              <h3 className="text-xl font-semibold mb-3 text-gray-900">
+                ניהול ביקורות
+              </h3>
+              <p className="text-gray-700 leading-relaxed">
+                הגיבו לביקורות, אספו פידבק אמיתי וצרו קשר מתמשך עם הקהל שלכם.{" "}
+              </p>
+            </motion.div>
+
+            <motion.div
+              className="p-6 rounded-xl border-l-4 border-l-purple-500 bg-white shadow-lg"
+              variants={cardVariants}
+            >
+              <div className="w-12 h-12 rounded-xl bg-purple-100 flex items-center justify-center mb-6">
+                <ArrowUp className="w-6 h-6 text-purple-600" />
+              </div>
+              <h3 className="text-xl font-semibold mb-3 text-gray-900">
+                דאשבורד ביצועים
+              </h3>
+              <p className="text-gray-700 leading-relaxed">
+                קבלו גישה לתובנות מפורטות על הביצועים שלכם, מעורבות משתמשים,
+                ומיקום בשוק.
+              </p>
+            </motion.div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Reviews Carousel Section */}
+      <ReviewsCarousel />
+
       {/* How it Works Section - Enhanced with pricing page styling */}
       <section ref={howItWorksRef} className="relative py-20 bg-white">
         <div className="container mx-auto px-4">
@@ -510,20 +607,28 @@ export default function BusinessPage() {
               <motion.div
                 key={index}
                 className={`p-6 rounded-xl bg-white shadow-lg border-l-4 ${
-                  index === 0 ? 'border-l-green-500' :
-                  index === 1 ? 'border-l-blue-500' :
-                  index === 2 ? 'border-l-purple-500' :
-                  'border-l-orange-500'
+                  index === 0
+                    ? "border-l-green-500"
+                    : index === 1
+                    ? "border-l-blue-500"
+                    : index === 2
+                    ? "border-l-purple-500"
+                    : "border-l-orange-500"
                 }`}
                 variants={cardVariants}
                 custom={index}
               >
-                <div className={`text-4xl font-bold mb-4 ${
-                  index === 0 ? 'text-green-600' :
-                  index === 1 ? 'text-blue-600' :
-                  index === 2 ? 'text-purple-600' :
-                  'text-orange-600'
-                }`}>
+                <div
+                  className={`text-4xl font-bold mb-4 ${
+                    index === 0
+                      ? "text-green-600"
+                      : index === 1
+                      ? "text-blue-600"
+                      : index === 2
+                      ? "text-purple-600"
+                      : "text-orange-600"
+                  }`}
+                >
                   {(index + 1).toString().padStart(2, "0")}
                 </div>
                 <h3 className="text-xl font-semibold mb-2">{step.title}</h3>
@@ -551,7 +656,7 @@ export default function BusinessPage() {
       </section>
 
       {/* Latest Listings Section - Scroll animation */}
-{/*       
+      {/*       
       {/* כל מה שצריך כדי להגדיל מכירות Section */}
       <section className="py-24 relative overflow-hidden bg-gradient-to-br from-white to-slate-50/70">
         {/* Add decorative background elements */}
@@ -672,91 +777,6 @@ export default function BusinessPage() {
         </div>
       </section>
 
-      {/* Control Section - Enhanced with pricing page styling */}
-      <section
-        ref={controlSectionRef}
-        className="relative py-24 bg-white"
-      >
-        <div className="container mx-auto px-4">
-          <motion.div
-            className="max-w-4xl mx-auto text-center space-y-4"
-            variants={containerVariants}
-            initial="hidden"
-            animate={controlSectionInView ? "visible" : "hidden"}
-          >
-            <motion.h2
-              className="text-4xl md:text-5xl font-bold"
-              variants={itemVariants}
-            >
-              <span className="text-gray-900">
-                קחו שליטה על המוניטין שלכם.
-              </span>{" "}
-              <span className="inline-block px-2 py-1 bg-primary text-white rounded-md transform shadow-md font-extrabold mt-2">
-                צמחו מהר יותר
-              </span>
-            </motion.h2>
-            <motion.p
-              className="text-xl text-gray-700 leading-relaxed"
-              variants={itemVariants}
-            >
-              הלקוחות הישראלים הם לא פרייארים – הם בודקים, משווים ורוצים לראות
-              ביקורות חיוביות מאנשים אמיתיים.
-              <br />
-              תנו להם לראות את מה שעושה אתכם טובים – ותזכו באמון שמוביל לפעולה{" "}
-            </motion.p>
-          </motion.div>
-
-          <motion.div
-            className="mt-16 grid md:grid-cols-3 gap-8 max-w-6xl mx-auto"
-            variants={containerVariants}
-            initial="hidden"
-            animate={controlSectionInView ? "visible" : "hidden"}
-          >
-            <motion.div
-              className="p-6 rounded-xl border-l-4 border-l-green-500 bg-white shadow-lg"
-              variants={cardVariants}
-            >
-              <div className="w-12 h-12 rounded-xl bg-green-100 flex items-center justify-center mb-6">
-                <CheckCircle2 className="w-6 h-6 text-green-600" />
-              </div>
-              <h3 className="text-xl font-semibold mb-3 text-gray-900">פרופיל מאומת</h3>
-              <p className="text-gray-700 leading-relaxed">
-                קבלו תג מאומת, צרו נוכחות מקצועית, שדרו אמינות, והראו ללקוחות
-                שאתם עסק איכותי.
-              </p>
-            </motion.div>
-
-            <motion.div
-              className="p-6 rounded-xl border-l-4 border-l-blue-500 bg-white shadow-lg"
-              variants={cardVariants}
-            >
-              <div className="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center mb-6">
-                <RadarIcon className="w-6 h-6 text-blue-600" />
-              </div>
-              <h3 className="text-xl font-semibold mb-3 text-gray-900">ניהול ביקורות</h3>
-              <p className="text-gray-700 leading-relaxed">
-                הגיבו לביקורות, אספו פידבק אמיתי וצרו קשר מתמשך עם הקהל שלכם.{" "}
-              </p>
-            </motion.div>
-
-            <motion.div
-              className="p-6 rounded-xl border-l-4 border-l-purple-500 bg-white shadow-lg"
-              variants={cardVariants}
-            >
-              <div className="w-12 h-12 rounded-xl bg-purple-100 flex items-center justify-center mb-6">
-                <ArrowUp className="w-6 h-6 text-purple-600" />
-              </div>
-              <h3 className="text-xl font-semibold mb-3 text-gray-900">דאשבורד ביצועים</h3>
-              <p className="text-gray-700 leading-relaxed">
-                קבלו גישה לתובנות מפורטות על הביצועים שלכם, מעורבות משתמשים,
-                ומיקום בשוק.
-              </p>
-            </motion.div>
-          </motion.div>
-        </div>
-      </section>
-
-      
       {/* Testimonials Section */}
       <section className="relative py-20 bg-gradient-to-br from-blue-50/80 via-indigo-50/60 to-purple-50/80 border-y border-indigo-200/40 overflow-hidden">
         {/* Background decorative elements */}
@@ -829,18 +849,32 @@ export default function BusinessPage() {
                       ) : null}
                     </div>
                   ) : null}
-                  <div className="flex justify-center mb-3" aria-label="5 כוכבים">
+                  <div
+                    className="flex justify-center mb-3"
+                    aria-label="5 כוכבים"
+                  >
                     {[1, 2, 3, 4, 5].map((i) => (
-                      <Star key={i} className="w-5 h-5 text-yellow-400 fill-yellow-400 ml-1" />
+                      <Star
+                        key={i}
+                        className="w-5 h-5 text-yellow-400 fill-yellow-400 ml-1"
+                      />
                     ))}
                   </div>
                   <div className="flex items-start justify-center gap-2 mb-2">
-                    <Quote className="w-6 h-6 text-primary/70 mt-0.5 flex-shrink-0" aria-hidden="true" />
+                    <Quote
+                      className="w-6 h-6 text-primary/70 mt-0.5 flex-shrink-0"
+                      aria-hidden="true"
+                    />
                     <p className="text-base leading-relaxed">{t.quote}</p>
-                    <Quote className="w-6 h-6 text-primary/70 mt-0.5 rotate-180 flex-shrink-0" aria-hidden="true" />
+                    <Quote
+                      className="w-6 h-6 text-primary/70 mt-0.5 rotate-180 flex-shrink-0"
+                      aria-hidden="true"
+                    />
                   </div>
                   <div className="mt-4 text-sm text-muted-foreground">
-                    <div className="font-semibold text-foreground">{t.author}</div>
+                    <div className="font-semibold text-foreground">
+                      {t.author}
+                    </div>
                     <div>{t.role}</div>
                   </div>
                 </motion.div>
@@ -923,7 +957,10 @@ export default function BusinessPage() {
       </section>
 
       {/* Final CTA Section - Enhanced with pricing page styling */}
-      <section ref={finalCtaRef} className="bg-gradient-to-r from-primary/10 via-blue-600/10 to-purple-700/15 py-16">
+      <section
+        ref={finalCtaRef}
+        className="bg-gradient-to-r from-primary/10 via-blue-600/10 to-purple-700/15 py-16"
+      >
         <div className="max-w-4xl mx-auto text-center px-4">
           <motion.div
             className="space-y-8"
