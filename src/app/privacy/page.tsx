@@ -9,37 +9,6 @@ export default function PrivacyPolicyPage() {
 
           <div className="prose max-w-none space-y-8">
             <section>
-              {/* <h2 className="text-2xl font-semibold mb-4 border-b pb-2">
-                1. הקדמה וחובת הגילוי
-              </h2>
-              <div className="bg-blue-50 p-4 rounded-lg mb-4">
-                <h3 className="font-semibold mb-2">הצהרת חובה על פי סעיף 11 לחוק הגנת הפרטיות</h3>
-                <p className="text-sm">
-                  <strong>חובת מתן המידע:</strong> מתן המידע המבוקש הינו התנדבותי. אין חובה חוקית למסור את המידע, 
-                  אולם ללא מסירת המידע לא נוכל לספק לכם את השירותים המבוקשים.
-                </p>
-              </div>
-              
-              <p className="text-base text-muted-foreground">
-                רייט איט בע"מ, ח.פ 123456789 (&ldquo;החברה&rdquo;, &ldquo;אנחנו&rdquo;, &ldquo;האתר&rdquo;, &ldquo;השירות&rdquo;) 
-                מחויבת לשמור על פרטיותכם בהתאם לחוק הגנת הפרטיות התשמ&rdquo;א-1981 ותיקוניו, 
-                כולל תיקון 13 הנכנס לתוקף ב-14 באוגוסט 2025. מדיניות פרטיות זו מסבירה 
-                כיצד אנו אוספים, משתמשים, שומרים וחולקים את המידע שלכם בעת שימוש בפלטפורמה.
-              </p> */}
-              
-              <div className="bg-gray-50 p-4 rounded-lg mt-4">
-                <h3 className="font-semibold mb-2">פרטי בעל השליטה במאגר:</h3>
-                <ul className="text-sm space-y-1">
-                  <li><strong>שם החברה:</strong> רייט איט בע&rdquo;מ</li>
-                  <li><strong>כתובת:</strong> רחוב הרא״ה 73, רמת גן</li>
-                  {/* <li><strong>טלפון:</strong> 03-1234567</li> */}
-                  <li><strong>דוא&rdquo;ל:</strong> hello@rate-it.co.il</li>
-                  {/* <li><strong>איש קשר לענייני פרטיות:</strong> מנהל הגנת מידע</li> */}
-                </ul>
-              </div>
-            </section>
-
-            <section>
               <h2 className="text-2xl font-semibold mb-4 border-b pb-2">
                 1. המידע שאנו אוספים
               </h2>
@@ -583,7 +552,7 @@ export default function PrivacyPolicyPage() {
               </div>
             </section>
 
-            <section>
+            {/* <section>
               <h2 className="text-2xl font-semibold mb-4 border-b pb-2">
                 12. יישוב מחלוקות ובוררות
               </h2>
@@ -626,9 +595,9 @@ export default function PrivacyPolicyPage() {
                   </p>
                 </div>
               </div>
-            </section>
+            </section> */}
 
-            <section>
+            {/* <section>
               <h2 className="text-2xl font-semibold mb-4 border-b pb-2">
                 13. צרו קשר ומימוש זכויות
               </h2>
@@ -666,9 +635,9 @@ export default function PrivacyPolicyPage() {
                   </ul>
                 </div>
               </div>
-            </section>
+            </section> */}
 
-            <div className="border-t pt-6 mt-8">
+            {/* <div className="border-t pt-6 mt-8">
               <div className="bg-gray-100 p-4 rounded-lg">
                 <h3 className="font-semibold mb-2">מידע על המדיניות:</h3>
                 <div className="text-sm text-muted-foreground space-y-1">
@@ -679,7 +648,7 @@ export default function PrivacyPolicyPage() {
                   <div><strong>סטטוס רישום מאגר:</strong> פטור מרישום (מתחת ל-10,000 נתוני נושאים)</div>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
