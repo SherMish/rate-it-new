@@ -151,6 +151,11 @@ export function PricingPlansUI({
                     </span>
                   )}
                 </div>
+                {plan.price !== "0 ₪" && (
+                  <div className="text-sm text-muted-foreground">
+                    + מעמ
+                  </div>
+                )}
                 {isAnnual && plan.monthlyPrice && plan.discount && !plan.isComingSoon && (
                   <div className="text-sm">
                     <span className="font-bold text-green-600 bg-green-100 px-3 py-1 rounded-full border border-green-200">

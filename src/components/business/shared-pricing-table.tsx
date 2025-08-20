@@ -6,15 +6,12 @@ import { PricingPlansUI } from "@/components/business/pricing-plans-ui";
 // Plan feature definitions
 export const basicFeatures = [
   { text: "פרופיל עסק מקצועי - דף ייעודי לעסק שלכם" },
-  { text: "קבלת עד 10 ביקורות בחודש" },
   { text: "מענה בסיסי לביקורות לקוחות" },
   { text: "הצגה במנוע החיפוש של רייט-איט" },
-  { text: "לוח בקרה בסיסי עם סטטיסטיקות" },
 ];
 
 export const plusFeatures = [
-  { text: "כל מה שבתכנית ה-Basic, ובנוסף:" },
-  { text: "עד 50 ביקורות בחודש", isHighlighted: true, },
+  { text: "כל מה שבתכנית ה-Basic, ובנוסף:"},
   {
     text: "תג 'עסק מאומת'",
     isHighlighted: true,
@@ -26,7 +23,6 @@ export const plusFeatures = [
 
 export const proFeatures = [
   { text: "כל מה שבתכנית ה-Plus, ובנוסף:" },
-  { text: "ביקורות ללא הגבלה", isHighlighted: true  },
   { text: "אוטומציה מלאה - הזמנות ביקורת אוטומטיות", isHighlighted: true },
   { text: "דוחות וניתוחים עסקיים מתקדמים", isHighlighted: true },
   { text: "API לשילוב עם מערכות קיימות", isHighlighted: true },
