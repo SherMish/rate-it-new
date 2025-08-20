@@ -2,9 +2,8 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
-  CheckCircle2,
+  Check,
   ArrowRight,
-  BadgeCheck,
   Star,
   Zap,
   Crown,
@@ -56,7 +55,7 @@ export function PricingPlansUI({
   return (
     <div className="space-y-8">
       {onBillingChange && (
-        <div className="flex items-center justify-center gap-4 bg-gradient-to-r from-green-50 to-green-100 border border-green-200 p-3 rounded-lg max-w-sm mx-auto">
+        <div className="flex items-center justify-center gap-4 bg-slate-50 border border-slate-200 p-3 rounded-lg max-w-sm mx-auto">
           <span
             className={`text-sm ${
               !isAnnual ? "font-semibold" : "text-muted-foreground"
@@ -70,7 +69,7 @@ export function PricingPlansUI({
               isAnnual ? "font-semibold" : "text-muted-foreground"
             }`}
           >
-            שנתי <span className="text-green-600 font-bold">(חסוך 30%)</span>
+            שנתי <span className="text-green-600 font-semibold">(חסוך 30%)</span>
           </span>
         </div>
       )}
@@ -80,17 +79,17 @@ export function PricingPlansUI({
         {plans.map((plan, index) => (
           <Card
             key={index}
-            className={`p-8 border-2 flex flex-col h-full relative transition-all duration-300 hover:shadow-2xl hover:scale-105 ${
+            className={`p-8 border-2 flex flex-col h-full relative transition-all duration-300 hover:shadow-lg ${
               plan.isRecommended
-                ? `border-primary bg-gradient-to-b from-primary/10 to-primary/20 shadow-xl bg-white`
+                ? `border-primary/30 bg-white shadow-lg ring-1 ring-primary/10`
                 : plan.isComingSoon
                 ? "border-gray-300 bg-gray-50/80 shadow-md"
-                : "border-slate-200 bg-white shadow-lg hover:border-primary/50 hover:shadow-xl"
-            } ${plan.isCurrent && plan.name !== "Basic" ? "bg-primary/10 border-primary" : ""}`}
+                : "border-slate-200 bg-white shadow-md hover:border-slate-300 hover:shadow-lg"
+            } ${plan.isCurrent && plan.name !== "Basic" ? "bg-slate-50 border-primary/40" : ""}`}
           >
             {plan.isRecommended && !plan.isComingSoon && (
               <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                <div className="bg-gradient-to-r from-primary to-blue-600 text-white text-sm font-bold px-6 py-2 rounded-full shadow-xl border-2 border-white flex items-center gap-1">
+                <div className="bg-primary text-white text-sm font-semibold px-6 py-2 rounded-full shadow-lg border-2 border-white flex items-center gap-1">
                   <Crown className="h-4 w-4" />
                   {plan.badge || "הכי מומלץ"}
                 </div>
@@ -116,7 +115,7 @@ export function PricingPlansUI({
                 {plan.bestFor && (
                   <p className={`text-sm font-medium p-3 rounded-lg border ${
                     plan.isRecommended 
-                      ? "text-primary bg-primary/10 border-primary/20" 
+                      ? "text-slate-700 bg-primary/5 border-primary/15" 
                       : plan.isComingSoon
                       ? "text-gray-500 bg-gray-100 border-gray-200"
                       : "text-muted-foreground bg-slate-50 border-slate-200"
@@ -129,7 +128,7 @@ export function PricingPlansUI({
               {/* Price Display */}
               <div className={`text-center space-y-2 p-6 rounded-xl ${
                 plan.isRecommended 
-                  ? "bg-primary/15 border border-primary/30" 
+                  ? "bg-slate-50 border border-slate-200" 
                   : plan.isComingSoon
                   ? "bg-gray-100/80 border border-gray-200"
                   : "bg-slate-50/80 border border-slate-200"
@@ -140,7 +139,7 @@ export function PricingPlansUI({
                   </div>
                 )}
                 <div className={`text-5xl font-bold ${
-                  plan.isComingSoon ? "text-gray-400" : "text-primary"
+                  plan.isComingSoon ? "text-gray-400" : plan.isRecommended ? "text-primary" : "text-slate-800"
                 }`}>
                   {isAnnual && plan.monthlyPrice && !plan.isComingSoon
                     ? `${plan.monthlyPrice} ₪`
@@ -166,22 +165,20 @@ export function PricingPlansUI({
               </div>
 
               {/* Features List */}
-              <ul className="space-y-4 flex-grow bg-white/50 p-4 rounded-xl border border-slate-100">
+              <ul className="space-y-3 flex-grow bg-white/50 p-4 rounded-xl border border-slate-100">
                 {plan.features.map((feature, idx) => (
                   <li
                     key={idx}
                     className={`flex items-center gap-3 p-2 rounded-lg ${
                       feature.isHighlighted
-                        ? "font-bold text-primary bg-primary/10 border border-primary/20"
+                        ? "font-semibold text-slate-800 bg-slate-50 border border-slate-200"
                         : "text-foreground bg-white/60 border border-transparent hover:border-slate-200"
                     }`}
                   >
-                    {feature.isHighlighted ? (
-                      <BadgeCheck className="h-6 w-6 text-primary flex-shrink-0" />
-                    ) : (
-                      <CheckCircle2 className="h-5 w-5 text-green-500 flex-shrink-0" />
-                    )}
-                    <span className="text-base">{feature.text}</span>
+                    <div className="w-5 h-5 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
+                      <Check className="h-3 w-3 text-green-600" />
+                    </div>
+                    <span className="text-sm">{feature.text}</span>
                   </li>
                 ))}
               </ul>
@@ -190,12 +187,12 @@ export function PricingPlansUI({
               <Button
                 size="lg"
                 variant={plan.isRecommended ? "default" : "outline"}
-                className={`w-full mt-auto py-4 text-lg font-bold transition-all duration-300 shadow-lg ${
+                className={`w-full mt-auto py-4 text-lg font-semibold transition-all duration-300 shadow-md hover:shadow-lg ${
                   plan.isRecommended && !plan.isComingSoon
-                    ? "bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-700 text-white border-0 shadow-primary/30 hover:shadow-xl hover:shadow-primary/40"
+                    ? "bg-primary hover:bg-primary/90 text-white border-0 hover:scale-105"
                     : plan.isComingSoon
                     ? "bg-gray-200 text-gray-500 cursor-not-allowed border-gray-300 shadow-none"
-                    : "border-2 border-primary text-primary bg-white hover:bg-primary hover:text-white shadow-md hover:shadow-lg"
+                    : "border-2 border-slate-300 text-slate-700 bg-white hover:bg-slate-800 hover:text-white hover:border-slate-800"
                 }`}
                 onClick={() => plan.onCtaClick()}
                 disabled={
