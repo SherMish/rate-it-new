@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { SharedPricingTable } from "@/components/business/shared-pricing-table";
 import { useSession } from "next-auth/react";
-import { CheckCircle2, ArrowRight, Users, Zap, Shield, Star } from "lucide-react";
+import { CheckCircle2, ArrowRight, Users, Zap, Shield, Star, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { usePlanManagement } from "@/hooks/use-plan-management";
@@ -229,7 +229,7 @@ export default function PublicPricingPage() {
           </p>
           <Button
             size="lg"
-            className="text-lg px-8 py-4 bg-gradient-to-r from-primary to-blue-600 hover:from-primary-600 hover:to-blue-700 shadow-lg hover:shadow-xl transition-all"
+            className="text-lg px-8 py-4 bg-primary hover:bg-primary/90 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 border-0"
             onClick={handleGetStarted}
           >
             התחילו בחינם - ללא כרטיס אשראי

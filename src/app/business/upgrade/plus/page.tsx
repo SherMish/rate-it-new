@@ -7,7 +7,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { CheckCircle2, Star, Zap, Crown, Gift, ArrowRight } from "lucide-react";
+import { CheckCircle2, Star, Zap, Crown, Gift, ArrowRight, Check } from "lucide-react";
 import { plusFeatures, proFeatures } from "@/components/business/shared-pricing-table";
 import { CelebrationModal } from "@/components/modals/celebration-modal";
 import { PRICING_CONFIG, calculateDiscountedPrice, calculateTotalWithVAT, formatPrice, getPlanDiscount, getFullYearlyPrice, type PlanType } from "@/lib/pricing";
@@ -131,18 +131,18 @@ export default function PlusUpgradePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-primary/5 to-primary/20 py-8">
+    <div className="min-h-screen bg-slate-50 py-8">
       <div className="max-w-4xl mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-foreground mb-4">
-            שדרגו ל-{planDisplayName} ותתחילו למכור יותר
+          <h1 className="text-4xl font-bold text-slate-800 mb-4">
+            שדרגו ל-<span className="text-primary">{planDisplayName}</span> ותתחילו למכור יותר
           </h1>
-          <p className="text-xl text-muted-foreground">
+          <p className="text-xl text-slate-600">
             צרו אמון עם הלקוחות שלכם והגדילו את המכירות
           </p>
           {isAnnual && discount > 0 && (
-            <div className="mt-4 inline-block bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm font-semibold">
+            <div className="mt-4 inline-block bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-semibold border border-primary/20">
               חסכון {discount}% בתשלום שנתי!
             </div>
           )}
@@ -150,40 +150,38 @@ export default function PlusUpgradePage() {
 
         <div className="grid lg:grid-cols-2 gap-8">
           {/* Benefits Section */}
-          <Card className="p-8 bg-gradient-to-br from-primary/10 to-primary/20 border-primary/30">
+          <Card className="p-8 bg-white border border-slate-200 shadow-md">
             <div className="flex items-center gap-3 mb-6">
-              <Crown className="h-8 w-8 text-primary" />
-              <h2 className="text-2xl font-bold">יתרונות תכנית {planDisplayName}</h2>
+              <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center border border-primary/20">
+                <Star className="h-5 w-5 text-primary" />
+              </div>
+              <h2 className="text-2xl font-bold text-slate-800">יתרונות תכנית {planDisplayName}</h2>
             </div>
             
-            <ul className="space-y-4">
+            <ul className="space-y-3">
               {features.map((feature, idx) => (
                 <li
                   key={idx}
-                  className={`flex items-center gap-3 p-3 rounded-lg ${
-                    feature.isHighlighted
-                      ? "bg-primary/20 border border-primary/40"
-                      : "bg-white/60"
-                  }`}
+                  className="flex items-center gap-3 p-3 rounded-lg bg-slate-50 border border-slate-100"
                 >
-                  {feature.isHighlighted ? (
-                    <Star className="h-5 w-5 text-primary flex-shrink-0" />
-                  ) : (
-                    <CheckCircle2 className="h-5 w-5 text-green-500 flex-shrink-0" />
-                  )}
-                  <span className={feature.isHighlighted ? "font-semibold" : ""}>
+                  <div className="w-5 h-5 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
+                    <Check className="h-3 w-3 text-green-600" />
+                  </div>
+                  <span className={`text-sm ${feature.isHighlighted ? "font-semibold text-slate-800" : "text-slate-700"}`}>
                     {feature.text}
                   </span>
                 </li>
               ))}
             </ul>
 
-            <div className="mt-6 p-4 bg-gradient-to-r from-green-100 to-green-50 rounded-lg border border-green-200">
+            <div className="mt-6 p-4 bg-slate-100 rounded-lg border border-slate-200">
               <div className="flex items-center gap-2 mb-2">
-                <Zap className="h-5 w-5 text-green-600" />
-                <span className="font-semibold text-green-800">מיוחד לחברי {planDisplayName}:</span>
+                <div className="w-5 h-5 bg-green-100 rounded-full flex items-center justify-center">
+                  <Zap className="h-3 w-3 text-green-600" />
+                </div>
+                <span className="font-semibold text-slate-800">מיוחד לחברי {planDisplayName}:</span>
               </div>
-              <p className="text-green-700 text-sm">
+              <p className="text-slate-700 text-sm">
                 {planType === "plus" 
                   ? 'תקבלו תג "עסק מאומת" שיעזור ללקוחות לסמוך עליכם יותר ויגדיל את שיעור ההמרה'
                   : 'תקבלו גישה מלאה לכל הכלים המתקדמים וניתוחים עסקיים מפורטים'
@@ -193,8 +191,8 @@ export default function PlusUpgradePage() {
           </Card>
 
           {/* Payment Section */}
-          <Card className="p-8">
-            <h2 className="text-2xl font-bold mb-6">פרטי התשלום</h2>
+          <Card className="p-8 bg-white border border-slate-200 shadow-md">
+            <h2 className="text-2xl font-bold text-slate-800 mb-6">פרטי התשלום</h2>
             
             {/* Price Summary */}
             <div className="space-y-4 mb-6">
@@ -242,7 +240,7 @@ export default function PlusUpgradePage() {
               <div className="border-t pt-4">
                 <div className="flex justify-between items-center text-lg font-bold">
                   <span>סה&quot;כ לתשלום</span>
-                  <span className={appliedCoupon === PRICING_CONFIG.coupons.EARLYPLUS ? "text-green-600" : ""}>
+                  <span className={appliedCoupon === PRICING_CONFIG.coupons.EARLYPLUS ? "text-green-600" : "text-primary"}>
                     {calculateTotal()} ₪
                   </span>
                 </div>
@@ -276,10 +274,12 @@ export default function PlusUpgradePage() {
 
             {/* Special Offer Message */}
             {appliedCoupon === PRICING_CONFIG.coupons.EARLYPLUS && (
-              <div className="mb-6 p-4 bg-gradient-to-r from-green-100 to-emerald-100 rounded-lg border border-green-200">
+              <div className="mb-6 p-4 bg-green-50 rounded-lg border border-green-200">
                 <div className="flex items-center gap-2 mb-2">
-                  <Gift className="h-5 w-5 text-green-600" />
-                  <span className="font-bold text-green-800">מזל טוב! 🎉</span>
+                  <div className="w-5 h-5 bg-green-100 rounded-full flex items-center justify-center">
+                    <Gift className="h-3 w-3 text-green-600" />
+                  </div>
+                  <span className="font-semibold text-green-800">מזל טוב! 🎉</span>
                 </div>
                 <p className="text-green-700 text-sm">
                   קיבלתם חודש חינם של תכנית {planDisplayName}! התכנית תופעל מיד ותוכלו להתחיל ליהנות מכל הרונים.
@@ -291,14 +291,16 @@ export default function PlusUpgradePage() {
             <Button
               onClick={handleUpgrade}
               disabled={loading}
-              className="w-full py-6 text-lg font-semibold"
+              className="w-full py-6 text-lg font-semibold bg-primary hover:bg-primary/90 text-white transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl"
               size="lg"
             >
               {loading ? (
                 "מעבד..."
               ) : appliedCoupon === PRICING_CONFIG.coupons.EARLYPLUS ? (
                 <>
-                  <Crown className="h-5 w-5 mr-2" />
+                  <div className="w-5 h-5 mr-2 bg-primary/20 rounded flex items-center justify-center">
+                    <Crown className="h-3 w-3 text-primary-foreground" />
+                  </div>
                   הפעילו את תכנית {planDisplayName} בחינם
                 </>
               ) : (
