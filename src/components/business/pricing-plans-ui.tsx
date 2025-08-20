@@ -86,7 +86,7 @@ export function PricingPlansUI({
                 : plan.isComingSoon
                 ? "border-gray-300 bg-gray-50/80 shadow-md"
                 : "border-slate-200 bg-white shadow-lg hover:border-primary/50 hover:shadow-xl"
-            } ${plan.isCurrent ? "bg-primary/10 border-primary" : ""}`}
+            } ${plan.isCurrent && plan.name !== "Basic" ? "bg-primary/10 border-primary" : ""}`}
           >
             {plan.isRecommended && !plan.isComingSoon && (
               <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">

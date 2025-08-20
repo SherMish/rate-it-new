@@ -14,12 +14,12 @@ export const basicFeatures = [
 export const plusFeatures = [
   { text: "כל מה שבתכנית ה-Basic, ובנוסף:"},
   {
-    text: "תג 'עסק מאומת'",
+    text: "תג 'עסק מאומת' - לקוחות סומכים יותר על עסקים מאומתים",
     isHighlighted: true,
   },
-  { text: "הצגה מועדפת בתוצאות החיפוש", isHighlighted: true },
-  { text: "תמיכה בעדיפות ומענה תוך 24 שעות", isHighlighted: true },
-  { text: "ניתוח מתקדם של ביקורות ומגמות", isHighlighted: true },
+  { text: "הצגה מועדפת בתוצאות החיפוש - תופיע לפני המתחרים", isHighlighted: true },
+  { text: "הסרת פרסומות צד ג׳ ואזכור מתחרים - הלקוחות יתמקדו רק בך", isHighlighted: true },
+    { text: "תמיכה בעדיפות ומענה תוך 24 שעות", isHighlighted: true }
 ];
 
 export const proFeatures = [

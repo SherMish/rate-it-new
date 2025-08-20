@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { SharedPricingTable } from "@/components/business/shared-pricing-table";
+import { EmbeddedPaymentForm } from "./EmbeddedPaymentForm";
+import { CelebrationModal } from "@/components/modals/celebration-modal";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { LoadingModal } from "@/components/ui/loading-modal";
 import { toast } from "@/components/ui/use-toast";
@@ -26,6 +28,9 @@ export function PricingSection({
   loadingParent: boolean;
 }) {
   const [loading, setLoading] = useState(false);
+  const [showPaymentForm, setShowPaymentForm] = useState(false);
+  const [selectedBilling, setSelectedBilling] = useState<"monthly" | "annual">("annual");
+  const [showCelebration, setShowCelebration] = useState(false);
   const { update: updateSession, data: session } = useSession();
   const router = useRouter();
 
@@ -80,11 +85,9 @@ export function PricingSection({
       billing_type: billing
     });
     
-    // First complete basic registration, then redirect to upgrade
-    await handleBasicPlanRegistration();
-    // After successful registration, redirect to upgrade page with billing info
-    const billingParam = billing ? `&billing=${billing}` : "";
-    router.push(`/business/upgrade/plus?plan=plus${billingParam}`);
+    // Store the selected billing period and show payment form
+    setSelectedBilling(billing || "annual");
+    setShowPaymentForm(true);
   };
 
   const handleProSubscription = (billing?: "monthly" | "annual") => {
@@ -103,6 +106,24 @@ export function PricingSection({
     });
   };
 
+  const handlePaymentSuccess = async () => {
+    // First complete basic registration
+    await handleBasicPlanRegistration();
+    
+    // Show celebration modal
+    setShowCelebration(true);
+  };
+
+  const handlePaymentCancel = () => {
+    setShowPaymentForm(false);
+  };
+
+  const handleCelebrationClose = () => {
+    setShowCelebration(false);
+    // Redirect to dashboard
+    window.location.href = "/business/dashboard?firstTime=true";
+  };
+
   // Define plan actions for the shared component
   const planActions = {
     onBasicClick: handleBasicPlanRegistration,
@@ -114,31 +135,54 @@ export function PricingSection({
     <div className="space-y-8" dir="rtl">
       <LoadingModal open={loading || loadingParent} />
 
-      <Alert className="bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 text-green-800 p-6">
-        <CheckCircle2 className="h-5 w-5" />
-        <AlertDescription className="text-lg font-semibold">
-          🎉 מזל טוב! הדומיין שלך אומת בהצלחה!
-          <br />
-          <span className="font-normal">
-            כעת בחר את המסלול שיעזור לך להגיע ללקוחות חדשים
-          </span>
-        </AlertDescription>
-      </Alert>
+      {!showPaymentForm ? (
+        <>
+          <Alert className="bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 text-green-800 p-6">
+            <CheckCircle2 className="h-5 w-5" />
+            <AlertDescription className="text-lg font-semibold">
+              🎉 מזל טוב! הדומיין שלך אומת בהצלחה!
+              <br />
+              <span className="font-normal">
+                כעת בחר את המסלול שיעזור לך להגיע ללקוחות חדשים
+              </span>
+            </AlertDescription>
+          </Alert>
 
-      <div className="mt-8">
-        <SharedPricingTable
-          planActions={planActions}
-          showBillingToggle={true}
-          defaultAnnual={true}
+          <div className="mt-8">
+            <SharedPricingTable
+              planActions={planActions}
+              showBillingToggle={true}
+              defaultAnnual={true}
+            />
+          </div>
+
+          <div className="text-center space-y-4 bg-muted/30 p-6 rounded-lg">
+            <p className="text-lg font-semibold text-foreground">
+              💳 תשלום מאובטח ובטוח
+            </p>
+            <p className="text-sm text-muted-foreground">
+              ביטול בכל עת • ללא התחייבויות • תמיכה 24/7 • המחירים לפני מע״מ
+            </p>
+          </div>
+        </>
+      ) : (
+        <EmbeddedPaymentForm
+          planType="plus"
+          isAnnual={selectedBilling === "annual"}
+          websiteUrl={websiteUrl}
+          onSuccess={handlePaymentSuccess}
+          onCancel={handlePaymentCancel}
         />
-      </div>      <div className="text-center space-y-4 bg-muted/30 p-6 rounded-lg">
-        <p className="text-lg font-semibold text-foreground">
-          💳 תשלום מאובטח ובטוח
-        </p>
-        <p className="text-sm text-muted-foreground">
-          ביטול בכל עת • ללא התחייבויות • תמיכה 24/7 • המחירים לפני מע״מ
-        </p>
-      </div>
+      )}
+
+      {/* Celebration Modal */}
+      <CelebrationModal
+        isOpen={showCelebration}
+        onClose={handleCelebrationClose}
+        title="ברוכים הבאים ל-Plus! 🎉"
+        description="התכנית שלכם שודרגה בהצלחה ל-Plus. עכשיו תוכלו ליהנות מכל היתרונות של התכנית ולהתחיל לבנות אמון עם הלקוחות שלכם."
+        buttonText="בואו נתחיל"
+      />
     </div>
   );
 }
