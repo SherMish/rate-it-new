@@ -170,15 +170,29 @@ export function PricingPlansUI({
                   <li
                     key={idx}
                     className={`flex items-center gap-3 p-2 rounded-lg ${
-                      feature.isHighlighted
+                      plan.isComingSoon
+                        ? "opacity-50"
+                        : feature.isHighlighted
                         ? "font-semibold text-slate-800 bg-slate-50 border border-slate-200"
                         : "text-foreground bg-white/60 border border-transparent hover:border-slate-200"
                     }`}
                   >
-                    <div className="w-5 h-5 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
-                      <Check className="h-3 w-3 text-green-600" />
+                    <div className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 ${
+                      plan.isComingSoon 
+                        ? "bg-gray-200"
+                        : "bg-green-100"
+                    }`}>
+                      <Check className={`h-3 w-3 ${
+                        plan.isComingSoon 
+                          ? "text-gray-400"
+                          : "text-green-600"
+                      }`} />
                     </div>
-                    <span className="text-sm">{feature.text}</span>
+                    <span className={`text-sm ${
+                      plan.isComingSoon 
+                        ? "text-gray-400"
+                        : ""
+                    }`}>{feature.text}</span>
                   </li>
                 ))}
               </ul>

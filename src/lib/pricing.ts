@@ -5,14 +5,14 @@ export const PRICING_CONFIG = {
   basePrices: {
     basic: 0,
     plus: 99,
-    pro: 159,
+    pro: 249,
   },
   
   // Annual billing discounts (percentage)
   annualDiscounts: {
     basic: 0,
     plus: 30,
-    pro: 25,
+    pro: 30,
   },
   
   // VAT rate
