@@ -7,10 +7,12 @@ import { useSession } from "next-auth/react";
 import { CheckCircle2, ArrowRight, Users, Zap, Shield, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { usePlanManagement } from "@/hooks/use-plan-management";
 
 export default function PublicPricingPage() {
   const router = useRouter();
   const { data: session } = useSession();
+  const { userPlan, upgradeToPlusClick, upgradeToProClick, isCurrentPlan } = usePlanManagement();
 
   const handleGetStarted = () => {
     if (session?.user) {
@@ -20,27 +22,21 @@ export default function PublicPricingPage() {
     }
   };
 
-  const handleUpgrade = () => {
-    if (session?.user?.isWebsiteOwner) {
-      router.push("/business/dashboard");
-    } else {
-      router.push("/business/register");
-    }
-  };
-
-  const handleProClick = () => {
-    console.log("Pro plan clicked");
-  };
-
-  // Define plan actions for the shared component
+  const handleProClick = (billing?: "monthly" | "annual") => {
+    console.log("Pro plan clicked with billing:", billing);
+  };  // Define plan actions for the shared component
   const planActions = {
     onBasicClick: handleGetStarted,
-    onPlusClick: handleUpgrade,
+    onPlusClick: upgradeToPlusClick,
     onProClick: handleProClick,
   };
 
   // Determine current plan if user is logged in
-  const isCurrent = session?.user?.isWebsiteOwner ? { basic: true } : {};
+  const isCurrent = userPlan ? {
+    basic: isCurrentPlan("basic"),
+    plus: isCurrentPlan("plus"),
+    pro: isCurrentPlan("pro"),
+  } : {};
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">

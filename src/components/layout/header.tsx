@@ -10,7 +10,7 @@ import { useLoginModal } from "@/hooks/use-login-modal";
 import { useSession, signOut } from "next-auth/react";
 import { UserNav } from "@/components/user-nav";
 import { SearchInput } from "@/components/search-input";
-import { useRouter, usePathname } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useLoading } from "@/contexts/loading-context";
 
 const navigation = [
@@ -31,6 +31,7 @@ export function Header() {
   const loginModal = useLoginModal();
   const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const { startLoading, stopLoading } = useLoading();
 
   // Handle post-login redirects
@@ -111,13 +112,16 @@ export function Header() {
 
   const isBusinessHome = pathname === "/business";
   const isBusinessRegister = pathname === "/business/register";
+  const isBusinessPricingMini = pathname === "/business/pricing" && searchParams?.get("from") === "dashboard";
+  const isBusinessUpgrade = pathname?.startsWith("/business/upgrade");
+  const isMiniHeader = isBusinessRegister || isBusinessPricingMini || isBusinessUpgrade;
   const isBusinessDashboard = pathname?.includes("/business/dashboard");
 
   const isRegularSite = pathname?.includes("/business") !== true;
   const isBusinessSection =
     pathname?.includes("/business") === true &&
     !isBusinessDashboard &&
-    !isBusinessRegister;
+    !isMiniHeader;
 
   const showSearch = pathname !== "/" && isRegularSite;
 
@@ -126,9 +130,9 @@ export function Header() {
     return (
       <header className="sticky top-0 z-50 w-full border-b border-border bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80 shadow-sm">
         <nav className="container mx-auto px-4" aria-label="ניווט ראשי">
-          {isBusinessRegister ? (
+          {isMiniHeader ? (
             <div className="flex h-16 items-center justify-center">
-              {/* Only logo for business register page */}
+              {/* Only logo for mini header pages */}
               <Link
                 href="/business"
                 className="flex items-center hover:opacity-90 transition-opacity"
@@ -287,14 +291,14 @@ export function Header() {
           )}
 
           {/* Mobile Search Bar */}
-          {!isBusinessRegister && showSearch && showMobileSearch && (
+          {!isMiniHeader && showSearch && showMobileSearch && (
             <div className="md:hidden py-2 px-1">
               <SearchInput onSearch={handleSearch} variant="header" />
             </div>
           )}
 
           {/* Mobile Navigation */}
-          {!isBusinessRegister && (
+          {!isMiniHeader && (
             <div className={cn("md:hidden", isOpen ? "block" : "hidden")}>
               <div className="space-y-1 pb-3 text-right bg-white">
                 {isRegularSite &&

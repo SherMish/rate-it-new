@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { SharedPricingTable } from "@/components/business/shared-pricing-table";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { LoadingModal } from "@/components/ui/loading-modal";
@@ -26,6 +27,7 @@ export function PricingSection({
 }) {
   const [loading, setLoading] = useState(false);
   const { update: updateSession, data: session } = useSession();
+  const router = useRouter();
 
   // ───────────────────────────────────────────────────────────────────────────
   // BASIC PLAN REGISTRATION - SIMPLIFIED (Business logic moved to verification)
@@ -67,31 +69,34 @@ export function PricingSection({
   };
 
   // ───────────────────────────────────────────────────────────────────────────
-  // PLUS/PRO PLAN HANDLERS (COMING SOON)
+  // PLUS/PRO PLAN HANDLERS
   // ───────────────────────────────────────────────────────────────────────────
-  const handlePlusSubscription = async () => {
+  const handlePlusSubscription = async (billing?: "monthly" | "annual") => {
     // Track plus plan selection attempt
     trackEvent(AnalyticsEvents.BUSINESS_PRICING_PLUS_SELECTED, {
       step: "pricing_selection",
       website_url: websiteUrl,
-      plan_type: "plus"
+      plan_type: "plus",
+      billing_type: billing
     });
     
-    toast({
-      title: "מסלול Plus",
-      description: "המסלול Plus יהיה זמין בקרוב. נרשמת למסלול החינמי.",
-    });
+    // First complete basic registration, then redirect to upgrade
     await handleBasicPlanRegistration();
+    // After successful registration, redirect to upgrade page with billing info
+    const billingParam = billing ? `&billing=${billing}` : "";
+    router.push(`/business/upgrade/plus?plan=plus${billingParam}`);
   };
 
-  const handleProSubscription = () => {
+  const handleProSubscription = (billing?: "monthly" | "annual") => {
     // Track pro plan selection attempt
     trackEvent(AnalyticsEvents.BUSINESS_PRICING_PRO_SELECTED, {
       step: "pricing_selection",
       website_url: websiteUrl,
-      plan_type: "pro"
+      plan_type: "pro",
+      billing_type: billing
     });
     
+    // For now, Pro is still coming soon
     toast({
       title: "מסלול Pro",
       description: "המסלול Pro יהיה זמין בקרוב!",
@@ -120,14 +125,13 @@ export function PricingSection({
         </AlertDescription>
       </Alert>
 
-      <SharedPricingTable
-        planActions={planActions}
-        loading={loading}
-        showBillingToggle={true}
-        defaultAnnual={true}
-      />
-
-      <div className="text-center space-y-4 bg-muted/30 p-6 rounded-lg">
+      <div className="mt-8">
+        <SharedPricingTable
+          planActions={planActions}
+          showBillingToggle={true}
+          defaultAnnual={true}
+        />
+      </div>      <div className="text-center space-y-4 bg-muted/30 p-6 rounded-lg">
         <p className="text-lg font-semibold text-foreground">
           💳 תשלום מאובטח ובטוח
         </p>

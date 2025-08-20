@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { PricingPlansUI } from "@/components/business/pricing-plans-ui";
+import { PRICING_CONFIG, calculateDiscountedPrice, formatPrice, getPlanDiscount, getMonthlyEquivalent, getFullYearlyPrice } from "@/lib/pricing";
 
 // Plan feature definitions
 export const basicFeatures = [
@@ -32,8 +33,8 @@ export const proFeatures = [
 
 interface PlanActions {
   onBasicClick: () => void;
-  onPlusClick: () => void;
-  onProClick: () => void;
+  onPlusClick: (billing?: "monthly" | "annual") => void;
+  onProClick: (billing?: "monthly" | "annual") => void;
 }
 
 interface SharedPricingTableProps {
@@ -57,19 +58,36 @@ export function SharedPricingTable({
 }: SharedPricingTableProps) {
   const [isAnnual, setIsAnnual] = useState(defaultAnnual);
 
-  const calculatePrice = (basePrice: number, discount: number = 30) => {
+  const calculatePrice = (planType: 'plus' | 'pro') => {
     if (isAnnual) {
-      const discountedPrice = Math.round(basePrice * (1 - discount / 100));
-      return `${discountedPrice} ₪`;
+      // For annual billing, show monthly equivalent (total annual / 12)
+      const monthlyEquivalent = getMonthlyEquivalent(planType);
+      return formatPrice(monthlyEquivalent);
+    } else {
+      // For monthly billing, show monthly price
+      const price = calculateDiscountedPrice(planType, false);
+      return formatPrice(price);
     }
-    return `${basePrice} ₪`;
   };
 
-  const calculateMonthlyAverage = (basePrice: number, discount: number = 30) => {
+  const calculateMonthlyAverage = (planType: 'plus' | 'pro') => {
     if (isAnnual) {
-      return Math.round(basePrice * (1 - discount / 100));
+      // For annual billing, return monthly equivalent for display
+      return getMonthlyEquivalent(planType);
+    } else {
+      // For monthly billing, return monthly price
+      return calculateDiscountedPrice(planType, false);
     }
-    return basePrice;
+  };
+
+  const getOriginalPrice = (planType: 'plus' | 'pro') => {
+    if (isAnnual) {
+      // For annual billing, show monthly price (before discount) as crossed out
+      return formatPrice(PRICING_CONFIG.basePrices[planType]);
+    } else {
+      // For monthly billing, no crossed out price
+      return undefined;
+    }
   };
 
   const plans = [
@@ -84,13 +102,13 @@ export function SharedPricingTable({
     },
     {
       name: "Plus",
-      price: calculatePrice(99, 30),
-      originalPrice: isAnnual ? "99 ₪" : undefined,
-      monthlyPrice: calculateMonthlyAverage(99, 30),
-      discount: 30,
+      price: calculatePrice('plus'),
+      originalPrice: getOriginalPrice('plus'),
+      monthlyPrice: calculateMonthlyAverage('plus'),
+      discount: getPlanDiscount('plus'),
       features: plusFeatures,
       ctaText: isCurrent.plus ? "המסלול הנוכחי שלך" : "שדרגו ל-Plus",
-      onCtaClick: planActions.onPlusClick,
+      onCtaClick: planActions.onPlusClick.bind(null, isAnnual ? "annual" : "monthly"),
       isRecommended: true,
       highlightColor: "primary",
       bestFor: "לעסקים שרוצים למקסם אמינות ולבלוט על מתחרים",
@@ -99,13 +117,13 @@ export function SharedPricingTable({
     },
     {
       name: "Pro",
-      price: calculatePrice(159, 25),
-      originalPrice: isAnnual ? "159 ₪" : undefined,
-      monthlyPrice: calculateMonthlyAverage(159, 25),
-      discount: 25,
+      price: calculatePrice('pro'),
+      originalPrice: getOriginalPrice('pro'),
+      monthlyPrice: calculateMonthlyAverage('pro'),
+      discount: getPlanDiscount('pro'),
       features: proFeatures,
       ctaText: "בקרוב",
-      onCtaClick: planActions.onProClick,
+      onCtaClick: planActions.onProClick.bind(null, isAnnual ? "annual" : "monthly"),
       isComingSoon: true,
       bestFor: "לעסקים שרוצים אוטומציה מלאה ותמיכה מתקדמת",
       badge: "Soon",

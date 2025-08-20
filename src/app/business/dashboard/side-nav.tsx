@@ -144,7 +144,7 @@ export function SideNav() {
                 המרות.
               </p>
               <Link
-                href="/business/pricing"
+                href="/business/pricing?from=dashboard"
                 className="flex items-center justify-center gap-2 w-full bg-gradient-to-r from-primary via-purple-600 to-pink-600 text-white rounded-md px-3 py-2 text-xs font-medium hover:opacity-90 transition-opacity shadow-sm hover:shadow-lg"
               >
                 צפו במסלולים
