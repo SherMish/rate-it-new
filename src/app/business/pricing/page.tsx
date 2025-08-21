@@ -4,7 +4,15 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { SharedPricingTable } from "@/components/business/shared-pricing-table";
 import { useSession } from "next-auth/react";
-import { CheckCircle2, ArrowRight, Users, Zap, Shield, Star, Check } from "lucide-react";
+import {
+  CheckCircle2,
+  ArrowRight,
+  Users,
+  Zap,
+  Shield,
+  Star,
+  Check,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { usePlanManagement } from "@/hooks/use-plan-management";
@@ -12,7 +20,8 @@ import { usePlanManagement } from "@/hooks/use-plan-management";
 export default function PublicPricingPage() {
   const router = useRouter();
   const { data: session } = useSession();
-  const { userPlan, upgradeToPlusClick, upgradeToProClick, isCurrentPlan } = usePlanManagement();
+  const { userPlan, upgradeToPlusClick, upgradeToProClick, isCurrentPlan } =
+    usePlanManagement();
 
   const handleGetStarted = () => {
     if (session?.user) {
@@ -24,7 +33,7 @@ export default function PublicPricingPage() {
 
   const handleProClick = (billing?: "monthly" | "annual") => {
     console.log("Pro plan clicked with billing:", billing);
-  };  // Define plan actions for the shared component
+  }; // Define plan actions for the shared component
   const planActions = {
     onBasicClick: handleGetStarted,
     onPlusClick: upgradeToPlusClick,
@@ -32,50 +41,26 @@ export default function PublicPricingPage() {
   };
 
   // Determine current plan if user is logged in
-  const isCurrent = userPlan ? {
-    basic: isCurrentPlan("basic"),
-    plus: isCurrentPlan("plus"),
-    pro: isCurrentPlan("pro"),
-  } : {};
+  const isCurrent = userPlan
+    ? {
+        basic: isCurrentPlan("basic"),
+        plus: isCurrentPlan("plus"),
+        pro: isCurrentPlan("pro"),
+      }
+    : {};
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
-      {/* Hero Section */}
-      <div className="relative bg-gradient-to-r from-primary/15 to-blue-600/15 border-b-2 border-primary/20">
-        <div className="max-w-7xl mx-auto px-4 py-16 sm:py-24">
-          <div className="text-center space-y-8">
-            <div className="bg-white/90 backdrop-blur-sm p-8 rounded-2xl shadow-xl border border-primary/20 max-w-4xl mx-auto">
-              <h1 className="text-5xl font-bold text-foreground mb-4 bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
-                בחרו את התכנית שתגדיל את המכירות שלכם
-              </h1>
-              <p className="text-xl text-muted-foreground max-w-3xl mx-auto font-medium">
-הדרך הפשוטה להפוך לקוחות מרוצים לביקורות חיוביות
-              </p>
-            </div>
-
-            {/* Trust Indicators */}
-            <div className="flex justify-center items-center gap-6 pt-8 flex-wrap">
-              <div className="flex items-center gap-3 bg-white/90 backdrop-blur-sm px-6 py-4 rounded-xl shadow-lg border border-green-200">
-                <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                  <Users className="h-5 w-5 text-green-600" />
-                </div>
-                <span className="text-sm font-bold text-green-700">
-                  +43% עלייה ממוצעת במכירות
-                </span>
-              </div>
-              <div className="flex items-center gap-3 bg-white/90 backdrop-blur-sm px-6 py-4 rounded-xl shadow-lg border border-blue-200">
-                <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                  <Shield className="h-5 w-5 text-blue-600" />
-                </div>
-                <span className="text-sm font-bold text-blue-700">4.8/5 שביעות רצון לקוחות</span>
-              </div>
-              <div className="flex items-center gap-3 bg-white/90 backdrop-blur-sm px-6 py-4 rounded-xl shadow-lg border border-orange-200">
-                <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
-                  <Zap className="h-5 w-5 text-orange-600" />
-                </div>
-                <span className="text-sm font-bold text-orange-700">ביטול בכל עת - ללא התחייבות</span>
-              </div>
-            </div>
+    <div className="min-h-screen bg-slate-50">
+      {/* Simple Header Section */}
+      <div className="border-b border-slate-200">
+        <div className="max-w-7xl mx-auto px-4 py-12 mt-5">
+          <div className="text-center">
+            <h1 className="text-6xl font-bold text-slate-900 mb-6">
+              בנו מוניטין חזק עם ביקורות חיוביות{" "}
+            </h1>
+            <p className="text-2xl text-slate-600 max-w-3xl mx-auto">
+              בחרו את התכנית הנכונה כדי להגיע ליותר לקוחות ולזכות באמונם.{" "}
+            </p>
           </div>
         </div>
       </div>
@@ -162,7 +147,8 @@ export default function PublicPricingPage() {
                     87% מהקונים בודקים ביקורות לפני קנייה
                   </h3>
                   <p className="text-muted-foreground">
-                    בלי ביקורות חיוביות, אתם מפסידים 9 מתוך 10 לקוחות פוטנציאליים
+                    בלי ביקורות חיוביות, אתם מפסידים 9 מתוך 10 לקוחות
+                    פוטנציאליים
                   </p>
                 </div>
               </div>
@@ -194,7 +180,8 @@ export default function PublicPricingPage() {
                     ביקורת חיובית אחת = 5 המלצות אישיות
                   </h3>
                   <p className="text-muted-foreground">
-                    הביקורות שלכם מחליפות את הצורך בשיווק יקר ומביאות לקוחות חדשים
+                    הביקורות שלכם מחליפות את הצורך בשיווק יקר ומביאות לקוחות
+                    חדשים
                   </p>
                 </div>
               </div>
@@ -210,8 +197,8 @@ export default function PublicPricingPage() {
                     הפכו מ&quot;עוד אחד&quot; לבחירה הברורה
                   </h3>
                   <p className="text-muted-foreground">
-ביקורות חיוביות מבדילות אתכם מהמתחרים
-ומציגות אתכם כאופציה מהימנה ומומלצת
+                    ביקורות חיוביות מבדילות אתכם מהמתחרים ומציגות אתכם כאופציה
+                    מהימנה ומומלצת
                   </p>
                 </div>
               </div>
@@ -223,9 +210,11 @@ export default function PublicPricingPage() {
       {/* CTA Section */}
       <div className="bg-gradient-to-r from-primary/10 via-blue-600/10 to-purple-700/15 py-16">
         <div className="max-w-4xl mx-auto text-center px-4">
-          <h2 className="text-3xl font-bold mb-4">🚀 התחילו להגדיל מכירות היום</h2>
+          <h2 className="text-3xl font-bold mb-4">
+            🚀 התחילו להגדיל מכירות היום
+          </h2>
           <p className="text-xl text-muted-foreground mb-8">
-            הצטרפו ל-2,847 עסקים שכבר מגדילים רווחים עם רייט-איט
+            הצטרפו ל-300 עסקים שכבר מגדילים רווחים עם רייט-איט
           </p>
           <Button
             size="lg"
