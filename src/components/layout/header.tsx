@@ -131,7 +131,7 @@ export function Header() {
       <header className="sticky top-0 z-50 w-full border-b border-border bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80 shadow-sm">
         <nav className="container mx-auto px-4" aria-label="ניווט ראשי">
           {isMiniHeader ? (
-            <div className="flex h-16 items-center justify-center">
+            <div className="flex h-20 items-center justify-center py-4">
               {/* Only logo for mini header pages */}
               <Link
                 href="/business"
