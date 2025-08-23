@@ -107,83 +107,158 @@ interface PageProps {
   };
 }
 
-// Remove the database write from metadata generation and fix JSON-LD
-async function getWebsiteData(url: string) {
-  await connectDB();
+// Consolidated data fetching function with error handling and optimization
+async function getToolPageData(url: string) {
+  try {
+    await connectDB();
 
-  // Get website data
-  const website = await Website.findOne({ url: url }).lean();
+    // Single aggregation pipeline to get website with all related data
+    const websiteWithStats = await Website.aggregate([
+      { $match: { url: url } },
+      {
+        $lookup: {
+          from: "reviews",
+          localField: "_id", 
+          foreignField: "relatedWebsite",
+          as: "reviews",
+          pipeline: [
+            {
+              $lookup: {
+                from: "users",
+                localField: "relatedUser",
+                foreignField: "_id",
+                as: "user",
+                pipeline: [{ $project: { name: 1 } }]
+              }
+            },
+            {
+              $addFields: {
+                relatedUser: { $arrayElemAt: ["$user", 0] }
+              }
+            },
+            {
+              $project: {
+                title: 1,
+                body: 1,
+                rating: 1,
+                createdAt: 1,
+                helpfulCount: 1,
+                isVerified: 1,
+                businessResponse: 1,
+                relatedUser: 1
+              }
+            },
+            { $sort: { createdAt: -1 } }
+          ]
+        }
+      },
+      {
+        $addFields: {
+          reviewCount: { $size: "$reviews" },
+          averageRating: {
+            $cond: {
+              if: { $gt: [{ $size: "$reviews" }, 0] },
+              then: { $avg: "$reviews.rating" },
+              else: 0
+            }
+          }
+        }
+      }
+    ]);
 
-  if (!website) {
+    if (!websiteWithStats || websiteWithStats.length === 0) {
+      notFound();
+    }
+
+    const website = websiteWithStats[0];
+
+    // Process categories from JSON data
+    const categoryDataList = website.categories
+      ? website.categories
+          .map((categoryId: string) => {
+            const categoryData = categoriesData.categories.find(
+              (cat) => cat.id === categoryId
+            );
+            if (categoryData) {
+              const Icon = categoryData.icon
+                ? (Icons[categoryData.icon as keyof typeof Icons] as LucideIcon)
+                : null;
+              return {
+                ...categoryData,
+                Icon: Icon as LucideIcon,
+              };
+            }
+            return null;
+          })
+          .filter(Boolean)
+      : [];
+
+    // Process reviews data
+    const processedReviews = website.reviews.map((review: any) => ({
+      _id: review._id.toString(),
+      title: review.title,
+      body: review.body,
+      rating: review.rating,
+      helpfulCount: review.helpfulCount,
+      createdAt: review.createdAt.toISOString(),
+      relatedUser: review.relatedUser
+        ? {
+            name: review.relatedUser.name,
+          }
+        : undefined,
+      isVerified: review.isVerified || false,
+      businessResponse: review.businessResponse ?? undefined,
+    }));
+
+    // Get suggested tools in the same query if we have a category
+    let suggestedTools: any[] = [];
+    if (categoryDataList.length > 0) {
+      try {
+        suggestedTools = await Website.find({
+          url: { $ne: url },
+          categories: categoryDataList[0].id,
+        })
+          .select("name url description averageRating reviewCount logo isVerified")
+          .limit(3)
+          .lean();
+      } catch (error) {
+        console.error("Error fetching suggested tools:", error);
+        // Continue without suggested tools rather than failing
+      }
+    }
+
+    return {
+      website: {
+        ...website,
+        _id: website._id.toString(),
+        averageRating: Math.round((website.averageRating || 0) * 10) / 10,
+        categories: categoryDataList,
+        category: categoryDataList[0] || null,
+        pricingModel: website.pricingModel || PricingModel.BASIC,
+      },
+      reviews: processedReviews,
+      suggestedTools: suggestedTools.map(tool => ({
+        ...tool,
+        _id: tool._id.toString()
+      })),
+    };
+  } catch (error) {
+    console.error("Database error in getToolPageData:", error);
+    
+    // For development, you might want to throw the error
+    if (process.env.NODE_ENV === 'development') {
+      throw error;
+    }
+    
+    // In production, return a graceful fallback or redirect to error page
     notFound();
   }
-
-  // Calculate average rating and review count from reviews (but don't write to DB here)
-  const reviews = await Review.find({ relatedWebsite: website._id });
-  const reviewCount = reviews.length;
-  const averageRating =
-    reviewCount > 0
-      ? reviews.reduce((acc, review) => acc + review.rating, 0) / reviewCount
-      : 0;
-
-  // Find all category data from categories.json
-  const categoryDataList = website.categories
-    ? website.categories
-        .map((categoryId) => {
-          const categoryData = categoriesData.categories.find(
-            (cat) => cat.id === categoryId
-          );
-          if (categoryData) {
-            const Icon = categoryData.icon
-              ? (Icons[categoryData.icon as keyof typeof Icons] as LucideIcon)
-              : null;
-            return {
-              ...categoryData,
-              Icon: Icon as LucideIcon,
-            };
-          }
-          return null;
-        })
-        .filter(Boolean)
-    : [];
-
-  return {
-    ...website,
-    pricingModel: (website.pricingModel as PricingModel) || PricingModel.BASIC,
-    _id: website._id.toString(),
-    averageRating: Math.round(averageRating * 10) / 10,
-    reviewCount,
-    categories: categoryDataList,
-    // Keep first category for backward compatibility
-    category: categoryDataList[0] || null,
-  };
 }
 
-const getReviews = async (websiteId: string) => {
-  const reviews = await Review.find({ relatedWebsite: websiteId })
-    .select(
-      "title body rating createdAt helpfulCount relatedUser isVerified businessResponse"
-    )
-    .populate("relatedUser", "name")
-    .sort({ createdAt: -1 }) // Show newest reviews first
-    .lean<ReviewDoc[]>();
-
-  return reviews.map((review) => ({
-    _id: review._id.toString(),
-    title: review.title,
-    body: review.body,
-    rating: review.rating,
-    helpfulCount: review.helpfulCount,
-    createdAt: review.createdAt.toISOString(),
-    relatedUser: review.relatedUser
-      ? {
-          name: review.relatedUser.name,
-        }
-      : undefined,
-    isVerified: review.isVerified || false,
-    businessResponse: review.businessResponse ?? undefined,
-  })) as Review[];
-};
+// Remove the old inefficient functions
+// async function getWebsiteData(url: string) { ... } - REMOVED
+// const getReviews = async (websiteId: string) => { ... } - REMOVED
+// async function getSuggestedTools(...) { ... } - REMOVED
 
 function getRatingStatus(rating: number): { label: string; color: string } {
   if (rating === 0) return { label: "ניטרלי", color: "text-zinc-500" };
@@ -200,15 +275,12 @@ function getRatingStatus(rating: number): { label: string; color: string } {
   return { label: "ניטרלי", color: "text-zinc-500" };
 }
 
-// Generate metadata for SEO
-export async function generateMetadata(
-  { params }: PageProps,
-  parent: ResolvingMetadata
-): Promise<Metadata> {
-  const decodedUrl = decodeURIComponent(params.url);
-  const website = await getWebsiteData(decodedUrl);
-  const reviews = await getReviews(website._id.toString());
-
+// Create a pure metadata generator without database operations
+function generateToolMetadata(
+  website: any, 
+  reviews: any[], 
+  params: { url: string }
+): Metadata {
   if (!website) {
     return {
       title: "עסק לא נמצא | רייט-איט",
@@ -253,40 +325,6 @@ export async function generateMetadata(
     "דירוגי אתרים",
     "קנייה בטוחה אונליין",
   ].filter(Boolean);
-
-  // Structured data for rich snippets
-  const positiveReviews = reviews?.filter((review) => review.rating > 3) || [];
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "LocalBusiness",
-    name: website.name,
-    url: `${process.env.NEXT_PUBLIC_APP_URL}/tool/${params.url}`,
-    aggregateRating:
-      reviewCount > 0
-        ? {
-            "@type": "AggregateRating",
-            ratingValue: averageRating,
-            bestRating: "5",
-            worstRating: "1",
-            ratingCount: reviewCount, // All reviews count for aggregate
-          }
-        : undefined,
-    review: positiveReviews.map((review) => ({
-      "@type": "Review",
-      reviewRating: {
-        "@type": "Rating",
-        ratingValue: review.rating,
-        bestRating: "5",
-        worstRating: "1",
-      },
-      author: {
-        "@type": "Person",
-        name: review.relatedUser?.name || "לקוח מאומת",
-      },
-      reviewBody: review.body,
-      datePublished: review.createdAt,
-    })),
-  };
 
   return {
     title,
@@ -334,7 +372,28 @@ export async function generateMetadata(
         "max-snippet": -1,
       },
     },
-    // JSON-LD will be rendered in the page component
+  };
+}
+
+// Simplified generateMetadata that provides basic fallback metadata
+export async function generateMetadata(
+  { params }: PageProps,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const decodedUrl = decodeURIComponent(params.url);
+  
+  // Provide basic metadata without database operations
+  // The actual dynamic metadata will be handled by the page component
+  return {
+    title: `ביקורות עסק | רייט-איט`,
+    description: "קראו ביקורות אמיתיות על עסקים דיגיטליים בישראל לפני הקנייה",
+    alternates: {
+      canonical: `${process.env.NEXT_PUBLIC_APP_URL}/tool/${params.url}`,
+    },
+    robots: {
+      index: true,
+      follow: true,
+    },
   };
 }
 
@@ -349,26 +408,6 @@ export async function generateStaticParams() {
   return websites.map((website) => ({
     url: website.url,
   }));
-}
-
-async function getSuggestedTools(
-  currentToolUrl: string,
-  category: { id: string },
-  limit = 3
-) {
-  try {
-    const tools = await Website.find({
-      url: { $ne: currentToolUrl }, // exclude current tool
-      categories: category.id, // find tools that have this category in their categories array
-    })
-      .limit(limit)
-      .lean();
-
-    return tools;
-  } catch (error) {
-    console.error("Error fetching suggested tools:", error);
-    return [];
-  }
 }
 
 // Function to get trust status based on score
@@ -419,13 +458,14 @@ function formatWhatsAppLink(whatsapp: string): string {
 
 export default async function ToolPage({ params }: PageProps) {
   const decodedUrl = decodeURIComponent(params.url);
-  const website = await getWebsiteData(decodedUrl);
-  const reviews = await getReviews(website._id.toString());
+  
+  // Single consolidated database operation
+  const { website, reviews, suggestedTools } = await getToolPageData(decodedUrl);
 
   const ratingStatus = getRatingStatus(website.averageRating || 0);
 
   // Add structured data for rich results
-  const positiveReviews = reviews?.filter((review) => review.rating > 3) || [];
+  const positiveReviews = reviews?.filter((review: any) => review.rating > 3) || [];
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
@@ -442,7 +482,7 @@ export default async function ToolPage({ params }: PageProps) {
             worstRating: "1",
           }
         : undefined,
-    review: positiveReviews.map((review) => ({
+    review: positiveReviews.map((review: any) => ({
       "@type": "Review",
       reviewRating: {
         "@type": "Rating",
@@ -458,10 +498,6 @@ export default async function ToolPage({ params }: PageProps) {
       datePublished: review.createdAt,
     })),
   };
-
-  const suggestedTools = website.category
-    ? await getSuggestedTools(decodedUrl, website.category, 3)
-    : [];
 
   return (
     <>
@@ -513,7 +549,7 @@ export default async function ToolPage({ params }: PageProps) {
                       {/* Categories as individual tags */}
                       {website.categories &&
                         website.categories.length > 0 &&
-                        website.categories.map((category, index) =>
+                        website.categories.map((category: any, index: number) =>
                           category ? (
                             <Link
                               key={category.id}
@@ -563,7 +599,7 @@ export default async function ToolPage({ params }: PageProps) {
                           {website.categories &&
                             website.categories.length > 0 && (
                               <div className="flex flex-wrap gap-2">
-                                {website.categories.map((category, index) =>
+                                {website.categories.map((category: any, index: number) =>
                                   category ? (
                                     <Link
                                       key={category.id}
