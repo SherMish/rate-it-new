@@ -6,10 +6,6 @@ import Image from "next/image";
 import {
   Star,
   Calendar,
-  ExternalLink,
-  CreditCard,
-  Code2,
-  Clock,
   ArrowRight,
   Radar as RadarIcon,
   Info,
@@ -60,46 +56,6 @@ import { WriteFirstReviewButton } from "./components/WriteFirstReviewButton";
 import { WebsiteLogo } from "@/components/website-logo";
 import { TruncatedDescription } from "./components/TruncatedDescription";
 import RatingTiles from "@/components/ui/rating-tiles";
-
-interface WebsiteDoc {
-  _id: Types.ObjectId;
-  name: string;
-  url: string;
-  isVerified: boolean;
-  relatedCategory: { name: string };
-  owner: { name: string };
-  radarTrust?: number;
-  pricingModel?: PricingModel;
-}
-
-interface ReviewDoc extends Document {
-  _id: Types.ObjectId;
-  title: string;
-  body: string;
-  rating: number;
-  createdAt: Date;
-  isVerified: boolean;
-  relatedWebsite: Types.ObjectId;
-  relatedUser?: { _id: Types.ObjectId; name: string; image?: string };
-  helpfulCount?: number;
-  businessResponse?: {
-    text: string;
-    lastUpdated: Date;
-  };
-}
-
-interface Review {
-  _id: string;
-  title: string;
-  body: string;
-  rating: number;
-  createdAt: string;
-  helpfulCount?: number;
-  relatedUser?: {
-    name: string;
-  };
-  isVerified?: boolean;
-}
 
 interface PageProps {
   params: {
@@ -275,126 +231,62 @@ function getRatingStatus(rating: number): { label: string; color: string } {
   return { label: "ניטרלי", color: "text-zinc-500" };
 }
 
-// Create a pure metadata generator without database operations
-function generateToolMetadata(
-  website: any, 
-  reviews: any[], 
-  params: { url: string }
-): Metadata {
-  if (!website) {
-    return {
-      title: "עסק לא נמצא | רייט-איט",
-    };
-  }
 
-  const averageRating = website.averageRating?.toFixed(1) || "0.0";
-  const reviewCount = website.reviewCount || 0;
-  const reviewText = `${reviewCount} ${
-    reviewCount === 1 ? "ביקורת" : "ביקורות"
-  }`;
-  const categoryName = website.category?.name || "עסקים";
-
-  // Better title that includes search intent
-  const title =
-    reviewCount > 0
-      ? `${website.name} ביקורות - ${averageRating}★ (${reviewText}) | רייט-איט`
-      : `${website.name} ביקורות - האם כדאי? | רייט-איט`;
-
-  // More compelling description that addresses buyer concerns
-  const description =
-    reviewCount > 0
-      ? `לפני שקונים ב${website.name} - קראו ${reviewText} של לקוחות אמיתיים. דירוג ${averageRating}/5 כוכבים. בדקו מה אומרים על איכות ושירות.`
-      : `מתכננים לקנות ב${website.name}? בדקו ביקורות וחוות דעת לקוחות לפני הרכישה. קראו על איכות השירות והמוצרים.`;
-
-  // Enhanced keywords targeting purchase intent and common search patterns
-  const keywords = [
-    `${website.name} ביקורות`,
-    `${website.name} חוות דעת`,
-    `${website.name} האם כדאי`,
-    `ביקורות ${website.name}`,
-    `חוות דעת ${website.name}`,
-    `האם כדאי ${website.name}`,
-    `${website.name} ביקורות לקוחות`,
-    `${website.name} דעות`,
-    `קנייה ב${website.name}`,
-    `אמינות ${website.name}`,
-    `${website.name} איכות שירות`,
-    categoryName.toLowerCase(),
-    "ביקורות לפני קנייה",
-    "חוות דעת לקוחות",
-    "דירוגי אתרים",
-    "קנייה בטוחה אונליין",
-  ].filter(Boolean);
-
-  return {
-    title,
-    description,
-    keywords,
-    openGraph: {
-      title: `${website.name} ביקורות - כדאי לקנות?`,
-      description:
-        reviewCount > 0
-          ? `${reviewText} אמיתיות על ${website.name}. דירוג ${averageRating}/5. קראו לפני הקנייה!`
-          : `ביקורות וחוות דעת על ${website.name}. בדקו לפני הקנייה!`,
-      type: "website",
-      url: `${process.env.NEXT_PUBLIC_APP_URL}/tool/${params.url}`,
-      siteName: "רייט-איט",
-      locale: "he_IL",
-      // images: [
-      //   {
-      //     url:
-      //       website.logo || `${process.env.NEXT_PUBLIC_APP_URL}/logo_new.png`,
-      //     width: 1200,
-      //     height: 630,
-      //     alt: `${website.name} - ביקורות וחוות דעת`,
-      //   },
-      // ],
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: `${website.name} ביקורות - ${averageRating}★`,
-      description:
-        reviewCount > 0
-          ? `${reviewText} אמיתיות. קראו לפני הקנייה!`
-          : `ביקורות וחוות דעת על ${website.name}`,
-    },
-    alternates: {
-      canonical: `${process.env.NEXT_PUBLIC_APP_URL}/tool/${params.url}`,
-    },
-    robots: {
-      index: true,
-      follow: true,
-      googleBot: {
-        index: true,
-        follow: true,
-        "max-video-preview": -1,
-        "max-image-preview": "large",
-        "max-snippet": -1,
-      },
-    },
-  };
-}
-
-// Simplified generateMetadata that provides basic fallback metadata
+// Replace the current generateMetadata function with this:
 export async function generateMetadata(
   { params }: PageProps,
   parent: ResolvingMetadata
 ): Promise<Metadata> {
   const decodedUrl = decodeURIComponent(params.url);
   
-  // Provide basic metadata without database operations
-  // The actual dynamic metadata will be handled by the page component
-  return {
-    title: `ביקורות עסק | רייט-איט`,
-    description: "קראו ביקורות אמיתיות על עסקים דיגיטליים בישראל לפני הקנייה",
-    alternates: {
-      canonical: `${process.env.NEXT_PUBLIC_APP_URL}/tool/${params.url}`,
-    },
-    robots: {
-      index: true,
-      follow: true,
-    },
-  };
+  try {
+    await connectDB();
+    
+    // Lightweight query to get just the essential metadata fields
+    const website = await Website.findOne({ url: decodedUrl })
+      .select('name averageRating reviewCount categories')
+      .lean();
+
+    if (!website) {
+      return {
+        title: "עסק לא נמצא | רייט-איט",
+        description: "העסק המבוקש לא נמצא במערכת",
+      };
+    }
+
+    // Get review count from database
+    const reviewCount = await Review.countDocuments({ 
+      relatedWebsite: website._id 
+    });
+
+    const averageRating = website.averageRating?.toFixed(1) || "0.0";
+    const reviewText = `${reviewCount} ${reviewCount === 1 ? "ביקורת" : "ביקורות"}`;
+
+    // Generate business-specific title
+    const title = `חוות דעת וביקורות על ${website.name}`;
+
+    const description = reviewCount > 0
+      ? `לפני שקונים ב${website.name} - קראו ${reviewText} של לקוחות אמיתיים. דירוג ${averageRating}.`
+      : `בדקו ביקורות וחוות דעת של לקוחות אמיתיים על ${website.name}.`;
+
+    return {
+      title,
+      description,
+      alternates: {
+        canonical: `${process.env.NEXT_PUBLIC_APP_URL}/tool/${params.url}`,
+      },
+      robots: {
+        index: true,
+        follow: true,
+      },
+    };
+  } catch (error) {
+    console.error("Metadata generation error:", error);
+    return {
+      title: `ביקורות עסק | רייט-איט`,
+      description: "קראו ביקורות אמיתיות על עסקים דיגיטליים בישראל",
+    };
+  }
 }
 
 // Add export for static params if you want to pre-render some pages
@@ -410,26 +302,6 @@ export async function generateStaticParams() {
   }));
 }
 
-// Function to get trust status based on score
-function getTrustStatus(score: number) {
-  const status = trustStatuses.find(
-    (status) => score >= status.from && score <= status.to
-  );
-  return (
-    status || {
-      status: "לא מדורג",
-      description: "עסק זה עדיין לא דורג.",
-    }
-  );
-}
-
-// Function to get the appropriate icon based on trust level
-function getTrustStatusIcon(score: number) {
-  if (score >= 8.6) return Award; // מוביל בתעשייה
-  if (score >= 7.1) return ThumbsUp; // מאושר שוק
-  if (score >= 5.1) return Sparkles; // שחקן מתפתח
-  return AlertTriangle; // אמון שוק נמוך
-}
 
 function formatWhatsAppLink(whatsapp: string): string {
   if (!whatsapp) return "";
