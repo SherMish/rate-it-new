@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { WebsiteCard } from "@/components/website-card";
 import { Metadata } from "next";
 import { WebsiteType } from "@/lib/models/Website";
+import { CategoryBreadcrumbs } from "./components/CategoryBreadcrumbs";
 
 interface PageProps {
   params: {
@@ -102,15 +103,7 @@ export default async function CategoryPage({ params }: PageProps) {
       <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,#3b82f620,transparent_70%),radial-gradient(ellipse_at_bottom,#6366f115,transparent_70%)] pointer-events-none" />
 
       <div className="relative container max-w-4xl mx-auto px-4 py-8">
-        <div className="mb-4">
-          <Link
-            href="/"
-            className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <ChevronLeft className="w-4 h-4 ml-1" />
-            חזרה לעמוד הראשי
-          </Link>
-        </div>
+        <CategoryBreadcrumbs categoryName={category.name} />
 
         <div className="rounded-lg border border-border bg-white shadow-sm overflow-hidden">
           <div className="p-4 sm:p-6 border-b border-border">
