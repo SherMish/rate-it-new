@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   Dialog,
   DialogContent,
@@ -112,6 +112,10 @@ export function AddToolDialog({
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [aiAnalysisResult, setAiAnalysisResult] = useState<AIAnalysisResult | null>(null);
   const [showAiPreview, setShowAiPreview] = useState(false);
+  
+  // URL duplicate checking state
+  const [isCheckingUrl, setIsCheckingUrl] = useState(false);
+  const [urlError, setUrlError] = useState<string | null>(null);
 
   // Initialize form data when website prop changes (edit mode)
   useEffect(() => {
@@ -224,6 +228,8 @@ export function AddToolDialog({
       });
       setFormErrors({});
       setFormError(null);
+      setUrlError(null);
+      setIsCheckingUrl(false);
     }
   };
 
@@ -274,6 +280,54 @@ export function AddToolDialog({
       setIsAnalyzing(false);
     }
   };
+
+  // URL duplicate checking function
+  const checkUrlExists = useCallback(async (url: string) => {
+    if (!url.trim() || isEditMode) {
+      setUrlError(null);
+      return;
+    }
+
+    // Normalize URL for checking
+    let normalizedUrl = url.trim().toLowerCase();
+    if (!normalizedUrl.startsWith('http://') && !normalizedUrl.startsWith('https://')) {
+      normalizedUrl = 'https://' + normalizedUrl;
+    }
+    
+    setIsCheckingUrl(true);
+    setUrlError(null);
+
+    try {
+      const response = await fetch(`/api/websites/find?url=${encodeURIComponent(normalizedUrl)}`);
+      
+      if (response.ok) {
+        // Website exists
+        setUrlError("אתר זה כבר קיים במערכת");
+      } else if (response.status === 404) {
+        // Website doesn't exist - this is good
+        setUrlError(null);
+      } else {
+        // Other error, don't show error to user
+        console.error('Error checking URL:', response.status);
+        setUrlError(null);
+      }
+    } catch (error) {
+      console.error('URL check error:', error);
+      // Don't show error to user for network issues
+      setUrlError(null);
+    } finally {
+      setIsCheckingUrl(false);
+    }
+  }, [isEditMode]);
+
+  // Debounced URL checking
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      checkUrlExists(formData.url);
+    }, 500); // Wait 500ms after user stops typing
+
+    return () => clearTimeout(timeoutId);
+  }, [formData.url, checkUrlExists]);
 
   // Apply AI analysis results to form
   const handleApplyAiResults = () => {
@@ -363,6 +417,12 @@ export function AddToolDialog({
     if (!formData.url.trim()) {
       errors.url = "נדרשת כתובת אתר";
     }
+    
+    // Check for URL duplicate error
+    if (urlError) {
+      errors.url = urlError;
+    }
+    
     if (!formData.shortDescription.trim()) {
       errors.shortDescription = "נדרש תיאור קצר";
     }
@@ -696,13 +756,13 @@ export function AddToolDialog({
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <Label className="text-right block">כתובת אתר</Label>
-                {!isEditMode && formData.url.trim() && (
+                {!isEditMode && formData.url.trim() && !urlError && (
                   <Button
                     type="button"
                     size="sm"
                     variant="outline"
                     onClick={handleAiAnalysis}
-                    disabled={isAnalyzing}
+                    disabled={isAnalyzing || isCheckingUrl}
                     className="flex items-center gap-2"
                   >
                     {isAnalyzing ? (
@@ -714,24 +774,36 @@ export function AddToolDialog({
                   </Button>
                 )}
               </div>
-              <Input
-                placeholder="example.co.il"
-                value={formData.url}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, url: e.target.value }))
-                }
-                className={`text-right ${
-                  formErrors.url ? "border-red-500" : ""
-                }`}
-                dir="rtl"
-                disabled={isEditMode} // Disable URL editing in edit mode
-              />
+              <div className="relative">
+                <Input
+                  placeholder="example.co.il"
+                  value={formData.url}
+                  onChange={(e) =>
+                    setFormData((prev) => ({ ...prev, url: e.target.value }))
+                  }
+                  className={`text-right ${
+                    formErrors.url || urlError ? "border-red-500" : ""
+                  } ${isCheckingUrl ? "pr-10" : ""}`}
+                  dir="rtl"
+                  disabled={isEditMode} // Disable URL editing in edit mode
+                />
+                {isCheckingUrl && (
+                  <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
+                    <Loader2 className="w-4 h-4 animate-spin text-gray-400" />
+                  </div>
+                )}
+              </div>
               {formErrors.url && (
                 <p className="text-sm text-red-500 text-right">
                   {formErrors.url}
                 </p>
               )}
-              {!isEditMode && (
+              {urlError && (
+                <p className="text-sm text-red-500 text-right">
+                  {urlError}
+                </p>
+              )}
+              {!isEditMode && !urlError && (
                 <p className="text-xs text-muted-foreground text-right">
                   💡 לחצו על &quot;מילוי אוטומטי&quot; כדי למלא אוטומטית את פרטי העסק באמצעות AI
                 </p>
