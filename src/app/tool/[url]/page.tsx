@@ -263,7 +263,7 @@ export async function generateMetadata(
     const reviewText = `${reviewCount} ${reviewCount === 1 ? "ביקורת" : "ביקורות"}`;
 
     // Generate business-specific title
-    const title = `חוות דעת וביקורות על ${website.name}`;
+    const title = `קראו ביקורות מלקוחות אמיתיים על ${website.name}`;
 
     const description = reviewCount > 0
       ? `לפני שקונים ב${website.name} - קראו ${reviewText} של לקוחות אמיתיים. דירוג ${averageRating}.`
