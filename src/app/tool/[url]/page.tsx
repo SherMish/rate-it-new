@@ -387,6 +387,7 @@ export default async function ToolPage({ params }: PageProps) {
           {/* Breadcrumbs */}
           <ToolBreadcrumbs 
             businessName={website.name}
+            businessUrl={params.url}
             category={website.category}
           />
           

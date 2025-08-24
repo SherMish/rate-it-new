@@ -103,7 +103,7 @@ export default async function CategoryPage({ params }: PageProps) {
       <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,#3b82f620,transparent_70%),radial-gradient(ellipse_at_bottom,#6366f115,transparent_70%)] pointer-events-none" />
 
       <div className="relative container max-w-4xl mx-auto px-4 py-8">
-        <CategoryBreadcrumbs categoryName={category.name} />
+        <CategoryBreadcrumbs categoryName={category.name} categoryId={category.id} />
 
         <div className="rounded-lg border border-border bg-white shadow-sm overflow-hidden">
           <div className="p-4 sm:p-6 border-b border-border">
