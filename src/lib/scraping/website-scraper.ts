@@ -55,7 +55,7 @@ export class WebsiteScraper {
       await page.setViewport({ width: 1920, height: 1080 });
 
       // Set timeout
-      page.setDefaultTimeout(15000);
+      page.setDefaultTimeout(30000);
 
       // Scrape main page
       const mainPage = await this.scrapeMainPage(page, normalizedUrl);
