@@ -6,6 +6,7 @@ export interface ScrapedContent {
     description: string;
     content: string;
     links: string[];
+    linkData?: { href: string, text: string, context: string }[];
   };
   aboutPage?: {
     content: string;
@@ -57,14 +58,17 @@ export class WebsiteScraper {
       // Set timeout
       page.setDefaultTimeout(30000);
 
-      // Scrape main page
+      // Scrape main page and extract navigation links intelligently
       const mainPage = await this.scrapeMainPage(page, normalizedUrl);
       
-      // Find and scrape about page
-      const aboutPage = await this.findAndScrapeAboutPage(page, normalizedUrl, mainPage.links);
+      // Use AI-powered navigation detection to find about and contact pages
+      const navigationAnalysis = await this.analyzeNavigation(mainPage.links, normalizedUrl, mainPage.linkData);
       
-      // Find and scrape contact page
-      const contactPage = await this.findAndScrapeContactPage(page, normalizedUrl, mainPage.links);
+      // Find and scrape about page using intelligent detection
+      const aboutPage = await this.findAndScrapeAboutPage(page, normalizedUrl, navigationAnalysis.aboutUrls);
+      
+      // Find and scrape contact page using intelligent detection
+      const contactPage = await this.findAndScrapeContactPage(page, normalizedUrl, navigationAnalysis.contactUrls);
 
       // Extract contact information and social links
       const allContent = [mainPage.content, aboutPage?.content || '', contactPage?.content || ''].join(' ');
@@ -102,7 +106,13 @@ export class WebsiteScraper {
   }
 
   private async scrapeMainPage(page: Page, url: string) {
-    await page.goto(url, { waitUntil: 'networkidle2' });
+    await page.goto(url, { 
+      waitUntil: 'domcontentloaded',
+      timeout: 15000 
+    });
+    
+    // Wait a bit for dynamic content but don't wait for all network activity
+    await new Promise(resolve => setTimeout(resolve, 2000));
 
     const result = await page.evaluate(() => {
       // Extract title
@@ -137,12 +147,55 @@ export class WebsiteScraper {
         }
       }
 
-      // Extract all links
+      // Extract all links with their text content for intelligent analysis
       const links: string[] = [];
+      const linkData: { href: string, text: string, context: string }[] = [];
+      
       document.querySelectorAll('a[href]').forEach(link => {
         const href = link.getAttribute('href');
         if (href && !href.startsWith('#') && !href.startsWith('javascript:')) {
           links.push(href);
+          
+          // Extract link text and surrounding context
+          const linkText = (link.textContent || '').trim();
+          const parent = link.parentElement;
+          let context = '';
+          
+          // Try to get better context by looking at parent elements
+          if (parent) {
+            // Check if link is in navigation, footer, or header
+            let currentElement: HTMLElement | null = parent;
+            for (let i = 0; i < 3 && currentElement; i++) {
+              const tagName = currentElement.tagName?.toLowerCase();
+              const className = currentElement.className?.toLowerCase() || '';
+              const id = currentElement.id?.toLowerCase() || '';
+              
+              if (tagName === 'nav' || className.includes('nav') || id.includes('nav')) {
+                context += ' navigation ';
+              }
+              if (tagName === 'footer' || className.includes('footer') || id.includes('footer')) {
+                context += ' footer ';
+              }
+              if (tagName === 'header' || className.includes('header') || id.includes('header')) {
+                context += ' header ';
+              }
+              if (className.includes('menu') || id.includes('menu')) {
+                context += ' menu ';
+              }
+              
+              currentElement = currentElement.parentElement;
+            }
+            
+            // Get surrounding text content
+            const parentText = (parent.textContent || '').trim().substring(0, 150);
+            context += ' ' + parentText;
+          }
+          
+          linkData.push({
+            href,
+            text: linkText,
+            context: context.trim()
+          });
         }
       });
 
@@ -150,95 +203,336 @@ export class WebsiteScraper {
         title: title.trim(),
         description: description.trim(),
         content: content.trim().substring(0, 5000), // Limit content size
-        links: Array.from(new Set(links)) // Remove duplicates
+        links: Array.from(new Set(links)), // Remove duplicates
+        linkData: linkData // Enhanced link information for intelligent navigation
       };
     });
 
     return result;
   }
 
-  private async findAndScrapeAboutPage(page: Page, baseUrl: string, links: string[]): Promise<{ content: string; url: string } | undefined> {
-    const aboutPatterns = [
-      '/about',
-      '/about-us',
-      '/אודות',
-      '/עלינו',
-      '/about.html',
-      '/about-us.html',
-      'about',
-      'אודות'
-    ];
+  private async analyzeNavigation(links: string[], baseUrl: string, linkData?: { href: string, text: string, context: string }[]): Promise<{ aboutUrls: string[], contactUrls: string[] }> {
+    const baseHost = new URL(baseUrl).hostname;
+    const internalLinks: { url: string, text: string, path: string, context: string }[] = [];
 
-    const aboutLink = this.findPageByPatterns(links, aboutPatterns, baseUrl);
-    if (!aboutLink) return undefined;
+    // Use enhanced link data if available, otherwise fall back to basic link analysis
+    if (linkData && linkData.length > 0) {
+      for (const linkInfo of linkData) {
+        try {
+          let fullUrl: string;
 
-    try {
-      await page.goto(aboutLink, { waitUntil: 'networkidle2' });
-      
-      const content = await page.evaluate(() => {
-        const contentSelectors = ['main', '[role="main"]', '.content', '#content', 'body'];
-        
-        for (const selector of contentSelectors) {
-          const element = document.querySelector(selector);
-          if (element) {
-            const cloned = element.cloneNode(true) as Element;
-            const unwanted = cloned.querySelectorAll('script, style, nav, header, footer');
-            unwanted.forEach(el => el.remove());
-            
-            const text = cloned.textContent || '';
-            if (text.length > 100) return text.trim().substring(0, 3000);
+          if (linkInfo.href.startsWith('http')) {
+            fullUrl = linkInfo.href;
+            // Skip external links
+            if (!fullUrl.includes(baseHost)) continue;
+          } else {
+            const url = new URL(baseUrl);
+            fullUrl = new URL(linkInfo.href, url.origin).href;
           }
-        }
-        return '';
-      });
 
-      return { content, url: aboutLink };
-    } catch (error) {
-      console.error('Error scraping about page:', error);
-      return undefined;
+          const path = new URL(fullUrl).pathname.toLowerCase();
+          
+          internalLinks.push({ 
+            url: fullUrl, 
+            text: linkInfo.text.toLowerCase(), 
+            path,
+            context: linkInfo.context.toLowerCase()
+          });
+        } catch (error) {
+          continue; // Skip malformed URLs
+        }
+      }
+    } else {
+      // Fallback to basic link analysis
+      for (const link of links) {
+        try {
+          let fullUrl: string;
+
+          if (link.startsWith('http')) {
+            fullUrl = link;
+            // Skip external links
+            if (!fullUrl.includes(baseHost)) continue;
+          } else {
+            const url = new URL(baseUrl);
+            fullUrl = new URL(link, url.origin).href;
+          }
+
+          const path = new URL(fullUrl).pathname.toLowerCase();
+          const linkText = this.getLinkTextFromPath(path);
+          
+          internalLinks.push({ url: fullUrl, text: linkText, path, context: '' });
+        } catch (error) {
+          continue; // Skip malformed URLs
+        }
+      }
     }
+
+    // Intelligent matching for about pages
+    const aboutUrls = this.findPagesByIntelligentMatching(internalLinks, 'about');
+    
+    // Intelligent matching for contact pages  
+    const contactUrls = this.findPagesByIntelligentMatching(internalLinks, 'contact');
+
+    return { aboutUrls, contactUrls };
   }
 
-  private async findAndScrapeContactPage(page: Page, baseUrl: string, links: string[]): Promise<{ content: string; url: string } | undefined> {
-    const contactPatterns = [
-      '/contact',
-      '/contact-us',
-      '/צור-קשר',
-      '/יצירת-קשר',
-      '/contact.html',
-      '/contact-us.html',
-      'contact',
-      'צור-קשר'
-    ];
+  private getLinkTextFromPath(path: string): string {
+    // Extract meaningful text from URL path
+    const segments = path.split('/').filter(segment => segment.length > 0);
+    return segments.join(' ').replace(/[-_]/g, ' ');
+  }
 
-    const contactLink = this.findPageByPatterns(links, contactPatterns, baseUrl);
-    if (!contactLink) return undefined;
+  private findPagesByIntelligentMatching(links: { url: string, text: string, path: string, context: string }[], pageType: 'about' | 'contact'): string[] {
+    const patterns = pageType === 'about' ? {
+      exact: ['/about', '/about-us', '/אודות', '/עלינו', '/about.html', '/about-us.html', '/מי-אנחנו'],
+      partial: ['about', 'אודות', 'עלינו', 'קצת עלינו', 'עלי', 'מי אנחנו', 'מי אני', 'our story', 'who we are', 'מי-אנחנו'],
+      keywords: ['story', 'team', 'history', 'mission', 'vision', 'company', 'סיפור', 'צוות', 'היסטוריה', 'משימה', 'חזון', 'חברה']
+    } : {
+      exact: ['/contact', '/contact-us', '/צור-קשר', '/יצירת-קשר', '/contact.html', '/contact-us.html', '/צרו-קשר'],
+      partial: [
+        'contact', 'צור-קשר', 'יצירת-קשר', 'צרו קשר', 'בואו נדבר', 'דברו איתנו', 'reach out', 'get in touch',
+        'צור קשר', 'צרו-קשר', 'יצירת קשר', 'ליצירת קשר', 'פרטי התקשרות', 'דרכי התקשרות'
+      ],
+      keywords: [
+        'phone', 'email', 'address', 'location', 'reach', 'טלפון', 'אימייל', 'כתובת', 'מיקום', 'הגעה',
+        'התקשרות', 'פרטים', 'מידע נוסף', 'פניות', 'שאלות', 'עזרה', 'תמיכה', 'support', 'help'
+      ]
+    };
 
-    try {
-      await page.goto(contactLink, { waitUntil: 'networkidle2' });
-      
-      const content = await page.evaluate(() => {
-        const contentSelectors = ['main', '[role="main"]', '.content', '#content', 'body'];
-        
-        for (const selector of contentSelectors) {
-          const element = document.querySelector(selector);
-          if (element) {
-            const cloned = element.cloneNode(true) as Element;
-            const unwanted = cloned.querySelectorAll('script, style, nav, header, footer');
-            unwanted.forEach(el => el.remove());
-            
-            const text = cloned.textContent || '';
-            if (text.length > 50) return text.trim().substring(0, 2000);
+    const matchedUrls: { url: string, score: number }[] = [];
+
+    for (const link of links) {
+      let score = 0;
+      const combinedText = (link.path + ' ' + link.text + ' ' + link.context).toLowerCase();
+      const decodedUrl = decodeURIComponent(link.url).toLowerCase();
+
+      // Exact path matches (highest priority) - check both encoded and decoded URLs
+      for (const exact of patterns.exact) {
+        if (link.path.includes(exact.toLowerCase()) || decodedUrl.includes(exact.toLowerCase())) {
+          score += 100;
+          break;
+        }
+      }
+
+      // Partial matches in path, text, or context (medium priority)
+      for (const partial of patterns.partial) {
+        if (combinedText.includes(partial.toLowerCase()) || decodedUrl.includes(partial.toLowerCase())) {
+          score += 50;
+          // Bonus points if match is in link text (more reliable than context)
+          if (link.text.includes(partial.toLowerCase())) {
+            score += 25;
           }
         }
-        return '';
-      });
+      }
 
-      return { content, url: contactLink };
-    } catch (error) {
-      console.error('Error scraping contact page:', error);
-      return undefined;
+      // Keyword matches (lower priority)
+      for (const keyword of patterns.keywords) {
+        if (combinedText.includes(keyword.toLowerCase()) || decodedUrl.includes(keyword.toLowerCase())) {
+          score += 20;
+          // Bonus for keyword in link text
+          if (link.text.includes(keyword.toLowerCase())) {
+            score += 10;
+          }
+        }
+      }
+
+      // Special handling for Hebrew URL encoding
+      if (pageType === 'contact') {
+        const hebrewContactPatterns = [
+          '%d7%a6%d7%95%d7%a8-%d7%a7%d7%a9%d7%a8', // צור-קשר
+          '%d7%a6%d7%a8%d7%95-%d7%a7%d7%a9%d7%a8', // צרו-קשר
+          '%d7%99%d7%a6%d7%99%d7%a8%d7%aa-%d7%a7%d7%a9%d7%a8' // יצירת-קשר
+        ];
+        
+        for (const pattern of hebrewContactPatterns) {
+          if (link.url.toLowerCase().includes(pattern)) {
+            score += 120; // Higher than exact matches due to specificity
+            break;
+          }
+        }
+      } else if (pageType === 'about') {
+        const hebrewAboutPatterns = [
+          '%d7%90%d7%95%d7%93%d7%95%d7%aa', // אודות
+          '%d7%9e%d7%99-%d7%90%d7%a0%d7%97%d7%a0%d7%95', // מי-אנחנו
+          '%d7%a2%d7%9c%d7%99%d7%a0%d7%95' // עלינו
+        ];
+        
+        for (const pattern of hebrewAboutPatterns) {
+          if (link.url.toLowerCase().includes(pattern)) {
+            score += 120; // Higher than exact matches due to specificity
+            break;
+          }
+        }
+      }
+
+      // Avoid common false positives
+      const falsePosivites = ['blog', 'news', 'products', 'services', 'home', 'portfolio', 'gallery', 'shop', 'store', 'cart'];
+      for (const falsePos of falsePosivites) {
+        if (combinedText.includes(falsePos)) {
+          score -= 30;
+        }
+      }
+
+      // Boost score for navigation/menu links (typically more reliable)
+      if (link.context.includes('nav') || link.context.includes('menu') || link.context.includes('navigation')) {
+        score += 15;
+      }
+
+      // Boost score for footer links (contact often in footer)
+      if (pageType === 'contact' && link.context.includes('footer')) {
+        score += 10;
+      }
+
+      if (score > 0) {
+        matchedUrls.push({ url: link.url, score });
+      }
     }
+
+    // Sort by score and return top matches
+    return matchedUrls
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 3) // Take top 3 candidates
+      .map(match => match.url);
+  }
+
+  private async findAndScrapeAboutPage(page: Page, baseUrl: string, candidateUrls: string[]): Promise<{ content: string; url: string } | undefined> {
+    // If no intelligent candidates found, fall back to basic pattern matching
+    if (candidateUrls.length === 0) {
+      const aboutPatterns = [
+        '/about',
+        '/about-us',
+        '/אודות',
+        '/עלינו',
+        '/about.html',
+        '/about-us.html',
+        'about',
+        'אודות'
+      ];
+      
+      // Get all links from the page for fallback
+      const allLinks = await page.evaluate(() => {
+        const links: string[] = [];
+        document.querySelectorAll('a[href]').forEach(link => {
+          const href = link.getAttribute('href');
+          if (href && !href.startsWith('#') && !href.startsWith('javascript:')) {
+            links.push(href);
+          }
+        });
+        return Array.from(new Set(links));
+      });
+      
+      const fallbackUrl = this.findPageByPatterns(allLinks, aboutPatterns, baseUrl);
+      if (fallbackUrl) candidateUrls = [fallbackUrl];
+    }
+
+    // Try each candidate URL until we find one that works
+    for (const aboutUrl of candidateUrls) {
+      try {
+        await page.goto(aboutUrl, { 
+          waitUntil: 'domcontentloaded',
+          timeout: 15000 
+        });
+        
+        // Brief wait for dynamic content
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        const content = await page.evaluate(() => {
+          const contentSelectors = ['main', '[role="main"]', '.content', '#content', '.about', '.about-content', 'body'];
+          
+          for (const selector of contentSelectors) {
+            const element = document.querySelector(selector);
+            if (element) {
+              const cloned = element.cloneNode(true) as Element;
+              const unwanted = cloned.querySelectorAll('script, style, nav, header, footer, .navigation, .menu');
+              unwanted.forEach(el => el.remove());
+              
+              const text = cloned.textContent || '';
+              if (text.length > 100) return text.trim().substring(0, 3000);
+            }
+          }
+          return '';
+        });
+
+        if (content.length > 100) {
+          return { content, url: aboutUrl };
+        }
+      } catch (error) {
+        console.error(`Error scraping about page ${aboutUrl}:`, error);
+        continue; // Try next candidate
+      }
+    }
+
+    return undefined;
+  }
+
+  private async findAndScrapeContactPage(page: Page, baseUrl: string, candidateUrls: string[]): Promise<{ content: string; url: string } | undefined> {
+    // If no intelligent candidates found, fall back to basic pattern matching
+    if (candidateUrls.length === 0) {
+      const contactPatterns = [
+        '/contact',
+        '/contact-us',
+        '/צור-קשר',
+        '/יצירת-קשר',
+        '/contact.html',
+        '/contact-us.html',
+        'contact',
+        'צור-קשר'
+      ];
+      
+      // Get all links from the page for fallback
+      const allLinks = await page.evaluate(() => {
+        const links: string[] = [];
+        document.querySelectorAll('a[href]').forEach(link => {
+          const href = link.getAttribute('href');
+          if (href && !href.startsWith('#') && !href.startsWith('javascript:')) {
+            links.push(href);
+          }
+        });
+        return Array.from(new Set(links));
+      });
+      
+      const fallbackUrl = this.findPageByPatterns(allLinks, contactPatterns, baseUrl);
+      if (fallbackUrl) candidateUrls = [fallbackUrl];
+    }
+
+    // Try each candidate URL until we find one that works
+    for (const contactUrl of candidateUrls) {
+      try {
+        await page.goto(contactUrl, { 
+          waitUntil: 'domcontentloaded',
+          timeout: 15000 
+        });
+        
+        // Brief wait for dynamic content
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        const content = await page.evaluate(() => {
+          const contentSelectors = ['main', '[role="main"]', '.content', '#content', '.contact', '.contact-content', 'body'];
+          
+          for (const selector of contentSelectors) {
+            const element = document.querySelector(selector);
+            if (element) {
+              const cloned = element.cloneNode(true) as Element;
+              const unwanted = cloned.querySelectorAll('script, style, nav, header, footer, .navigation, .menu');
+              unwanted.forEach(el => el.remove());
+              
+              const text = cloned.textContent || '';
+              if (text.length > 50) return text.trim().substring(0, 2000);
+            }
+          }
+          return '';
+        });
+
+        if (content.length > 50) {
+          return { content, url: contactUrl };
+        }
+      } catch (error) {
+        console.error(`Error scraping contact page ${contactUrl}:`, error);
+        continue; // Try next candidate
+      }
+    }
+
+    return undefined;
   }
 
   private findPageByPatterns(links: string[], patterns: string[], baseUrl: string): string | null {

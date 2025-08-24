@@ -48,6 +48,30 @@ export class WebsiteAnalyzer {
         warnings.push(`Scraping issue: ${scrapedContent.error}`);
       }
 
+      // Add warnings about page detection
+      if (!scrapedContent.aboutPage) {
+        warnings.push('לא נמצא דף "אודות" - המידע עלול להיות חלקי');
+      } else {
+        console.log(`✅ About page found: ${scrapedContent.aboutPage.url}`);
+      }
+      
+      if (!scrapedContent.contactPage) {
+        warnings.push('לא נמצא דף "צור קשר" - פרטי קשר עלולים להיות חלקיים');
+      } else {
+        console.log(`✅ Contact page found: ${scrapedContent.contactPage.url}`);
+      }
+
+      // Log successful content extraction
+      if (scrapedContent.emails.length > 0) {
+        console.log(`✅ Found ${scrapedContent.emails.length} email(s):`, scrapedContent.emails);
+      }
+      if (scrapedContent.phones.length > 0) {
+        console.log(`✅ Found ${scrapedContent.phones.length} phone(s):`, scrapedContent.phones);
+      }
+      if (scrapedContent.socialLinks.length > 0) {
+        console.log(`✅ Found ${scrapedContent.socialLinks.length} social link(s)`);
+      }
+
       // Step 1: Basic content analysis
       const basicAnalysis = await this.analyzeBasicContent(scrapedContent);
       
