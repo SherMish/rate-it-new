@@ -17,11 +17,36 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Loader2 } from "lucide-react";
+import { Loader2, Sparkles } from "lucide-react";
 import { WebsiteType } from "@/lib/models/Website";
 import categoriesData from "@/lib/data/categories.json";
 import { ImageUpload } from "@/components/image-upload";
 import { toast } from "react-hot-toast";
+
+interface AIAnalysisResult {
+  name: string;
+  nameEnglish?: string;
+  shortDescription: string;
+  description: string;
+  categories: string[];
+  launchYear?: number;
+  address?: string;
+  contact: {
+    email?: string;
+    phone?: string;
+    whatsapp?: string;
+  };
+  socialUrls: {
+    facebook?: string;
+    instagram?: string;
+    twitter?: string;
+    tiktok?: string;
+    linkedin?: string;
+    youtube?: string;
+  };
+  confidence: number;
+  warnings: string[];
+}
 
 interface AddToolDialogProps {
   open: boolean;
@@ -82,6 +107,11 @@ export function AddToolDialog({
   const [generatedDataState, setGeneratedDataState] =
     useState<Partial<WebsiteType> | null>(null);
   const [isEditOpen, setIsEditOpen] = useState(false);
+  
+  // AI Analysis state
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [aiAnalysisResult, setAiAnalysisResult] = useState<AIAnalysisResult | null>(null);
+  const [showAiPreview, setShowAiPreview] = useState(false);
 
   // Initialize form data when website prop changes (edit mode)
   useEffect(() => {
@@ -195,6 +225,86 @@ export function AddToolDialog({
       setFormErrors({});
       setFormError(null);
     }
+  };
+
+  // AI Analysis function
+  const handleAiAnalysis = async () => {
+    if (!formData.url.trim()) {
+      toast.error("אנא הזינו כתובת אתר תחילה");
+      return;
+    }
+
+    setIsAnalyzing(true);
+    setFormError(null);
+
+    try {
+      const response = await fetch('/api/admin/ai-analyze-website', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ url: formData.url }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Failed to analyze website');
+      }
+
+      setAiAnalysisResult(result.data);
+      setShowAiPreview(true);
+      
+      // Show success message with confidence score
+      const confidence = Math.round(result.data.confidence * 100);
+      toast.success(`ניתוח הושלם בהצלחה! רמת ביטחון: ${confidence}%`);
+
+      // Show warnings if any
+      if (result.data.warnings && result.data.warnings.length > 0) {
+        result.data.warnings.forEach((warning: string) => {
+          toast(warning, { icon: '⚠️' });
+        });
+      }
+      
+    } catch (error) {
+      console.error('AI analysis error:', error);
+      setFormError(error instanceof Error ? error.message : 'שגיאה בניתוח האתר');
+      toast.error('שגיאה בניתוח האתר');
+    } finally {
+      setIsAnalyzing(false);
+    }
+  };
+
+  // Apply AI analysis results to form
+  const handleApplyAiResults = () => {
+    if (!aiAnalysisResult) return;
+
+    setFormData(prev => ({
+      ...prev,
+      name: aiAnalysisResult.name || prev.name,
+      shortDescription: aiAnalysisResult.shortDescription || prev.shortDescription,
+      description: aiAnalysisResult.description || prev.description,
+      categories: aiAnalysisResult.categories.length > 0 ? aiAnalysisResult.categories : prev.categories,
+      launchYear: aiAnalysisResult.launchYear ? aiAnalysisResult.launchYear.toString() : prev.launchYear,
+      address: aiAnalysisResult.address || prev.address,
+      contact: {
+        email: aiAnalysisResult.contact.email || prev.contact.email,
+        phone: aiAnalysisResult.contact.phone || prev.contact.phone,
+        whatsapp: aiAnalysisResult.contact.whatsapp || prev.contact.whatsapp,
+      },
+      socialUrls: {
+        facebook: aiAnalysisResult.socialUrls.facebook || prev.socialUrls.facebook,
+        instagram: aiAnalysisResult.socialUrls.instagram || prev.socialUrls.instagram,
+        twitter: aiAnalysisResult.socialUrls.twitter || prev.socialUrls.twitter,
+        tiktok: aiAnalysisResult.socialUrls.tiktok || prev.socialUrls.tiktok,
+        linkedin: aiAnalysisResult.socialUrls.linkedin || prev.socialUrls.linkedin,
+        youtube: aiAnalysisResult.socialUrls.youtube || prev.socialUrls.youtube,
+      },
+    }));
+
+    setShowAiPreview(false);
+    setAiAnalysisResult(null);
+    toast.success("הנתונים הוחלו בהצלחה!");
   };
 
   // URL validation helper function
@@ -465,6 +575,88 @@ export function AddToolDialog({
             </div>
           )}
 
+          {/* AI Analysis Preview */}
+          {showAiPreview && aiAnalysisResult && (
+            <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Button size="sm" onClick={handleApplyAiResults}>
+                    החל כל השינויים
+                  </Button>
+                  <Button size="sm" variant="outline" onClick={() => setShowAiPreview(false)}>
+                    ביטול
+                  </Button>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium">
+                    ניתוח AI הושלם (ביטחון: {Math.round(aiAnalysisResult.confidence * 100)}%)
+                  </span>
+                  <Sparkles className="w-4 h-4 text-blue-600" />
+                </div>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                <div className="space-y-2">
+                  <div>
+                    <strong>שם העסק:</strong> {aiAnalysisResult.name}
+                    {aiAnalysisResult.nameEnglish && (
+                      <span className="text-gray-500"> ({aiAnalysisResult.nameEnglish})</span>
+                    )}
+                  </div>
+                  <div>
+                    <strong>תיאור קצר:</strong> {aiAnalysisResult.shortDescription}
+                  </div>
+                  <div>
+                    <strong>קטגוריות:</strong> {aiAnalysisResult.categories.map(catId => {
+                      const cat = categoriesData.categories.find(c => c.id === catId);
+                      return cat?.name || catId;
+                    }).join(', ')}
+                  </div>
+                  {aiAnalysisResult.launchYear && (
+                    <div><strong>שנת הקמה:</strong> {aiAnalysisResult.launchYear}</div>
+                  )}
+                  {aiAnalysisResult.address && (
+                    <div><strong>כתובת:</strong> {aiAnalysisResult.address}</div>
+                  )}
+                </div>
+                
+                <div className="space-y-2">
+                  {(aiAnalysisResult.contact.email || aiAnalysisResult.contact.phone || aiAnalysisResult.contact.whatsapp) && (
+                    <div>
+                      <strong>פרטי קשר:</strong>
+                      <ul className="list-disc list-inside text-xs">
+                        {aiAnalysisResult.contact.email && <li>אימייל: {aiAnalysisResult.contact.email}</li>}
+                        {aiAnalysisResult.contact.phone && <li>טלפון: {aiAnalysisResult.contact.phone}</li>}
+                        {aiAnalysisResult.contact.whatsapp && <li>וואטסאפ: {aiAnalysisResult.contact.whatsapp}</li>}
+                      </ul>
+                    </div>
+                  )}
+                  
+                  {Object.values(aiAnalysisResult.socialUrls).some(url => url) && (
+                    <div>
+                      <strong>רשתות חברתיות:</strong>
+                      <ul className="list-disc list-inside text-xs">
+                        {aiAnalysisResult.socialUrls.facebook && <li>פייסבוק ✓</li>}
+                        {aiAnalysisResult.socialUrls.instagram && <li>אינסטגרם ✓</li>}
+                        {aiAnalysisResult.socialUrls.twitter && <li>טוויטר ✓</li>}
+                        {aiAnalysisResult.socialUrls.linkedin && <li>לינקדאין ✓</li>}
+                        {aiAnalysisResult.socialUrls.youtube && <li>יוטיוב ✓</li>}
+                        {aiAnalysisResult.socialUrls.tiktok && <li>טיקטוק ✓</li>}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              </div>
+              
+              {aiAnalysisResult.description && (
+                <div className="pt-2 border-t border-blue-300">
+                  <strong>תיאור מפורט:</strong>
+                  <p className="text-sm text-gray-700 mt-1">{aiAnalysisResult.description}</p>
+                </div>
+              )}
+            </div>
+          )}
+
           <div className="space-y-2">
             <Label className="text-right block">לוגו</Label>
             <ImageUpload
@@ -502,7 +694,26 @@ export function AddToolDialog({
             </div>
 
             <div className="space-y-2">
-              <Label className="text-right block">כתובת אתר</Label>
+              <div className="flex items-center justify-between">
+                <Label className="text-right block">כתובת אתר</Label>
+                {!isEditMode && formData.url.trim() && (
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="outline"
+                    onClick={handleAiAnalysis}
+                    disabled={isAnalyzing}
+                    className="flex items-center gap-2"
+                  >
+                    {isAnalyzing ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <Sparkles className="w-4 h-4" />
+                    )}
+                    {isAnalyzing ? "מנתח..." : "מילוי אוטומטי"}
+                  </Button>
+                )}
+              </div>
               <Input
                 placeholder="example.co.il"
                 value={formData.url}
@@ -518,6 +729,11 @@ export function AddToolDialog({
               {formErrors.url && (
                 <p className="text-sm text-red-500 text-right">
                   {formErrors.url}
+                </p>
+              )}
+              {!isEditMode && (
+                <p className="text-xs text-muted-foreground text-right">
+                  💡 לחצו על &quot;מילוי אוטומטי&quot; כדי למלא אוטומטית את פרטי העסק באמצעות AI
                 </p>
               )}
             </div>
