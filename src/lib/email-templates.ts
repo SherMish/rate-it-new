@@ -49,7 +49,7 @@ export function getEmailFooter(): string {
                     <!-- Footer -->
                     <div style="${emailStyles.footer}">
                         <p style="${emailStyles.footerText}">
-                            נשלח באמצעות <a href="https://rate-it.co.il" style="${emailStyles.footerLink}">Rate-It</a>
+                            נשלח באמצעות <a href="https://www.rate-it.co.il" style="${emailStyles.footerLink}">Rate-It</a>
                         </p>
                         <p style="margin:0;font-size:12px;line-height:1.5;color:#9ca3af;">
                             © 2024 Rate-It. כל הזכויות שמורות.
@@ -69,7 +69,7 @@ export function getPlainTextFooter(): string {
 --
 נשלח באמצעות Rate-It
 © 2024 Rate-It. כל הזכויות שמורות.
-https://rate-it.co.il`;
+https://www.rate-it.co.il`;
 }
 
 interface EmailData {
@@ -119,7 +119,7 @@ export function createUnifiedEmailTemplate({
                 <div style="${emailStyles.content}">
                     <!-- Logo Section -->
                     <div style="${emailStyles.logoSection}">
-                        <img src="https://rate-it.co.il/logo_new.png" alt="Rate-It" width="240" height="120" style="${
+                        <img src="https://www.rate-it.co.il/logo_new.png" alt="Rate-It" width="240" height="120" style="${
                           emailStyles.logo
                         }">
                     </div>

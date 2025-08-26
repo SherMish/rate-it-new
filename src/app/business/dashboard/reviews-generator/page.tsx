@@ -53,7 +53,7 @@ export default function ReviewsGeneratorPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const reviewLink = website
-    ? `${process.env.NEXT_PUBLIC_BASE_URL || "https://rate-it.co.il"}/tool/${
+    ? `${process.env.NEXT_PUBLIC_BASE_URL || "https://www.rate-it.co.il"}/tool/${
         website.url
       }/review`
     : "";
@@ -472,7 +472,7 @@ export default function ReviewsGeneratorPage() {
                 <Input
                   readOnly
                   value={`${
-                    process.env.NEXT_PUBLIC_BASE_URL || "https://rate-it.co.il"
+                    process.env.NEXT_PUBLIC_BASE_URL || "https://www.rate-it.co.il"
                   }/api/invite-review`}
                   className="font-mono text-sm"
                   disabled
@@ -485,7 +485,7 @@ export default function ReviewsGeneratorPage() {
                     copyToClipboard(
                       `${
                         process.env.NEXT_PUBLIC_BASE_URL ||
-                        "https://rate-it.co.il"
+                        "https://www.rate-it.co.il"
                       }/api/invite-review`,
                       setCopyApiSuccess
                     )

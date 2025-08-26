@@ -43,8 +43,8 @@ export function ReviewInvitationCard({
   const [customMessage, setCustomMessage] = useState("");
   const [copiedLink, setCopiedLink] = useState<string | null>(null);
 
-  const reviewUrl = `https://rate-it.co.il/tool/${websiteUrl}/review`;
-  const businessPageUrl = `https://rate-it.co.il/tool/${websiteUrl}`;
+  const reviewUrl = `https://www.rate-it.co.il/tool/${websiteUrl}/review`;
+  const businessPageUrl = `https://www.rate-it.co.il/tool/${websiteUrl}`;
 
   // Format Israeli phone number (054-1234567 -> +972541234567)
   const formatIsraeliPhone = (phone: string): string => {

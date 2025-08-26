@@ -19,7 +19,7 @@ export function ReviewQRCode({ websiteUrl, className }: ReviewQRCodeProps) {
   const hiddenQrRef = useRef<HTMLDivElement>(null);
 
   // Create the review URL
-  const reviewUrl = `https://rate-it.co.il/tool/${websiteUrl}/review`;
+  const reviewUrl = `https://www.rate-it.co.il/tool/${websiteUrl}/review`;
 
   // Generate QR code with embedded logo
   useEffect(() => {

@@ -81,7 +81,7 @@ ${stars} <b>דירוג:</b> ${reviewData.rating}/5
 
 ${proofText}
 
-🔗 <a href="https://rate-it.co.il/tool/${encodeURIComponent(reviewData.websiteUrl)}">צפה בביקורת</a>
+🔗 <a href="https://www.rate-it.co.il/tool/${encodeURIComponent(reviewData.websiteUrl)}">צפה בביקורת</a>
     `.trim();
 
     return this.sendMessage({ text: message, parse_mode: 'HTML' });
@@ -133,7 +133,7 @@ ${roleText}
 
 ⏰ <b>זמן:</b> ${new Date().toLocaleString('he-IL', { timeZone: 'Asia/Jerusalem' })}
 
-🔗 <a href="https://rate-it.co.il/tool/${encodeURIComponent(businessData.websiteUrl)}">צפה בעסק</a>
+🔗 <a href="https://www.rate-it.co.il/tool/${encodeURIComponent(businessData.websiteUrl)}">צפה בעסק</a>
     `.trim();
 
     return this.sendMessage({ text: message, parse_mode: 'HTML' });
@@ -163,7 +163,7 @@ ${workEmailText}
 
 ⏰ <b>זמן:</b> ${new Date().toLocaleString('he-IL', { timeZone: 'Asia/Jerusalem' })}
 
-🔗 <a href="https://rate-it.co.il/tool/${encodeURIComponent(businessData.websiteUrl)}">צפה בעסק</a>
+🔗 <a href="https://www.rate-it.co.il/tool/${encodeURIComponent(businessData.websiteUrl)}">צפה בעסק</a>
     `.trim();
 
     return this.sendMessage({ text: message, parse_mode: 'HTML' });

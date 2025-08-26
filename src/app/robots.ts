@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next'
  
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://rateit.co.il'
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.rate-it.co.il'
   
   return {
     rules: [
@@ -14,21 +14,10 @@ export default function robots(): MetadataRoute.Robots {
           '/business/dashboard/',
           '/_next/',
           '/private/',
-          '*.json',
+          '/*.json$',
           '/auth/',
           '/reset-password/',
           '/forgot-password/',
-        ],
-      },
-      // Allow search engines to crawl important paths
-      {
-        userAgent: '*',
-        allow: [
-          '/tool/',
-          '/category/',
-          '/search',
-          '/business',
-          '/about',
         ],
       },
     ],

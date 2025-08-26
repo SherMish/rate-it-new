@@ -396,7 +396,7 @@ export default function WidgetsPage() {
                 {!loading && (
                   <div className="flex justify-center">
                     <a
-                      href={`https://rate-it.co.il/tool/${website?.url || ""}`}
+                      href={`https://www.rate-it.co.il/tool/${website?.url || ""}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-block"

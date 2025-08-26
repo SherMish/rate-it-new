@@ -6,42 +6,22 @@ import Image from "next/image";
 import {
   Star,
   Calendar,
-  ArrowRight,
-  Radar as RadarIcon,
   Info,
-  Award,
-  ThumbsUp,
-  Sparkles,
-  AlertTriangle,
-  Facebook,
-  Instagram,
-  Twitter,
+
   Globe,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import connectDB from "@/lib/mongodb";
 import Website from "@/lib/models/Website";
 import Review from "@/lib/models/Review";
-import { Types } from "mongoose";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import categoriesData from "@/lib/data/categories.json";
 import * as Icons from "lucide-react";
 import { LucideIcon } from "lucide-react";
 import { ReviewsSection } from "@/components/reviews-section";
 import Link from "next/link";
-import { Document } from "mongoose";
-import { Card } from "@/components/ui/card";
 import WriteReviewButton from "@/app/components/WriteReviewButton";
 import { PricingModel } from "@/lib/types/website";
-import { WebsiteCard } from "@/components/website-card";
 import { SuggestedToolCard } from "@/components/suggested-tool-card";
 import { ClaimToolButton } from "@/app/components/claim-tool-button";
-import { trackEvent } from "@/lib/analytics";
 import {
   VisitToolButtonDesktop,
   VisitToolButtonMobile,
@@ -264,11 +244,11 @@ export async function generateMetadata(
     const reviewText = `${reviewCount} ${reviewCount === 1 ? "ביקורת" : "ביקורות"}`;
 
     // Generate business-specific title
-    const title = `קראו ביקורות מלקוחות אמיתיים על ${website.name}`;
+    const title = ` ${website.name} ביקורות | קראו ביקורות מלקוחות אמיתיים`;
 
     const description = reviewCount > 0
-      ? `לפני שקונים ב${website.name} - קראו ${reviewText} של לקוחות אמיתיים. דירוג ${averageRating}.`
-      : `בדקו ביקורות וחוות דעת של לקוחות אמיתיים על ${website.name}.`;
+      ? `בכמה כוכבים תדרגו את ${website.name}? הצטרפו ל${website.reviewCount} אנשים שכבר דירגו. החוויה שלך חשובה.`
+      : `בכמה כוכבים תדרגו את ${website.name}? הצטרפו לרייט-איט ושתפו, קראו ותהנו מביקורות וחוות דעת אמיתיות`;
 
     return {
       title,

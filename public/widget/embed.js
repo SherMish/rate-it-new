@@ -51,7 +51,7 @@
       <script>(function(){const c=document.getElementById('${cardId}');c.addEventListener('mouseenter',function(){this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(124,58,237,0.12),0 4px 12px rgba(0,0,0,0.15)';this.style.background='linear-gradient(135deg,#ffffff 0%,#fefefe 100%)';});c.addEventListener('mouseleave',function(){this.style.transform='translateY(0)';this.style.boxShadow='0 4px 16px rgba(124,58,237,0.08),0 2px 8px rgba(0,0,0,0.1)';this.style.background='linear-gradient(135deg,#ffffff 0%,#f8fafc 100%)';});})();</script>
     `;
     if (websiteUrl) {
-      return `<a href="https://rate-it.co.il/tool/${websiteUrl}" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;">${inner}</a>`;
+      return `<a href="https://www.rate-it.co.il/tool/${websiteUrl}" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;">${inner}</a>`;
     }
     return inner;
   }
@@ -87,7 +87,7 @@
         </div>
       </div>`;
     if (websiteUrl) {
-      return `<a href="https://rate-it.co.il/tool/${websiteUrl}" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;">${inner}</a>`;
+      return `<a href="https://www.rate-it.co.il/tool/${websiteUrl}" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;">${inner}</a>`;
     }
     return inner;
   }
