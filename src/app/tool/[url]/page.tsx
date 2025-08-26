@@ -321,7 +321,7 @@ export default async function ToolPage({ params }: PageProps) {
   const positiveReviews = reviews?.filter((review: any) => review.rating > 3) || [];
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "LocalBusiness",
+    "@type": "WebSite",
     name: website.name,
     description: website.description,
     url: `${process.env.NEXT_PUBLIC_APP_URL}/tool/${params.url}`,
