@@ -4,7 +4,7 @@ import Website from '@/lib/models/Website'
 import categoriesData from '@/lib/data/categories.json'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://rateit.co.il'
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.rate-it.co.il'
   
   try {
     await connectDB()
