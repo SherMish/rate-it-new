@@ -304,7 +304,15 @@ export class WebsiteScraper {
     for (const link of links) {
       let score = 0;
       const combinedText = (link.path + ' ' + link.text + ' ' + link.context).toLowerCase();
-      const decodedUrl = decodeURIComponent(link.url).toLowerCase();
+      
+      // Safely decode URL, fall back to original if malformed
+      let decodedUrl: string;
+      try {
+        decodedUrl = decodeURIComponent(link.url).toLowerCase();
+      } catch (error) {
+        // If URL is malformed, use the original URL
+        decodedUrl = link.url.toLowerCase();
+      }
 
       // Exact path matches (highest priority) - check both encoded and decoded URLs
       for (const exact of patterns.exact) {
