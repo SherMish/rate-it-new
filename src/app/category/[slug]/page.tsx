@@ -84,6 +84,19 @@ async function getCategoryTools(categoryId: string) {
   return tools;
 }
 
+// Get related categories for better internal linking
+function getRelatedCategories(currentCategoryId: string, limit: number = 6) {
+  const currentCategory = categoriesData.categories.find(cat => cat.id === currentCategoryId);
+  if (!currentCategory) return [];
+  
+  // Simple related logic - you can make this more sophisticated
+  const relatedCategories = categoriesData.categories
+    .filter(cat => cat.id !== currentCategoryId)
+    .slice(0, limit);
+    
+  return relatedCategories;
+}
+
 export default async function CategoryPage({ params }: PageProps) {
   const category = categoriesData.categories.find(
     (cat) => cat.id === params.slug
@@ -91,6 +104,7 @@ export default async function CategoryPage({ params }: PageProps) {
   if (!category) return notFound();
 
   const tools = await getCategoryTools(params.slug);
+  const relatedCategories = getRelatedCategories(params.slug);
 
   // Get the icon component
   const IconComponent = (
@@ -160,6 +174,51 @@ export default async function CategoryPage({ params }: PageProps) {
             )}
           </div>
         </div>
+
+        {/* Related Categories Section for Better Internal Linking */}
+        {relatedCategories.length > 0 && (
+          <div className="mt-8 rounded-lg border border-border bg-white shadow-sm overflow-hidden">
+            <div className="p-4 sm:p-6 border-b border-border">
+              <h2 className="text-xl font-bold text-foreground mb-2">
+                קטגוריות קשורות
+              </h2>
+              <p className="text-muted-foreground text-sm">
+                גלו עוד קטגוריות שעשויות לעניין אתכם
+              </p>
+            </div>
+            <div className="p-4 sm:p-6">
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                {relatedCategories.map((relatedCategory) => {
+                  const RelatedIcon = (
+                    relatedCategory.icon 
+                      ? Icons[relatedCategory.icon as keyof typeof Icons] 
+                      : Star
+                  ) as LucideIcon;
+                  
+                  return (
+                    <Link
+                      key={relatedCategory.id}
+                      href={`/category/${relatedCategory.id}`}
+                      className="group p-4 rounded-lg border border-border hover:border-primary/50 hover:bg-primary/5 transition-all duration-200"
+                    >
+                      <div className="flex items-center gap-3 mb-2">
+                        <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0 group-hover:bg-primary/20 transition-colors">
+                          <RelatedIcon className="w-4 h-4 text-primary" />
+                        </div>
+                        <h3 className="font-medium text-foreground text-sm group-hover:text-primary transition-colors">
+                          {relatedCategory.name}
+                        </h3>
+                      </div>
+                      <p className="text-xs text-muted-foreground line-clamp-2">
+                        {relatedCategory.description}
+                      </p>
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

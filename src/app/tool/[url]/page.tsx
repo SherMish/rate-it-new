@@ -319,6 +319,51 @@ export default async function ToolPage({ params }: PageProps) {
 
   // Add structured data for rich results
   const positiveReviews = reviews?.filter((review: any) => review.rating > 3) || [];
+  
+  // FAQ structured data for better search visibility
+  const faqData = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: [
+      {
+        "@type": "Question",
+        name: `האם ${website.name} אמין?`,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: website.reviewCount > 0 
+            ? `${website.name} קיבל דירוג ממוצע של ${website.averageRating.toFixed(1)} כוכבים מתוך ${website.reviewCount} ביקורות של לקוחות אמיתיים ברייט-איט.`
+            : `${website.name} נמצא ברשימה שלנו. עדיין לא קיבל ביקורות, אתם יכולים להיות הראשונים לכתוב ביקורת ולעזור לקהילה.`
+        }
+      },
+      {
+        "@type": "Question", 
+        name: `איך כותבים ביקורת על ${website.name}?`,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: `כדי לכתוב ביקורת על ${website.name}, לחצו על כפתור 'כתיבת ביקורת', דרגו את השירות מ-1 עד 5 כוכבים ושתפו את החוויה שלכם עם הקהילה.`
+        }
+      },
+      {
+        "@type": "Question",
+        name: `מה אומרים הלקוחות על ${website.name}?`,
+        acceptedAnswer: {
+          "@type": "Answer", 
+          text: website.reviewCount > 0
+            ? `הלקוחות נתנו ל${website.name} דירוג ממוצע של ${website.averageRating.toFixed(1)} כוכבים. ברוב הביקורות מציינים ${website.averageRating >= 4 ? 'שירות איכותי ומהיר' : 'שירות סביר עם מקום לשיפור'}.`
+            : `עדיין לא נכתבו ביקורות על ${website.name}. תהיו הראשונים לכתוב ביקורת ולעזור לקהילה!`
+        }
+      },
+       {
+      "@type": "Question",
+      name: `איך ליצור קשר עם ${website.name}?`,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: `ניתן ליצור קשר עם ${website.name} דרך האתר שלהם, טלפון, או מייל. פרטי הקשר המלאים זמינים בעמוד החברה שלנו.`
+      }
+    }
+    ]
+  };
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "WebSite",
@@ -357,6 +402,10 @@ export default async function ToolPage({ params }: PageProps) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqData) }}
       />
       {/* Tracking component */}
       <TrackPageVisit websiteId={website._id.toString()} />
