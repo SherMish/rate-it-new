@@ -49,34 +49,62 @@ export class WebsiteScraper {
       if (!this.browser) throw new Error('Failed to initialize browser');
 
       const normalizedUrl = this.normalizeUrl(url);
-      const page = await this.browser.newPage();
       
-      // Set user agent and viewport
-      await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36');
-      await page.setViewport({ width: 1920, height: 1080 });
-
-      // Set timeout
-      page.setDefaultTimeout(30000);
-
-      // Scrape main page and extract navigation links intelligently
-      const mainPage = await this.scrapeMainPage(page, normalizedUrl);
+      // Scrape main page with retry logic using fresh pages
+      const mainPage = await this.scrapeMainPageWithRetry(normalizedUrl);
+      
+      // Ensure mainPage is valid before proceeding
+      if (!mainPage || !mainPage.links) {
+        throw new Error('Failed to scrape main page content');
+      }
       
       // Use AI-powered navigation detection to find about and contact pages
       const navigationAnalysis = await this.analyzeNavigation(mainPage.links, normalizedUrl, mainPage.linkData);
       
-      // Find and scrape about page using intelligent detection
-      const aboutPage = await this.findAndScrapeAboutPage(page, normalizedUrl, navigationAnalysis.aboutUrls);
+      // If main page scraping failed completely, try a simple HTTP fallback
+      if (mainPage.content.length === 0 && mainPage.links.length === 0) {
+        console.log('Main page scraping failed, attempting HTTP fallback...');
+        const httpFallback = await this.simpleHttpFallback(normalizedUrl);
+        
+        // Use enhanced content for better contact extraction
+        const contentForExtraction = (httpFallback as any).enhancedContent || httpFallback.content;
+        const directSocialLinks = (httpFallback as any).socialLinks || [];
+        console.log('Using enhanced content for extraction:', contentForExtraction.substring(0, 300));
+        console.log('Direct social links from HTML:', directSocialLinks);
+        
+        // Combine social links from content extraction and direct HTML extraction
+        const allSocialLinks = [
+          ...this.extractSocialLinks(contentForExtraction),
+          ...directSocialLinks
+        ];
+        
+        return {
+          mainPage: httpFallback,
+          aboutPage: undefined,
+          contactPage: undefined,
+          socialLinks: Array.from(new Set(allSocialLinks)),
+          emails: this.extractEmails(contentForExtraction),
+          phones: this.extractPhones(contentForExtraction)
+        };
+      }
       
-      // Find and scrape contact page using intelligent detection
-      const contactPage = await this.findAndScrapeContactPage(page, normalizedUrl, navigationAnalysis.contactUrls);
+      // Find and scrape about page using fresh page instance
+      const aboutPage = await this.findAndScrapeAboutPageWithRetry(normalizedUrl, navigationAnalysis.aboutUrls);
+      
+      // Find and scrape contact page using fresh page instance
+      const contactPage = await this.findAndScrapeContactPageWithRetry(normalizedUrl, navigationAnalysis.contactUrls);
 
       // Extract contact information and social links
       const allContent = [mainPage.content, aboutPage?.content || '', contactPage?.content || ''].join(' ');
-      const socialLinks = this.extractSocialLinks(allContent + mainPage.links.join(' '));
-      const emails = this.extractEmails(allContent);
-      const phones = this.extractPhones(allContent);
-
-      await page.close();
+      
+      // Also extract footer content specifically for contact information using fresh page
+      const footerContent = await this.extractFooterContentWithRetry(normalizedUrl);
+      console.log('Footer content extracted:', footerContent.substring(0, 200)); // Debug log
+      const contentForContactExtraction = allContent + ' ' + footerContent;
+      
+      const socialLinks = this.extractSocialLinks(contentForContactExtraction + mainPage.links.join(' '));
+      const emails = this.extractEmails(contentForContactExtraction);
+      const phones = this.extractPhones(contentForContactExtraction);
 
       return {
         mainPage,
@@ -105,108 +133,433 @@ export class WebsiteScraper {
     return url;
   }
 
-  private async scrapeMainPage(page: Page, url: string) {
-    await page.goto(url, { 
-      waitUntil: 'domcontentloaded',
-      timeout: 15000 
-    });
+  private async createFreshPage(): Promise<Page> {
+    // Check if browser is still alive
+    if (!this.browser || !this.browser.isConnected()) {
+      console.log('Browser connection lost, reinitializing...');
+      await this.cleanup();
+      await this.initialize();
+      
+      if (!this.browser) throw new Error('Failed to reinitialize browser');
+    }
     
-    // Wait a bit for dynamic content but don't wait for all network activity
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    try {
+      const page = await this.browser.newPage();
+      await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36');
+      await page.setViewport({ width: 1920, height: 1080 });
+      page.setDefaultTimeout(30000);
+      return page;
+    } catch (error) {
+      console.error('Failed to create page, reinitializing browser:', error);
+      // Browser is likely dead, reinitialize
+      await this.cleanup();
+      await this.initialize();
+      
+      if (!this.browser) throw new Error('Failed to reinitialize browser after page creation failure');
+      
+      const page = await this.browser.newPage();
+      await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36');
+      await page.setViewport({ width: 1920, height: 1080 });
+      page.setDefaultTimeout(30000);
+      return page;
+    }
+  }
 
-    const result = await page.evaluate(() => {
-      // Extract title
-      const title = document.title || '';
+  private async scrapeMainPageWithRetry(url: string) {
+    let retries = 2; // Reduced retries to prevent excessive browser crashes
+    let browserReinitialized = false;
+    
+    while (retries > 0) {
+      let page: Page | null = null;
+      try {
+        page = await this.createFreshPage();
+        const result = await this.scrapeMainPage(page, url);
+        await page.close();
+        return result;
+      } catch (error) {
+        retries--;
+        console.warn(`Main page scraping failed, retries left: ${retries}`, error);
+        
+        if (page) {
+          try {
+            await page.close();
+          } catch (closeError) {
+            console.warn('Failed to close page:', closeError);
+          }
+        }
+        
+        // If we get connection errors, the browser is likely dead
+        if (error instanceof Error && error.message.includes('Connection closed')) {
+          if (!browserReinitialized) {
+            console.log('Browser connection lost, attempting to reinitialize...');
+            await this.cleanup();
+            await new Promise(resolve => setTimeout(resolve, 2000)); // Wait before restart
+            await this.initialize();
+            browserReinitialized = true;
+          } else {
+            // Already tried reinitializing, give up
+            console.error('Browser keeps crashing, giving up on this website');
+            break;
+          }
+        }
+        
+        if (retries === 0) {
+          // Return fallback result
+          return {
+            title: '',
+            description: '',
+            content: '',
+            links: [],
+            linkData: []
+          };
+        }
+        
+        await new Promise(resolve => setTimeout(resolve, 3000)); // Longer wait between retries
+      }
+    }
+  }
 
-      // Extract meta description
-      const metaDesc = document.querySelector('meta[name="description"]');
-      const description = metaDesc?.getAttribute('content') || '';
+  private async findAndScrapeAboutPageWithRetry(baseUrl: string, candidateUrls: string[]) {
+    let retries = 2;
+    
+    while (retries > 0) {
+      let page: Page | null = null;
+      try {
+        page = await this.createFreshPage();
+        const result = await this.findAndScrapeAboutPage(page, baseUrl, candidateUrls);
+        await page.close();
+        return result;
+      } catch (error) {
+        retries--;
+        console.warn(`About page scraping failed, retries left: ${retries}`, error);
+        
+        if (page) {
+          try {
+            await page.close();
+          } catch (closeError) {
+            console.warn('Failed to close page:', closeError);
+          }
+        }
+        
+        if (retries === 0) {
+          return undefined;
+        }
+        
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      }
+    }
+  }
 
-      // Extract main content (excluding header, footer, nav)
-      const contentSelectors = [
-        'main',
-        '[role="main"]',
-        '.main-content',
-        '.content',
-        '#content',
-        '.container',
-        'body'
+  private async findAndScrapeContactPageWithRetry(baseUrl: string, candidateUrls: string[]) {
+    let retries = 2;
+    
+    while (retries > 0) {
+      let page: Page | null = null;
+      try {
+        page = await this.createFreshPage();
+        const result = await this.findAndScrapeContactPage(page, baseUrl, candidateUrls);
+        await page.close();
+        return result;
+      } catch (error) {
+        retries--;
+        console.warn(`Contact page scraping failed, retries left: ${retries}`, error);
+        
+        if (page) {
+          try {
+            await page.close();
+          } catch (closeError) {
+            console.warn('Failed to close page:', closeError);
+          }
+        }
+        
+        if (retries === 0) {
+          return undefined;
+        }
+        
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      }
+    }
+  }
+
+  private async extractFooterContentWithRetry(url: string): Promise<string> {
+    let retries = 2;
+    
+    while (retries > 0) {
+      let page: Page | null = null;
+      try {
+        page = await this.createFreshPage();
+        await page.goto(url, { 
+          waitUntil: 'domcontentloaded',
+          timeout: 15000 
+        });
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        const result = await this.extractFooterContent(page);
+        await page.close();
+        return result;
+      } catch (error) {
+        retries--;
+        console.warn(`Footer content extraction failed, retries left: ${retries}`, error);
+        
+        if (page) {
+          try {
+            await page.close();
+          } catch (closeError) {
+            console.warn('Failed to close page:', closeError);
+          }
+        }
+        
+        if (retries === 0) {
+          return '';
+        }
+        
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      }
+    }
+    
+    return '';
+  }
+
+  private async simpleHttpFallback(url: string) {
+    try {
+      console.log('Attempting simple HTTP fetch fallback...');
+      const response = await fetch(url, {
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+        },
+        signal: AbortSignal.timeout(10000) // 10 second timeout
+      });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+      
+      const html = await response.text();
+      
+      // Basic HTML parsing without Puppeteer
+      const titleMatch = html.match(/<title[^>]*>([^<]+)<\/title>/i);
+      const title = titleMatch ? titleMatch[1].trim() : '';
+      
+      const descMatch = html.match(/<meta[^>]*name=["\']description["\'][^>]*content=["\']([^"']+)["\'][^>]*>/i);
+      const description = descMatch ? descMatch[1].trim() : '';
+      
+      // Extract basic text content (very rough)
+      let content = html
+        .replace(/<script[^>]*>.*?<\/script>/gi, '')
+        .replace(/<style[^>]*>.*?<\/style>/gi, '')
+        .replace(/<[^>]+>/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim()
+        .substring(0, 3000);
+      
+      console.log('HTTP fallback extracted content sample:', content.substring(0, 500));
+      
+      // Enhanced content extraction - also try to preserve some structure for contact info
+      let enhancedContent = html
+        .replace(/<script[^>]*>.*?<\/script>/gi, '')
+        .replace(/<style[^>]*>.*?<\/style>/gi, '')
+        .replace(/<br\s*\/?>/gi, '\n')
+        .replace(/<\/p>/gi, '\n')
+        .replace(/<\/div>/gi, '\n')
+        .replace(/<[^>]+>/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+      
+      // Use enhanced content for better extraction but limit main content
+      content = content.substring(0, 3000);
+      
+      // Extract basic links
+      const linkMatches = html.match(/<a[^>]*href=["\']([^"']+)["\'][^>]*>/gi) || [];
+      const links = linkMatches
+        .map(match => {
+          const hrefMatch = match.match(/href=["\']([^"']+)["\']/i);
+          return hrefMatch ? hrefMatch[1] : null;
+        })
+        .filter(href => href && !href.startsWith('#') && !href.startsWith('javascript:'))
+        .slice(0, 50); // Limit to 50 links
+      
+      // Also extract social links directly from HTML href attributes
+      const socialPatterns = [
+        /href=["\']([^"']*facebook\.com[^"']*)["\']?/gi,
+        /href=["\']([^"']*instagram\.com[^"']*)["\']?/gi,
+        /href=["\']([^"']*twitter\.com[^"']*)["\']?/gi,
+        /href=["\']([^"']*linkedin\.com[^"']*)["\']?/gi,
+        /href=["\']([^"']*youtube\.com[^"']*)["\']?/gi,
+        /href=["\']([^"']*tiktok\.com[^"']*)["\']?/gi,
       ];
-
-      let content = '';
-      for (const selector of contentSelectors) {
-        const element = document.querySelector(selector);
-        if (element) {
-          // Remove scripts, styles, and navigation elements
-          const cloned = element.cloneNode(true) as Element;
-          const unwanted = cloned.querySelectorAll('script, style, nav, header, footer, .navigation, .menu');
-          unwanted.forEach(el => el.remove());
-          
-          content = cloned.textContent || '';
-          if (content.length > 200) break; // Found substantial content
+      
+      const socialLinks: string[] = [];
+      for (const pattern of socialPatterns) {
+        let match;
+        while ((match = pattern.exec(html)) !== null) {
+          if (match[1]) {
+            socialLinks.push(match[1]);
+          }
         }
       }
-
-      // Extract all links with their text content for intelligent analysis
-      const links: string[] = [];
-      const linkData: { href: string, text: string, context: string }[] = [];
       
-      document.querySelectorAll('a[href]').forEach(link => {
-        const href = link.getAttribute('href');
-        if (href && !href.startsWith('#') && !href.startsWith('javascript:')) {
-          links.push(href);
-          
-          // Extract link text and surrounding context
-          const linkText = (link.textContent || '').trim();
-          const parent = link.parentElement;
-          let context = '';
-          
-          // Try to get better context by looking at parent elements
-          if (parent) {
-            // Check if link is in navigation, footer, or header
-            let currentElement: HTMLElement | null = parent;
-            for (let i = 0; i < 3 && currentElement; i++) {
-              const tagName = currentElement.tagName?.toLowerCase();
-              const className = currentElement.className?.toLowerCase() || '';
-              const id = currentElement.id?.toLowerCase() || '';
-              
-              if (tagName === 'nav' || className.includes('nav') || id.includes('nav')) {
-                context += ' navigation ';
-              }
-              if (tagName === 'footer' || className.includes('footer') || id.includes('footer')) {
-                context += ' footer ';
-              }
-              if (tagName === 'header' || className.includes('header') || id.includes('header')) {
-                context += ' header ';
-              }
-              if (className.includes('menu') || id.includes('menu')) {
-                context += ' menu ';
-              }
-              
-              currentElement = currentElement.parentElement;
-            }
-            
-            // Get surrounding text content
-            const parentText = (parent.textContent || '').trim().substring(0, 150);
-            context += ' ' + parentText;
-          }
-          
-          linkData.push({
-            href,
-            text: linkText,
-            context: context.trim()
-          });
+      console.log('HTTP fallback found social links:', socialLinks);
+      
+      return {
+        title,
+        description,
+        content,
+        links: Array.from(new Set(links)) as string[],
+        linkData: [], // Can't extract context without proper DOM parsing
+        enhancedContent, // Add this for better contact extraction
+        socialLinks: Array.from(new Set(socialLinks)) // Add extracted social links
+      };
+    } catch (error) {
+      console.error('HTTP fallback failed:', error);
+      return {
+        title: '',
+        description: '',
+        content: '',
+        links: [],
+        linkData: []
+      };
+    }
+  }
+
+  private async scrapeMainPage(page: Page, url: string) {
+    try {
+      // Set additional safety measures
+      await page.setRequestInterception(true);
+      page.on('request', (req) => {
+        // Block potentially problematic resource types that might crash the browser
+        const resourceType = req.resourceType();
+        if (['font', 'image', 'media', 'websocket'].includes(resourceType)) {
+          req.abort();
+        } else {
+          req.continue();
         }
       });
 
-      return {
-        title: title.trim(),
-        description: description.trim(),
-        content: content.trim().substring(0, 5000), // Limit content size
-        links: Array.from(new Set(links)), // Remove duplicates
-        linkData: linkData // Enhanced link information for intelligent navigation
-      };
-    });
+      await page.goto(url, { 
+        waitUntil: 'domcontentloaded',
+        timeout: 10000  // Reduced timeout to prevent hanging
+      });
+    } catch (error) {
+      console.error('Failed to navigate to page:', error);
+      // Try with an even more minimal approach
+      try {
+        await page.goto(url, { 
+          waitUntil: 'load',
+          timeout: 15000 
+        });
+      } catch (secondError) {
+        console.error('Second navigation attempt failed:', secondError);
+        throw secondError; // Let the retry logic handle this
+      }
+    }
+    
+    // Shorter wait time to reduce chance of crashes
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    
+    // Add timeout to the evaluation itself
+    const result = await Promise.race([
+      page.evaluate(() => {
+        // Check if document is still available
+        if (!document || !document.documentElement) {
+          throw new Error('Document not available');
+        }
+        
+        // Extract title
+        const title = document.title || '';
+
+        // Extract meta description
+        const metaDesc = document.querySelector('meta[name="description"]');
+        const description = metaDesc?.getAttribute('content') || '';
+
+        // Extract main content (excluding header, footer, nav)
+        const contentSelectors = [
+          'main',
+          '[role="main"]',
+          '.main-content',
+          '.content',
+          '#content',
+          '.container',
+          'body'
+        ];
+
+        let content = '';
+        for (const selector of contentSelectors) {
+          const element = document.querySelector(selector);
+          if (element) {
+            // Remove scripts, styles, and navigation elements
+            const cloned = element.cloneNode(true) as Element;
+            const unwanted = cloned.querySelectorAll('script, style, nav, header, footer, .navigation, .menu');
+            unwanted.forEach(el => el.remove());
+            
+            content = cloned.textContent || '';
+            if (content.length > 200) break; // Found substantial content
+          }
+        }
+
+        // Extract all links with their text content for intelligent analysis
+        const links: string[] = [];
+        const linkData: { href: string, text: string, context: string }[] = [];
+        
+        document.querySelectorAll('a[href]').forEach(link => {
+          const href = link.getAttribute('href');
+          if (href && !href.startsWith('#') && !href.startsWith('javascript:')) {
+            links.push(href);
+            
+            // Extract link text and surrounding context
+            const linkText = (link.textContent || '').trim();
+            const parent = link.parentElement;
+            let context = '';
+            
+            // Try to get better context by looking at parent elements
+            if (parent) {
+              // Check if link is in navigation, footer, or header
+              let currentElement: HTMLElement | null = parent;
+              for (let i = 0; i < 3 && currentElement; i++) {
+                const tagName = currentElement.tagName?.toLowerCase();
+                const className = currentElement.className?.toLowerCase() || '';
+                const id = currentElement.id?.toLowerCase() || '';
+                
+                if (tagName === 'nav' || className.includes('nav') || id.includes('nav')) {
+                  context += ' navigation ';
+                }
+                if (tagName === 'footer' || className.includes('footer') || id.includes('footer')) {
+                  context += ' footer ';
+                }
+                if (tagName === 'header' || className.includes('header') || id.includes('header')) {
+                  context += ' header ';
+                }
+                if (className.includes('menu') || id.includes('menu')) {
+                  context += ' menu ';
+                }
+                
+                currentElement = currentElement.parentElement;
+              }
+              
+              // Get surrounding text content
+              const parentText = (parent.textContent || '').trim().substring(0, 150);
+              context += ' ' + parentText;
+            }
+            
+            linkData.push({
+              href,
+              text: linkText,
+              context: context.trim()
+            });
+          }
+        });
+
+        return {
+          title: title.trim(),
+          description: description.trim(),
+          content: content.trim().substring(0, 5000), // Limit content size
+          links: Array.from(new Set(links)), // Remove duplicates
+          linkData: linkData // Enhanced link information for intelligent navigation
+        };
+      }),
+      new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Page evaluation timeout')), 10000)
+      )
+    ]) as any;
 
     return result;
   }
@@ -418,16 +771,25 @@ export class WebsiteScraper {
       ];
       
       // Get all links from the page for fallback
-      const allLinks = await page.evaluate(() => {
-        const links: string[] = [];
-        document.querySelectorAll('a[href]').forEach(link => {
-          const href = link.getAttribute('href');
-          if (href && !href.startsWith('#') && !href.startsWith('javascript:')) {
-            links.push(href);
+      let allLinks: string[] = [];
+      try {
+        allLinks = await page.evaluate(() => {
+          if (!document || !document.documentElement) {
+            return [];
           }
+          const links: string[] = [];
+          document.querySelectorAll('a[href]').forEach(link => {
+            const href = link.getAttribute('href');
+            if (href && !href.startsWith('#') && !href.startsWith('javascript:')) {
+              links.push(href);
+            }
+          });
+          return Array.from(new Set(links));
         });
-        return Array.from(new Set(links));
-      });
+      } catch (error) {
+        console.warn('Failed to extract links for about page fallback:', error);
+        allLinks = [];
+      }
       
       const fallbackUrl = this.findPageByPatterns(allLinks, aboutPatterns, baseUrl);
       if (fallbackUrl) candidateUrls = [fallbackUrl];
@@ -444,22 +806,43 @@ export class WebsiteScraper {
         // Brief wait for dynamic content
         await new Promise(resolve => setTimeout(resolve, 1000));
         
-        const content = await page.evaluate(() => {
-          const contentSelectors = ['main', '[role="main"]', '.content', '#content', '.about', '.about-content', 'body'];
-          
-          for (const selector of contentSelectors) {
-            const element = document.querySelector(selector);
-            if (element) {
-              const cloned = element.cloneNode(true) as Element;
-              const unwanted = cloned.querySelectorAll('script, style, nav, header, footer, .navigation, .menu');
-              unwanted.forEach(el => el.remove());
+        // Add retry logic for page evaluation
+        let content = '';
+        let retries = 2;
+        
+        while (retries > 0) {
+          try {
+            content = await page.evaluate(() => {
+              if (!document || !document.documentElement) {
+                throw new Error('Document not available');
+              }
               
-              const text = cloned.textContent || '';
-              if (text.length > 100) return text.trim().substring(0, 3000);
+              const contentSelectors = ['main', '[role="main"]', '.content', '#content', '.about', '.about-content', 'body'];
+              
+              for (const selector of contentSelectors) {
+                const element = document.querySelector(selector);
+                if (element) {
+                  const cloned = element.cloneNode(true) as Element;
+                  const unwanted = cloned.querySelectorAll('script, style, nav, header, footer, .navigation, .menu');
+                  unwanted.forEach(el => el.remove());
+                  
+                  const text = cloned.textContent || '';
+                  if (text.length > 100) return text.trim().substring(0, 3000);
+                }
+              }
+              return '';
+            });
+            break; // Success, exit retry loop
+          } catch (error) {
+            retries--;
+            console.warn(`About page evaluation failed, retries left: ${retries}`, error);
+            if (retries === 0) {
+              content = ''; // Set empty content as fallback
+            } else {
+              await new Promise(resolve => setTimeout(resolve, 1000));
             }
           }
-          return '';
-        });
+        }
 
         if (content.length > 100) {
           return { content, url: aboutUrl };
@@ -488,16 +871,25 @@ export class WebsiteScraper {
       ];
       
       // Get all links from the page for fallback
-      const allLinks = await page.evaluate(() => {
-        const links: string[] = [];
-        document.querySelectorAll('a[href]').forEach(link => {
-          const href = link.getAttribute('href');
-          if (href && !href.startsWith('#') && !href.startsWith('javascript:')) {
-            links.push(href);
+      let allLinks: string[] = [];
+      try {
+        allLinks = await page.evaluate(() => {
+          if (!document || !document.documentElement) {
+            return [];
           }
+          const links: string[] = [];
+          document.querySelectorAll('a[href]').forEach(link => {
+            const href = link.getAttribute('href');
+            if (href && !href.startsWith('#') && !href.startsWith('javascript:')) {
+              links.push(href);
+            }
+          });
+          return Array.from(new Set(links));
         });
-        return Array.from(new Set(links));
-      });
+      } catch (error) {
+        console.warn('Failed to extract links for contact page fallback:', error);
+        allLinks = [];
+      }
       
       const fallbackUrl = this.findPageByPatterns(allLinks, contactPatterns, baseUrl);
       if (fallbackUrl) candidateUrls = [fallbackUrl];
@@ -514,22 +906,43 @@ export class WebsiteScraper {
         // Brief wait for dynamic content
         await new Promise(resolve => setTimeout(resolve, 1000));
         
-        const content = await page.evaluate(() => {
-          const contentSelectors = ['main', '[role="main"]', '.content', '#content', '.contact', '.contact-content', 'body'];
-          
-          for (const selector of contentSelectors) {
-            const element = document.querySelector(selector);
-            if (element) {
-              const cloned = element.cloneNode(true) as Element;
-              const unwanted = cloned.querySelectorAll('script, style, nav, header, footer, .navigation, .menu');
-              unwanted.forEach(el => el.remove());
+        // Add retry logic for page evaluation
+        let content = '';
+        let retries = 2;
+        
+        while (retries > 0) {
+          try {
+            content = await page.evaluate(() => {
+              if (!document || !document.documentElement) {
+                throw new Error('Document not available');
+              }
               
-              const text = cloned.textContent || '';
-              if (text.length > 50) return text.trim().substring(0, 2000);
+              const contentSelectors = ['main', '[role="main"]', '.content', '#content', '.contact', '.contact-content', 'body'];
+              
+              for (const selector of contentSelectors) {
+                const element = document.querySelector(selector);
+                if (element) {
+                  const cloned = element.cloneNode(true) as Element;
+                  const unwanted = cloned.querySelectorAll('script, style, nav, header, footer, .navigation, .menu');
+                  unwanted.forEach(el => el.remove());
+                  
+                  const text = cloned.textContent || '';
+                  if (text.length > 50) return text.trim().substring(0, 2000);
+                }
+              }
+              return '';
+            });
+            break; // Success, exit retry loop
+          } catch (error) {
+            retries--;
+            console.warn(`Contact page evaluation failed, retries left: ${retries}`, error);
+            if (retries === 0) {
+              content = ''; // Set empty content as fallback
+            } else {
+              await new Promise(resolve => setTimeout(resolve, 1000));
             }
           }
-          return '';
-        });
+        }
 
         if (content.length > 50) {
           return { content, url: contactUrl };
@@ -600,6 +1013,11 @@ export class WebsiteScraper {
     const emailPattern = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g;
     const emails = content.match(emailPattern) || [];
     
+    // Debug logging
+    if (emails.length > 0) {
+      console.log('Found emails:', emails);
+    }
+    
     // Filter out common false positives
     const filteredEmails = emails.filter(email => 
       !email.includes('example.') && 
@@ -616,6 +1034,9 @@ export class WebsiteScraper {
       /\b0\d{1,2}-?\d{7,8}\b/g, // Israeli format: 02-1234567, 050-1234567
       /\b\+972-?\d{1,2}-?\d{7,8}\b/g, // International Israeli: +972-2-1234567
       /\b\d{3}-\d{7,8}\b/g, // Format: 050-1234567
+      /\b0\d{9,10}\b/g, // Israeli format without dashes: 0544450913
+      /\b\+972\d{9,10}\b/g, // International Israeli without dashes: +972544450913
+      /\b\d{10}\b/g, // 10-digit numbers: 0544450913 (less specific, so last)
     ];
 
     const phones: string[] = [];
@@ -627,7 +1048,61 @@ export class WebsiteScraper {
       }
     }
 
+    // Also extract WhatsApp numbers (often marked differently)
+    const whatsappPatterns = [
+      /whatsapp[:\s]*(\+?\d[\d\s\-\(\)]{8,})/gi,
+      /wa[:\s]*(\+?\d[\d\s\-\(\)]{8,})/gi,
+      /וואטסאפ[:\s]*(\+?\d[\d\s\-\(\)]{8,})/gi, // Hebrew WhatsApp
+    ];
+
+    for (const pattern of whatsappPatterns) {
+      let match;
+      while ((match = pattern.exec(content)) !== null) {
+        if (match[1]) {
+          phones.push(match[1].replace(/[\s\-\(\)]/g, '')); // Clean up the number
+        }
+      }
+    }
+
+    // Debug logging
+    if (phones.length > 0) {
+      console.log('Found phones:', phones);
+    }
+
     return Array.from(new Set(phones)); // Remove duplicates
+  }
+
+  private async extractFooterContent(page: Page): Promise<string> {
+    try {
+      const footerContent = await page.evaluate(() => {
+        const footerSelectors = [
+          'footer',
+          '.footer',
+          '#footer',
+          '[class*="footer"]',
+          '.contact-info',
+          '.contact-details'
+        ];
+
+        let content = '';
+        for (const selector of footerSelectors) {
+          const elements = document.querySelectorAll(selector);
+          for (let i = 0; i < elements.length; i++) {
+            const element = elements[i];
+            if (element.textContent) {
+              content += ' ' + element.textContent;
+            }
+          }
+        }
+
+        return content.trim();
+      });
+
+      return footerContent;
+    } catch (error) {
+      console.error('Error extracting footer content:', error);
+      return '';
+    }
   }
 
   async cleanup(): Promise<void> {
