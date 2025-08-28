@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Plus, ChevronLeft, ChevronRight, BarChart3 } from "lucide-react";
+import { Plus, ChevronLeft, ChevronRight, BarChart3, Activity } from "lucide-react";
 import { WebsiteType } from "@/lib/models/Website";
 import { WebsiteCard } from "./website-card";
 import { AddToolDialog } from "./add-tool-dialog";
@@ -178,6 +178,13 @@ export function AdminDashboard() {
             </Button>
           ) : activeTab === "tools" ? (
             <div className="flex gap-2">
+              <Button
+                onClick={() => router.push("/admin/web-vitals")}
+                variant="outline"
+              >
+                <Activity className="w-4 h-4 ml-2" />
+                Web Vitals
+              </Button>
               <Button onClick={() => setIsAllStatsOpen(true)} variant="outline">
                 <BarChart3 className="w-4 h-4 ml-2" />
                 סטטיסטיקות כל האתרים
