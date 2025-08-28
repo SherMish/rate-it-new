@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { Card } from "@/components/ui/card";
@@ -12,7 +12,7 @@ import { plusFeatures, proFeatures } from "@/components/business/shared-pricing-
 import { CelebrationModal } from "@/components/modals/celebration-modal";
 import { PRICING_CONFIG, calculateDiscountedPrice, calculateTotalWithVAT, formatPrice, getPlanDiscount, getFullYearlyPrice, type PlanType } from "@/lib/pricing";
 
-export default function PlusUpgradePage() {
+function PlusUpgradeContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { data: session, status } = useSession();
@@ -334,5 +334,13 @@ export default function PlusUpgradePage() {
         buttonText="בואו נתחיל"
       />
     </div>
+  );
+}
+
+export default function PlusUpgradePage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <PlusUpgradeContent />
+    </Suspense>
   );
 }

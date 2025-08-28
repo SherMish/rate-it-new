@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Menu, X, Search } from "lucide-react";
@@ -24,14 +24,32 @@ const businessNavigation = [
   { name: "אודות", href: "/about" },
 ];
 
+// Component to handle search params logic that requires Suspense
+function SearchParamsHandler({ 
+  pathname, 
+  onHeaderTypeChange 
+}: { 
+  pathname: string; 
+  onHeaderTypeChange: (isMini: boolean) => void; 
+}) {
+  const searchParams = useSearchParams();
+  
+  useEffect(() => {
+    const isBusinessPricingMini = pathname === "/business/pricing" && searchParams?.get("from") === "dashboard";
+    onHeaderTypeChange(isBusinessPricingMini);
+  }, [pathname, searchParams, onHeaderTypeChange]);
+  
+  return null;
+}
+
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [showMobileSearch, setShowMobileSearch] = useState(false);
+  const [isMiniHeader, setIsMiniHeader] = useState(false);
   const { data: session } = useSession();
   const loginModal = useLoginModal();
   const router = useRouter();
   const pathname = usePathname();
-  const searchParams = useSearchParams();
   const { startLoading, stopLoading } = useLoading();
 
   // Handle post-login redirects
@@ -112,9 +130,8 @@ export function Header() {
 
   const isBusinessHome = pathname === "/business";
   const isBusinessRegister = pathname === "/business/register";
-  const isBusinessPricingMini = pathname === "/business/pricing" && searchParams?.get("from") === "dashboard";
   const isBusinessUpgrade = pathname?.startsWith("/business/upgrade");
-  const isMiniHeader = isBusinessRegister || isBusinessPricingMini || isBusinessUpgrade;
+  // isMiniHeader is managed by state now
   const isBusinessDashboard = pathname?.includes("/business/dashboard");
 
   const isRegularSite = pathname?.includes("/business") !== true;
@@ -125,10 +142,28 @@ export function Header() {
 
   const showSearch = pathname !== "/" && isRegularSite;
 
+  // Update mini header state based on search params
+  useEffect(() => {
+    const isBusinessRegister = pathname === "/business/register";
+    const isBusinessUpgrade = pathname?.startsWith("/business/upgrade") || false;
+    setIsMiniHeader(isBusinessRegister || isBusinessUpgrade);
+  }, [pathname]);
+
   if (isBusinessDashboard) return <> </>;
   else {
     return (
-      <header className="sticky top-0 z-50 w-full border-b border-border bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80 shadow-sm">
+      <>
+        <Suspense fallback={null}>
+          <SearchParamsHandler 
+            pathname={pathname || ""} 
+            onHeaderTypeChange={(isMini: boolean) => {
+              const isBusinessRegister = pathname === "/business/register";
+              const isBusinessUpgrade = pathname?.startsWith("/business/upgrade") || false;
+              setIsMiniHeader(isBusinessRegister || isBusinessUpgrade || isMini);
+            }} 
+          />
+        </Suspense>
+        <header className="sticky top-0 z-50 w-full border-b border-border bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80 shadow-sm">
         <nav className="container mx-auto px-4" aria-label="ניווט ראשי">
           {isMiniHeader ? (
             <div className="flex h-20 items-center justify-center py-4">
@@ -386,6 +421,7 @@ export function Header() {
           )}
         </nav>
       </header>
+      </>
     );
   }
 }

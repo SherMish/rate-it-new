@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { Card } from "@/components/ui/card";
@@ -12,7 +12,7 @@ import { proFeatures } from "@/components/business/shared-pricing-table";
 import { CelebrationModal } from "@/components/modals/celebration-modal";
 
 // This is a redirect component that forwards to the plus upgrade page with pro parameters
-export default function ProUpgradePage() {
+function ProUpgradeContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   
@@ -29,5 +29,13 @@ export default function ProUpgradePage() {
         <p className="text-slate-600">מעביר לדף התשלום...</p>
       </div>
     </div>
+  );
+}
+
+export default function ProUpgradePage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ProUpgradeContent />
+    </Suspense>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { LoginModal } from "@/components/auth/login-modal";
@@ -19,7 +19,7 @@ import { toast } from "@/components/ui/use-toast";
 import { HelpDialog } from "@/components/business/registration/HelpDialog";
 import { trackEvent, AnalyticsEvents } from "@/lib/analytics";
 
-export default function BusinessRegistration() {
+function BusinessRegistrationContent() {
   const router = useRouter();
   const { update: updateSession, data: session, status } = useSession();
   const searchParams = useSearchParams();
@@ -328,5 +328,13 @@ export default function BusinessRegistration() {
       {/* Help Dialog - Always visible during registration */}
       <HelpDialog />
     </div>
+  );
+}
+
+export default function BusinessRegistration() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <BusinessRegistrationContent />
+    </Suspense>
   );
 }

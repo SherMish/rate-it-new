@@ -11,6 +11,7 @@ import type { Session } from "next-auth";
 import { Providers } from "@/components/providers/providers";
 import Script from "next/script";
 import { AnalyticsProvider } from "@/components/providers/analytics-provider";
+import { WebVitalsProvider } from "@/components/providers/web-vitals-provider";
 import { CookieBanner } from "@/components/cookie-banner";
 import { useErrorTracking } from "@/hooks/useErrorTracking";
 import { ErrorBoundary } from "./components/ErrorBoundary";
@@ -95,6 +96,7 @@ export default async function RootLayout({
         <Providers>
           <LoadingProvider>
             <AnalyticsProvider />
+            <WebVitalsProvider />
             <TopProgressBar />
             {/* <ErrorBoundary> */}
             <div className="flex min-h-screen flex-col">

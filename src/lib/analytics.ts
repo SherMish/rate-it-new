@@ -188,4 +188,11 @@ export const AnalyticsEvents = {
   BUSINESS_DASHBOARD_FIRST_TIME_DIALOG_CLOSED: "business_dashboard_first_time_dialog_closed",
   BUSINESS_DASHBOARD_HELP_OPENED: "business_dashboard_help_opened",
   BUSINESS_DASHBOARD_DAILY_TIP_VIEWED: "business_dashboard_daily_tip_viewed",
+  // Web Vitals Events
+  WEB_VITALS_CLS_POOR: "web_vitals_cls_poor",
+  WEB_VITALS_FID_POOR: "web_vitals_fid_poor",
+  WEB_VITALS_LCP_POOR: "web_vitals_lcp_poor",
+  WEB_VITALS_FCP_POOR: "web_vitals_fcp_poor",
+  WEB_VITALS_TTFB_POOR: "web_vitals_ttfb_poor",
+  WEB_VITALS_PERFORMANCE_ISSUE: "web_vitals_performance_issue",
 } as const;

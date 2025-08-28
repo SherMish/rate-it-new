@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import {
   Star,
   Users,
@@ -94,6 +94,14 @@ const fetchTotalClicks = async (websiteId: string) => {
 };
 
 export default function DashboardPage() {
+  return (
+    <Suspense fallback={<LoadingSpinner />}>
+      <DashboardContent />
+    </Suspense>
+  );
+}
+
+function DashboardContent() {
   const { isLoading, website, user } = useBusinessGuard();
   const searchParams = useSearchParams();
   const router = useRouter();

@@ -18,6 +18,7 @@ import {
 import { useSession, signOut } from "next-auth/react";
 import { UserNav } from "@/components/user-nav";
 import BusinessTabHighlight from "@/app/components/BusinessTabHighlight";
+import { Suspense } from "react";
 import { isPlus, PricingModel } from "@/lib/types/website";
 import { useBusinessGuard } from "@/hooks/use-business-guard";
 
@@ -55,7 +56,7 @@ const menuItems = [
   // },
 ];
 
-export function SideNav() {
+function SideNavContent() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { data: session } = useSession();
@@ -171,5 +172,13 @@ export function SideNav() {
         </div>
       )}
     </nav>
+  );
+}
+
+export function SideNav() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SideNavContent />
+    </Suspense>
   );
 }

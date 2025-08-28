@@ -1,9 +1,10 @@
 "use client";
 
 import { usePathname, useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 import { Footer } from "./footer";
 
-export function ConditionalFooter() {
+function ConditionalFooterInner() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
@@ -23,4 +24,12 @@ export function ConditionalFooter() {
   }
 
   return <Footer />;
+}
+
+export function ConditionalFooter() {
+  return (
+    <Suspense fallback={<Footer />}>
+      <ConditionalFooterInner />
+    </Suspense>
+  );
 }
