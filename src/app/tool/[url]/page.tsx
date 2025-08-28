@@ -3,13 +3,7 @@ export const revalidate = 60; // Update every 60 seconds
 import { Metadata, ResolvingMetadata } from "next";
 import { notFound } from "next/navigation";
 import Image from "next/image";
-import {
-  Star,
-  Calendar,
-  Info,
-
-  Globe,
-} from "lucide-react";
+import { Star, Calendar, Info, Globe } from "lucide-react";
 import connectDB from "@/lib/mongodb";
 import Website from "@/lib/models/Website";
 import Review from "@/lib/models/Review";
@@ -55,7 +49,7 @@ async function getToolPageData(url: string) {
       {
         $lookup: {
           from: "reviews",
-          localField: "_id", 
+          localField: "_id",
           foreignField: "relatedWebsite",
           as: "reviews",
           pipeline: [
@@ -65,13 +59,13 @@ async function getToolPageData(url: string) {
                 localField: "relatedUser",
                 foreignField: "_id",
                 as: "user",
-                pipeline: [{ $project: { name: 1 } }]
-              }
+                pipeline: [{ $project: { name: 1 } }],
+              },
             },
             {
               $addFields: {
-                relatedUser: { $arrayElemAt: ["$user", 0] }
-              }
+                relatedUser: { $arrayElemAt: ["$user", 0] },
+              },
             },
             {
               $project: {
@@ -82,12 +76,12 @@ async function getToolPageData(url: string) {
                 helpfulCount: 1,
                 isVerified: 1,
                 businessResponse: 1,
-                relatedUser: 1
-              }
+                relatedUser: 1,
+              },
             },
-            { $sort: { createdAt: -1 } }
-          ]
-        }
+            { $sort: { createdAt: -1 } },
+          ],
+        },
       },
       {
         $addFields: {
@@ -96,11 +90,11 @@ async function getToolPageData(url: string) {
             $cond: {
               if: { $gt: [{ $size: "$reviews" }, 0] },
               then: { $avg: "$reviews.rating" },
-              else: 0
-            }
-          }
-        }
-      }
+              else: 0,
+            },
+          },
+        },
+      },
     ]);
 
     if (!websiteWithStats || websiteWithStats.length === 0) {
@@ -155,7 +149,9 @@ async function getToolPageData(url: string) {
           url: { $ne: url },
           categories: categoryDataList[0].id,
         })
-          .select("name url description averageRating reviewCount logo isVerified")
+          .select(
+            "name url description averageRating reviewCount logo isVerified"
+          )
           .limit(3)
           .lean();
       } catch (error) {
@@ -174,19 +170,19 @@ async function getToolPageData(url: string) {
         pricingModel: website.pricingModel || PricingModel.BASIC,
       },
       reviews: processedReviews,
-      suggestedTools: suggestedTools.map(tool => ({
+      suggestedTools: suggestedTools.map((tool) => ({
         ...tool,
-        _id: tool._id.toString()
+        _id: tool._id.toString(),
       })),
     };
   } catch (error) {
     console.error("Database error in getToolPageData:", error);
-    
+
     // For development, you might want to throw the error
-    if (process.env.NODE_ENV === 'development') {
+    if (process.env.NODE_ENV === "development") {
       throw error;
     }
-    
+
     // In production, return a graceful fallback or redirect to error page
     notFound();
   }
@@ -212,20 +208,19 @@ function getRatingStatus(rating: number): { label: string; color: string } {
   return { label: "ניטרלי", color: "text-zinc-500" };
 }
 
-
 // Replace the current generateMetadata function with this:
 export async function generateMetadata(
   { params }: PageProps,
   parent: ResolvingMetadata
 ): Promise<Metadata> {
   const decodedUrl = decodeURIComponent(params.url);
-  
+
   try {
     await connectDB();
-    
+
     // Lightweight query to get just the essential metadata fields
     const website = await Website.findOne({ url: decodedUrl })
-      .select('name averageRating reviewCount categories')
+      .select("name averageRating reviewCount categories")
       .lean();
 
     if (!website) {
@@ -236,19 +231,22 @@ export async function generateMetadata(
     }
 
     // Get review count from database
-    const reviewCount = await Review.countDocuments({ 
-      relatedWebsite: website._id 
+    const reviewCount = await Review.countDocuments({
+      relatedWebsite: website._id,
     });
 
     const averageRating = website.averageRating?.toFixed(1) || "0.0";
-    const reviewText = `${reviewCount} ${reviewCount === 1 ? "ביקורת" : "ביקורות"}`;
+    const reviewText = `${reviewCount} ${
+      reviewCount === 1 ? "ביקורת" : "ביקורות"
+    }`;
 
     // Generate business-specific title
     const title = ` ${website.name} ביקורות | קראו ביקורות מלקוחות אמיתיים`;
 
-    const description = reviewCount > 0
-      ? `בכמה כוכבים תדרגו את ${website.name}? הצטרפו ל${website.reviewCount} אנשים שכבר דירגו. החוויה שלך חשובה.`
-      : `בכמה כוכבים תדרגו את ${website.name}? הצטרפו לרייט-איט ושתפו, קראו ותהנו מביקורות וחוות דעת אמיתיות`;
+    const description =
+      reviewCount > 0
+        ? `בכמה כוכבים תדרגו את ${website.name}? הצטרפו ל${website.reviewCount} אנשים שכבר דירגו. החוויה שלך חשובה.`
+        : `בכמה כוכבים תדרגו את ${website.name}? הצטרפו לרייט-איט ושתפו, קראו ותהנו מביקורות וחוות דעת אמיתיות`;
 
     return {
       title,
@@ -283,7 +281,6 @@ export async function generateStaticParams() {
   }));
 }
 
-
 function formatWhatsAppLink(whatsapp: string): string {
   if (!whatsapp) return "";
 
@@ -311,15 +308,18 @@ function formatWhatsAppLink(whatsapp: string): string {
 
 export default async function ToolPage({ params }: PageProps) {
   const decodedUrl = decodeURIComponent(params.url);
-  
+
   // Single consolidated database operation
-  const { website, reviews, suggestedTools } = await getToolPageData(decodedUrl);
+  const { website, reviews, suggestedTools } = await getToolPageData(
+    decodedUrl
+  );
 
   const ratingStatus = getRatingStatus(website.averageRating || 0);
 
   // Add structured data for rich results
-  const positiveReviews = reviews?.filter((review: any) => review.rating > 3) || [];
-  
+  const positiveReviews =
+    reviews?.filter((review: any) => review.rating > 3) || [];
+
   // FAQ structured data for better search visibility
   const faqData = {
     "@context": "https://schema.org",
@@ -330,71 +330,108 @@ export default async function ToolPage({ params }: PageProps) {
         name: `האם ${website.name} אמין?`,
         acceptedAnswer: {
           "@type": "Answer",
-          text: website.reviewCount > 0 
-            ? `${website.name} קיבל דירוג ממוצע של ${website.averageRating.toFixed(1)} כוכבים מתוך ${website.reviewCount} ביקורות של לקוחות אמיתיים ברייט-איט.`
-            : `${website.name} נמצא ברשימה שלנו. עדיין לא קיבל ביקורות, אתם יכולים להיות הראשונים לכתוב ביקורת ולעזור לקהילה.`
-        }
+          text:
+            website.reviewCount > 0
+              ? `${
+                  website.name
+                } קיבל דירוג ממוצע של ${website.averageRating.toFixed(
+                  1
+                )} כוכבים מתוך ${
+                  website.reviewCount
+                } ביקורות של לקוחות אמיתיים ברייט-איט.`
+              : `${website.name} נמצא ברשימה שלנו. עדיין לא קיבל ביקורות, אתם יכולים להיות הראשונים לכתוב ביקורת ולעזור לקהילה.`,
+        },
       },
       {
-        "@type": "Question", 
+        "@type": "Question",
         name: `איך כותבים ביקורת על ${website.name}?`,
         acceptedAnswer: {
           "@type": "Answer",
-          text: `כדי לכתוב ביקורת על ${website.name}, לחצו על כפתור 'כתיבת ביקורת', דרגו את השירות מ-1 עד 5 כוכבים ושתפו את החוויה שלכם עם הקהילה.`
-        }
+          text: `כדי לכתוב ביקורת על ${website.name}, לחצו על כפתור 'כתיבת ביקורת', דרגו את השירות מ-1 עד 5 כוכבים ושתפו את החוויה שלכם עם הקהילה.`,
+        },
       },
       {
         "@type": "Question",
         name: `מה אומרים הלקוחות על ${website.name}?`,
         acceptedAnswer: {
-          "@type": "Answer", 
-          text: website.reviewCount > 0
-            ? `הלקוחות נתנו ל${website.name} דירוג ממוצע של ${website.averageRating.toFixed(1)} כוכבים. ברוב הביקורות מציינים ${website.averageRating >= 4 ? 'שירות איכותי ומהיר' : 'שירות סביר עם מקום לשיפור'}.`
-            : `עדיין לא נכתבו ביקורות על ${website.name}. תהיו הראשונים לכתוב ביקורת ולעזור לקהילה!`
-        }
+          "@type": "Answer",
+          text:
+            website.reviewCount > 0
+              ? `הלקוחות נתנו ל${
+                  website.name
+                } דירוג ממוצע של ${website.averageRating.toFixed(
+                  1
+                )} כוכבים. ברוב הביקורות מציינים ${
+                  website.averageRating >= 4
+                    ? "שירות איכותי ומהיר"
+                    : "שירות סביר עם מקום לשיפור"
+                }.`
+              : `עדיין לא נכתבו ביקורות על ${website.name}. תהיו הראשונים לכתוב ביקורת ולעזור לקהילה!`,
+        },
       },
-       {
-      "@type": "Question",
-      name: `איך ליצור קשר עם ${website.name}?`,
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: `ניתן ליצור קשר עם ${website.name} דרך האתר שלהם, טלפון, או מייל. פרטי הקשר המלאים זמינים בעמוד החברה שלנו.`
-      }
-    }
-    ]
+      {
+        "@type": "Question",
+        name: `איך ליצור קשר עם ${website.name}?`,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: `ניתן ליצור קשר עם ${website.name} דרך האתר שלהם, טלפון, או מייל. פרטי הקשר המלאים זמינים בעמוד החברה שלנו.`,
+        },
+      },
+    ],
   };
 
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "WebSite",
+    "@type": "Organization",
     name: website.name,
     description: website.description,
     url: `${process.env.NEXT_PUBLIC_APP_URL}/tool/${params.url}`,
-    aggregateRating:
-      website.reviewCount > 0
-        ? {
-            "@type": "AggregateRating",
-            ratingValue: website.averageRating,
-            reviewCount: website.reviewCount,
-            bestRating: "5",
-            worstRating: "1",
-          }
-        : undefined,
-    review: positiveReviews.map((review: any) => ({
-      "@type": "Review",
-      reviewRating: {
-        "@type": "Rating",
-        ratingValue: review.rating,
+    "@id": `${process.env.NEXT_PUBLIC_APP_URL}/tool/${params.url}#organization`,
+    sameAs: website.socialUrls
+      ? Object.values(website.socialUrls).filter(Boolean)
+      : [],
+    ...((website.contact?.email || website.contact?.phone) && {
+      contactPoint: {
+        "@type": "ContactPoint",
+        contactType: "customer service",
+        ...(website.contact.email && { email: website.contact.email }),
+        ...(website.contact.phone && { telephone: website.contact.phone }),
+      },
+    }),
+
+    // Aggregate rating (only if reviews exist)
+    ...(website.reviewCount > 0 && {
+      aggregateRating: {
+        "@type": "AggregateRating",
+        ratingValue: website.averageRating,
+        reviewCount: website.reviewCount,
         bestRating: "5",
         worstRating: "1",
       },
-      author: {
-        "@type": "Person",
-        name: review.relatedUser?.name || "לקוח מאומת",
-      },
-      reviewBody: review.body,
-      datePublished: review.createdAt,
-    })),
+    }),
+    // Reviews array with proper itemReviewed reference
+    ...(positiveReviews.length > 0 && {
+      review: positiveReviews.map((review: any) => ({
+        "@type": "Review",
+        itemReviewed: {
+          name: website.name,
+          "@id": `${process.env.NEXT_PUBLIC_APP_URL}/tool/${params.url}#organization`,
+          "@type": "Organization",
+        },
+        reviewRating: {
+          "@type": "Rating",
+          ratingValue: review.rating,
+          bestRating: "5",
+          worstRating: "1",
+        },
+        author: {
+          "@type": "Person",
+          name: review.relatedUser?.name || "לקוח מאומת",
+        },
+        reviewBody: review.body,
+        datePublished: review.createdAt,
+      })),
+    }),
   };
 
   return (
@@ -414,12 +451,12 @@ export default async function ToolPage({ params }: PageProps) {
 
         <div className="relative container max-w-6xl mx-auto py-6 lg:py-8">
           {/* Breadcrumbs */}
-          <ToolBreadcrumbs 
+          <ToolBreadcrumbs
             businessName={website.name}
             businessUrl={params.url}
             category={website.category}
           />
-          
+
           {/* Header Section */}
           <div className="bg-white rounded-xl border border-border shadow-sm mb-6">
             <div className="p-6 space-y-6">
@@ -428,7 +465,10 @@ export default async function ToolPage({ params }: PageProps) {
                 <div className="flex flex-col gap-3 lg:gap-0">
                   {/* Mobile Layout */}
                   <div className="lg:hidden">
-                    <div className="flex items-start gap-4 mb-3" style={{ height: "75px" }}>
+                    <div
+                      className="flex items-start gap-4 mb-3"
+                      style={{ height: "75px" }}
+                    >
                       <WebsiteLogo
                         logo={website.logo}
                         name={website.name}
@@ -444,9 +484,13 @@ export default async function ToolPage({ params }: PageProps) {
                         <div className="flex justify-start">
                           <VerifiedBadge
                             isVerified={website.isVerified ?? false}
-                            pricingModel={website.pricingModel ?? PricingModel.BASIC}
+                            pricingModel={
+                              website.pricingModel ?? PricingModel.BASIC
+                            }
                             licenseValidDate={website.licenseValidDate}
-                            isVerifiedByRateIt={website.isVerifiedByRateIt ?? false}
+                            isVerifiedByRateIt={
+                              website.isVerifiedByRateIt ?? false
+                            }
                             showUnverified={true}
                           />
                         </div>
@@ -508,20 +552,21 @@ export default async function ToolPage({ params }: PageProps) {
                           {website.categories &&
                             website.categories.length > 0 && (
                               <div className="flex flex-wrap gap-2">
-                                {website.categories.map((category: any, index: number) =>
-                                  category ? (
-                                    <Link
-                                      key={category.id}
-                                      href={`/category/${category.id}`}
-                                      className="inline-flex items-center gap-1 text-muted-foreground text-sm hover:text-foreground transition-colors bg-muted/50 px-2 py-1 rounded-md"
-                                      style={{ fontFamily: "inherit" }}
-                                    >
-                                      {category.Icon && (
-                                        <category.Icon className="w-3 h-3" />
-                                      )}
-                                      <span>{category.name}</span>
-                                    </Link>
-                                  ) : null
+                                {website.categories.map(
+                                  (category: any, index: number) =>
+                                    category ? (
+                                      <Link
+                                        key={category.id}
+                                        href={`/category/${category.id}`}
+                                        className="inline-flex items-center gap-1 text-muted-foreground text-sm hover:text-foreground transition-colors bg-muted/50 px-2 py-1 rounded-md"
+                                        style={{ fontFamily: "inherit" }}
+                                      >
+                                        {category.Icon && (
+                                          <category.Icon className="w-3 h-3" />
+                                        )}
+                                        <span>{category.name}</span>
+                                      </Link>
+                                    ) : null
                                 )}
                               </div>
                             )}
