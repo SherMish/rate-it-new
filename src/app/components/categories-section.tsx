@@ -58,6 +58,7 @@ import {
   Mic,
   FlaskRound,
   Wallet,
+  BedDouble
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import Link from "next/link";
@@ -123,6 +124,7 @@ const Icons: Record<string, LucideIcon> = {
   Mic,
   FlaskRound,
   Wallet,
+  BedDouble
 };
 
 export function CategoriesSection() {
