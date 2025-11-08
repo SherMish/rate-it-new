@@ -5,30 +5,33 @@ import { CookieSettings, defaultSettings } from "@/lib/types/cookie-consent";
 
 export function useCookieConsent() {
   const [showBanner, setShowBanner] = useState(false);
-  const [showSettings, setShowSettings] = useState(false);
   const [settings, setSettings] = useState<CookieSettings>(defaultSettings);
 
   useEffect(() => {
     const consent = localStorage.getItem("cookie-consent");
     if (!consent) {
+      // Auto-accept all cookies by default
+      const acceptedSettings = {
+        necessary: true,
+        analytics: true,
+        marketing: true,
+      };
+      localStorage.setItem("cookie-consent", JSON.stringify(acceptedSettings));
+      setSettings(acceptedSettings);
+      // Show informational banner
       setShowBanner(true);
     } else {
       setSettings(JSON.parse(consent));
     }
   }, []);
 
-  const saveSettings = (newSettings: CookieSettings) => {
-    localStorage.setItem("cookie-consent", JSON.stringify(newSettings));
-    setSettings(newSettings);
+  const dismissBanner = () => {
     setShowBanner(false);
-    setShowSettings(false);
   };
 
   return {
     showBanner,
-    showSettings,
     settings,
-    setShowSettings,
-    saveSettings,
+    dismissBanner,
   };
 } 
