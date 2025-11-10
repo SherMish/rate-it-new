@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import User from "@/lib/models/User";
+import Website from "@/lib/models/Website";
 import { checkAdminAuth } from "@/lib/admin-auth";
 
 export async function PATCH(
@@ -23,6 +24,7 @@ export async function PATCH(
       workRole,
       workEmail,
       isAgreeMarketing,
+      websiteId,
     } = body;
 
     const updateData: any = {};
@@ -40,12 +42,32 @@ export async function PATCH(
     if (isAgreeMarketing !== undefined)
       updateData.isAgreeMarketing = isAgreeMarketing;
 
+    // If a website is being assigned, automatically set role to business_owner
+    if (websiteId && relatedWebsite) {
+      updateData.role = "business_owner";
+      updateData.isWebsiteOwner = true;
+      updateData.websites = websiteId;
+    }
+
     const user = await User.findByIdAndUpdate(params.id, updateData, {
       new: true,
     }).select("-hashedPassword -resetToken");
 
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+
+    // If a website was selected, update the website document
+    if (websiteId) {
+      try {
+        await Website.findByIdAndUpdate(websiteId, {
+          owner: params.id,
+          isVerified: true,
+        });
+      } catch (websiteError) {
+        console.error("Error updating website:", websiteError);
+        // Continue even if website update fails
+      }
     }
 
     return NextResponse.json(user);

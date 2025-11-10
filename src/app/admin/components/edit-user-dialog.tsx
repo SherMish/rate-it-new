@@ -42,6 +42,13 @@ interface EditUserDialogProps {
   user: UserType | null;
 }
 
+interface WebsiteOption {
+  _id: string;
+  name: string;
+  url: string;
+  logo?: string;
+}
+
 export function EditUserDialog({
   open,
   onOpenChange,
@@ -62,6 +69,14 @@ export function EditUserDialog({
 
   const [isLoading, setIsLoading] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
+  const [websiteSearch, setWebsiteSearch] = useState("");
+  const [websiteOptions, setWebsiteOptions] = useState<WebsiteOption[]>([]);
+  const [selectedWebsite, setSelectedWebsite] = useState<WebsiteOption | null>(null);
+  const [showWebsiteDropdown, setShowWebsiteDropdown] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
+  const [isRemoving, setIsRemoving] = useState(false);
+  const [showRemoveConfirm, setShowRemoveConfirm] = useState(false);
+  const [hasUserInteracted, setHasUserInteracted] = useState(false);
 
   // Reset form when dialog opens with new user
   useEffect(() => {
@@ -77,11 +92,56 @@ export function EditUserDialog({
         workEmail: user.workEmail || "",
         isAgreeMarketing: user.isAgreeMarketing || false,
       });
+      setWebsiteSearch(user.relatedWebsite || "");
+      setSelectedWebsite(null);
+      setShowWebsiteDropdown(false);
+      setWebsiteOptions([]);
+      setHasUserInteracted(false);
     }
   }, [user, open]);
 
+  // Debounced website search
+  useEffect(() => {
+    // Don't search if user hasn't interacted with the field yet
+    if (!hasUserInteracted) {
+      return;
+    }
+
+    if (!websiteSearch || websiteSearch.length < 2) {
+      setWebsiteOptions([]);
+      setShowWebsiteDropdown(false);
+      return;
+    }
+
+    const timer = setTimeout(async () => {
+      setIsSearching(true);
+      try {
+        const response = await fetch(
+          `/api/admin/websites/search?q=${encodeURIComponent(websiteSearch)}`
+        );
+        if (response.ok) {
+          const data = await response.json();
+          setWebsiteOptions(data);
+          setShowWebsiteDropdown(data.length > 0);
+        }
+      } catch (error) {
+        console.error("Error searching websites:", error);
+      } finally {
+        setIsSearching(false);
+      }
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [websiteSearch, hasUserInteracted]);
+
   const handleSubmit = async () => {
     if (!user?._id) return;
+
+    // Validate that a website is selected
+    if (websiteSearch && !selectedWebsite) {
+      setFormError("אנא בחר עסק מהרשימה");
+      return;
+    }
 
     setIsLoading(true);
     setFormError(null);
@@ -90,7 +150,11 @@ export function EditUserDialog({
       const response = await fetch(`/api/admin/users/${user._id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          relatedWebsite: selectedWebsite ? selectedWebsite.url : "",
+          websiteId: selectedWebsite ? selectedWebsite._id : null,
+        }),
       });
 
       const data = await response.json();
@@ -107,6 +171,39 @@ export function EditUserDialog({
       setFormError("עדכון המשתמש נכשל. אנא נסו שוב.");
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleRemoveFromBusiness = async () => {
+    if (!user?._id || !selectedWebsite) return;
+
+    setIsRemoving(true);
+    setFormError(null);
+
+    try {
+      const response = await fetch(`/api/admin/users/${user._id}/remove-business`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          websiteId: selectedWebsite._id,
+        }),
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        setFormError(data.error || "הסרת המשתמש מהעסק נכשלה");
+        return;
+      }
+
+      toast.success("המשתמש הוסר מהעסק בהצלחה");
+      setShowRemoveConfirm(false);
+      onUserUpdated();
+      onOpenChange(false);
+    } catch (error) {
+      console.error("Error removing user from business:", error);
+      setFormError("הסרת המשתמש מהעסק נכשלה. אנא נסו שוב.");
+    } finally {
+      setIsRemoving(false);
     }
   };
 
@@ -177,18 +274,94 @@ export function EditUserDialog({
 
             <div className="space-y-2">
               <Label className="text-right block">עסק משויך</Label>
-              <Input
-                placeholder="כתובת העסק המשויך"
-                value={formData.relatedWebsite}
-                onChange={(e) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    relatedWebsite: e.target.value,
-                  }))
-                }
-                className="text-right"
-                dir="rtl"
-              />
+              <div className="relative">
+                <Input
+                  placeholder="חפש עסק (לפחות 2 תווים)"
+                  value={websiteSearch}
+                  onChange={(e) => {
+                    setWebsiteSearch(e.target.value);
+                    setSelectedWebsite(null);
+                    setHasUserInteracted(true);
+                  }}
+                  onFocus={() => {
+                    setHasUserInteracted(true);
+                    if (websiteOptions.length > 0) {
+                      setShowWebsiteDropdown(true);
+                    }
+                  }}
+                  className="text-right"
+                  dir="rtl"
+                />
+                {isSearching && (
+                  <div className="absolute left-3 top-1/2 -translate-y-1/2">
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  </div>
+                )}
+                {showWebsiteDropdown && websiteOptions.length > 0 && (
+                  <div className="absolute z-50 w-full mt-1 bg-white border rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                    {websiteOptions.map((website) => (
+                      <div
+                        key={website._id}
+                        className="p-3 hover:bg-gray-100 cursor-pointer flex items-center gap-3"
+                        onClick={() => {
+                          setSelectedWebsite(website);
+                          setWebsiteSearch(website.name);
+                          setShowWebsiteDropdown(false);
+                          setFormData((prev) => ({
+                            ...prev,
+                            relatedWebsite: website.url,
+                          }));
+                        }}
+                      >
+                        {website.logo && (
+                          <img
+                            src={website.logo}
+                            alt={website.name}
+                            className="w-8 h-8 rounded object-cover"
+                          />
+                        )}
+                        <div className="flex-1 text-right">
+                          <div className="font-medium">{website.name}</div>
+                          <div className="text-sm text-gray-500">
+                            {website.url}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                {selectedWebsite && (
+                  <div className="mt-2 p-2 bg-green-50 border border-green-200 rounded flex items-center justify-between">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSelectedWebsite(null);
+                        setWebsiteSearch("");
+                        setFormData((prev) => ({
+                          ...prev,
+                          relatedWebsite: "",
+                        }));
+                      }}
+                      className="text-red-500 hover:text-red-700"
+                    >
+                      ✕
+                    </button>
+                    <div className="flex items-center gap-2">
+                      <div className="text-right text-sm">
+                        <div className="font-medium">{selectedWebsite.name}</div>
+                        <div className="text-gray-600">{selectedWebsite.url}</div>
+                      </div>
+                      {selectedWebsite.logo && (
+                        <img
+                          src={selectedWebsite.logo}
+                          alt={selectedWebsite.name}
+                          className="w-8 h-8 rounded object-cover"
+                        />
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 
@@ -278,10 +451,29 @@ export function EditUserDialog({
             <Button variant="outline" onClick={() => onOpenChange(false)}>
               ביטול
             </Button>
+            {selectedWebsite && formData.relatedWebsite && (
+              <Button
+                onClick={() => setShowRemoveConfirm(true)}
+                className="bg-red-600 hover:bg-red-700 text-white border-2 border-red-800 shadow-lg"
+                disabled={isRemoving || isLoading}
+                type="button"
+              >
+                {isRemoving ? (
+                  <>
+                    <Loader2 className="w-4 h-4 ml-2 animate-spin" />
+                    מסיר...
+                  </>
+                ) : (
+                  <>
+                    ⚠️ הסר מהעסק
+                  </>
+                )}
+              </Button>
+            )}
             <Button
               onClick={handleSubmit}
               className="gradient-button"
-              disabled={isLoading}
+              disabled={isLoading || isRemoving}
             >
               {isLoading ? (
                 <>
@@ -293,6 +485,56 @@ export function EditUserDialog({
               )}
             </Button>
           </div>
+
+          {/* Remove Confirmation Dialog */}
+          {showRemoveConfirm && (
+            <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[100]">
+              <div className="bg-white rounded-lg p-6 max-w-md mx-4 shadow-2xl border-4 border-red-600">
+                <div className="text-center mb-4">
+                  <div className="text-6xl mb-2">⚠️</div>
+                  <h3 className="text-xl font-bold text-red-600 mb-2">
+                    אזהרה!
+                  </h3>
+                  <p className="text-gray-700 mb-4">
+                    האם אתה בטוח שברצונך להסיר את המשתמש מהעסק?
+                  </p>
+                  <div className="bg-red-50 border-2 border-red-200 rounded p-3 mb-4">
+                    <p className="text-sm text-right text-red-800 font-semibold">
+                      פעולה זו תבצע:
+                    </p>
+                    <ul className="text-sm text-right text-red-700 mt-2 space-y-1">
+                      <li>• ביטול אימות העסק</li>
+                      <li>• הסרת קישור למשתמש</li>
+                      <li>• שינוי סוג המשתמש ל&quot;משתמש רגיל&quot;</li>
+                    </ul>
+                  </div>
+                </div>
+                <div className="flex gap-3 justify-center">
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowRemoveConfirm(false)}
+                    disabled={isRemoving}
+                  >
+                    ביטול
+                  </Button>
+                  <Button
+                    onClick={handleRemoveFromBusiness}
+                    className="bg-red-600 hover:bg-red-700 text-white"
+                    disabled={isRemoving}
+                  >
+                    {isRemoving ? (
+                      <>
+                        <Loader2 className="w-4 h-4 ml-2 animate-spin" />
+                        מסיר...
+                      </>
+                    ) : (
+                      "כן, הסר מהעסק"
+                    )}
+                  </Button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </DialogContent>
     </Dialog>
