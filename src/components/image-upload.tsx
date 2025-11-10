@@ -58,14 +58,14 @@ export function ImageUpload({ value, onChange, onRemove }: ImageUploadProps) {
 
   return (
     <div className="flex items-center gap-4">
-      <div className="relative w-[100px] h-[100px] rounded-lg border border-border overflow-hidden">
+      <div className="relative w-[100px] h-[100px] rounded-lg border border-border overflow-hidden bg-secondary">
         {value ? (
           <>
             <Image
               fill
               src={value}
               alt="Logo"
-              className="object-cover"
+              className="object-contain"
             />
             <button
               onClick={onRemove}

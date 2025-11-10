@@ -47,6 +47,7 @@ import { DashboardHelpDialog } from "@/components/business/dashboard/DashboardHe
 import { QRCodeGeneratorCard } from "@/components/business/dashboard/QRCodeGeneratorCard";
 import { ReviewInvitationCard } from "@/components/business/dashboard/ReviewInvitationCard";
 import { trackEvent, AnalyticsEvents } from "@/lib/analytics";
+import { WebsiteLogo } from "@/components/website-logo";
 
 type Feature = {
   id: string;
@@ -222,10 +223,10 @@ function DashboardContent() {
           <div className="flex justify-between items-start">
             <div className="flex items-center gap-4">
               {website?.logo && (
-                <img
-                  src={website.logo}
-                  alt={website.name}
-                  className="w-16 h-16 rounded-lg object-cover border border-border"
+                <WebsiteLogo
+                  logo={website.logo}
+                  name={website.name}
+                  size="md"
                 />
               )}
               <div>
