@@ -109,10 +109,11 @@ export function SharedPricingTable({
       features: plusFeatures,
       ctaText: isCurrent.plus ? "המסלול הנוכחי שלך" : "שדרגו ל-Plus",
       onCtaClick: planActions.onPlusClick.bind(null, isAnnual ? "annual" : "monthly"),
-      isRecommended: true,
+      // isRecommended: true,
       highlightColor: "primary",
       bestFor: "בלטו מעל המתחרים עם סטטוס מאומת ופרופיל נקי מפרסומות",
-      badge: "הכי מומלץ",
+      // badge: "הכי מומלץ",
+      isComingSoon: true,
       isCurrent: isCurrent.plus,
     },
     {
@@ -126,7 +127,7 @@ export function SharedPricingTable({
       onCtaClick: planActions.onProClick.bind(null, isAnnual ? "annual" : "monthly"),
       isComingSoon: true,
       bestFor: "ניהול מוניטין מלא עם אוטומציות ואנליטיקה מתקדמת",
-      badge: "Soon",
+      // badge: "Soon",
       isCurrent: isCurrent.pro,
     },
   ];

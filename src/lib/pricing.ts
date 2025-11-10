@@ -4,8 +4,8 @@ export const PRICING_CONFIG = {
   // Base prices (monthly in ₪)
   basePrices: {
     basic: 0,
-    plus: 99,
-    pro: 249,
+    plus: 149,
+    pro: 279,
   },
   
   // Annual billing discounts (percentage)
