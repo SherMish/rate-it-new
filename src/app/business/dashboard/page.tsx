@@ -161,9 +161,12 @@ function DashboardContent() {
     }
   }, [website]);
 
-  // Check for firstTime parameter
+  // Check for firstTime parameter (case-insensitive)
   useEffect(() => {
-    const isFirstTime = searchParams?.get("firstTime") === "true";
+    const isFirstTime = 
+      searchParams?.get("firstTime") === "true" || 
+      searchParams?.get("firsttime") === "true";
+
     if (isFirstTime) {
       setShowFirstTimeDialog(true);
     }
@@ -194,6 +197,17 @@ function DashboardContent() {
   const conversionRate =
     totalViews > 0 ? ((totalClicks / totalViews) * 100).toFixed(1) : "0.0";
 
+    if (!website) return (<div className="container mx-auto px-4 py-12 min-h-screen" dir="rtl">
+      <div className="text-center py-20">
+        <AlertTriangle className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
+        <h2 className="text-2xl font-semibold mb-2">העסק לא נמצא</h2>
+        <p className="text-muted-foreground mb-4">
+          נראה שאין לכם עסק מקושר לחשבון זה. אנא צרו עסק חדש או פנו לתמיכה אם אתם זקוקים לעזרה.
+        </p>
+      </div>
+    </div>
+  );
+  else
   return (
     <>
       <FirstTimeDialog
