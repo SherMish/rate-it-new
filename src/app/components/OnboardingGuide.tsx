@@ -14,9 +14,10 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { WebsiteType } from "@/lib/models/Website";
 
 interface OnboardingGuideProps {
-  website: any;
+  website: WebsiteType
   className?: string;
 }
 
@@ -82,12 +83,12 @@ export function OnboardingGuide({ website, className }: OnboardingGuideProps) {
     });
   }
 
-  if (!website?.category || website.category === "other") {
+  if (!website?.categories || website.categories[0] === "other") {
     tips.push({
       id: "category",
-      title: "בחרו קטגוריה שהלקוחות מחפשים בה",
+      title: "בחרו קטגוריה/ות מדויקת/ות לעסק שלכם",
       description:
-        "כשתבחרו קטגוריה מדויקת – לקוחות יוכלו למצוא אתכם דרך חיפושים ועמודי תחום.",
+        "כשתבחרו קטגוריה מדויקת – לקוחות יוכלו למצוא אתכם דרך חיפושים אורגניים!",
       icon: Tag,
       action: {
         label: "בחירת קטגוריה",
@@ -149,7 +150,7 @@ export function OnboardingGuide({ website, className }: OnboardingGuideProps) {
     });
   }
 
-  if (website?.reviewCount > 0 && website.reviewCount < 5) {
+  if (website.reviewCount && (website.reviewCount > 0 && website.reviewCount < 5)) {
     tips.push({
       id: "fiveReviews",
       title: "כמעט שם 🎯 – עוד קצת ואתם בולטים באמת",
