@@ -1,9 +1,0 @@
-{
-  "functions": {
-    "app/api/admin/ai-analyze-website/route.ts": {
-      "memory": 2048,
-      "maxDuration": 60
-    }
-  },
-  "outputDirectory": ".next"
-}

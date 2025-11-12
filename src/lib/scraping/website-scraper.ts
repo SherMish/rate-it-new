@@ -1,6 +1,4 @@
-import puppeteer, { Browser, Page } from 'puppeteer-core';
-// @ts-ignore - @sparticuz/chromium may have type issues
-import chromium from '@sparticuz/chromium';
+import puppeteer, { Browser, Page } from 'puppeteer';
 
 export interface ScrapedContent {
   mainPage: {
@@ -29,82 +27,19 @@ export class WebsiteScraper {
 
   async initialize(): Promise<void> {
     if (!this.browser) {
-      const isProduction = process.env.NEXT_PUBLIC_IS_PRODUCTION === 'true' || process.env.VERCEL === '1';
-      
-      if (isProduction) {
-        // Production environment (serverless) - use @sparticuz/chromium
-        try {
-          console.log('Initializing chromium in production mode...');
-          
-          // Get executable path - this will download/decompress if needed
-          const executablePath = await chromium.executablePath();
-          console.log('Chromium executable path:', executablePath);
-          
-          // Get chromium args
-          const args = chromium.args;
-          console.log('Chromium args:', args.slice(0, 5), '...');
-          
-          this.browser = await puppeteer.launch({
-            args: args,
-            defaultViewport: {
-              width: 1920,
-              height: 1080,
-            },
-            executablePath,
-            headless: true,
-          });
-          
-          console.log('Browser launched successfully in production');
-        } catch (error) {
-          console.error('Failed to initialize chromium for production:', error);
-          console.error('Error details:', {
-            name: error instanceof Error ? error.name : 'Unknown',
-            message: error instanceof Error ? error.message : 'Unknown error',
-            stack: error instanceof Error ? error.stack : undefined
-          });
-          throw new Error(`Failed to launch browser in production: ${error instanceof Error ? error.message : 'Unknown error'}`);
-        } //test
-      } else {
-        // Development environment - use local Chrome/Chromium
-        // First try to find local Chrome installation
-        const executablePath = process.env.PUPPETEER_EXECUTABLE_PATH || 
-          process.platform === 'darwin' ? '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' :
-          process.platform === 'win32' ? 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe' :
-          '/usr/bin/google-chrome';
-
-        try {
-          this.browser = await puppeteer.launch({
-            headless: true,
-            executablePath,
-            args: [
-              '--no-sandbox',
-              '--disable-setuid-sandbox',
-              '--disable-dev-shm-usage',
-              '--disable-accelerated-2d-canvas',
-              '--no-first-run',
-              '--no-zygote',
-              '--single-process',
-              '--disable-gpu'
-            ]
-          });
-        } catch (error) {
-          console.error('Failed to launch with local Chrome, trying without executablePath:', error);
-          // Fallback: Let puppeteer find Chrome automatically
-          this.browser = await puppeteer.launch({
-            headless: true,
-            args: [
-              '--no-sandbox',
-              '--disable-setuid-sandbox',
-              '--disable-dev-shm-usage',
-              '--disable-accelerated-2d-canvas',
-              '--no-first-run',
-              '--no-zygote',
-              '--single-process',
-              '--disable-gpu'
-            ]
-          });
-        }
-      }
+      this.browser = await puppeteer.launch({
+        headless: true,
+        args: [
+          '--no-sandbox',
+          '--disable-setuid-sandbox',
+          '--disable-dev-shm-usage',
+          '--disable-accelerated-2d-canvas',
+          '--no-first-run',
+          '--no-zygote',
+          '--single-process',
+          '--disable-gpu'
+        ]
+      });
     }
   }
 

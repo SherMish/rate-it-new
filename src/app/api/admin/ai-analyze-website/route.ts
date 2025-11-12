@@ -5,10 +5,6 @@ import { checkAdminAuth } from '@/lib/admin-auth';
 import { WebsiteScraper } from '@/lib/scraping/website-scraper';
 import { WebsiteAnalyzer } from '@/lib/ai/website-analyzer';
 
-// Force Node.js runtime (required for puppeteer)
-export const runtime = 'nodejs';
-export const maxDuration = 60; // 60 seconds max execution
-
 export async function POST(request: Request) {
   // Check admin authentication
   const authError = await checkAdminAuth();
