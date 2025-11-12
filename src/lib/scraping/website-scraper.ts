@@ -63,7 +63,7 @@ export class WebsiteScraper {
             stack: error instanceof Error ? error.stack : undefined
           });
           throw new Error(`Failed to launch browser in production: ${error instanceof Error ? error.message : 'Unknown error'}`);
-        }
+        } //test
       } else {
         // Development environment - use local Chrome/Chromium
         // First try to find local Chrome installation
