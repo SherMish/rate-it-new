@@ -57,6 +57,7 @@ import {
   GraduationCap,
   Mic,
   FlaskRound,
+  Package,
   Wallet,
   BedDouble
 } from "lucide-react";
@@ -76,6 +77,7 @@ const Icons: Record<string, LucideIcon> = {
   Music,
   Video,
   Database,
+  Package,
   Brain,
   Wine,
   Sparkles,
