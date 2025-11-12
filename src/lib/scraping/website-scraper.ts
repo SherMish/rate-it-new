@@ -1,4 +1,5 @@
 import puppeteer, { Browser, Page } from 'puppeteer-core';
+// @ts-ignore - @sparticuz/chromium may have type issues
 import chromium from '@sparticuz/chromium';
 
 export interface ScrapedContent {
@@ -28,16 +29,41 @@ export class WebsiteScraper {
 
   async initialize(): Promise<void> {
     if (!this.browser) {
-      const isProduction = process.env.NEXT_PUBLIC_IS_PRODUCTION === 'true';
+      const isProduction = process.env.NEXT_PUBLIC_IS_PRODUCTION === 'true' || process.env.VERCEL === '1';
       
       if (isProduction) {
         // Production environment (serverless) - use @sparticuz/chromium
-        this.browser = await puppeteer.launch({
-          args: chromium.args,
-          defaultViewport: { width: 1920, height: 1080 },
-          executablePath: await chromium.executablePath(),
-          headless: true,
-        });
+        try {
+          console.log('Initializing chromium in production mode...');
+          
+          // Get executable path - this will download/decompress if needed
+          const executablePath = await chromium.executablePath();
+          console.log('Chromium executable path:', executablePath);
+          
+          // Get chromium args
+          const args = chromium.args;
+          console.log('Chromium args:', args.slice(0, 5), '...');
+          
+          this.browser = await puppeteer.launch({
+            args: args,
+            defaultViewport: {
+              width: 1920,
+              height: 1080,
+            },
+            executablePath,
+            headless: true,
+          });
+          
+          console.log('Browser launched successfully in production');
+        } catch (error) {
+          console.error('Failed to initialize chromium for production:', error);
+          console.error('Error details:', {
+            name: error instanceof Error ? error.name : 'Unknown',
+            message: error instanceof Error ? error.message : 'Unknown error',
+            stack: error instanceof Error ? error.stack : undefined
+          });
+          throw new Error(`Failed to launch browser in production: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        }
       } else {
         // Development environment - use local Chrome/Chromium
         // First try to find local Chrome installation
