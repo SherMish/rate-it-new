@@ -80,7 +80,7 @@ export default async function MyReviewsPage() {
         ) : (
           <div className="space-y-6 max-w-4xl mx-auto">
             {formattedReviews.map((review) => (
-              <ReviewCard key={review._id} review={review} />
+              <ReviewCard key={review._id} review={review} isOwner={true} />
             ))}
           </div>
         )}

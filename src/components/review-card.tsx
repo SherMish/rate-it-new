@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Star, ThumbsUp, Flag, ShieldCheck, ShieldAlert } from "lucide-react";
+import { Star, ThumbsUp, Flag, ShieldCheck, ShieldAlert, Pencil } from "lucide-react";
 import RatingTiles from "@/components/ui/rating-tiles";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -14,11 +14,14 @@ import {
 } from "@/components/ui/tooltip";
 import { Review } from "./reviews-section";
 import { ReportReviewModal } from "./report-review-modal";
+import { EditReviewModal } from "./edit-review-modal";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 
 interface ReviewCardProps {
   review: Review;
+  isOwner?: boolean;
 }
 
 function getInitials(name: string) {
@@ -30,10 +33,12 @@ function getInitials(name: string) {
     .slice(0, 2);
 }
 
-export function ReviewCard({ review }: ReviewCardProps) {
+export function ReviewCard({ review, isOwner = false }: ReviewCardProps) {
   const [hasVoted, setHasVoted] = useState(false);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const { data: session } = useSession();
+  const router = useRouter();
 
   // Check if user has already voted on mount
   useEffect(() => {
@@ -228,6 +233,22 @@ export function ReviewCard({ review }: ReviewCardProps) {
             <Flag className="w-4 h-4 ml-2" />
             <span>דווח</span>
           </Button>
+
+          {isOwner && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setIsEditModalOpen(true);
+              }}
+              className="hover:bg-gray-100 text-gray-700 mr-auto"
+            >
+              <Pencil className="w-4 h-4 ml-2" />
+              <span>ערוך</span>
+            </Button>
+          )}
         </div>
       </div>
     </Card>
@@ -247,6 +268,15 @@ export function ReviewCard({ review }: ReviewCardProps) {
         review={review}
         userEmail={session?.user?.email || ""}
       />
+
+      {isOwner && (
+        <EditReviewModal
+          isOpen={isEditModalOpen}
+          onClose={() => setIsEditModalOpen(false)}
+          review={review}
+          onSuccess={() => router.refresh()}
+        />
+      )}
     </>
   );
 }
